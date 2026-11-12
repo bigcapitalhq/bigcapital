@@ -24,6 +24,10 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/users',
   },
   {
+    text: <T id={'security.title'} />,
+    href: '/preferences/security',
+  },
+  {
     text: 'Payment Methods',
     href: '/preferences/payment-methods',
   },

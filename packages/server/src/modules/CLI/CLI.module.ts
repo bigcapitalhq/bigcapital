@@ -14,6 +14,7 @@ import { SystemSeedLatestCommand } from './commands/SystemSeedLatest.command';
 import { TenantsSeedLatestCommand } from './commands/TenantsSeedLatest.command';
 import { OpenApiExportCommand } from './commands/OpenApiExport.command';
 import { AnalyticsBackfillCommand } from './commands/AnalyticsBackfill.command';
+import { UsersTwoFactorDisableCommand } from './commands/UsersTwoFactorDisable.command';
 import { StripeSyncPlansCommand } from './commands/StripeSyncPlans.command';
 import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
 
@@ -39,6 +40,7 @@ import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
     TenantsSeedLatestCommand,
     OpenApiExportCommand,
     AnalyticsBackfillCommand,
+    UsersTwoFactorDisableCommand,
     StripeSyncPlansCommand,
   ],
 })

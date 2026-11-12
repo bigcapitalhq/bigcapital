@@ -49,15 +49,38 @@ import { AuthApiKeysController } from './AuthApiKeys.controllers';
 import { AuthApiKeyAuthorizeService } from './commands/AuthApiKeyAuthorization.service';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
+import { UserTwoFactor } from './two-factor/models/UserTwoFactor.model';
+import { UserTwoFactorRecoveryCode } from './two-factor/models/UserTwoFactorRecoveryCode.model';
+import { TwoFactorChallenge } from './two-factor/models/TwoFactorChallenge.model';
+import { TwoFactorCryptoService } from './two-factor/TwoFactorCrypto.service';
+import { TwoFactorService } from './two-factor/TwoFactor.service';
+import { TwoFactorChallengeService } from './two-factor/TwoFactorChallenge.service';
+import { TwoFactorPolicyService } from './two-factor/TwoFactorPolicy.service';
+import { TwoFactorSigninService } from './two-factor/TwoFactorSignin.service';
+import { MfaMethodRegistry } from './two-factor/methods/MfaMethodRegistry.service';
+import { TotpMfaMethod } from './two-factor/methods/TotpMfaMethod';
+import { RecoveryCodeMfaMethod } from './two-factor/methods/RecoveryCodeMfaMethod';
+import { TwoFactorEnforcementGuard } from './two-factor/TwoFactorEnforcement.guard';
+import { TwoFactorController } from './two-factor/TwoFactor.controller';
+import { OrganizationTwoFactorController } from './two-factor/OrganizationTwoFactor.controller';
 
 const models = [
   InjectSystemModel(PasswordReset),
   InjectSystemModel(ApiKeyModel),
   InjectSystemModel(UserTenant),
+  InjectSystemModel(UserTwoFactor),
+  InjectSystemModel(UserTwoFactorRecoveryCode),
+  InjectSystemModel(TwoFactorChallenge),
 ];
 
 @Module({
-  controllers: [AuthController, AuthedController, AuthApiKeysController],
+  controllers: [
+    AuthController,
+    AuthedController,
+    AuthApiKeysController,
+    TwoFactorController,
+    OrganizationTwoFactorController,
+  ],
   imports: [
     MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -99,7 +122,7 @@ const models = [
       adapter: BullMQAdapter,
     }),
   ],
-  exports: [...models],
+  exports: [...models, TwoFactorService],
   providers: [
     ...models,
     LocalStrategy,
@@ -126,6 +149,14 @@ const models = [
     GenerateApiKey,
     GetApiKeysService,
     JwtAuthGuard,
+    TwoFactorCryptoService,
+    TwoFactorService,
+    TwoFactorChallengeService,
+    TwoFactorPolicyService,
+    TotpMfaMethod,
+    RecoveryCodeMfaMethod,
+    MfaMethodRegistry,
+    TwoFactorSigninService,
     {
       provide: APP_GUARD,
       useClass: MixedAuthGuard,
@@ -133,6 +164,11 @@ const models = [
     {
       provide: APP_GUARD,
       useClass: EnsureUserVerifiedGuard,
+    },
+    // After the authentication guards above: needs the signed-in user.
+    {
+      provide: APP_GUARD,
+      useClass: TwoFactorEnforcementGuard,
     },
     AuthMailSubscriber,
   ],

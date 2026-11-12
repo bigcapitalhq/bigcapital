@@ -24,6 +24,7 @@ import redis from './redis';
 import queue from './queue';
 import bullBoard from './bull-board';
 import clickhouse from './clickhouse';
+import twoFactor from './two-factor';
 
 export const config = [
   app,
@@ -52,4 +53,5 @@ export const config = [
   queue,
   bullBoard,
   clickhouse,
+  twoFactor,
 ];

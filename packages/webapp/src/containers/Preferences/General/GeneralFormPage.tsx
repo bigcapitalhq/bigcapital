@@ -7,6 +7,7 @@ import '@/style/pages/Preferences/GeneralForm.scss';
 import { PreferencesGeneralSchema } from './General.schema';
 import { PreferencesGeneralForm as GeneralForm } from './GeneralForm';
 import { useGeneralFormContext } from './GeneralFormProvider';
+import { OrganizationTwoFactorSetting } from './OrganizationTwoFactorSetting';
 import type { GeneralFormValues } from './types';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
@@ -82,12 +83,15 @@ function GeneralFormPageInner({
   };
 
   return (
-    <Formik<GeneralFormValues>
-      initialValues={initialValues}
-      validationSchema={PreferencesGeneralSchema}
-      onSubmit={handleFormSubmit}
-      component={GeneralForm}
-    />
+    <>
+      <Formik<GeneralFormValues>
+        initialValues={initialValues}
+        validationSchema={PreferencesGeneralSchema}
+        onSubmit={handleFormSubmit}
+        component={GeneralForm}
+      />
+      <OrganizationTwoFactorSetting />
+    </>
   );
 }
 

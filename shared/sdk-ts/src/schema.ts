@@ -37,6 +37,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/signin/2fa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Second sign-in step: a code from the authenticator app or a recovery code */
+        post: operations["AuthController_signinTwoFactor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Second sign-in step: verify the credential of the selected method */
+        post: operations["AuthController_signinMfaVerify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare a method before verification, e.g. send an email code or return WebAuthn options */
+        post: operations["AuthController_signinMfaPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/setup/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Required two-factor setup during sign-in: start the setup of a method */
+        post: operations["AuthController_signinMfaSetupStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/setup/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the required setup with a credential: turns the method on and signs in */
+        post: operations["AuthController_signinMfaSetupConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/2fa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Required two-factor setup during sign-in: returns a new secret and its otpauth URI */
+        post: operations["AuthController_signinTwoFactorSetup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/2fa/setup/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the required setup with a code: turns two-factor on and signs in */
+        post: operations["AuthController_signinTwoFactorSetupConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/signup": {
         parameters: {
             query?: never;
@@ -234,6 +353,109 @@ export interface paths {
         /** Get all API keys for the current tenant */
         get: operations["AuthApiKeysController_getApiKeys"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Two-factor status of the signed-in user */
+        get: operations["TwoFactorController_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start the setup: returns a new secret and its otpauth URI (pending until confirmed) */
+        post: operations["TwoFactorController_startSetup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/setup/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the setup with a code: turns two-factor on and returns the recovery codes */
+        post: operations["TwoFactorController_confirmSetup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/recovery-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Replace the recovery codes (password and a code required) */
+        post: operations["TwoFactorController_regenerateRecoveryCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Turn two-factor off (password and a code required) */
+        post: operations["TwoFactorController_disable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/organization/two-factor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Whether the organization requires two-factor authentication */
+        get: operations["OrganizationTwoFactorController_get"];
+        /** Require two-factor authentication for all users (administrators only) */
+        put: operations["OrganizationTwoFactorController_update"];
         post?: never;
         delete?: never;
         options?: never;
@@ -5655,21 +5877,97 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        MfaMethodDescriptorDto: {
+            /** @enum {string} */
+            id: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /** @enum {string} */
+            kind: "otp" | "recovery_code" | "webauthn";
+        };
+        MfaChallengeDto: {
+            /** @description Single-use token of the second step. */
+            challengeToken: string;
+            /** @description Seconds until the challenge token expires. */
+            expiresIn: number;
+            /** @enum {string} */
+            purpose: "verify" | "setup";
+            /** @description Methods the user can use for this challenge. */
+            methods: components["schemas"]["MfaMethodDescriptorDto"][];
+            /** @enum {string} */
+            defaultMethod?: "totp" | "recovery_code" | "email_otp" | "webauthn";
+        };
         AuthSigninResponseDto: {
-            /** @description JWT access token */
-            accessToken: string;
+            /** @description JWT access token. Missing when a second step is needed (two_factor_required or two_factor_setup_required). */
+            accessToken?: string;
             /** @description Organization ID */
-            organizationId: string;
+            organizationId?: string;
             /** @description Tenant ID */
-            tenantId: number;
+            tenantId?: number;
             /** @description User ID */
-            userId: number;
+            userId?: number;
+            /** @description The user has two-factor authentication: send a code with the challenge token to POST /auth/signin/2fa. */
+            twoFactorRequired?: boolean;
+            /** @description The organization requires two-factor authentication and the user has not set it up: set it up with POST /auth/signin/2fa/setup and /auth/signin/2fa/setup/confirm. */
+            twoFactorSetupRequired?: boolean;
+            /** @description Single-use token of the second step. */
+            challengeToken?: string;
+            /** @description Seconds until the challenge token expires. */
+            challengeExpiresIn?: number;
+            /** @description The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete. */
+            mfa?: components["schemas"]["MfaChallengeDto"];
+            /** @description Methods available for the second step (deprecated, use mfa.methods). */
+            availableMethods?: components["schemas"]["MfaMethodDescriptorDto"][];
+            /** @description The method to show first (deprecated, use mfa.defaultMethod). */
+            defaultMethod?: string;
+        };
+        AuthSigninSetupConfirmResponseDto: {
+            /** @description JWT access token. Missing when a second step is needed (two_factor_required or two_factor_setup_required). */
+            accessToken?: string;
+            /** @description Organization ID */
+            organizationId?: string;
+            /** @description Tenant ID */
+            tenantId?: number;
+            /** @description User ID */
+            userId?: number;
+            /** @description The user has two-factor authentication: send a code with the challenge token to POST /auth/signin/2fa. */
+            twoFactorRequired?: boolean;
+            /** @description The organization requires two-factor authentication and the user has not set it up: set it up with POST /auth/signin/2fa/setup and /auth/signin/2fa/setup/confirm. */
+            twoFactorSetupRequired?: boolean;
+            /** @description Single-use token of the second step. */
+            challengeToken?: string;
+            /** @description Seconds until the challenge token expires. */
+            challengeExpiresIn?: number;
+            /** @description The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete. */
+            mfa?: components["schemas"]["MfaChallengeDto"];
+            /** @description Methods available for the second step (deprecated, use mfa.methods). */
+            availableMethods?: components["schemas"]["MfaMethodDescriptorDto"][];
+            /** @description The method to show first (deprecated, use mfa.defaultMethod). */
+            defaultMethod?: string;
+            /** @description The new single-use recovery codes. Shown once. */
+            recoveryCodes: string[];
         };
         AuthMetaResponseDto: {
             /** @description Whether signup is disabled */
             signupDisabled: boolean;
             /** @description Whether sign-in with Google is enabled */
             googleEnabled: boolean;
+        };
+        TwoFactorSetupResponseDto: {
+            /**
+             * @description The new secret, base32, for entering it by hand.
+             * @example JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP
+             */
+            secret: string;
+            /**
+             * @description otpauth:// URI to show as a QR code.
+             * @example otpauth://totp/Bigcapital:user%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=Bigcapital&algorithm=SHA1&digits=6&period=30
+             */
+            otpauthUrl: string;
+        };
+        MfaPrepareResponseDto: {
+            /** @enum {string} */
+            method: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /** @description The method is ready for its credential. */
+            ready: boolean;
         };
         AuthSigninDto: {
             /**
@@ -5687,6 +5985,72 @@ export interface components {
              * @example true
              */
             rememberMe?: boolean;
+        };
+        TwoFactorSigninDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code?: string;
+            /**
+             * @description One of the recovery codes, instead of `code`.
+             * @example k7m2-q9xd-3fha-p8tw
+             */
+            recoveryCode?: string;
+        };
+        MfaVerifyDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /**
+             * @description 6-digit code from the authenticator app or email.
+             * @example 123456
+             */
+            code?: string;
+            /**
+             * @description One of the recovery codes, instead of `code`.
+             * @example k7m2-q9xd-3fha-p8tw
+             */
+            recoveryCode?: string;
+        };
+        MfaPrepareDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method: "totp" | "recovery_code" | "email_otp" | "webauthn";
+        };
+        MfaSetupStartDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method?: "totp" | "recovery_code" | "email_otp" | "webauthn";
+        };
+        MfaSetupConfirmDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method?: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code: string;
+        };
+        TwoFactorSigninSetupDto: {
+            /** @description The challenge token returned by POST /auth/signin with two_factor_setup_required. */
+            challengeToken: string;
+        };
+        TwoFactorSigninSetupConfirmDto: {
+            /** @description The challenge token returned by POST /auth/signin with two_factor_setup_required. */
+            challengeToken: string;
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code: string;
         };
         AuthSignupDto: {
             /**
@@ -5821,6 +6185,52 @@ export interface components {
              * @example My API Key
              */
             name?: string;
+        };
+        TwoFactorStatusResponseDto: {
+            /** @description Whether two-factor authentication is on. */
+            enabled: boolean;
+            /**
+             * Format: date-time
+             * @description When it was turned on.
+             */
+            enabledAt: string | null;
+            /** @description Unused recovery codes left. */
+            recoveryCodesRemaining: number;
+            /** @description A setup was started and not confirmed yet. */
+            pendingSetup: boolean;
+        };
+        TwoFactorRecoveryCodesResponseDto: {
+            /** @description New single-use recovery codes. Shown once. */
+            recoveryCodes: string[];
+        };
+        TwoFactorConfirmSetupDto: {
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code: string;
+        };
+        TwoFactorVerifyDto: {
+            /** @description The current password of the user. */
+            password: string;
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code?: string;
+            /** @description One of the recovery codes, instead of `code`. */
+            recoveryCode?: string;
+        };
+        OrganizationTwoFactorResponseDto: {
+            /** @description Whether the organization requires two-factor authentication. */
+            required: boolean;
+        };
+        OrganizationTwoFactorDto: {
+            /**
+             * @description Require two-factor authentication for every user of the organization.
+             * @example true
+             */
+            required: boolean;
         };
         ItemErrorResponseDto: {
             /**
@@ -19556,13 +19966,178 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Sign-in successful. Returns access token and tenant/organization IDs. */
+            /** @description Sign-in successful. Returns access token and tenant/organization IDs. When the user has two-factor authentication (or the organization requires it and the user has none yet), returns two_factor_required (or two_factor_setup_required) and a challenge_token instead of the access token. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinTwoFactor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorSigninDto"];
+            };
+        };
+        responses: {
+            /** @description The same response as a sign-in without two-factor. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaVerify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaVerifyDto"];
+            };
+        };
+        responses: {
+            /** @description The same response as a sign-in without two-factor. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaPrepare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaPrepareDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaPrepareResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaSetupStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaSetupStartDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorSetupResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaSetupConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaSetupConfirmDto"];
+            };
+        };
+        responses: {
+            /** @description The sign-in response plus recovery_codes (shown once). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninSetupConfirmResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinTwoFactorSetup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorSigninSetupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorSetupResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinTwoFactorSetupConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorSigninSetupConfirmDto"];
+            };
+        };
+        responses: {
+            /** @description The sign-in response plus recovery_codes (shown once). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninSetupConfirmResponseDto"];
                 };
             };
         };
@@ -19838,6 +20413,163 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiKeyListItemDto"][];
+                };
+            };
+        };
+    };
+    TwoFactorController_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorStatusResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_startSetup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorSetupResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_confirmSetup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorConfirmSetupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorRecoveryCodesResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_regenerateRecoveryCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorVerifyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorRecoveryCodesResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_disable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorVerifyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationTwoFactorController_get: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationTwoFactorResponseDto"];
+                };
+            };
+        };
+    };
+    OrganizationTwoFactorController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationTwoFactorDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationTwoFactorResponseDto"];
                 };
             };
         };
