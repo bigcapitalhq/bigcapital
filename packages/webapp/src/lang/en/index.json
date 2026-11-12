@@ -1589,6 +1589,8 @@
   "item.error.you_could_not_delete_item_has_associated": "You cannot delete item that has associated transactions",
   "customer.link.customer_details": "Customer details ({amount})",
   "bad_debt.dialog.written_off_amount": "Written-off amount",
+  "bad_debt.dialog.written_off_date": "Write-off date",
+  "bad_debt.dialog.date_before_invoice_date": "The write-off date can't be before the invoice date.",
   "bad_debt.dialog.bad_debt": "Bad debt",
   "bad_debt.dialog.cancel_bad_debt": "Cancel bad debt",
   "bad_debt.dialog.header_note": "The seller can charge the amount of an invoice to the bad debt expense account when it is certain that the invoice will not be paid.",

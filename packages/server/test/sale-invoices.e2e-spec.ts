@@ -1,6 +1,7 @@
 import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
+import { authHeaders, cancelTransactionsLock, fetchLegs } from './_utils/gl';
 
 let customerId;
 let itemId;
@@ -203,6 +204,105 @@ describe('Sale Invoices (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+  });
+
+  describe('write-off date', () => {
+    const createInvoice = async (): Promise<number> => {
+      const response = await request(app.getHttpServer())
+        .post('/sale-invoices')
+        .set(authHeaders())
+        .send(requestSaleInvoiceBody())
+        .expect(201);
+
+      return response.body.id;
+    };
+
+    const writeOff = (invoiceId: number, body: Record<string, unknown>) =>
+      request(app.getHttpServer())
+        .post(`/sale-invoices/${invoiceId}/writeoff`)
+        .set(authHeaders())
+        .send(body);
+
+    it('writes off on the given date', async () => {
+      const invoiceId = await createInvoice();
+
+      await writeOff(invoiceId, {
+        expenseAccountId: 1024,
+        date: '2023-03-15',
+        reason: 'Write off reason',
+      }).expect(200);
+
+      const invoice = await request(app.getHttpServer())
+        .get(`/sale-invoices/${invoiceId}`)
+        .set(authHeaders())
+        .expect(200);
+
+      expect(invoice.body.writtenoff_at).toBe('2023-03-15');
+
+      const legs = await fetchLegs('InvoiceWriteOff', invoiceId);
+
+      expect(legs.length).toBeGreaterThan(0);
+      expect(legs.every((leg) => leg.date === '2023-03-15')).toBe(true);
+    });
+
+    it('refuses a write-off date before the invoice date', async () => {
+      const invoiceId = await createInvoice();
+
+      const response = await writeOff(invoiceId, {
+        expenseAccountId: 1024,
+        date: '2022-12-31',
+        reason: 'Write off reason',
+      }).expect(400);
+
+      expect(response.body.errors[0].type).toBe(
+        'SALE_INVOICE_WRITEOFF_DATE_BEFORE_INVOICE_DATE',
+      );
+    });
+
+    it('refuses a write-off without an expense account', async () => {
+      const invoiceId = await createInvoice();
+
+      await writeOff(invoiceId, { date: '2023-03-15' }).expect(400);
+    });
+
+    describe('with transactions locked', () => {
+      afterAll(() => cancelTransactionsLock());
+
+      it('writes off an invoice of a locked period in an open period', async () => {
+        const invoiceId = await createInvoice();
+
+        await request(app.getHttpServer())
+          .put('/transactions-locking/lock')
+          .set(authHeaders())
+          .send({
+            module: 'all',
+            lock_to_date: '2023-02-01',
+            reason: 'Write-off e2e test',
+          })
+          .expect(200);
+
+        const lockedResponse = await writeOff(invoiceId, {
+          expenseAccountId: 1024,
+          date: '2023-01-15',
+          reason: 'Write off reason',
+        }).expect(400);
+
+        expect(lockedResponse.body.errors[0].type).toBe(
+          'TRANSACTIONS_DATE_LOCKED',
+        );
+
+        await writeOff(invoiceId, {
+          expenseAccountId: 1024,
+          date: '2023-03-15',
+          reason: 'Write off reason',
+        }).expect(200);
+
+        await request(app.getHttpServer())
+          .post(`/sale-invoices/${invoiceId}/cancel-writeoff`)
+          .set(authHeaders())
+          .expect(200);
+      });
+    });
   });
 
   it('/sale-invoices/:id/deliver (PUT)', async () => {

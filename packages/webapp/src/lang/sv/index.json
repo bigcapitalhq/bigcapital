@@ -1497,6 +1497,8 @@
   "item.error.you_could_not_delete_item_has_associated": "Du kan inte ta bort ett objekt som har associerade transaktioner",
   "customer.link.customer_details": "Uppgifter om kunden ({amount})",
   "bad_debt.dialog.written_off_amount": "Avskrivet belopp",
+  "bad_debt.dialog.written_off_date": "Avskrivningsdatum",
+  "bad_debt.dialog.date_before_invoice_date": "Avskrivningsdatumet kan inte vara före fakturadatumet.",
   "bad_debt.dialog.bad_debt": "Osäkra fordringar",
   "bad_debt.dialog.cancel_bad_debt": "Annullering av osäker fordran",
   "bad_debt.dialog.header_note": "Säljaren kan debitera fakturabeloppet på kostnadskontot för osäkra fordringar när det är säkert att fakturan inte kommer att betalas.",

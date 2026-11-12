@@ -44,7 +44,7 @@ export class SaleInvoice extends TenantBaseModel {
 
   public writtenoffExpenseAccountId: number;
   public writtenoffAmount: number;
-  public writtenoffAt: Date;
+  public writtenoffAt: Date | string;
 
   public discountType: DiscountType;
   public discount: number;

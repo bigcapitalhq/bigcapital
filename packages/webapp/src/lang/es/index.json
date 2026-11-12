@@ -1523,6 +1523,8 @@
   "item.error.you_could_not_delete_item_has_associated": "No se pudo eliminar el artículo que tiene transacciones asociadas.",
   "customer.link.customer_details": "Detalles del cliente ({amount})",
   "bad_debt.dialog.written_off_amount": "Monto cancelado",
+  "bad_debt.dialog.written_off_date": "Fecha de cancelación",
+  "bad_debt.dialog.date_before_invoice_date": "La fecha de cancelación no puede ser anterior a la fecha de la factura.",
   "bad_debt.dialog.bad_debt": "Deuda incobrable",
   "bad_debt.dialog.cancel_bad_debt": "Cancelar deuda incobrable",
   "bad_debt.dialog.header_note": "El vendedor puede cargar el monto de una factura a la cuenta de gastos por deudas incobrables cuando es seguro que la factura no será pagada.",

@@ -15,6 +15,7 @@ const buildSaleInvoice = (overrides: Record<string, any> = {}) =>
     referenceNo: 'REF-1',
     branchId: 1,
     customerId: 5,
+    writtenoffAt: '2023-01-01',
     writtenoffAmountLocal: 1000,
     writtenoffExpenseAccountId: BAD_DEBT_ACCOUNT_ID,
     writtenoffExpenseAccount: { accountNormal: AccountNormal.DEBIT },
@@ -43,6 +44,20 @@ describe('SaleInvoiceWriteoffGL', () => {
 
     expect(expenseEntry.debit).toBe(1000);
     expect(expenseEntry.credit).toBe(0);
+  });
+
+  it('dates the entries on the write-off date, not the invoice date', () => {
+    const entries = buildLedger(
+      buildSaleInvoice({
+        invoiceDate: '2023-01-01',
+        writtenoffAt: '2023-03-15',
+      }),
+    ).getEntries();
+
+    expect(entries.map((entry) => entry.date)).toEqual([
+      '2023-03-15',
+      '2023-03-15',
+    ]);
   });
 
   it('flags every ledger entry as accrual basis', () => {
