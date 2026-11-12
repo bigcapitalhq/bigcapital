@@ -6,6 +6,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 @Injectable()
 export class GetAccountTransactionsService {
@@ -36,6 +37,9 @@ export class GetAccountTransactionsService {
       .query()
       .onBuild((query) => {
         query.orderBy('date', 'DESC');
+
+        // Cash-basis rows repeat accrual lines; the account balance skips them.
+        query.modify('filterByBasis', AccountingBasis.Accrual);
 
         if (filter.accountId) {
           query.where('account_id', filter.accountId);
