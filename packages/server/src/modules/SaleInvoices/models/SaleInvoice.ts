@@ -496,12 +496,16 @@ export class SaleInvoice extends TenantBaseModel {
       },
 
       dueInvoicesFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft invoices are not yet delivered, hence not receivables.
+        query.modify('delivered');
         query.modify('dueInvoices');
         query.modify('notOverdue', asDate);
         query.modify('fromDate', asDate);
       },
 
       overdueInvoicesFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft invoices are not yet delivered, hence not receivables.
+        query.modify('delivered');
         query.modify('dueInvoices');
         query.modify('overdue', asDate);
         query.modify('fromDate', asDate);
