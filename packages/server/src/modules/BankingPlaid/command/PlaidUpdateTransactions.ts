@@ -3,6 +3,7 @@ import { PlaidSyncDb } from './PlaidSyncDB';
 import { PlaidFetchedTransactionsUpdates } from '../types/BankingPlaid.types';
 import { PlaidItem } from '../models/PlaidItem';
 import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import {
   CountryCode,
@@ -21,6 +22,7 @@ export class PlaidUpdateTransactions {
    * @param {UnitOfWork} uow - Unit of work.
    * @param {TenantModelProxy<typeof PlaidItem>} plaidItemModel - Plaid item model.
    * @param {PlaidApi} plaidClient - Plaid client.
+   * @param {ConfigService} configService - Config service.
    */
   constructor(
     private readonly plaidSync: PlaidSyncDb,
@@ -31,6 +33,8 @@ export class PlaidUpdateTransactions {
 
     @Inject(PLAID_CLIENT)
     private readonly plaidClient: PlaidApi,
+
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -92,7 +96,8 @@ export class PlaidUpdateTransactions {
       data: { institution },
     } = await this.plaidClient.institutionsGetById({
       institution_id: item.institution_id,
-      country_codes: [CountryCode.Us, CountryCode.Gb],
+      country_codes:
+        this.configService.get<CountryCode[]>('plaid.countryCodes'),
     });
     // Sync bank accounts.
     await this.plaidSync.syncBankAccounts(accounts, institution, item, trx);
