@@ -6,11 +6,10 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { Popover2 } from '@blueprintjs/popover2';
+import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { getBatchAllocationsLabel } from './SaleBatchAllocationsPopover';
 import type { Batch } from '@/hooks/query/batches/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import { FormattedMessage as T } from '@/components';
@@ -175,6 +174,26 @@ export function PurchaseBatchAllocationsPopover({
       minimal={true}
       disabled={disabled}
       popoverClassName={'batch-allocations-popover'}
+      renderTarget={(targetProps) => (
+        <Tooltip2
+          content={intl.get('batch.allocate.purchase_tooltip')}
+          placement={'top'}
+          disabled={isOpen}
+        >
+          <Button
+            {...targetProps}
+            small={true}
+            minimal={true}
+            icon={'full-stacked-chart'}
+            intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
+            aria-label={intl.get('batch.allocate.purchase_tooltip')}
+            onClick={(event) => {
+              event.stopPropagation();
+              targetProps.onClick?.(event);
+            }}
+          />
+        </Tooltip2>
+      )}
       content={
         <div
           className={'batch-allocations batch-allocations--purchase'}
@@ -364,22 +383,6 @@ export function PurchaseBatchAllocationsPopover({
           </div>
         </div>
       }
-    >
-      <Button
-        small={true}
-        minimal={true}
-        icon={'add'}
-        intent={allocations?.length ? Intent.SUCCESS : Intent.PRIMARY}
-        onClick={(event) => {
-          event.stopPropagation();
-          setIsOpen(true);
-        }}
-        text={
-          allocations?.length
-            ? getBatchAllocationsLabel(allocations)
-            : intl.get('batch.allocate.add_batches')
-        }
-      />
-    </Popover2>
+    />
   );
 }

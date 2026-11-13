@@ -1,5 +1,5 @@
 import { Button, Intent, NumericInput, Tag } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { Batch } from '@/hooks/query/batches/queries';
@@ -23,26 +23,6 @@ interface BatchRow {
 const toNumber = (value: unknown) => {
   const number = Number(value);
   return Number.isFinite(number) ? number : 0;
-};
-
-/**
- * Builds a concise label describing the entry batch allocations.
- */
-export const getBatchAllocationsLabel = (
-  allocations?: ItemEntryBatchAllocation[],
-) => {
-  if (!allocations?.length) {
-    return intl.get('batch.select.button');
-  }
-  if (allocations.length === 1) {
-    const allocation = allocations[0];
-    return `${allocation.batch?.batchNumber ?? `#${allocation.batchId}`} (${
-      allocation.quantity
-    })`;
-  }
-  return intl.get('batch.select.batches_count', {
-    count: allocations.length,
-  });
 };
 
 /**
@@ -169,6 +149,26 @@ export function SaleBatchAllocationsPopover({
       minimal={true}
       disabled={disabled}
       popoverClassName={'batch-allocations-popover'}
+      renderTarget={(targetProps) => (
+        <Tooltip2
+          content={intl.get('batch.select.tooltip')}
+          placement={'top'}
+          disabled={isOpen}
+        >
+          <Button
+            {...targetProps}
+            small={true}
+            minimal={true}
+            icon={'full-stacked-chart'}
+            intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
+            aria-label={intl.get('batch.select.tooltip')}
+            onClick={(event) => {
+              event.stopPropagation();
+              targetProps.onClick?.(event);
+            }}
+          />
+        </Tooltip2>
+      )}
       content={
         <div
           className={'batch-allocations'}
@@ -319,18 +319,6 @@ export function SaleBatchAllocationsPopover({
           </div>
         </div>
       }
-    >
-      <Button
-        small={true}
-        minimal={true}
-        icon={'selection'}
-        intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
-        onClick={(event) => {
-          event.stopPropagation();
-          setIsOpen(true);
-        }}
-        text={getBatchAllocationsLabel(allocations)}
-      />
-    </Popover2>
+    />
   );
 }

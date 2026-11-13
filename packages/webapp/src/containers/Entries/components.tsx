@@ -133,7 +133,7 @@ interface BatchEntryCellProps {
 }
 
 /**
- * Batch entry cell used by purchase/sale transaction lines.
+ * Batch entry button used by purchase/sale transaction lines.
  */
 export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
   const { index, original } = row;
@@ -182,11 +182,17 @@ export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
 }
 
 /**
- * Batch header cell.
+ * Quantity cell with the batch allocation trigger on the left.
  */
-const BatchHeaderCell = () => {
-  return <T id={'batch.label'} />;
-};
+function BatchQuantityCell(props: any) {
+  return (
+    <div className={'batch-quantity-cell'}>
+      <BatchEntryCell row={props.row} payload={props.payload} />
+      <NumericInputCell {...props} />
+    </div>
+  );
+}
+BatchQuantityCell.cellType = NumericInputCell.cellType;
 
 /**
  * Retrieve editable items entries columns.
@@ -218,9 +224,9 @@ export function useEditableItemsEntriesColumns() {
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
-        Cell: NumericInputCell,
+        Cell: batchMode ? BatchQuantityCell : NumericInputCell,
         disableSortBy: true,
-        width: 70,
+        width: batchMode ? 120 : 70,
         align: Align.Right,
       },
       {
@@ -231,20 +237,6 @@ export function useEditableItemsEntriesColumns() {
         width: 70,
         align: Align.Right,
       },
-      ...(batchMode
-        ? [
-            {
-              Header: BatchHeaderCell,
-              id: 'batch',
-              accessor: (row: { batches?: unknown[] }) =>
-                row.batches?.length ?? 0,
-              Cell: BatchEntryCell,
-              disableSortBy: true,
-              disableResizing: true,
-              width: 130,
-            },
-          ]
-        : []),
       ...(enableTaxRates
         ? [
             {

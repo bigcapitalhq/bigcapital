@@ -144,6 +144,23 @@
   gap: 2px;
 }
 
+.batch-quantity-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+
+  .bp4-form-group {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  > .bp4-button {
+    flex: 0 0 auto;
+  }
+}
+
 .batch-details-filters {
   display: flex;
   align-items: flex-end;

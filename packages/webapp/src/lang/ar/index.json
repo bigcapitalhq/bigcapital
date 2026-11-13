@@ -2184,6 +2184,8 @@
   "batch.select.apply": "تطبيق",
   "batch.select.clear": "إزالة الدفعة",
   "batch.select.button": "اختر دفعة",
+  "batch.select.tooltip": "اختر الدفعات وخصص الكميات",
+  "batch.allocate.purchase_tooltip": "إضافة أو تعديل دفعات هذا البند",
   "batch.tab.label": "الدفعات",
   "batch.tab.title": "الدفعات",
   "batch.tab.description": "تتبّع الكميات المستلمة والمباعة لكل دفعة من هذا الصنف.",

@@ -2620,6 +2620,8 @@
   "batch.select.apply": "Apply",
   "batch.select.clear": "Remove batch",
   "batch.select.button": "Select batch",
+  "batch.select.tooltip": "Select batches and allocate quantities",
+  "batch.allocate.purchase_tooltip": "Add or edit batches for this line",
   "batch.tab.label": "Batches",
   "batch.tab.title": "Batches",
   "batch.tab.description": "Track the quantities received and sold for each batch of this item.",
