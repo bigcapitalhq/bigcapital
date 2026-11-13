@@ -1,7 +1,7 @@
 import React from 'react';
 import { BatchDetailsActionsBar } from './BatchDetailsActionsBar';
 import { BatchDetailsBody } from './BatchDetailsBody';
-import { BatchDetailsFilters } from './BatchDetailsFilters';
+import { BatchDetailsHeader } from './BatchDetailsHeader';
 import { BatchDetailsProvider } from './BatchDetailsProvider';
 import { useBatchDetailsQuery } from './utils';
 import { DashboardPageContent, FinancialStatement } from '@/components';
@@ -17,6 +17,7 @@ interface BatchDetailsFilterValues {
  */
 export function BatchDetails() {
   const { query, setLocationQuery } = useBatchDetailsQuery();
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = React.useState(false);
 
   const handleFilterSubmit = (values: BatchDetailsFilterValues) => {
     setLocationQuery({
@@ -28,12 +29,17 @@ export function BatchDetails() {
 
   return (
     <BatchDetailsProvider query={query}>
-      <BatchDetailsActionsBar />
+      <BatchDetailsActionsBar
+        isFilterDrawerOpen={isFilterDrawerOpen}
+        onToggleFilterDrawer={() => setIsFilterDrawerOpen((open) => !open)}
+      />
       <DashboardPageContent>
         <FinancialStatement>
-          <BatchDetailsFilters
-            initialValues={query}
-            onSubmit={handleFilterSubmit}
+          <BatchDetailsHeader
+            isOpen={isFilterDrawerOpen}
+            pageFilter={query}
+            onSubmitFilter={handleFilterSubmit}
+            onClose={() => setIsFilterDrawerOpen(false)}
           />
           <BatchDetailsBody />
         </FinancialStatement>
