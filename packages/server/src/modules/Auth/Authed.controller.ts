@@ -8,8 +8,8 @@ import {
 } from '@nestjs/swagger';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
 import { Controller, Get, Post } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import { TenantAgnosticRoute } from '../Tenancy/TenancyGlobal.guard';
+import { AuthThrottle } from '../App/AppThrottle.throttlers';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { IgnoreUserVerifiedRoute } from './guards/EnsureUserVerified.guard';
 import { AuthedAccountResponseDto } from './dtos/AuthedAccountResponse.dto';
@@ -19,7 +19,7 @@ import { AuthedAccountResponseDto } from './dtos/AuthedAccountResponse.dto';
 @ApiExtraModels(AuthedAccountResponseDto)
 @TenantAgnosticRoute()
 @IgnoreUserVerifiedRoute()
-@Throttle({ auth: {} })
+@AuthThrottle()
 export class AuthedController {
   constructor(
     private readonly getAuthedAccountService: GetAuthenticatedAccount,

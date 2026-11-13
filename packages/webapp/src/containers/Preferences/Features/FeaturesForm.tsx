@@ -62,6 +62,19 @@ export function FeaturesForm() {
         />
       </FFormGroup>
 
+      {/* ----------- Recurring Journals ----------- */}
+      <FFormGroup
+        name={'features.recurringJournals'}
+        inline={true}
+        helperText={<T id={'features.recurring_journals.helper_text'} />}
+      >
+        <FSwitch
+          name={'features.recurringJournals'}
+          labelElement={<T id={'features.recurring_journals'} />}
+          large={true}
+        />
+      </FFormGroup>
+
       <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />

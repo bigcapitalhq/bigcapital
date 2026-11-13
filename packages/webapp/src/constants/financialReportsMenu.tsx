@@ -183,6 +183,13 @@ export const financialReportMenus: FinancialSection[] = [
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
       },
+      {
+        title: <T id={'inventory_summary'} />,
+        desc: <T id={'summerize_the_stock_movements_of_each_inventory_item'} />,
+        link: '/financial-reports/inventory-summary',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_INVENTORY_SUMMARY,
+      },
     ],
   },
   {

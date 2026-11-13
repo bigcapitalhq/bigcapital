@@ -81,6 +81,7 @@ export interface IInventoryTransactionRecord {
   entryId?: number;
   createdAt?: Date;
   warehouseId?: number;
+  branchId?: number | null;
   meta?: IInventoryTransactionMeta;
 }
 

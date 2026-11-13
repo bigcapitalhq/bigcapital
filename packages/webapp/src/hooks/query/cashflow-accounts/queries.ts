@@ -24,6 +24,7 @@ import { useApiFetcher } from '../../useRequest';
 import { accountsKeys } from '../accounts/query-keys';
 import { customersKeys } from '../customers/query-keys';
 import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { getNextPageFromPagination } from '../utils/infinite-pagination';
 import { vendorsKeys } from '../vendors/query-keys';
 import { cashflowAccountsKeys } from './query-keys';
 import type {
@@ -158,7 +159,7 @@ type AccountTransactionsInfinityPage = Awaited<
 >;
 type AccountUncategorizedTransactionsInfinityPage = Awaited<
   ReturnType<typeof fetchAccountUncategorizedTransactions>
-> & { pagination?: { nextPage?: number } };
+>;
 
 export function useAccountTransactionsInfinity(
   accountId: number,
@@ -192,7 +193,7 @@ export function useAccountTransactionsInfinity(
         page: pageParam,
       }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage,
+    getNextPageParam: getNextPageFromPagination,
   });
 }
 
@@ -224,9 +225,9 @@ export function useAccountUncategorizedTransactionsInfinity(
       fetchAccountUncategorizedTransactions(fetcher, accountId, {
         ...query,
         page: pageParam,
-      }) as Promise<AccountUncategorizedTransactionsInfinityPage>,
+      }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage,
+    getNextPageParam: getNextPageFromPagination,
   });
 }
 

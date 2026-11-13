@@ -5,6 +5,7 @@ import {
   groupUncategorizedTransactions,
 } from './_utils';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { UncategorizedBankTransaction } from '../../models/UncategorizedBankTransaction';
 import { MatchedBankTransaction } from '@/modules/BankingMatching/models/MatchedBankTransaction';
@@ -65,6 +66,8 @@ export class GetBankAccountTransactionsRepository {
     const { results, pagination } = await this.accountTransactionModel()
       .query()
       .where('account_id', this.query.accountId)
+      // Cash-basis rows repeat the accrual bank line; the balance skips them.
+      .modify('filterByBasis', AccountingBasis.Accrual)
       .orderBy([
         { column: 'date', order: 'desc' },
         { column: 'created_at', order: 'desc' },
@@ -87,6 +90,7 @@ export class GetBankAccountTransactionsRepository {
     const openingBalancesSubquery = this.accountTransactionModel()
       .query()
       .where('account_id', this.query.accountId)
+      .modify('filterByBasis', AccountingBasis.Accrual)
       .orderBy([
         { column: 'date', order: 'desc' },
         { column: 'created_at', order: 'desc' },

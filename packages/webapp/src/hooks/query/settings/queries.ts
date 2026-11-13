@@ -1,4 +1,5 @@
 import {
+  camelToSnakeCase,
   fetchSettingsGrouped,
   fetchSettingsInvoices,
   fetchSettingsEstimates,
@@ -23,6 +24,7 @@ import {
   fetchSettingSMSNotification,
   editSettingSMSNotification,
   editSettings,
+  snakeToCamelCase,
 } from '@bigcapital/sdk-ts';
 import {
   useMutation,
@@ -30,9 +32,11 @@ import {
   useQueryClient,
   UseMutationOptions,
   UseQueryOptions,
+  QueryClient,
+  QueryKey,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { settingsKeys } from './query-keys';
+import { settingsGroupKeys, settingsKeys } from './query-keys';
 import type {
   AllSettings,
   EditSmsNotificationValues,
@@ -42,16 +46,132 @@ import type {
   SmsNotificationSettingsListResponse,
 } from '@bigcapital/sdk-ts';
 
+interface SettingOption {
+  group: string;
+  key: string;
+  value: unknown;
+}
+
+interface SaveSettingsMutationContext {
+  previousQueries: Array<[QueryKey, unknown]>;
+}
+
+/**
+ * Retrieves the settings options from the mutation payload.
+ */
+const getSettingsOptions = (values: SaveSettingsBody): SettingOption[] => {
+  const options = (values as { options?: unknown }).options;
+  return Array.isArray(options) ? (options as SettingOption[]) : [];
+};
+
+/**
+ * Normalizes a settings option to the snake_case names expected by the API.
+ */
+const normalizeSettingsOption = ({
+  group,
+  key,
+  value,
+}: SettingOption): SettingOption => ({
+  group: camelToSnakeCase(group),
+  key: camelToSnakeCase(key),
+  value,
+});
+
+/**
+ * Normalizes the mutation payload so callers can use camelCase names while the
+ * API receives snake_case ones.
+ */
+const normalizeSettingsValues = (
+  values: SaveSettingsBody,
+): SaveSettingsBody => {
+  const options = getSettingsOptions(values);
+
+  return options.length
+    ? { ...values, options: options.map(normalizeSettingsOption) }
+    : values;
+};
+
+/**
+ * Writes the given settings options into the cached settings queries so the UI
+ * reflects the change immediately, before the request is confirmed.
+ */
+const applySettingsOptionsToCache = (
+  queryClient: QueryClient,
+  options: SettingOption[],
+) => {
+  if (!options.length) {
+    return;
+  }
+  // Grouped settings query (`useSettings`).
+  queryClient.setQueryData<AllSettings>(settingsKeys.all(), (oldData) => {
+    if (!oldData) {
+      return oldData;
+    }
+    const nextData = { ...oldData };
+
+    options.forEach(({ group, key, value }) => {
+      const camelGroup = snakeToCamelCase(group);
+      const camelKey = snakeToCamelCase(key);
+
+      nextData[camelGroup] = {
+        ...(nextData[camelGroup] ?? {}),
+        [camelKey]: value,
+      };
+    });
+    return nextData;
+  });
+
+  // Dedicated group queries (`useSettingsInvoices`, `useSettingsItems`, ...).
+  options.forEach(({ group, key, value }) => {
+    const getGroupQueryKey = settingsGroupKeys[group];
+    if (!getGroupQueryKey) {
+      return;
+    }
+    queryClient.setQueryData<SettingsGroup>(getGroupQueryKey(), (oldData) =>
+      oldData ? { ...oldData, [snakeToCamelCase(key)]: value } : oldData,
+    );
+  });
+};
+
 export function useSaveSettings(
-  props?: UseMutationOptions<void, Error, SaveSettingsBody>,
+  props?: UseMutationOptions<
+    void,
+    Error,
+    SaveSettingsBody,
+    SaveSettingsMutationContext
+  >,
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
+
   return useMutation({
     ...props,
-    mutationFn: (values: SaveSettingsBody) => editSettings(fetcher, values),
-    onSuccess: () => {
+    mutationFn: (values: SaveSettingsBody) =>
+      editSettings(fetcher, normalizeSettingsValues(values)),
+    onMutate: async (values: SaveSettingsBody, context) => {
+      await queryClient.cancelQueries({ queryKey: settingsKeys.all() });
+
+      const previousQueries = queryClient.getQueriesData({
+        queryKey: settingsKeys.all(),
+      });
+      applySettingsOptionsToCache(
+        queryClient,
+        getSettingsOptions(values).map(normalizeSettingsOption),
+      );
+
+      await props?.onMutate?.(values, context);
+
+      return { previousQueries };
+    },
+    onError: (error, values, _onMutateResult, context) => {
+      _onMutateResult?.previousQueries.forEach(([queryKey, queryData]) => {
+        queryClient.setQueryData(queryKey, queryData);
+      });
+      props?.onError?.(error, values, _onMutateResult, context);
+    },
+    onSettled: (data, error, values, _onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: settingsKeys.all() });
+      props?.onSettled?.(data, error, values, _onMutateResult, context);
     },
   });
 }

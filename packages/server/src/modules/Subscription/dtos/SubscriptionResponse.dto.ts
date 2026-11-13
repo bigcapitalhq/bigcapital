@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
- * Single system subscription (no Lemon Squeezy data).
+ * Single system subscription (no third-party provider data).
  * Mirrors the output of `GetSubscriptionsTransformer`.
  */
 export class SubscriptionResponseDto {
@@ -10,7 +10,7 @@ export class SubscriptionResponseDto {
 
   @ApiProperty({
     example: 'active',
-    enum: ['active', 'inactive', 'on_trial', 'canceled'],
+    enum: ['active', 'inactive', 'on_trial', 'canceled', 'past_due'],
   })
   status: string;
 
@@ -28,6 +28,19 @@ export class SubscriptionResponseDto {
 
   @ApiProperty({ example: false })
   ended: boolean;
+
+  @ApiProperty({
+    description: 'Whether the subscription will cancel at the period end.',
+    example: false,
+  })
+  cancelAtPeriodEnd: boolean;
+
+  @ApiPropertyOptional({
+    description: 'The raw Stripe subscription status.',
+    example: 'active',
+    nullable: true,
+  })
+  stripeStatus: string | null;
 
   @ApiProperty({ example: 'succeed', enum: ['succeed', 'failed'] })
   paymentStatus: string;
@@ -53,6 +66,9 @@ export class SubscriptionResponseDto {
   @ApiPropertyOptional({ example: 'Jan 1, 2024', nullable: true })
   endsAtFormatted: string | null;
 
+  @ApiPropertyOptional({ example: 'Jan 1, 2024', nullable: true })
+  startsAtFormatted: string | null;
+
   @ApiPropertyOptional({ example: null, nullable: true })
   trialStartsAtFormatted: string | null;
 
@@ -64,6 +80,12 @@ export class SubscriptionResponseDto {
 
   @ApiProperty({ example: 'standard' })
   planSlug: string;
+
+  @ApiPropertyOptional({
+    example: 'Good for service businesses that just started.',
+    nullable: true,
+  })
+  planDescription: string | null;
 
   @ApiProperty({ example: 10 })
   planPrice: number;

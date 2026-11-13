@@ -37,6 +37,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/signin/2fa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Second sign-in step: a code from the authenticator app or a recovery code */
+        post: operations["AuthController_signinTwoFactor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Second sign-in step: verify the credential of the selected method */
+        post: operations["AuthController_signinMfaVerify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare a method before verification, e.g. send an email code or return WebAuthn options */
+        post: operations["AuthController_signinMfaPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/setup/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Required two-factor setup during sign-in: start the setup of a method */
+        post: operations["AuthController_signinMfaSetupStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/mfa/setup/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the required setup with a credential: turns the method on and signs in */
+        post: operations["AuthController_signinMfaSetupConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/2fa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Required two-factor setup during sign-in: returns a new secret and its otpauth URI */
+        post: operations["AuthController_signinTwoFactorSetup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signin/2fa/setup/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the required setup with a code: turns two-factor on and signs in */
+        post: operations["AuthController_signinTwoFactorSetupConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/signup": {
         parameters: {
             query?: never;
@@ -114,6 +233,40 @@ export interface paths {
         };
         /** Get auth metadata (e.g. signup disabled) */
         get: operations["AuthController_meta"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Start sign-in with Google */
+        get: operations["AuthController_googleAuth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/google/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Google OAuth callback */
+        get: operations["AuthController_googleAuthCallback"];
         put?: never;
         post?: never;
         delete?: never;
@@ -200,6 +353,109 @@ export interface paths {
         /** Get all API keys for the current tenant */
         get: operations["AuthApiKeysController_getApiKeys"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Two-factor status of the signed-in user */
+        get: operations["TwoFactorController_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start the setup: returns a new secret and its otpauth URI (pending until confirmed) */
+        post: operations["TwoFactorController_startSetup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/setup/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the setup with a code: turns two-factor on and returns the recovery codes */
+        post: operations["TwoFactorController_confirmSetup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/recovery-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Replace the recovery codes (password and a code required) */
+        post: operations["TwoFactorController_regenerateRecoveryCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/two-factor/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Turn two-factor off (password and a code required) */
+        post: operations["TwoFactorController_disable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/organization/two-factor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Whether the organization requires two-factor authentication */
+        get: operations["OrganizationTwoFactorController_get"];
+        /** Require two-factor authentication for all users (administrators only) */
+        put: operations["OrganizationTwoFactorController_update"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1051,6 +1307,159 @@ export interface paths {
         put?: never;
         /** Generate sharable sale invoice link (private or public) */
         post: operations["SaleInvoicesController_generateSaleInvoiceSharableLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all subscriptions for the current tenant */
+        get: operations["SubscriptionsController_getSubscriptions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the Bigcapital Cloud plan catalog */
+        get: operations["SubscriptionsController_getPlans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/stripe/checkout_session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a Stripe Checkout session for a subscription plan */
+        post: operations["SubscriptionsController_createCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/stripe/portal_session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a Stripe Customer Portal session */
+        post: operations["SubscriptionsController_createPortalSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/stripe/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Synchronize a completed Stripe Checkout session */
+        post: operations["SubscriptionsController_syncCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/change": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change the subscription plan of the current organization */
+        post: operations["SubscriptionsController_changeSubscriptionPlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel the current organization subscription */
+        post: operations["SubscriptionsController_cancelSubscription"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume the current organization subscription */
+        post: operations["SubscriptionsController_resumeSubscription"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/stripe-billing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Listen to Stripe Billing webhooks */
+        post: operations["StripeBillingWebhooksController_handleWebhook"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2223,6 +2632,128 @@ export interface paths {
         put?: never;
         /** Deletes multiple vendors in bulk. */
         post: operations["VendorsController_bulkDeleteVendors"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves recurring invoice profiles. */
+        get: operations["RecurringInvoicesController_getRecurringInvoices"];
+        put?: never;
+        /** Creates a new recurring invoice profile. */
+        post: operations["RecurringInvoicesController_createRecurringInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices/state": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the recurring invoice form state. */
+        get: operations["RecurringInvoicesController_getRecurringInvoiceState"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the given recurring invoice. */
+        get: operations["RecurringInvoicesController_getRecurringInvoice"];
+        /** Edits the given recurring invoice. */
+        put: operations["RecurringInvoicesController_editRecurringInvoice"];
+        post?: never;
+        /** Deletes the given recurring invoice. */
+        delete: operations["RecurringInvoicesController_deleteRecurringInvoice"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices/{id}/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pauses the given recurring invoice. */
+        post: operations["RecurringInvoicesController_pauseRecurringInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices/{id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resumes the given recurring invoice. */
+        post: operations["RecurringInvoicesController_resumeRecurringInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices/{id}/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generates an extra invoice immediately without rescheduling. */
+        post: operations["RecurringInvoicesController_generateRecurringInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-invoices/{id}/invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the invoices generated by the recurring profile. */
+        get: operations["RecurringInvoicesController_getRecurringInvoiceInvoices"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -4207,6 +4738,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/inventory-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the inventory summary report */
+        get: operations["InventorySummaryController_getInventorySummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/sales-tax-liability-summary": {
         parameters: {
             query?: never;
@@ -4340,124 +4888,6 @@ export interface paths {
         get: operations["RolesController_getRolePermissionsSchema"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all subscriptions for the current tenant */
-        get: operations["SubscriptionsController_getSubscriptions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription/lemon": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Lemon Squeezy subscription details for the current tenant */
-        get: operations["SubscriptionsController_getLemonSubscriptions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription/lemon/checkout_url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get LemonSqueezy checkout URL */
-        post: operations["SubscriptionsController_getCheckoutUrl"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Cancel the current organization subscription */
-        post: operations["SubscriptionsController_cancelSubscription"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription/resume": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Resume the current organization subscription */
-        post: operations["SubscriptionsController_resumeSubscription"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription/change": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Change the subscription plan of the current organization */
-        post: operations["SubscriptionsController_changeSubscriptionPlan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/webhooks/lemon": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SubscriptionsLemonWebhook_lemonWebhooks"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5250,6 +5680,111 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/recurring-journals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves recurring journal profiles. */
+        get: operations["RecurringJournalsController_getRecurringJournals"];
+        put?: never;
+        /** Creates a new recurring journal profile. */
+        post: operations["RecurringJournalsController_createRecurringJournal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-journals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the given recurring journal. */
+        get: operations["RecurringJournalsController_getRecurringJournal"];
+        /** Edits the given recurring journal. */
+        put: operations["RecurringJournalsController_editRecurringJournal"];
+        post?: never;
+        /** Deletes the given recurring journal. */
+        delete: operations["RecurringJournalsController_deleteRecurringJournal"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-journals/{id}/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pauses the given recurring journal. */
+        post: operations["RecurringJournalsController_pauseRecurringJournal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-journals/{id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resumes the given recurring journal. */
+        post: operations["RecurringJournalsController_resumeRecurringJournal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-journals/{id}/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generates a journal immediately without rescheduling. */
+        post: operations["RecurringJournalsController_generateRecurringJournal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recurring-journals/{id}/journals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the journals generated by the recurring profile. */
+        get: operations["RecurringJournalsController_getRecurringJournalJournals"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/exchange-rates/latest": {
         parameters: {
             query?: never;
@@ -5267,23 +5802,172 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/webhooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the webhooks list. */
+        get: operations["WebhooksController_getWebhooks"];
+        put?: never;
+        /** Create a new webhook. */
+        post: operations["WebhooksController_createWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the webhook details. */
+        get: operations["WebhooksController_getWebhook"];
+        /** Edit the given webhook. */
+        put: operations["WebhooksController_editWebhook"];
+        post?: never;
+        /** Delete the given webhook. */
+        delete: operations["WebhooksController_deleteWebhook"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/{id}/toggle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Toggle the webhook active state. */
+        post: operations["WebhooksController_toggleWebhookActive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/{id}/deliveries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the webhook delivery logs. */
+        get: operations["WebhooksController_getWebhookDeliveries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        MfaMethodDescriptorDto: {
+            /** @enum {string} */
+            id: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /** @enum {string} */
+            kind: "otp" | "recovery_code" | "webauthn";
+        };
+        MfaChallengeDto: {
+            /** @description Single-use token of the second step. */
+            challengeToken: string;
+            /** @description Seconds until the challenge token expires. */
+            expiresIn: number;
+            /** @enum {string} */
+            purpose: "verify" | "setup";
+            /** @description Methods the user can use for this challenge. */
+            methods: components["schemas"]["MfaMethodDescriptorDto"][];
+            /** @enum {string} */
+            defaultMethod?: "totp" | "recovery_code" | "email_otp" | "webauthn";
+        };
         AuthSigninResponseDto: {
-            /** @description JWT access token */
-            accessToken: string;
+            /** @description JWT access token. Missing when a second step is needed (two_factor_required or two_factor_setup_required). */
+            accessToken?: string;
             /** @description Organization ID */
-            organizationId: string;
+            organizationId?: string;
             /** @description Tenant ID */
-            tenantId: number;
+            tenantId?: number;
             /** @description User ID */
-            userId: number;
+            userId?: number;
+            /** @description The user has two-factor authentication: send a code with the challenge token to POST /auth/signin/2fa. */
+            twoFactorRequired?: boolean;
+            /** @description The organization requires two-factor authentication and the user has not set it up: set it up with POST /auth/signin/2fa/setup and /auth/signin/2fa/setup/confirm. */
+            twoFactorSetupRequired?: boolean;
+            /** @description Single-use token of the second step. */
+            challengeToken?: string;
+            /** @description Seconds until the challenge token expires. */
+            challengeExpiresIn?: number;
+            /** @description The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete. */
+            mfa?: components["schemas"]["MfaChallengeDto"];
+            /** @description Methods available for the second step (deprecated, use mfa.methods). */
+            availableMethods?: components["schemas"]["MfaMethodDescriptorDto"][];
+            /** @description The method to show first (deprecated, use mfa.defaultMethod). */
+            defaultMethod?: string;
+        };
+        AuthSigninSetupConfirmResponseDto: {
+            /** @description JWT access token. Missing when a second step is needed (two_factor_required or two_factor_setup_required). */
+            accessToken?: string;
+            /** @description Organization ID */
+            organizationId?: string;
+            /** @description Tenant ID */
+            tenantId?: number;
+            /** @description User ID */
+            userId?: number;
+            /** @description The user has two-factor authentication: send a code with the challenge token to POST /auth/signin/2fa. */
+            twoFactorRequired?: boolean;
+            /** @description The organization requires two-factor authentication and the user has not set it up: set it up with POST /auth/signin/2fa/setup and /auth/signin/2fa/setup/confirm. */
+            twoFactorSetupRequired?: boolean;
+            /** @description Single-use token of the second step. */
+            challengeToken?: string;
+            /** @description Seconds until the challenge token expires. */
+            challengeExpiresIn?: number;
+            /** @description The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete. */
+            mfa?: components["schemas"]["MfaChallengeDto"];
+            /** @description Methods available for the second step (deprecated, use mfa.methods). */
+            availableMethods?: components["schemas"]["MfaMethodDescriptorDto"][];
+            /** @description The method to show first (deprecated, use mfa.defaultMethod). */
+            defaultMethod?: string;
+            /** @description The new single-use recovery codes. Shown once. */
+            recoveryCodes: string[];
         };
         AuthMetaResponseDto: {
             /** @description Whether signup is disabled */
             signupDisabled: boolean;
+            /** @description Whether sign-in with Google is enabled */
+            googleEnabled: boolean;
+        };
+        TwoFactorSetupResponseDto: {
+            /**
+             * @description The new secret, base32, for entering it by hand.
+             * @example JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP
+             */
+            secret: string;
+            /**
+             * @description otpauth:// URI to show as a QR code.
+             * @example otpauth://totp/Bigcapital:user%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=Bigcapital&algorithm=SHA1&digits=6&period=30
+             */
+            otpauthUrl: string;
+        };
+        MfaPrepareResponseDto: {
+            /** @enum {string} */
+            method: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /** @description The method is ready for its credential. */
+            ready: boolean;
         };
         AuthSigninDto: {
             /**
@@ -5301,6 +5985,72 @@ export interface components {
              * @example true
              */
             rememberMe?: boolean;
+        };
+        TwoFactorSigninDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code?: string;
+            /**
+             * @description One of the recovery codes, instead of `code`.
+             * @example k7m2-q9xd-3fha-p8tw
+             */
+            recoveryCode?: string;
+        };
+        MfaVerifyDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /**
+             * @description 6-digit code from the authenticator app or email.
+             * @example 123456
+             */
+            code?: string;
+            /**
+             * @description One of the recovery codes, instead of `code`.
+             * @example k7m2-q9xd-3fha-p8tw
+             */
+            recoveryCode?: string;
+        };
+        MfaPrepareDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method: "totp" | "recovery_code" | "email_otp" | "webauthn";
+        };
+        MfaSetupStartDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method?: "totp" | "recovery_code" | "email_otp" | "webauthn";
+        };
+        MfaSetupConfirmDto: {
+            /** @description The challenge token returned by POST /auth/signin. */
+            challengeToken: string;
+            /** @enum {string} */
+            method?: "totp" | "recovery_code" | "email_otp" | "webauthn";
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code: string;
+        };
+        TwoFactorSigninSetupDto: {
+            /** @description The challenge token returned by POST /auth/signin with two_factor_setup_required. */
+            challengeToken: string;
+        };
+        TwoFactorSigninSetupConfirmDto: {
+            /** @description The challenge token returned by POST /auth/signin with two_factor_setup_required. */
+            challengeToken: string;
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code: string;
         };
         AuthSignupDto: {
             /**
@@ -5435,6 +6185,52 @@ export interface components {
              * @example My API Key
              */
             name?: string;
+        };
+        TwoFactorStatusResponseDto: {
+            /** @description Whether two-factor authentication is on. */
+            enabled: boolean;
+            /**
+             * Format: date-time
+             * @description When it was turned on.
+             */
+            enabledAt: string | null;
+            /** @description Unused recovery codes left. */
+            recoveryCodesRemaining: number;
+            /** @description A setup was started and not confirmed yet. */
+            pendingSetup: boolean;
+        };
+        TwoFactorRecoveryCodesResponseDto: {
+            /** @description New single-use recovery codes. Shown once. */
+            recoveryCodes: string[];
+        };
+        TwoFactorConfirmSetupDto: {
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code: string;
+        };
+        TwoFactorVerifyDto: {
+            /** @description The current password of the user. */
+            password: string;
+            /**
+             * @description 6-digit code from the authenticator app.
+             * @example 123456
+             */
+            code?: string;
+            /** @description One of the recovery codes, instead of `code`. */
+            recoveryCode?: string;
+        };
+        OrganizationTwoFactorResponseDto: {
+            /** @description Whether the organization requires two-factor authentication. */
+            required: boolean;
+        };
+        OrganizationTwoFactorDto: {
+            /**
+             * @description Require two-factor authentication for every user of the organization.
+             * @example true
+             */
+            required: boolean;
         };
         ItemErrorResponseDto: {
             /**
@@ -7946,6 +8742,170 @@ export interface components {
              */
             expiryTime?: string;
         };
+        SubscriptionResponseDto: {
+            /** @example main */
+            slug: string;
+            /**
+             * @example active
+             * @enum {string}
+             */
+            status: "active" | "inactive" | "on_trial" | "canceled" | "past_due";
+            /** @example true */
+            active: boolean;
+            /** @example false */
+            inactive: boolean;
+            /** @example false */
+            onTrial: boolean;
+            /** @example false */
+            canceled: boolean;
+            /** @example false */
+            ended: boolean;
+            /**
+             * @description Whether the subscription will cancel at the period end.
+             * @example false
+             */
+            cancelAtPeriodEnd: boolean;
+            /**
+             * @description The raw Stripe subscription status.
+             * @example active
+             */
+            stripeStatus?: string | null;
+            /**
+             * @example succeed
+             * @enum {string}
+             */
+            paymentStatus: "succeed" | "failed";
+            /**
+             * Format: date-time
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            startsAt?: string | null;
+            /**
+             * Format: date-time
+             * @example 2024-02-01T00:00:00.000Z
+             */
+            endsAt?: string | null;
+            /**
+             * Format: date-time
+             * @example null
+             */
+            canceledAt?: string | null;
+            /**
+             * Format: date-time
+             * @example 2024-01-07T00:00:00.000Z
+             */
+            trialEndsAt?: string | null;
+            /** @example Active */
+            statusFormatted: string;
+            /** @example null */
+            canceledAtFormatted?: string | null;
+            /** @example Jan 1, 2024 */
+            endsAtFormatted?: string | null;
+            /** @example Jan 1, 2024 */
+            startsAtFormatted?: string | null;
+            /** @example null */
+            trialStartsAtFormatted?: string | null;
+            /** @example Jan 7, 2024 */
+            trialEndsAtFormatted?: string | null;
+            /** @example Standard */
+            planName: string;
+            /** @example standard */
+            planSlug: string;
+            /** @example Good for service businesses that just started. */
+            planDescription?: string | null;
+            /** @example 10 */
+            planPrice: number;
+            /** @example USD */
+            planPriceCurrency: string;
+            /** @example $10 */
+            planPriceFormatted: string;
+            /** @example month */
+            planPeriod: string;
+        };
+        SubscriptionsListResponseDto: {
+            subscriptions: components["schemas"]["SubscriptionResponseDto"][];
+        };
+        SubscriptionPlanFeatureResponseDto: {
+            /** @example Unlimited Sale Invoices */
+            text: string;
+            /** @example Feature description */
+            hint?: string;
+            /** @example Feature label */
+            hintLabel?: string;
+        };
+        SubscriptionPlanPriceResponseDto: {
+            /** @example capital-basic-monthly */
+            slug: string;
+            /** @example month */
+            interval: string;
+            /** @example 1 */
+            intervalCount: number;
+            /** @example 10 */
+            amount: number;
+            /** @example $10 */
+            amountFormatted: string;
+            /** @example Per month */
+            priceLabel: string;
+        };
+        SubscriptionPlanGroupResponseDto: {
+            /** @example capital-basic */
+            slug: string;
+            /** @example Capital Basic */
+            name: string;
+            /** @example Good for service businesses that just started. */
+            description: string;
+            features: components["schemas"]["SubscriptionPlanFeatureResponseDto"][];
+            /** @example false */
+            featured: boolean;
+            prices: components["schemas"]["SubscriptionPlanPriceResponseDto"][];
+        };
+        GetSubscriptionPlansResponseDto: {
+            plans: components["schemas"]["SubscriptionPlanGroupResponseDto"][];
+        };
+        StripeCheckoutSessionResponseDto: {
+            /**
+             * @description The hosted Stripe URL to redirect the user to
+             * @example https://checkout.stripe.com/c/pay/cs_test_xxx
+             */
+            url: string;
+            /**
+             * @description Stripe Checkout Session id
+             * @example cs_test_xxx
+             */
+            sessionId: string;
+        };
+        StripeSessionResponseDto: {
+            /**
+             * @description The hosted Stripe URL to redirect the user to
+             * @example https://checkout.stripe.com/c/pay/cs_test_xxx
+             */
+            url: string;
+        };
+        StripeSyncCheckoutSessionResponseDto: {
+            /** @example synced */
+            status: string;
+        };
+        CreateStripeCheckoutSessionBodyDto: {
+            /**
+             * @description The plan slug to subscribe to
+             * @example capital-basic-monthly
+             */
+            planSlug: string;
+        };
+        SyncStripeCheckoutSessionBodyDto: {
+            /**
+             * @description The Stripe Checkout Session id returned in the success URL
+             * @example cs_test_xxx
+             */
+            sessionId: string;
+        };
+        ChangeSubscriptionPlanBodyDto: {
+            /**
+             * @description The target plan slug
+             * @example capital-plus-monthly
+             */
+            planSlug: string;
+        };
         CreatePdfTemplateDto: Record<string, never>;
         EditPdfTemplateDto: Record<string, never>;
         UploadAttachmentDto: {
@@ -10348,6 +11308,351 @@ export interface components {
              */
             skipUndeletable: boolean;
         };
+        RecurringInvoiceStateResponseDto: {
+            /**
+             * @description The ID of the default PDF template for sale invoices
+             * @example 1
+             */
+            defaultTemplateId: number | null;
+        };
+        RecurringInvoiceResponseDto: {
+            /**
+             * @description Recurring invoice ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Customer ID
+             * @example 1
+             */
+            customerId: number;
+            /** @description The customer of the recurring invoice profile */
+            customer?: components["schemas"]["CustomerResponseDto"];
+            /** @description The branch of the recurring invoice profile */
+            branch?: components["schemas"]["BranchLinkDto"];
+            /**
+             * @description Profile name
+             * @example Monthly retainer
+             */
+            profileName: string;
+            /** @description Reference number */
+            referenceNo?: string;
+            /** @description Invoice message */
+            invoiceMessage?: string;
+            /** @description Terms and conditions */
+            termsConditions?: string;
+            /**
+             * @description Currency code
+             * @example USD
+             */
+            currencyCode?: string;
+            /**
+             * @description Exchange rate
+             * @example 1
+             */
+            exchangeRate?: number;
+            /** @description Discount value */
+            discount?: number;
+            /** @description Discount type */
+            discountType?: string;
+            /** @description Adjustment amount */
+            adjustment?: number;
+            /** @description Whether tax is inclusive */
+            isInclusiveTax?: boolean;
+            /** @description Branch ID */
+            branchId?: number;
+            /** @description Warehouse ID */
+            warehouseId?: number;
+            /** @description PDF template ID */
+            pdfTemplateId?: number;
+            /**
+             * @description Profile status
+             * @enum {string}
+             */
+            status: "active" | "paused" | "completed";
+            /**
+             * @description Recurrence frequency
+             * @enum {string}
+             */
+            frequency: "day" | "week" | "month" | "year";
+            /**
+             * @description Repeat interval
+             * @example 1
+             */
+            repeatInterval: number;
+            /**
+             * @description Start date
+             * @example 2026-11-05
+             */
+            startDate: string;
+            /**
+             * @description End date
+             * @example 2027-11-05
+             */
+            endDate?: string;
+            /**
+             * @description Maximum occurrences
+             * @example 12
+             */
+            maxOccurrences?: number;
+            /**
+             * @description Generated occurrences count
+             * @example 3
+             */
+            occurrencesCount: number;
+            /**
+             * @description Next invoice date
+             * @example 2026-12-05
+             */
+            nextInvoiceDate?: string;
+            /**
+             * @description Last generated invoice date
+             * @example 2026-11-05
+             */
+            lastInvoiceDate?: string;
+            /**
+             * @description Due date offset in days
+             * @example 15
+             */
+            dueDays: number;
+            /**
+             * @description Delivery mode
+             * @enum {string}
+             */
+            deliveryMode: "draft" | "email";
+            /** @description Email subject override */
+            emailSubject?: string;
+            /** @description Email message override */
+            emailMessage?: string;
+            /** @description Email CC recipients */
+            emailCc?: string[];
+            /** @description Email BCC recipients */
+            emailBcc?: string[];
+            /** @description Whether the PDF is attached */
+            attachInvoice?: boolean;
+            /** @description Last generation error */
+            lastError?: string;
+            /** @description Consecutive failure count */
+            failureCount?: number;
+            /** @description Recurring invoice line items */
+            entries?: components["schemas"]["ItemEntryDto"][];
+            /** @description Subtotal amount */
+            subtotal?: number;
+            /** @description Tax amount */
+            taxAmount?: number;
+            /** @description Discount amount */
+            discountAmount?: number;
+            /** @description Total amount */
+            total?: number;
+            /** @description Formatted start date */
+            startDateFormatted?: string;
+            /** @description Formatted end date */
+            endDateFormatted?: string;
+            /** @description Formatted next invoice date */
+            nextInvoiceDateFormatted?: string;
+            /** @description Formatted last invoice date */
+            lastInvoiceDateFormatted?: string;
+            /** @description Formatted created date */
+            createdAtFormatted?: string;
+            /** @description Formatted total */
+            totalFormatted?: string;
+            /** @description Formatted subtotal */
+            subtotalFormatted?: string;
+            /** @description Formatted tax amount */
+            taxAmountFormatted?: string;
+            /** @description Formatted discount amount */
+            discountAmountFormatted?: string;
+            /** @description Formatted adjustment amount */
+            adjustmentFormatted?: string;
+        };
+        CreateRecurringInvoiceDto: {
+            /**
+             * @description Customer ID
+             * @example 1
+             */
+            customerId: number;
+            /**
+             * @description Recurring invoice profile name
+             * @example Monthly retainer
+             */
+            profileName: string;
+            /**
+             * @description The first invoice date
+             * @example 2026-11-05
+             */
+            startDate: string;
+            /**
+             * @description Recurrence frequency
+             * @example month
+             * @enum {string}
+             */
+            frequency: "day" | "week" | "month" | "year";
+            /**
+             * @description Repeat every N periods
+             * @default 1
+             * @example 1
+             */
+            repeatInterval: number;
+            /**
+             * @description Optional end date
+             * @example 2027-11-05
+             */
+            endDate?: string;
+            /**
+             * @description Optional maximum number of generated invoices
+             * @example 12
+             */
+            maxOccurrences?: number;
+            /**
+             * @description Due date offset in days from the invoice date
+             * @default 0
+             * @example 15
+             */
+            dueDays: number;
+            /**
+             * @description What to do with generated invoices
+             * @default draft
+             * @enum {string}
+             */
+            deliveryMode: "draft" | "email";
+            /** @description Email subject override */
+            emailSubject?: string;
+            /** @description Email message override */
+            emailMessage?: string;
+            /** @description Email CC recipients */
+            emailCc?: string[];
+            /** @description Email BCC recipients */
+            emailBcc?: string[];
+            /**
+             * @description Whether the generated invoice PDF is attached
+             * @default true
+             */
+            attachInvoice: boolean;
+            /** @description Reference number */
+            referenceNo?: string;
+            /** @description Invoice message */
+            invoiceMessage?: string;
+            /** @description Terms and conditions */
+            termsConditions?: string;
+            /**
+             * @description Exchange rate
+             * @example 1
+             */
+            exchangeRate?: number;
+            /** @description Branch ID */
+            branchId?: number;
+            /** @description Warehouse ID */
+            warehouseId?: number;
+            /** @description PDF template ID */
+            pdfTemplateId?: number;
+            /** @description Whether tax is inclusive */
+            isInclusiveTax?: boolean;
+            /** @description Discount value */
+            discount?: number;
+            /**
+             * @description Discount type
+             * @enum {string}
+             */
+            discountType?: "percentage" | "amount";
+            /** @description Adjustment amount */
+            adjustment?: number;
+            /** @description Recurring invoice line items */
+            entries: components["schemas"]["ItemEntryDto"][];
+        };
+        EditRecurringInvoiceDto: {
+            /**
+             * @description Customer ID
+             * @example 1
+             */
+            customerId: number;
+            /**
+             * @description Recurring invoice profile name
+             * @example Monthly retainer
+             */
+            profileName: string;
+            /**
+             * @description The first invoice date
+             * @example 2026-11-05
+             */
+            startDate: string;
+            /**
+             * @description Recurrence frequency
+             * @example month
+             * @enum {string}
+             */
+            frequency: "day" | "week" | "month" | "year";
+            /**
+             * @description Repeat every N periods
+             * @default 1
+             * @example 1
+             */
+            repeatInterval: number;
+            /**
+             * @description Optional end date
+             * @example 2027-11-05
+             */
+            endDate?: string;
+            /**
+             * @description Optional maximum number of generated invoices
+             * @example 12
+             */
+            maxOccurrences?: number;
+            /**
+             * @description Due date offset in days from the invoice date
+             * @default 0
+             * @example 15
+             */
+            dueDays: number;
+            /**
+             * @description What to do with generated invoices
+             * @default draft
+             * @enum {string}
+             */
+            deliveryMode: "draft" | "email";
+            /** @description Email subject override */
+            emailSubject?: string;
+            /** @description Email message override */
+            emailMessage?: string;
+            /** @description Email CC recipients */
+            emailCc?: string[];
+            /** @description Email BCC recipients */
+            emailBcc?: string[];
+            /**
+             * @description Whether the generated invoice PDF is attached
+             * @default true
+             */
+            attachInvoice: boolean;
+            /** @description Reference number */
+            referenceNo?: string;
+            /** @description Invoice message */
+            invoiceMessage?: string;
+            /** @description Terms and conditions */
+            termsConditions?: string;
+            /**
+             * @description Exchange rate
+             * @example 1
+             */
+            exchangeRate?: number;
+            /** @description Branch ID */
+            branchId?: number;
+            /** @description Warehouse ID */
+            warehouseId?: number;
+            /** @description PDF template ID */
+            pdfTemplateId?: number;
+            /** @description Whether tax is inclusive */
+            isInclusiveTax?: boolean;
+            /** @description Discount value */
+            discount?: number;
+            /**
+             * @description Discount type
+             * @enum {string}
+             */
+            discountType?: "percentage" | "amount";
+            /** @description Adjustment amount */
+            adjustment?: number;
+            /** @description Recurring invoice line items */
+            entries: components["schemas"]["ItemEntryDto"][];
+        };
         SaleEstimateResponseDto: {
             /**
              * @description Unique identifier of the sale estimate
@@ -12041,6 +13346,16 @@ export interface components {
              * @example 1
              */
             branchId?: number;
+            /**
+             * @description Recurring journal profile ID
+             * @example 1
+             */
+            recurringJournalId?: number;
+            /**
+             * @description Recurring journal occurrence date
+             * @example 2026-11-06
+             */
+            recurringJournalDate?: Record<string, never>;
             /**
              * @description Formatted amount
              * @example $1,000.00
@@ -16318,6 +17633,123 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["InventoryValuationMetaDto"];
         };
+        InventorySummaryQueryResponseDto: {
+            /** @description From date */
+            fromDate: string;
+            /** @description To date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude items without transactions */
+            noneTransactions: boolean;
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Warehouse IDs to include */
+            warehousesIds?: number[];
+            /** @description Branch IDs to include */
+            branchesIds?: number[];
+        };
+        InventorySummaryItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Opening stock quantity */
+            openingStock: number;
+            /** @description Quantity received in the period */
+            quantityIn: number;
+            /** @description Quantity issued out in the period */
+            quantityOut: number;
+            /** @description Closing stock quantity */
+            closingStock: number;
+            /** @description Formatted opening stock quantity */
+            openingStockFormatted: string;
+            /** @description Formatted quantity in */
+            quantityInFormatted: string;
+            /** @description Formatted quantity out */
+            quantityOutFormatted: string;
+            /** @description Formatted closing stock quantity */
+            closingStockFormatted: string;
+        };
+        InventorySummaryTotalDto: {
+            /** @description Total opening stock quantity */
+            openingStock: number;
+            /** @description Total quantity in */
+            quantityIn: number;
+            /** @description Total quantity out */
+            quantityOut: number;
+            /** @description Total closing stock quantity */
+            closingStock: number;
+            /** @description Formatted total opening stock quantity */
+            openingStockFormatted: string;
+            /** @description Formatted total quantity in */
+            quantityInFormatted: string;
+            /** @description Formatted total quantity out */
+            quantityOutFormatted: string;
+            /** @description Formatted total closing stock quantity */
+            closingStockFormatted: string;
+        };
+        InventorySummaryDataDto: {
+            /** @description Inventory summary items */
+            items: components["schemas"]["InventorySummaryItemDto"][];
+            /** @description Inventory summary totals */
+            total: components["schemas"]["InventorySummaryTotalDto"];
+        };
+        InventorySummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        InventorySummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventorySummaryQueryResponseDto"];
+            /** @description Inventory summary data */
+            data: components["schemas"]["InventorySummaryDataDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventorySummaryMetaDto"];
+        };
+        InventorySummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "opening_stock" | "quantity_in" | "quantity_out" | "closing_stock";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        InventorySummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["InventorySummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
+        InventorySummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["InventorySummaryTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventorySummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventorySummaryMetaDto"];
+        };
         SalesTaxLiabilitySummaryQueryResponseDto: {
             /** @description Start date */
             fromDate: string;
@@ -16968,89 +18400,6 @@ export interface components {
             roleDescription: string;
             /** @description The permissions of the role */
             permissions: components["schemas"]["EditRolePermissionDto"][];
-        };
-        SubscriptionResponseDto: {
-            /** @example main */
-            slug: string;
-            /**
-             * @example active
-             * @enum {string}
-             */
-            status: "active" | "inactive" | "on_trial" | "canceled";
-            /** @example true */
-            active: boolean;
-            /** @example false */
-            inactive: boolean;
-            /** @example false */
-            onTrial: boolean;
-            /** @example false */
-            canceled: boolean;
-            /** @example false */
-            ended: boolean;
-            /**
-             * @example succeed
-             * @enum {string}
-             */
-            paymentStatus: "succeed" | "failed";
-            /**
-             * Format: date-time
-             * @example 2024-01-01T00:00:00.000Z
-             */
-            startsAt?: string | null;
-            /**
-             * Format: date-time
-             * @example 2024-02-01T00:00:00.000Z
-             */
-            endsAt?: string | null;
-            /**
-             * Format: date-time
-             * @example null
-             */
-            canceledAt?: string | null;
-            /**
-             * Format: date-time
-             * @example 2024-01-07T00:00:00.000Z
-             */
-            trialEndsAt?: string | null;
-            /** @example Active */
-            statusFormatted: string;
-            /** @example null */
-            canceledAtFormatted?: string | null;
-            /** @example Jan 1, 2024 */
-            endsAtFormatted?: string | null;
-            /** @example null */
-            trialStartsAtFormatted?: string | null;
-            /** @example Jan 7, 2024 */
-            trialEndsAtFormatted?: string | null;
-            /** @example Standard */
-            planName: string;
-            /** @example standard */
-            planSlug: string;
-            /** @example 10 */
-            planPrice: number;
-            /** @example USD */
-            planPriceCurrency: string;
-            /** @example $10 */
-            planPriceFormatted: string;
-            /** @example month */
-            planPeriod: string;
-        };
-        SubscriptionsListResponseDto: {
-            subscriptions: components["schemas"]["SubscriptionResponseDto"][];
-        };
-        LemonSubscriptionUrlsDto: {
-            /** @example https://.../update-payment-method */
-            updatePaymentMethod?: string | null;
-            /** @example https://.../customer-portal */
-            customerPortal?: string | null;
-        };
-        LemonSubscriptionResponseDto: {
-            /** @example main */
-            slug: string;
-            urls: components["schemas"]["LemonSubscriptionUrlsDto"];
-        };
-        LemonSubscriptionsListResponseDto: {
-            lemonSubscriptions: components["schemas"]["LemonSubscriptionResponseDto"][];
         };
         OrgBaseCurrencyMutateLockDto: {
             /**
@@ -18126,6 +19475,251 @@ export interface components {
             formattedLocalAmount?: string;
         };
         AllocateBillLandedCostDto: Record<string, never>;
+        RecurringJournalResponseDto: {
+            /**
+             * @description Recurring journal ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Profile name
+             * @example Monthly depreciation
+             */
+            profileName: string;
+            /** @description Reference */
+            reference?: string;
+            /** @description Profile notes / journal description */
+            description?: string;
+            /**
+             * @description Journal type
+             * @example Journal
+             */
+            journalType?: string;
+            /**
+             * @description Accounting basis
+             * @enum {string|null}
+             */
+            basis?: "cash" | "accrual" | null;
+            /**
+             * @description Currency code
+             * @example USD
+             */
+            currencyCode?: string;
+            /**
+             * @description Exchange rate
+             * @example 1
+             */
+            exchangeRate?: number;
+            /** @description Branch ID */
+            branchId?: number;
+            /**
+             * @description Profile status
+             * @enum {string}
+             */
+            status: "active" | "paused" | "completed";
+            /**
+             * @description Recurrence frequency
+             * @enum {string}
+             */
+            frequency: "day" | "week" | "month" | "year";
+            /**
+             * @description Repeat interval
+             * @example 1
+             */
+            repeatInterval: number;
+            /**
+             * @description Start date
+             * @example 2026-11-06
+             */
+            startDate: string;
+            /**
+             * @description End date
+             * @example 2027-11-06
+             */
+            endDate?: string;
+            /**
+             * @description Maximum occurrences
+             * @example 12
+             */
+            maxOccurrences?: number;
+            /**
+             * @description Generated occurrences count
+             * @example 3
+             */
+            occurrencesCount: number;
+            /**
+             * @description Next journal date
+             * @example 2026-12-06
+             */
+            nextJournalDate?: string;
+            /**
+             * @description Last generated journal date
+             * @example 2026-11-06
+             */
+            lastJournalDate?: string;
+            /**
+             * @description Whether generated journals are published automatically
+             * @example false
+             */
+            autoPublish: boolean;
+            /** @description Last generation error */
+            lastError?: string;
+            /** @description Consecutive failure count */
+            failureCount?: number;
+            /**
+             * @description Total debit amount
+             * @example 1000
+             */
+            amount: number;
+            /** @description Recurring journal entries */
+            entries?: components["schemas"]["ManualJournalEntryResponseDto"][];
+            /** @description Formatted start date */
+            startDateFormatted?: string;
+            /** @description Formatted end date */
+            endDateFormatted?: string;
+            /** @description Formatted next journal date */
+            nextJournalDateFormatted?: string;
+            /** @description Formatted last journal date */
+            lastJournalDateFormatted?: string;
+            /** @description Formatted created date */
+            createdAtFormatted?: string;
+            /** @description Formatted amount */
+            amountFormatted?: string;
+        };
+        CreateRecurringJournalDto: {
+            /**
+             * @description Recurring journal profile name
+             * @example Monthly depreciation
+             */
+            profileName: string;
+            /** @description Reference */
+            reference?: string;
+            /** @description Profile notes / journal description */
+            description?: string;
+            /**
+             * @description Journal type copied to generated journals
+             * @default Journal
+             */
+            journalType: string;
+            /**
+             * @description Accounting basis copied to generated journals
+             * @enum {string|null}
+             */
+            basis?: "cash" | "accrual" | null;
+            /**
+             * @description Currency code
+             * @example USD
+             */
+            currencyCode?: string;
+            /**
+             * @description Exchange rate
+             * @example 1
+             */
+            exchangeRate?: number;
+            /** @description Branch ID */
+            branchId?: number;
+            /**
+             * @description First journal date
+             * @example 2026-11-06
+             */
+            startDate: string;
+            /**
+             * @description Optional end date
+             * @example 2027-11-06
+             */
+            endDate?: string;
+            /**
+             * @description Recurrence frequency
+             * @example month
+             * @enum {string}
+             */
+            frequency: "day" | "week" | "month" | "year";
+            /**
+             * @description Repeat every N periods
+             * @default 1
+             * @example 1
+             */
+            repeatInterval: number;
+            /**
+             * @description Optional maximum number of generated journals
+             * @example 12
+             */
+            maxOccurrences?: number;
+            /**
+             * @description Whether generated journals are published automatically; otherwise they are saved as drafts
+             * @default false
+             */
+            autoPublish: boolean;
+            /** @description Recurring journal entries */
+            entries: components["schemas"]["ManualJournalEntryDto"][];
+        };
+        EditRecurringJournalDto: {
+            /**
+             * @description Recurring journal profile name
+             * @example Monthly depreciation
+             */
+            profileName: string;
+            /** @description Reference */
+            reference?: string;
+            /** @description Profile notes / journal description */
+            description?: string;
+            /**
+             * @description Journal type copied to generated journals
+             * @default Journal
+             */
+            journalType: string;
+            /**
+             * @description Accounting basis copied to generated journals
+             * @enum {string|null}
+             */
+            basis?: "cash" | "accrual" | null;
+            /**
+             * @description Currency code
+             * @example USD
+             */
+            currencyCode?: string;
+            /**
+             * @description Exchange rate
+             * @example 1
+             */
+            exchangeRate?: number;
+            /** @description Branch ID */
+            branchId?: number;
+            /**
+             * @description First journal date
+             * @example 2026-11-06
+             */
+            startDate: string;
+            /**
+             * @description Optional end date
+             * @example 2027-11-06
+             */
+            endDate?: string;
+            /**
+             * @description Recurrence frequency
+             * @example month
+             * @enum {string}
+             */
+            frequency: "day" | "week" | "month" | "year";
+            /**
+             * @description Repeat every N periods
+             * @default 1
+             * @example 1
+             */
+            repeatInterval: number;
+            /**
+             * @description Optional maximum number of generated journals
+             * @example 12
+             */
+            maxOccurrences?: number;
+            /**
+             * @description Whether generated journals are published automatically; otherwise they are saved as drafts
+             * @default false
+             */
+            autoPublish: boolean;
+            /** @description Recurring journal entries */
+            entries: components["schemas"]["ManualJournalEntryDto"][];
+        };
         ExchangeRateLatestResponseDto: {
             /**
              * @description The base currency code
@@ -18142,6 +19736,196 @@ export interface components {
              * @example 0.85
              */
             exchangeRate: number;
+        };
+        WebhookResponseDto: {
+            /**
+             * @description The unique identifier of the webhook
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Name of the webhook.
+             * @example Invoice Webhook
+             */
+            name: string;
+            /**
+             * @description Target URL for the webhook callback.
+             * @example https://example.com/webhook
+             */
+            url: string;
+            /**
+             * @description Entity type the webhook subscribes to.
+             * @example sale_invoice
+             */
+            entity: string;
+            /**
+             * @description List of events that trigger this webhook.
+             * @example [
+             *       "created",
+             *       "edited",
+             *       "deleted"
+             *     ]
+             */
+            events: string[];
+            /**
+             * @description HTTP method for the webhook.
+             * @example POST
+             */
+            method: string;
+            /** @description Custom headers to include in the webhook request. */
+            headers: unknown[];
+            /**
+             * @description Secret key for HMAC signature.
+             * @example whsec_123456
+             */
+            secret: string | null;
+            /**
+             * @description Whether the webhook is active.
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * @description Creation timestamp.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            createdAt: string;
+            /**
+             * @description Last update timestamp.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            updatedAt: string;
+        };
+        WebhookDeliveryResponseDto: {
+            /**
+             * @description The unique identifier of the delivery log
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description ID of the associated webhook
+             * @example 1
+             */
+            webhookId: number;
+            /**
+             * @description The event type that was delivered.
+             * @example sale_invoice.created
+             */
+            eventType: string;
+            /** @description The payload that was sent. */
+            payload: Record<string, never>;
+            /**
+             * @description HTTP response status code.
+             * @example 200
+             */
+            responseStatus?: number | null;
+            /**
+             * @description HTTP response body.
+             * @example OK
+             */
+            responseBody?: string | null;
+            /**
+             * @description Number of delivery attempts.
+             * @example 1
+             */
+            attemptCount: number;
+            /**
+             * @description Error message if delivery failed.
+             * @example Connection timeout
+             */
+            errorMessage?: string | null;
+            /**
+             * @description Timestamp when the delivery succeeded.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            deliveredAt?: string | null;
+            /**
+             * @description Creation timestamp.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            createdAt: string;
+        };
+        WebhookHeaderDto: {
+            /** @description Name of the header parameter. */
+            param_name: string;
+            /** @description Value of the header parameter. */
+            param_value: string;
+        };
+        CreateWebhookDto: {
+            /**
+             * @description Name of the webhook.
+             * @example Invoice Webhook
+             */
+            name: string;
+            /**
+             * @description Target URL for the webhook callback.
+             * @example https://example.com/webhook
+             */
+            url: string;
+            /**
+             * @description Entity type the webhook subscribes to.
+             * @example sale_invoice
+             */
+            entity: string;
+            /**
+             * @description List of events that trigger this webhook.
+             * @example [
+             *       "created",
+             *       "edited",
+             *       "deleted"
+             *     ]
+             */
+            events: string[];
+            /**
+             * @description HTTP method for the webhook.
+             * @default POST
+             * @example POST
+             */
+            method: string;
+            /** @description Custom headers to include in the webhook request. */
+            headers?: components["schemas"]["WebhookHeaderDto"][];
+            /**
+             * @description Secret key for HMAC signature.
+             * @example whsec_123456
+             */
+            secret?: string;
+        };
+        EditWebhookDto: {
+            /**
+             * @description Name of the webhook.
+             * @example Invoice Webhook
+             */
+            name?: string;
+            /**
+             * @description Target URL for the webhook callback.
+             * @example https://example.com/webhook
+             */
+            url?: string;
+            /**
+             * @description Entity type the webhook subscribes to.
+             * @example sale_invoice
+             */
+            entity?: string;
+            /**
+             * @description List of events that trigger this webhook.
+             * @example [
+             *       "created",
+             *       "edited",
+             *       "deleted"
+             *     ]
+             */
+            events?: string[];
+            /**
+             * @description HTTP method for the webhook.
+             * @example POST
+             */
+            method?: string;
+            /** @description Custom headers to include in the webhook request. */
+            headers?: components["schemas"]["WebhookHeaderDto"][];
+            /**
+             * @description Secret key for HMAC signature.
+             * @example whsec_123456
+             */
+            secret?: string;
         };
     };
     responses: never;
@@ -18182,13 +19966,178 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Sign-in successful. Returns access token and tenant/organization IDs. */
+            /** @description Sign-in successful. Returns access token and tenant/organization IDs. When the user has two-factor authentication (or the organization requires it and the user has none yet), returns two_factor_required (or two_factor_setup_required) and a challenge_token instead of the access token. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinTwoFactor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorSigninDto"];
+            };
+        };
+        responses: {
+            /** @description The same response as a sign-in without two-factor. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaVerify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaVerifyDto"];
+            };
+        };
+        responses: {
+            /** @description The same response as a sign-in without two-factor. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaPrepare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaPrepareDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaPrepareResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaSetupStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaSetupStartDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorSetupResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinMfaSetupConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaSetupConfirmDto"];
+            };
+        };
+        responses: {
+            /** @description The sign-in response plus recovery_codes (shown once). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninSetupConfirmResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinTwoFactorSetup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorSigninSetupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorSetupResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_signinTwoFactorSetupConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorSigninSetupConfirmDto"];
+            };
+        };
+        responses: {
+            /** @description The sign-in response plus recovery_codes (shown once). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninSetupConfirmResponseDto"];
                 };
             };
         };
@@ -18301,6 +20250,42 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AuthMetaResponseDto"];
                 };
+            };
+        };
+    };
+    AuthController_googleAuth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirects the browser to the Google consent screen. */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_googleAuthCallback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirects to the web app with a JWT access token or an error code. */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -18428,6 +20413,163 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiKeyListItemDto"][];
+                };
+            };
+        };
+    };
+    TwoFactorController_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorStatusResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_startSetup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorSetupResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_confirmSetup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorConfirmSetupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorRecoveryCodesResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_regenerateRecoveryCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorVerifyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwoFactorRecoveryCodesResponseDto"];
+                };
+            };
+        };
+    };
+    TwoFactorController_disable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorVerifyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationTwoFactorController_get: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationTwoFactorResponseDto"];
+                };
+            };
+        };
+    };
+    OrganizationTwoFactorController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationTwoFactorDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationTwoFactorResponseDto"];
                 };
             };
         };
@@ -20565,6 +22707,231 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["GenerateSaleInvoiceSharableLinkResponseDto"];
                 };
+            };
+        };
+    };
+    SubscriptionsController_getSubscriptions: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of subscriptions retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubscriptionsListResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_getPlans: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Plan catalog retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetSubscriptionPlansResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_createCheckoutSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStripeCheckoutSessionBodyDto"];
+            };
+        };
+        responses: {
+            /** @description Checkout session created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeCheckoutSessionResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_createPortalSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Portal session created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeSessionResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_syncCheckoutSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SyncStripeCheckoutSessionBodyDto"];
+            };
+        };
+        responses: {
+            /** @description Checkout session synchronized successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeSyncCheckoutSessionResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_changeSubscriptionPlan: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSubscriptionPlanBodyDto"];
+            };
+        };
+        responses: {
+            /** @description Subscription plan changed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SubscriptionsController_cancelSubscription: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Subscription canceled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SubscriptionsController_resumeSubscription: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Subscription resumed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    StripeBillingWebhooksController_handleWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                "stripe-signature": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -23281,6 +25648,304 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    RecurringInvoicesController_getRecurringInvoices: {
+        parameters: {
+            query?: {
+                /** @description Page number (1-based) */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring invoices have been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["RecurringInvoiceResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_createRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRecurringInvoiceDto"];
+            };
+        };
+        responses: {
+            /** @description The recurring invoice has been created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringInvoiceResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_getRecurringInvoiceState: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring invoice state has been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringInvoiceStateResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_getRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring invoice has been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringInvoiceResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_editRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditRecurringInvoiceDto"];
+            };
+        };
+        responses: {
+            /** @description The recurring invoice has been updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringInvoiceResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_deleteRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring invoice has been deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringInvoicesController_pauseRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring invoice has been paused. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringInvoiceResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_resumeRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring invoice has been resumed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringInvoiceResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_generateRecurringInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The invoice has been generated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaleInvoiceResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringInvoicesController_getRecurringInvoiceInvoices: {
+        parameters: {
+            query?: {
+                /** @description Page number (1-based) */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The generated invoices have been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["SaleInvoiceResponseDto"][];
+                    };
+                };
             };
         };
     };
@@ -31305,6 +33970,44 @@ export interface operations {
             };
         };
     };
+    InventorySummaryController_getInventorySummary: {
+        parameters: {
+            query?: {
+                /** @description Whether to exclude items without transactions */
+                noneTransactions?: boolean;
+                /** @description Items IDs for the inventory summary */
+                itemsIds?: string[];
+                /** @description Warehouses IDs for the inventory summary */
+                warehousesIds?: string[];
+                /** @description Branches IDs for the inventory summary */
+                branchesIds?: string[];
+                /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
+                numberFormat?: components["schemas"]["NumberFormatQueryDto"];
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+                accept: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The inventory summary report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InventorySummaryResponseDto"];
+                    "application/json+table": components["schemas"]["InventorySummaryTableResponseDto"];
+                };
+            };
+        };
+    };
     SalesTaxLiabilitySummaryController_getSalesTaxLiabilitySummary: {
         parameters: {
             query: {
@@ -32593,149 +35296,6 @@ export interface operations {
         responses: {
             /** @description Role permissions schema */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SubscriptionsController_getSubscriptions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of subscriptions retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SubscriptionsListResponseDto"];
-                };
-            };
-        };
-    };
-    SubscriptionsController_getLemonSubscriptions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Lemon subscription details retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LemonSubscriptionsListResponseDto"];
-                };
-            };
-        };
-    };
-    SubscriptionsController_getCheckoutUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /** @description The variant ID for the subscription plan */
-                    variantId: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Checkout URL retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SubscriptionsController_cancelSubscription: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Subscription canceled successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SubscriptionsController_resumeSubscription: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Subscription resumed successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SubscriptionsController_changeSubscriptionPlan: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /** @description The variant ID for the new subscription plan */
-                    variant_id: number;
-                };
-            };
-        };
-        responses: {
-            /** @description Subscription plan changed successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SubscriptionsLemonWebhook_lemonWebhooks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -34121,6 +36681,279 @@ export interface operations {
             };
         };
     };
+    RecurringJournalsController_getRecurringJournals: {
+        parameters: {
+            query?: {
+                /** @description Page number (1-based) */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring journals have been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["RecurringJournalResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
+    RecurringJournalsController_createRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRecurringJournalDto"];
+            };
+        };
+        responses: {
+            /** @description The recurring journal has been created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringJournalResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringJournalsController_getRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring journal has been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringJournalResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringJournalsController_editRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditRecurringJournalDto"];
+            };
+        };
+        responses: {
+            /** @description The recurring journal has been updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringJournalResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringJournalsController_deleteRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring journal has been deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringJournalsController_pauseRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring journal has been paused. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringJournalResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringJournalsController_resumeRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The recurring journal has been resumed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringJournalResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringJournalsController_generateRecurringJournal: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The journal has been generated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManualJournalResponseDto"];
+                };
+            };
+        };
+    };
+    RecurringJournalsController_getRecurringJournalJournals: {
+        parameters: {
+            query?: {
+                /** @description Page number (1-based) */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The generated journals have been retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["ManualJournalResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
     ExchangeRatesController_getLatestExchangeRate: {
         parameters: {
             query?: {
@@ -34150,6 +36983,220 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    WebhooksController_getWebhooks: {
+        parameters: {
+            query: {
+                filter_by: string;
+                page: number;
+                page_size: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhooks have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["WebhookResponseDto"][];
+                        pagination?: {
+                            total?: number;
+                            page?: number;
+                            pageSize?: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    WebhooksController_createWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWebhookDto"];
+            };
+        };
+        responses: {
+            /** @description The webhook has been successfully created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_getWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhook details have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_editWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditWebhookDto"];
+            };
+        };
+        responses: {
+            /** @description The webhook has been successfully updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_deleteWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhook has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_toggleWebhookActive: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhook active state has been toggled. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_getWebhookDeliveries: {
+        parameters: {
+            query: {
+                page: number;
+                page_size: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The delivery logs have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["WebhookDeliveryResponseDto"][];
+                        pagination?: {
+                            total?: number;
+                            page?: number;
+                            pageSize?: number;
+                        };
+                    };
+                };
             };
         };
     };

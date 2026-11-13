@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import PreferencesSidebarContainer from './PreferencesSidebarContainer';
 import { FormattedMessage as T } from '@/components';
 import { PreferencesMenu } from '@/constants/preferencesMenu';
+import { useDashboardMeta } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state/feature';
 
 import '@/style/pages/Preferences/Sidebar.scss';
@@ -16,8 +17,12 @@ export default function PreferencesSidebar() {
   const history = useHistory();
   const location = useLocation();
   const { featureCan } = useFeatureCan();
+  const { data: dashboardMeta } = useDashboardMeta();
 
   const items = PreferencesMenu.filter((item) => {
+    if (item.cloudOnly && !dashboardMeta?.isBigcapitalCloud) {
+      return false;
+    }
     if (item.feature && !featureCan(item.feature)) {
       return false;
     }

@@ -19,9 +19,12 @@ import { UsersApplication } from './Users.application';
 import { EditUserDto } from './dtos/EditUser.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { UserDto } from './dtos/UserResponse.dto';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('users')
 @ApiTags('Users')
+@RequireSubscriptionFeature(SubscriptionFeature.UserSeats)
 @ApiExtraModels(UserDto)
 @ApiCommonHeaders()
 export class UsersController {

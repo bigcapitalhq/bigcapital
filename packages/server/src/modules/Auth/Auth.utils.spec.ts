@@ -1,4 +1,4 @@
-import { getApiKeyPrefix, hashApiKey } from './Auth.utils';
+import { buildUrlWithQuery, getApiKeyPrefix, hashApiKey } from './Auth.utils';
 
 describe('Auth.utils', () => {
   describe('hashApiKey', () => {
@@ -14,6 +14,27 @@ describe('Auth.utils', () => {
   describe('getApiKeyPrefix', () => {
     it('returns the first 8 characters of the API key', () => {
       expect(getApiKeyPrefix('bc_0123456789abcdef')).toBe('bc_01234');
+    });
+  });
+
+  describe('buildUrlWithQuery', () => {
+    it('appends query params to an absolute URL', () => {
+      expect(
+        buildUrlWithQuery('https://app.example.com/auth/callback', {
+          token: 'abc',
+          user_id: 10,
+        }),
+      ).toBe('https://app.example.com/auth/callback?token=abc&user_id=10');
+    });
+
+    it('keeps relative URLs relative and skips empty values', () => {
+      expect(
+        buildUrlWithQuery('/auth/login', {
+          error: 'google_auth_failed',
+          empty: '',
+          missing: undefined,
+        }),
+      ).toBe('/auth/login?error=google_auth_failed');
     });
   });
 });

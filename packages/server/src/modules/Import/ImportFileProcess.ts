@@ -50,7 +50,7 @@ export class ImportFileProcess {
     // Read the imported file and parse the given buffer to get columns
     // and sheet data in json format.
     const buffer = await readImportFile(importFile.filename);
-    const [sheetData, sheetColumns] = parseSheetData(buffer);
+    const [sheetData, sheetColumns, date1904] = parseSheetData(buffer);
 
     const resource = importFile.resource;
     const resourceFields = await this.resource.getResourceFields2(resource);
@@ -64,6 +64,7 @@ export class ImportFileProcess {
           resourceFields,
           sheetData,
           trx,
+          date1904,
         );
         const [successedImport, failedImport] = await this.importCommon.import(
           importFile,

@@ -6,6 +6,7 @@ export enum Features {
   SMS_NOTIFICATIONS = 'sms_notifications',
   SALES_TAX = 'sales_tax',
   TRACKING_CATEGORIES = 'tracking_categories',
+  RECURRING_JOURNALS = 'recurring_journals',
 }
 
 export interface IFeatureAllItem {

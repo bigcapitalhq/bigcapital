@@ -9,6 +9,8 @@ import { JwtPayload } from '../Auth.interfaces';
 import { JWT_ISSUER, JWT_AUDIENCE } from '../Auth.constants';
 import { InvalidEmailPasswordException } from '../exceptions/InvalidEmailPassword.exception';
 import { UserNotFoundException } from '../exceptions/UserNotFound.exception';
+import { NoActiveWorkspaceException } from '../exceptions/NoActiveWorkspace.exception';
+import { AuthSigninResponseDto } from '../dtos/AuthSigninResponse.dto';
 
 @Injectable()
 export class AuthSigninService {
@@ -46,7 +48,9 @@ export class AuthSigninService {
     } catch (_err) {
       throw new InvalidEmailPasswordException(email);
     }
-    if (!(await user.checkPassword(password))) {
+    // Accounts created through Google (or pending invites) may not have a
+    // password set yet, in which case password sign-in is not available.
+    if (!user.password || !(await user.checkPassword(password))) {
       throw new InvalidEmailPasswordException(email);
     }
     return user;
@@ -122,6 +126,27 @@ export class AuthSigninService {
 
     if (!membership?.tenant?.isActive) return null;
     return membership.tenant;
+  }
+
+  /**
+   * Builds the sign-in response of the given user: their workspace and a token.
+   * @throws {UnauthorizedException} when the user has no active workspace.
+   */
+  async issueSigninResponse(
+    user: SystemUser,
+    rememberMe = false,
+  ): Promise<AuthSigninResponseDto> {
+    const tenant = await this.resolveSigninTenant(user);
+
+    if (!tenant) {
+      throw new NoActiveWorkspaceException();
+    }
+    return {
+      accessToken: this.signToken(user, rememberMe),
+      organizationId: tenant.organizationId,
+      tenantId: tenant.id,
+      userId: user.id,
+    };
   }
 
   /**

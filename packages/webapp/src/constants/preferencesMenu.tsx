@@ -14,13 +14,18 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     disabled: false,
     href: '/preferences/branding',
   },
-  // {
-  //   text: 'Billing',
-  //   href: '/preferences/billing',
-  // },
+  {
+    text: 'Billing',
+    href: '/preferences/billing',
+    cloudOnly: true,
+  },
   {
     text: <T id={'users'} />,
     href: '/preferences/users',
+  },
+  {
+    text: <T id={'security.title'} />,
+    href: '/preferences/security',
   },
   {
     text: 'Payment Methods',

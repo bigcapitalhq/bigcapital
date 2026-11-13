@@ -28,7 +28,8 @@ export class PlaidLinkTokenService {
       },
       client_name: this.configService.get('plaid.clientName'),
       products: [Products.Transactions],
-      country_codes: [CountryCode.Us],
+      country_codes:
+        this.configService.get<CountryCode[]>('plaid.countryCodes'),
       language: 'en',
       webhook: this.configService.get('plaid.linkWebhook'),
       access_token: accessToken,

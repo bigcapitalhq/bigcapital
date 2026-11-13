@@ -60,6 +60,9 @@ export class SaleInvoice extends TenantBaseModel {
   public branchId: number;
   public warehouseId: number;
 
+  public recurringInvoiceId: number | null;
+  public recurringInvoiceDate: string | null;
+
   public taxes!: TaxRateTransaction[];
   public entries!: ItemEntry[];
   public attachments!: Document[];
@@ -493,12 +496,16 @@ export class SaleInvoice extends TenantBaseModel {
       },
 
       dueInvoicesFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft invoices are not yet delivered, hence not receivables.
+        query.modify('delivered');
         query.modify('dueInvoices');
         query.modify('notOverdue', asDate);
         query.modify('fromDate', asDate);
       },
 
       overdueInvoicesFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft invoices are not yet delivered, hence not receivables.
+        query.modify('delivered');
         query.modify('dueInvoices');
         query.modify('overdue', asDate);
         query.modify('fromDate', asDate);
@@ -537,8 +544,23 @@ export class SaleInvoice extends TenantBaseModel {
     const {
       PdfTemplateModel,
     } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      RecurringInvoice,
+    } = require('../../RecurringInvoices/models/RecurringInvoice');
 
     return {
+      /**
+       * Sale invoice may belong to a recurring invoice profile.
+       */
+      recurringInvoice: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: RecurringInvoice,
+        join: {
+          from: 'sales_invoices.recurringInvoiceId',
+          to: 'recurring_invoices.id',
+        },
+      },
+
       /**
        * Sale invoice associated entries.
        */

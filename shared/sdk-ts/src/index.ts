@@ -4,10 +4,13 @@
  */
 export type * from './schema';
 export * from './fetch-utils';
+export * from './utils/case-transform';
 export * from './accounts';
 export * from './credit-notes';
 export * from './api-keys';
 export * from './sale-invoices';
+export * from './recurring-invoices';
+export * from './ee/recurring-journals';
 export * from './customers';
 export * from './vendors';
 export * from './bills';
@@ -32,6 +35,7 @@ export * from './attachments';
 export * from './pdf-templates';
 export * from './invite';
 export * from './authentication';
+export * from './two-factor';
 export * from './contacts';
 export * from './items-categories';
 export * from './views';
