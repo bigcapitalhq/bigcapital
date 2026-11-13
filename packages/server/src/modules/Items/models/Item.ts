@@ -110,6 +110,7 @@ export class Item extends TenantBaseModel {
       InventoryAdjustmentEntry,
     } = require('../../InventoryAdjutments/models/InventoryAdjustmentEntry');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const { Batch } = require('../../Batches/models/Batch');
 
     return {
       /**
@@ -181,6 +182,18 @@ export class Item extends TenantBaseModel {
         join: {
           from: 'items.id',
           to: 'items_entries.itemId',
+        },
+      },
+
+      /**
+       * Item may has many batches.
+       */
+      batches: {
+        relation: Model.HasManyRelation,
+        modelClass: Batch,
+        join: {
+          from: 'items.id',
+          to: 'batches.itemId',
         },
       },
 

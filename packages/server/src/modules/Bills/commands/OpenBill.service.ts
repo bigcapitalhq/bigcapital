@@ -31,7 +31,7 @@ export class OpenBillService {
     const oldBill = await this.billModel()
       .query()
       .findById(billId)
-      .withGraphFetched('entries');
+      .withGraphFetched('entries.batches');
 
     // Validates the bill existence.
     this.validators.validateBillExistance(oldBill);

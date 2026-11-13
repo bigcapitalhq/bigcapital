@@ -3,8 +3,16 @@ import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import type { Batch } from '@/hooks/query/batches/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { Tooltip2Props } from '@blueprintjs/popover2';
-import { Hint, Icon, FormattedMessage as T } from '@/components';
+import {
+  Hint,
+  Icon,
+  FormattedMessage as T,
+  PurchaseBatchAllocationsPopover,
+  SaleBatchAllocationsPopover,
+} from '@/components';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -106,11 +114,86 @@ const LandedCostHeaderCell = () => {
   );
 };
 
+interface BatchEntryCellProps {
+  row: {
+    index: number;
+    original: {
+      itemId?: number | string;
+      batchId?: number | null;
+      batch?: Batch | null;
+      batches?: ItemEntryBatchAllocation[];
+      quantity?: number | string;
+    };
+  };
+  payload: {
+    items?: Array<{ id: number; type?: string; name?: string }>;
+    batchMode?: 'purchase' | 'sale';
+    updateRow: (rowIndex: number, patch: Record<string, unknown>) => void;
+  };
+}
+
+/**
+ * Batch entry cell used by purchase/sale transaction lines.
+ */
+export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
+  const { index, original } = row;
+  const item = payload.items?.find(
+    (item) => Number(item.id) === Number(original.itemId),
+  );
+
+  if (!item || item.type !== 'inventory') {
+    return null;
+  }
+  const allocations: ItemEntryBatchAllocation[] =
+    (original.batches?.length ?? 0) > 0
+      ? (original.batches as ItemEntryBatchAllocation[])
+      : original.batchId
+        ? [
+            {
+              batchId: original.batchId,
+              quantity: Number(original.quantity) || 0,
+              batch: original.batch,
+            },
+          ]
+        : [];
+
+  if (payload.batchMode === 'sale') {
+    return (
+      <SaleBatchAllocationsPopover
+        itemId={Number(original.itemId)}
+        entryQuantity={original.quantity ?? 0}
+        allocations={allocations}
+        onApply={(nextAllocations) => {
+          payload.updateRow(index, { batches: nextAllocations });
+        }}
+      />
+    );
+  }
+  return (
+    <PurchaseBatchAllocationsPopover
+      itemId={Number(original.itemId)}
+      entryQuantity={original.quantity ?? 0}
+      allocations={allocations}
+      onApply={(nextAllocations) => {
+        payload.updateRow(index, { batches: nextAllocations });
+      }}
+    />
+  );
+}
+
+/**
+ * Batch header cell.
+ */
+const BatchHeaderCell = () => {
+  return <T id={'batch.label'} />;
+};
+
 /**
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  const { landedCost, enableTaxRates } = useItemEntriesTableContext();
+  const { landedCost, enableTaxRates, batchMode } =
+    useItemEntriesTableContext();
 
   return React.useMemo(
     () => [
@@ -148,6 +231,20 @@ export function useEditableItemsEntriesColumns() {
         width: 70,
         align: Align.Right,
       },
+      ...(batchMode
+        ? [
+            {
+              Header: BatchHeaderCell,
+              id: 'batch',
+              accessor: (row: { batches?: unknown[] }) =>
+                row.batches?.length ?? 0,
+              Cell: BatchEntryCell,
+              disableSortBy: true,
+              disableResizing: true,
+              width: 130,
+            },
+          ]
+        : []),
       ...(enableTaxRates
         ? [
             {
@@ -199,6 +296,6 @@ export function useEditableItemsEntriesColumns() {
         align: Align.Center,
       },
     ],
-    [],
+    [batchMode, enableTaxRates, landedCost],
   );
 }

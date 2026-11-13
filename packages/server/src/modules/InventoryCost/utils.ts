@@ -1,5 +1,5 @@
 import { chain } from 'lodash';
-import { pick } from 'lodash';
+import { flatMap, pick } from 'lodash';
 import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';
 import {
   TInventoryTransactionDirection,
@@ -40,21 +40,38 @@ export function transformItemEntriesToInventory(transaction: {
 }): IInventoryTransaction[] {
   const exchangeRate = transaction.exchangeRate || 1;
 
-  return transaction.entries.map((entry: IInventoryTransactionItemEntry) => ({
-    ...pick(entry, ['itemId', 'quantity']),
-    rate: entry.rate * exchangeRate,
-    transactionType: transaction.transactionType,
-    transactionId: transaction.transactionId,
-    direction: transaction.direction,
-    date: transaction.date,
-    entryId: entry.id,
-    createdAt: transaction.createdAt,
-    costAccountId: entry.costAccountId,
+  return flatMap(
+    transaction.entries,
+    (entry: IInventoryTransactionItemEntry) => {
+      const allocations =
+        entry.batches?.length > 0
+          ? entry.batches
+          : [
+              {
+                batchId: entry.batchId ?? null,
+                quantity: entry.quantity,
+              },
+            ];
 
-    warehouseId: entry.warehouseId || transaction.warehouseId,
-    meta: {
-      transactionNumber: transaction.transactionNumber,
-      description: entry.description,
+      return allocations.map((allocation) => ({
+        ...pick(entry, ['itemId']),
+        quantity: allocation.quantity,
+        rate: entry.rate * exchangeRate,
+        transactionType: transaction.transactionType,
+        transactionId: transaction.transactionId,
+        direction: transaction.direction,
+        date: transaction.date,
+        entryId: entry.id,
+        createdAt: transaction.createdAt,
+        costAccountId: entry.costAccountId,
+
+        warehouseId: entry.warehouseId || transaction.warehouseId,
+        batchId: allocation.batchId ?? entry.batchId,
+        meta: {
+          transactionNumber: transaction.transactionNumber,
+          description: entry.description,
+        },
+      }));
     },
-  }));
+  );
 }

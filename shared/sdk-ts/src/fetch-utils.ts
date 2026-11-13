@@ -163,6 +163,7 @@ export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
     init: parsedConfig.init,
     disableCamelCaseTransform: parsedConfig.disableCamelCaseTransform,
     disableSnakeCaseTransform: parsedConfig.disableSnakeCaseTransform,
+    onError: parsedConfig.onError,
   };
 
   return fetcher;
@@ -185,6 +186,7 @@ interface FetcherRuntimeConfig {
   init?: RequestInit;
   disableCamelCaseTransform?: boolean;
   disableSnakeCaseTransform?: boolean;
+  onError?: (error: unknown) => void;
 }
 
 interface FetcherWithConfig {
@@ -198,6 +200,7 @@ function getFetcherConfig(fetcher: ApiFetcher): FetcherRuntimeConfig {
     init: config?.init,
     disableCamelCaseTransform: config?.disableCamelCaseTransform ?? true,
     disableSnakeCaseTransform: config?.disableSnakeCaseTransform ?? false,
+    onError: config?.onError,
   };
 }
 
@@ -220,6 +223,7 @@ export async function rawRequest<T = unknown>(
     init,
     disableCamelCaseTransform,
     disableSnakeCaseTransform,
+    onError,
   } = getFetcherConfig(fetcher);
 
   const url = `${baseUrl}${path}`;
@@ -243,11 +247,34 @@ export async function rawRequest<T = unknown>(
   }
 
   const response = await fetch(url, requestInit);
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  }
   const contentType = response.headers.get("content-type") ?? "";
-  const data = (await response.json()) as T;
+
+  if (!response.ok) {
+    let data: unknown;
+    if (contentType.includes("application/json")) {
+      try {
+        data = await response.json();
+      } catch {
+        data = undefined;
+      }
+    }
+    const error = Object.assign(
+      new Error(`HTTP ${response.status}: ${response.statusText}`),
+      {
+        status: response.status,
+        data,
+      },
+    );
+    onError?.(error);
+    throw error;
+  }
+
+  // Handles empty (e.g. 204 No Content) responses.
+  if (response.status === 204) {
+    return undefined as T;
+  }
+  const text = await response.text();
+  const data = (text ? JSON.parse(text) : undefined) as T;
 
   if (disableCamelCaseTransform || !contentType.includes("application/json")) {
     return data;

@@ -75,6 +75,19 @@ export function FeaturesForm() {
         />
       </FFormGroup>
 
+      {/* ----------- Batch Tracking ----------- */}
+      <FFormGroup
+        name={'features.batchTracking'}
+        inline={true}
+        helperText={<T id={'features.batch_tracking.helper_text'} />}
+      >
+        <FSwitch
+          name={'features.batchTracking'}
+          labelElement={<T id={'features.batch_tracking'} />}
+          large={true}
+        />
+      </FFormGroup>
+
       <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />

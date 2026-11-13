@@ -20,10 +20,12 @@ import {
   Can,
   If,
   TextOverviewTooltipCell,
+  getEntryBatchAllocationsSummary,
   FeatureCan,
 } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { Features } from '@/constants/features';
+import { useFeatureCan } from '@/hooks/state';
 import { getColumnWidth } from '@/utils';
 
 interface InvoiceDetailsStatusProps {
@@ -49,6 +51,8 @@ export const useInvoiceReadonlyEntriesColumns = () => {
   // Invoice details drawer context.
   const { invoice } = useInvoiceDetailDrawerContext();
   const entries = invoice?.entries ?? [];
+  const { featureCan } = useFeatureCan();
+  const isBatchTrackingEnabled = featureCan(Features.BatchTracking);
 
   return React.useMemo(
     () => [
@@ -60,6 +64,18 @@ export const useInvoiceReadonlyEntriesColumns = () => {
         textOverview: true,
         width: 150,
       },
+      ...(isBatchTrackingEnabled
+        ? [
+            {
+              Header: intl.get('batch.column.batch_number'),
+              id: 'batch',
+              accessor: (entry: any) => getEntryBatchAllocationsSummary(entry),
+              disableSortBy: true,
+              textOverview: true,
+              width: 110,
+            },
+          ]
+        : []),
       {
         Header: intl.get('description'),
         accessor: 'description',
@@ -113,7 +129,7 @@ export const useInvoiceReadonlyEntriesColumns = () => {
         }),
       },
     ],
-    [entries],
+    [entries, isBatchTrackingEnabled],
   );
 };
 

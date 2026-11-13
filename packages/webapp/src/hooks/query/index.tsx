@@ -10,6 +10,7 @@ export * from './accounts';
 export * from './items';
 export * from './items-categories';
 export * from './inventory-adjustments';
+export * from './batches';
 export * from './customers';
 export * from './vendors';
 export * from './contacts';

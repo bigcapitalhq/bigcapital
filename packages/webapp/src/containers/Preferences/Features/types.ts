@@ -4,5 +4,6 @@ export interface FeaturesFormValues {
     smsNotifications: boolean;
     salesTax: boolean;
     recurringJournals: boolean;
+    batchTracking: boolean;
   };
 }

@@ -1,0 +1,16 @@
+{
+  "sheet_name": "Batch Details Report",
+  "item_name": "Item Name",
+  "batch_number": "Batch Number",
+  "batch_ref": "Batch Ref.",
+  "batch_status": "Batch Status",
+  "manufactured_date": "Manufactured Date",
+  "expiry_date": "Expiry Date",
+  "quantity_in": "Quantity In",
+  "quantity_out": "Quantity Out",
+  "quantity_on_hand": "Quantity On Hand",
+  "status_active": "Active",
+  "status_expiring_soon": "Expiring Soon",
+  "status_expired": "Expired",
+  "status_depleted": "Depleted"
+}

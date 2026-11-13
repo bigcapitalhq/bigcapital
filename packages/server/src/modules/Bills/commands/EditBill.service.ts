@@ -12,6 +12,7 @@ import { Knex } from 'knex';
 import { BillLandedCostsBridge } from '../integrations/BillLandedCostsBridge';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditBillDto } from '../dtos/Bill.dto';
+import { BatchAllocationsService } from '@/modules/Batches/BatchAllocations.service';
 
 @Injectable()
 export class EditBillService {
@@ -22,6 +23,7 @@ export class EditBillService {
     private eventPublisher: EventEmitter2,
     private landedCostsBridge: BillLandedCostsBridge,
     private transformerDTO: BillDTOTransformer,
+    private batchAllocations: BatchAllocationsService,
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
     @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
@@ -62,6 +64,15 @@ export class EditBillService {
           id: billId,
           ...billObj,
         });
+
+      // Replaces the batch allocations of the bill entries.
+      await this.batchAllocations.syncEntriesAllocations(
+        'Bill',
+        bill.id,
+        billDTO.entries,
+        trx,
+      );
+
       // Triggers event `onBillEdited`.
       await this.eventPublisher.emitAsync(events.bill.onEdited, {
         oldBill,

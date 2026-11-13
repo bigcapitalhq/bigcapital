@@ -42,6 +42,7 @@
   "inventory_valuation_summary": "Inventory valuation summary",
   "inventory_summary": "Inventory summary",
   "inventory_items_details": "Inventory items details",
+  "batch_details": "Batch details",
   "cashflow_account_transactions": "Cashflow account transactions",
   "sales_tax_liability_summary_report": "Sales tax liability summary"
 }

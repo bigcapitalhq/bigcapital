@@ -446,6 +446,20 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
   },
   {
+    path: `/financial-reports/batch-details`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/BatchDetails/BatchDetails').then(
+        (m) => ({ default: m.BatchDetails }),
+      ),
+    ),
+    breadcrumb: intl.get('batch_details'),
+    hint: intl.get('batch_details_desc'),
+    pageTitle: intl.get('batch_details'),
+    backLink: true,
+    sidebarExpand: false,
+    feature: Features.BatchTracking,
+  },
+  {
     path: `/financial-reports/realized-gain-loss`,
     component: lazy(() =>
       import(

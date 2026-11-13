@@ -35,6 +35,7 @@ export class ItemEntry extends BaseModel {
   public taxRateId: number;
 
   public warehouseId: number;
+  public batchId: number | null;
 
   item: Item;
 
@@ -189,6 +190,8 @@ export class ItemEntry extends BaseModel {
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const { Batch } = require('../../Batches/models/Batch');
+    const { ItemEntryBatch } = require('./ItemEntryBatch');
     // const { Expense } = require('../../Expenses/models/Expense.model');
     // const ProjectTask = require('models/Task');
 
@@ -199,6 +202,27 @@ export class ItemEntry extends BaseModel {
         join: {
           from: 'items_entries.itemId',
           to: 'items.id',
+        },
+      },
+
+      batch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Batch,
+        join: {
+          from: 'items_entries.batchId',
+          to: 'batches.id',
+        },
+      },
+
+      /**
+       * The batch allocations of the item entry.
+       */
+      batches: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemEntryBatch,
+        join: {
+          from: 'items_entries.id',
+          to: 'items_entries_batches.entryId',
         },
       },
 

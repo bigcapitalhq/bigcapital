@@ -10,6 +10,7 @@ import {
   useComposeRowsOnEditTableCell,
   useComposeRowsOnRemoveTableRow,
   useComposeRowsOnNewRow,
+  useComposeRowsOnUpdateTableRow,
 } from './utils';
 import type { ItemEntry } from '@/interfaces/ItemEntries';
 import type { Item, TaxRate } from '@bigcapital/sdk-ts';
@@ -34,6 +35,7 @@ interface ItemsEntriesTableProps {
   isInclusiveTax?: boolean;
   landedCost?: boolean;
   defaultEntry?: ItemEntry;
+  batchMode?: 'purchase' | 'sale';
 }
 
 /**
@@ -81,6 +83,7 @@ function ItemEntriesTableRoot() {
     landedCost,
     taxRates,
     itemType,
+    batchMode,
   } = useItemEntriesTableContext();
 
   // Editiable items entries columns.
@@ -89,6 +92,7 @@ function ItemEntriesTableRoot() {
   const composeRowsOnEditCell = useComposeRowsOnEditTableCell();
   const composeRowsOnDeleteRow = useComposeRowsOnRemoveTableRow();
   const composeRowsOnNewRow = useComposeRowsOnNewRow();
+  const composeRowsOnUpdateRow = useComposeRowsOnUpdateTableRow();
 
   // Handle the fetch item row details.
   const { setItemRow, cellsLoading, isItemFetching } = useFetchItemRow({
@@ -118,6 +122,15 @@ function ItemEntriesTableRoot() {
     handleChange(newRows);
   };
 
+  // Handle updating a full row at once (used by the batch cell).
+  const handleUpdateRow = useCallback(
+    (rowIndex: number, patch: Partial<ItemEntry>) => {
+      const newRows = composeRowsOnUpdateRow(rowIndex, patch);
+      handleChange(newRows);
+    },
+    [composeRowsOnUpdateRow, handleChange],
+  );
+
   return (
     <DataTableEditable
       className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
@@ -132,9 +145,11 @@ function ItemEntriesTableRoot() {
         taxRates,
         errors: errors || [],
         updateData: handleUpdateData,
+        updateRow: handleUpdateRow,
         removeRow: handleRemoveRow,
         autoFocus: ['itemId', 0],
         currencyCode,
+        batchMode,
       }}
     />
   );
@@ -148,6 +163,9 @@ ItemsEntriesTable.defaultProps = {
     quantity: '',
     rate: '',
     discount: '',
+    batchId: null,
+    batch: null,
+    batches: [],
   },
   initialEntries: [],
   taxRates: [],

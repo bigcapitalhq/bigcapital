@@ -12,6 +12,7 @@ import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateBillDto } from '../dtos/Bill.dto';
+import { BatchAllocationsService } from '@/modules/Batches/BatchAllocations.service';
 
 @Injectable()
 export class CreateBill {
@@ -22,6 +23,7 @@ export class CreateBill {
     private itemsEntriesService: ItemsEntriesService,
     private transformerDTO: BillDTOTransformer,
     private subscriptionAccess: SubscriptionAccessService,
+    private batchAllocations: BatchAllocationsService,
 
     @Inject(Bill.name)
     private billModel: TenantModelProxy<typeof Bill>,
@@ -86,6 +88,14 @@ export class CreateBill {
       const bill = await this.billModel()
         .query(trx)
         .upsertGraphAndFetch(billObj);
+
+      // Replaces the batch allocations of the bill entries.
+      await this.batchAllocations.syncEntriesAllocations(
+        'Bill',
+        bill.id,
+        billDTO.entries,
+        trx,
+      );
 
       // Triggers `onBillCreated` event.
       await this.eventPublisher.emitAsync(events.bill.onCreated, {

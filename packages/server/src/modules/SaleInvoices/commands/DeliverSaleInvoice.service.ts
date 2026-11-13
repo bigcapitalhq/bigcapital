@@ -82,7 +82,7 @@ export class DeliverSaleInvoice {
       .query(trx)
       .findById(saleInvoiceId)
       .forUpdate()
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.batches')
       .throwIfNotFound();
 
     // Throws error in case the sale invoice already published.

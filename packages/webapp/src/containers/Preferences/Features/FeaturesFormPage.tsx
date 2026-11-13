@@ -24,6 +24,7 @@ const defaultFormValues = flatten({
     smsNotifications: false,
     salesTax: true,
     recurringJournals: false,
+    batchTracking: false,
   },
 }) as FeaturesFormValues;
 
