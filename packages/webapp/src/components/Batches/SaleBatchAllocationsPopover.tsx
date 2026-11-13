@@ -178,9 +178,15 @@ export function SaleBatchAllocationsPopover({
             <strong>
               <T id={'batch.allocate.title'} />
             </strong>
-            <span>
-              <T id={'batch.allocate.required'} />: {requiredQuantity}
-            </span>
+            <div className={'batch-allocations__header-meta'}>
+              <span className={'batch-allocations__required'}>
+                <T id={'batch.allocate.required'} />: {requiredQuantity}
+              </span>
+              <span className={'batch-allocations__allocated'}>
+                <T id={'batch.allocate.allocated'} />: {allocatedTotal} /{' '}
+                {requiredQuantity}
+              </span>
+            </div>
           </div>
 
           {isLoading ? (
@@ -210,71 +216,86 @@ export function SaleBatchAllocationsPopover({
                 </Button>
               </div>
 
-              <div className={'batch-allocations__rows'}>
-                {rows.map((row) => {
-                  const quantity = toNumber(quantities[row.batch.id]);
-                  const exceeded = quantity > row.available + 0.0001;
+              <div className={'batch-allocations__table-wrapper'}>
+                <table className={'batch-form-table batch-allocations-table'}>
+                  <thead>
+                    <tr>
+                      <th>{intl.get('batch.form.batch_number')}</th>
+                      <th>{intl.get('batch.form.batch_ref')}</th>
+                      <th className={'batch-form-table__col-date'}>
+                        {intl.get('batch.select.expiry')}
+                      </th>
+                      <th className={'batch-form-table__col-available'}>
+                        {intl.get('batch.select.available')}
+                      </th>
+                      <th className={'batch-form-table__col-quantity'}>
+                        {intl.get('batch.select.quantity_out')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row) => {
+                      const quantity = toNumber(quantities[row.batch.id]);
+                      const exceeded = quantity > row.available + 0.0001;
 
-                  return (
-                    <div
-                      key={row.batch.id}
-                      className={'batch-allocations__row'}
-                    >
-                      <div className={'batch-allocations__batch'}>
-                        <div>
-                          <strong>{row.batch.batchNumber}</strong>
-                          {row.batch.batchRef ? (
-                            <span> · {row.batch.batchRef}</span>
-                          ) : null}
-                        </div>
-                        <div className={'batch-allocations__meta'}>
-                          <span>
-                            <T id={'batch.select.available'} />: {row.available}
-                          </span>
-                          {row.batch.expiryDate ? (
-                            <span>
-                              <T id={'batch.select.expiry'} />:{' '}
-                              {row.batch.expiryDate}
-                            </span>
-                          ) : null}
-                          {row.batch.status === 'expiring_soon' ? (
-                            <Tag minimal={true} intent={Intent.WARNING}>
-                              <T id={'batch.status.expiring_soon'} />
-                            </Tag>
-                          ) : null}
-                        </div>
-                      </div>
-                      <NumericInput
-                        value={quantity || ''}
-                        min={0}
-                        max={row.available}
-                        buttonPosition={'none'}
-                        onValueChange={(value) =>
-                          setQuantity(row.batch.id, value)
-                        }
-                        className={'batch-allocations__quantity'}
-                      />
-                      {exceeded ? (
-                        <span className={'batch-allocations__error'}>
-                          <T id={'batch.allocate.exceeds_available'} />
-                        </span>
-                      ) : null}
-                    </div>
-                  );
-                })}
+                      return (
+                        <tr key={row.batch.id}>
+                          <td className={'batch-form-table__text'}>
+                            <strong>{row.batch.batchNumber}</strong>
+                            {row.batch.status === 'expiring_soon' ? (
+                              <Tag
+                                minimal={true}
+                                intent={Intent.WARNING}
+                                className={'ml1'}
+                              >
+                                <T id={'batch.status.expiring_soon'} />
+                              </Tag>
+                            ) : null}
+                          </td>
+                          <td className={'batch-form-table__text'}>
+                            {row.batch.batchRef || '-'}
+                          </td>
+                          <td
+                            className={
+                              'batch-form-table__text batch-form-table__col-date'
+                            }
+                          >
+                            {row.batch.expiryDate || '-'}
+                          </td>
+                          <td className={'batch-form-table__number'}>
+                            {row.available}
+                          </td>
+                          <td>
+                            <NumericInput
+                              value={quantity || ''}
+                              min={0}
+                              max={row.available}
+                              buttonPosition={'none'}
+                              fill={true}
+                              onValueChange={(value) =>
+                                setQuantity(row.batch.id, value)
+                              }
+                            />
+                            {exceeded ? (
+                              <span className={'batch-form__cell-error'}>
+                                <T id={'batch.allocate.exceeds_available'} />
+                              </span>
+                            ) : null}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
 
-              <div className={'batch-allocations__summary'}>
-                <span>
-                  <T id={'batch.allocate.allocated'} />: {allocatedTotal} /{' '}
-                  {requiredQuantity}
-                </span>
-                {!isBalanced ? (
+              {!isBalanced ? (
+                <div className={'batch-allocations__summary'}>
                   <Tag minimal={true} intent={Intent.WARNING}>
                     <T id={'batch.allocate.mismatch'} />
                   </Tag>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </>
           )}
 
@@ -289,6 +310,7 @@ export function SaleBatchAllocationsPopover({
             <Button
               small={true}
               intent={Intent.PRIMARY}
+              className={'batch-allocations__apply-btn'}
               disabled={!canApply}
               onClick={handleApply}
             >

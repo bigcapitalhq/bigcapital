@@ -1,6 +1,6 @@
 import { Button, ButtonProps, Intent, Position } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-import { Form, Formik, useFormikContext } from 'formik';
+import { ErrorMessage, Form, Formik, useFormikContext } from 'formik';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -10,7 +10,6 @@ import type { Batch } from '@/hooks/query/batches/queries';
 import {
   AppToaster,
   FDateInput,
-  FFormGroup,
   FInputGroup,
   FNumericInput,
   FormattedMessage as T,
@@ -66,7 +65,7 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
 
   return (
     <Form
-      className="batch-form"
+      className="batch-form batch-form--table"
       onSubmitCapture={(event) => event.stopPropagation()}
     >
       <div className="batch-form__header">
@@ -79,58 +78,82 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
         </strong>
       </div>
 
-      <FFormGroup
-        name={'batchNumber'}
-        label={intl.get('batch.form.batch_number')}
-        labelInfo={<span className={'batch-form__required'}>*</span>}
-      >
-        <FInputGroup
-          name={'batchNumber'}
-          placeholder={intl.get('batch.form.batch_number_placeholder')}
-          autoFocus
-        />
-      </FFormGroup>
-
-      <FFormGroup name={'batchRef'} label={intl.get('batch.form.batch_ref')}>
-        <FInputGroup
-          name={'batchRef'}
-          placeholder={intl.get('batch.form.batch_ref_placeholder')}
-        />
-      </FFormGroup>
-
-      <div className="batch-form__row">
-        <FFormGroup
-          name={'manufacturedDate'}
-          label={intl.get('batch.form.manufactured_date')}
-        >
-          <FDateInput
-            name={'manufacturedDate'}
-            {...dateInputFormatter}
-            popoverProps={{ position: Position.BOTTOM, minimal: true }}
-            fill
-          />
-        </FFormGroup>
-
-        <FFormGroup
-          name={'expiryDate'}
-          label={intl.get('batch.form.expiry_date')}
-        >
-          <FDateInput
-            name={'expiryDate'}
-            {...dateInputFormatter}
-            popoverProps={{ position: Position.BOTTOM, minimal: true }}
-            fill
-          />
-        </FFormGroup>
+      <div className="batch-form__table-wrapper">
+        <table className="batch-form-table">
+          <thead>
+            <tr>
+              <th>
+                {intl.get('batch.form.batch_number')}
+                <span className="batch-form__required">*</span>
+              </th>
+              <th>{intl.get('batch.form.batch_ref')}</th>
+              <th className="batch-form-table__col-date">
+                {intl.get('batch.form.manufactured_date')}
+              </th>
+              <th className="batch-form-table__col-date">
+                {intl.get('batch.form.expiry_date')}
+              </th>
+              <th className="batch-form-table__col-quantity">
+                {intl.get('batch.form.quantity')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <FInputGroup
+                  name={'batchNumber'}
+                  placeholder={intl.get('batch.form.batch_number_placeholder')}
+                  autoFocus
+                  fill={true}
+                />
+                <ErrorMessage
+                  name={'batchNumber'}
+                  component={'div'}
+                  className={'batch-form__cell-error'}
+                />
+              </td>
+              <td>
+                <FInputGroup
+                  name={'batchRef'}
+                  placeholder={intl.get('batch.form.batch_ref_placeholder')}
+                  fill={true}
+                />
+              </td>
+              <td className={'batch-form-table__col-date'}>
+                <FDateInput
+                  name={'manufacturedDate'}
+                  {...dateInputFormatter}
+                  placeholder={dateInputFormatter.placeholder}
+                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                  fill={true}
+                />
+              </td>
+              <td className={'batch-form-table__col-date'}>
+                <FDateInput
+                  name={'expiryDate'}
+                  {...dateInputFormatter}
+                  placeholder={dateInputFormatter.placeholder}
+                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                  fill={true}
+                />
+                <ErrorMessage
+                  name={'expiryDate'}
+                  component={'div'}
+                  className={'batch-form__cell-error'}
+                />
+              </td>
+              <td>
+                <FNumericInput name={'quantity'} min={0} fill={true} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <FFormGroup
-        name={'quantity'}
-        label={intl.get('batch.form.quantity')}
-        helperText={intl.get('batch.form.quantity_hint')}
-      >
-        <FNumericInput name={'quantity'} min={0} fill />
-      </FFormGroup>
+      <p className={'batch-form__hint'}>
+        <T id={'batch.form.quantity_hint'} />
+      </p>
 
       <div className="batch-form__footer">
         <Button

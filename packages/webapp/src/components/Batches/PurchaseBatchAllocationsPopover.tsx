@@ -184,9 +184,15 @@ export function PurchaseBatchAllocationsPopover({
             <strong>
               <T id={'batch.allocate.purchase_title'} />
             </strong>
-            <span>
-              <T id={'batch.allocate.required'} />: {requiredQuantity}
-            </span>
+            <div className={'batch-allocations__header-meta'}>
+              <span className={'batch-allocations__required'}>
+                <T id={'batch.allocate.required'} />: {requiredQuantity}
+              </span>
+              <span className={'batch-allocations__allocated'}>
+                <T id={'batch.allocate.allocated'} />: {allocatedTotal} /{' '}
+                {requiredQuantity}
+              </span>
+            </div>
           </div>
 
           {rows.length === 0 ? (
@@ -194,127 +200,147 @@ export function PurchaseBatchAllocationsPopover({
               <T id={'batch.allocate.no_batches'} />
             </div>
           ) : (
-            <div className={'batch-allocations__rows'}>
-              {rows.map((row) => (
-                <div
-                  key={row.key}
-                  className={'batch-allocations__purchase-row'}
-                >
-                  <div className={'batch-allocations__purchase-row-header'}>
-                    <strong>
+            <div className={'batch-allocations__table-wrapper'}>
+              <table className={'batch-form-table batch-allocations-table'}>
+                <thead>
+                  <tr>
+                    <th>{intl.get('batch.form.batch_number')}</th>
+                    <th>{intl.get('batch.form.batch_ref')}</th>
+                    <th className={'batch-form-table__col-date'}>
+                      {intl.get('batch.form.manufactured_date')}
+                    </th>
+                    <th className={'batch-form-table__col-date'}>
+                      {intl.get('batch.form.expiry_date')}
+                    </th>
+                    <th className={'batch-form-table__col-quantity'}>
+                      {intl.get('batch.form.quantity')}
+                    </th>
+                    <th className={'batch-form-table__col-actions'} />
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row.key}>
                       {row.batchId ? (
-                        row.batchNumber
+                        <>
+                          <td className={'batch-form-table__text'}>
+                            {row.batchNumber}
+                          </td>
+                          <td className={'batch-form-table__text'}>
+                            {row.batchRef || '-'}
+                          </td>
+                          <td className={'batch-form-table__text'}>
+                            {row.manufacturedDate
+                              ? dateInputFormatter.formatDate(
+                                  row.manufacturedDate,
+                                )
+                              : '-'}
+                          </td>
+                          <td className={'batch-form-table__text'}>
+                            {row.expiryDate
+                              ? dateInputFormatter.formatDate(row.expiryDate)
+                              : '-'}
+                          </td>
+                        </>
                       ) : (
-                        <T id={'batch.form.new_title'} />
+                        <>
+                          <td>
+                            <InputGroup
+                              placeholder={intl.get(
+                                'batch.form.batch_number_placeholder',
+                              )}
+                              value={row.batchNumber}
+                              fill={true}
+                              onChange={(event) =>
+                                updateRow(row.key, {
+                                  batchNumber: event.currentTarget.value,
+                                })
+                              }
+                            />
+                          </td>
+                          <td>
+                            <InputGroup
+                              placeholder={intl.get(
+                                'batch.form.batch_ref_placeholder',
+                              )}
+                              value={row.batchRef}
+                              fill={true}
+                              onChange={(event) =>
+                                updateRow(row.key, {
+                                  batchRef: event.currentTarget.value,
+                                })
+                              }
+                            />
+                          </td>
+                          <td className={'batch-form-table__col-date'}>
+                            <DateInput
+                              value={row.manufacturedDate}
+                              onChange={(date) =>
+                                updateRow(row.key, {
+                                  manufacturedDate: date ?? null,
+                                })
+                              }
+                              {...dateInputFormatter}
+                              placeholder={dateInputFormatter.placeholder}
+                              popoverProps={{ minimal: true }}
+                              fill={true}
+                            />
+                          </td>
+                          <td className={'batch-form-table__col-date'}>
+                            <DateInput
+                              value={row.expiryDate}
+                              onChange={(date) =>
+                                updateRow(row.key, { expiryDate: date ?? null })
+                              }
+                              {...dateInputFormatter}
+                              placeholder={dateInputFormatter.placeholder}
+                              popoverProps={{ minimal: true }}
+                              fill={true}
+                            />
+                          </td>
+                        </>
                       )}
-                    </strong>
-                    <Button
-                      small={true}
-                      minimal={true}
-                      icon={'trash'}
-                      onClick={() => removeRow(row.key)}
-                    />
-                  </div>
-
-                  {row.batchId ? (
-                    <div className={'batch-allocations__meta'}>
-                      {row.batchRef ? <span>{row.batchRef}</span> : null}
-                      {row.manufacturedDate ? (
-                        <span>
-                          <T id={'batch.form.manufactured_date'} />:{' '}
-                          {dateInputFormatter.formatDate(row.manufacturedDate)}
-                        </span>
-                      ) : null}
-                      {row.expiryDate ? (
-                        <span>
-                          <T id={'batch.form.expiry_date'} />:{' '}
-                          {dateInputFormatter.formatDate(row.expiryDate)}
-                        </span>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <>
-                      <InputGroup
-                        placeholder={intl.get(
-                          'batch.form.batch_number_placeholder',
-                        )}
-                        value={row.batchNumber}
-                        onChange={(event) =>
-                          updateRow(row.key, {
-                            batchNumber: event.currentTarget.value,
-                          })
-                        }
-                      />
-                      <InputGroup
-                        placeholder={intl.get(
-                          'batch.form.batch_ref_placeholder',
-                        )}
-                        value={row.batchRef}
-                        onChange={(event) =>
-                          updateRow(row.key, {
-                            batchRef: event.currentTarget.value,
-                          })
-                        }
-                      />
-                      <div className={'batch-allocations__dates'}>
-                        <DateInput
-                          value={row.manufacturedDate}
-                          onChange={(date) =>
-                            updateRow(row.key, {
-                              manufacturedDate: date ?? null,
-                            })
+                      <td>
+                        <NumericInput
+                          value={row.quantity || ''}
+                          min={0}
+                          buttonPosition={'none'}
+                          fill={true}
+                          onValueChange={(value) =>
+                            updateRow(row.key, { quantity: toNumber(value) })
                           }
-                          {...dateInputFormatter}
-                          placeholder={intl.get('batch.form.manufactured_date')}
-                          popoverProps={{ minimal: true }}
                         />
-                        <DateInput
-                          value={row.expiryDate}
-                          onChange={(date) =>
-                            updateRow(row.key, { expiryDate: date ?? null })
-                          }
-                          {...dateInputFormatter}
-                          placeholder={intl.get('batch.form.expiry_date')}
-                          popoverProps={{ minimal: true }}
+                      </td>
+                      <td className={'batch-form-table__col-actions'}>
+                        <Button
+                          small={true}
+                          minimal={true}
+                          icon={'trash'}
+                          onClick={() => removeRow(row.key)}
                         />
-                      </div>
-                    </>
-                  )}
-
-                  <div className={'batch-allocations__quantity-row'}>
-                    <span>
-                      <T id={'batch.form.quantity'} />
-                    </span>
-                    <NumericInput
-                      value={row.quantity || ''}
-                      min={0}
-                      buttonPosition={'none'}
-                      onValueChange={(value) =>
-                        updateRow(row.key, { quantity: toNumber(value) })
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 
-          <div className={'batch-allocations__toolbar'}>
+          <div
+            className={
+              'batch-allocations__toolbar batch-allocations__toolbar--purchase'
+            }
+          >
             <Button small={true} minimal={true} icon={'add'} onClick={addRow}>
               <T id={'batch.allocate.add_batch'} />
             </Button>
-          </div>
-
-          <div className={'batch-allocations__summary'}>
-            <span>
-              <T id={'batch.allocate.allocated'} />: {allocatedTotal} /{' '}
-              {requiredQuantity}
-            </span>
-            {!isBalanced ? (
-              <Tag minimal={true} intent={Intent.WARNING}>
-                <T id={'batch.allocate.mismatch'} />
-              </Tag>
-            ) : null}
+            <div className={'batch-allocations__toolbar-meta'}>
+              {!isBalanced ? (
+                <Tag minimal={true} intent={Intent.WARNING}>
+                  <T id={'batch.allocate.mismatch'} />
+                </Tag>
+              ) : null}
+            </div>
           </div>
 
           <div className={'batch-allocations__footer'}>
@@ -328,6 +354,7 @@ export function PurchaseBatchAllocationsPopover({
             <Button
               small={true}
               intent={Intent.PRIMARY}
+              className={'batch-allocations__apply-btn'}
               loading={isSaving}
               disabled={!canApply}
               onClick={handleApply}
