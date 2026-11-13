@@ -393,6 +393,20 @@ export const events = {
   },
 
   /**
+   * Batches service.
+   */
+  batch: {
+    onCreating: 'onBatchCreating',
+    onCreated: 'onBatchCreated',
+
+    onEditing: 'onBatchEditing',
+    onEdited: 'onBatchEdited',
+
+    onDeleting: 'onBatchDeleting',
+    onDeleted: 'onBatchDeleted',
+  },
+
+  /**
    * Item category service.
    */
   itemCategory: {

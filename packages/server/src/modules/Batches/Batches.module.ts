@@ -13,6 +13,7 @@ import { GetBatchesService } from './queries/GetBatches.service';
 import { BatchDetailsReportService } from './BatchDetailsReport.service';
 import { BatchesSubscriber } from './BatchesSubscriber';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
+import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { BatchAllocationsModule } from './BatchAllocations.module';
 
@@ -21,6 +22,7 @@ const models = [RegisterTenancyModel(Batch)];
 @Module({
   imports: [
     TenancyModule,
+    TenancyDatabaseModule,
     InventoryCostModule,
     BatchAllocationsModule,
     ...models,

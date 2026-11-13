@@ -1,3 +1,8 @@
+import type { Knex } from 'knex';
+import type { Batch } from '../models/Batch';
+import type { CreateBatchDto } from '../dtos/CreateBatch.dto';
+import type { EditBatchDto } from '../dtos/EditBatch.dto';
+
 export enum BatchStatus {
   Active = 'active',
   ExpiringSoon = 'expiring_soon',
@@ -68,4 +73,43 @@ export interface IGetBatchesFilter {
   page?: number;
   pageSize?: number;
   sort?: string;
+}
+
+export interface IBatchCreatingPayload {
+  batchDTO: CreateBatchDto;
+  trx: Knex.Transaction;
+}
+
+export interface IBatchCreatedPayload {
+  batch: Batch;
+  batchId: number;
+  batchDTO: CreateBatchDto;
+  trx: Knex.Transaction;
+}
+
+export interface IBatchEditingPayload {
+  batchId: number;
+  batchDTO: EditBatchDto;
+  oldBatch: Batch;
+  trx: Knex.Transaction;
+}
+
+export interface IBatchEditedPayload {
+  batch: Batch;
+  batchId: number;
+  batchDTO: EditBatchDto;
+  oldBatch: Batch;
+  trx: Knex.Transaction;
+}
+
+export interface IBatchDeletingPayload {
+  batchId: number;
+  oldBatch: Batch;
+  trx: Knex.Transaction;
+}
+
+export interface IBatchDeletedPayload {
+  batchId: number;
+  oldBatch: Batch;
+  trx: Knex.Transaction;
 }
