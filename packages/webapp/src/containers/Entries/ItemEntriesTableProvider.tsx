@@ -38,6 +38,8 @@ export interface ItemEntriesTableContextValue {
   isInclusiveTax?: boolean;
   /* Controls whether the landed cost column is displayed. */
   landedCost?: boolean;
+  /* The batch tracking mode of the table (purchase/sale). */
+  batchMode?: 'purchase' | 'sale';
 }
 
 const ItemEntriesTableContext = createContext<

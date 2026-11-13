@@ -177,6 +177,14 @@ export const financialReportMenus: FinancialSection[] = [
         ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
       },
       {
+        title: <T id={'batch_details'} />,
+        desc: <T id={'batch_details_desc'} />,
+        link: '/financial-reports/batch-details',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_BATCH_DETAILS,
+        feature: Features.BatchTracking,
+      },
+      {
         title: <T id={'inventory_valuation'} />,
         desc: <T id={'summerize_your_transactions_for_each_inventory_item'} />,
         link: '/financial-reports/inventory-valuation',

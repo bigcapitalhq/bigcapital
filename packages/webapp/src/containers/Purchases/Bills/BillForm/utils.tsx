@@ -6,6 +6,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBillFormContext } from './BillFormProvider';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { Bill, CreateBillBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import {
@@ -48,6 +50,9 @@ export type BillFormEntry = {
   taxRateId: string | number;
   taxRate: string | number;
   taxAmount: string | number;
+  batchId?: number | null;
+  batch?: Batch | null;
+  batches?: ItemEntryBatchAllocation[];
 };
 
 export type BillFormValues = {
@@ -83,6 +88,9 @@ export const defaultBillEntry: BillFormEntry = {
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
+  batchId: null,
+  batch: null,
+  batches: [],
 };
 
 // Default bill.
@@ -160,8 +168,21 @@ export const transformEntriesToSubmit = (
   entries: BillFormEntry[],
 ): Record<string, unknown>[] => {
   const transformBillEntry = (entry: BillFormEntry) => {
-    const { amount, ...rest } = transformToForm(entry, defaultBillEntry);
-    return rest;
+    const { amount, batch, batchId, batches, ...rest } = transformToForm(
+      entry,
+      defaultBillEntry,
+    );
+    const normalizedBatches = ((batches ?? []) as ItemEntryBatchAllocation[])
+      .filter((allocation) => allocation.batchId && allocation.quantity > 0)
+      .map((allocation) => ({
+        batchId: allocation.batchId,
+        quantity: allocation.quantity,
+      }));
+
+    return {
+      ...rest,
+      ...(normalizedBatches.length > 0 ? { batches: normalizedBatches } : {}),
+    };
   };
   return FF.pipe(
     entries,

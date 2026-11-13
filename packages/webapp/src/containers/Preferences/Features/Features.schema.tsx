@@ -6,6 +6,7 @@ const Schema = Yup.object().shape({
     smsNotifications: Yup.boolean().nullable(),
     salesTax: Yup.boolean().nullable(),
     recurringJournals: Yup.boolean().nullable(),
+    batchTracking: Yup.boolean().nullable(),
   }),
 });
 

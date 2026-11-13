@@ -9,6 +9,8 @@ export interface IInventoryTransactionItemEntry {
   rate: number;
   costAccountId?: number;
   warehouseId?: number;
+  batchId?: number;
+  batches?: Array<{ batchId: number; quantity: number }>;
   description?: string;
 }
 
@@ -66,6 +68,7 @@ export interface IInventoryTransaction {
   costAccountId?: number;
   createdAt: Date;
   warehouseId?: number | null;
+  batchId?: number | null;
   meta: IInventoryTransactionMeta;
 }
 
@@ -81,6 +84,7 @@ export interface IInventoryTransactionRecord {
   entryId?: number;
   createdAt?: Date;
   warehouseId?: number;
+  batchId?: number;
   branchId?: number | null;
   meta?: IInventoryTransactionMeta;
 }

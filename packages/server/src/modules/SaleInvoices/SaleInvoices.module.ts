@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
+import { BatchAllocationsIntegrationModule } from '../TransactionItemEntry/integrations/BatchAllocationsIntegration.module';
 import { CreateSaleInvoice } from './commands/CreateSaleInvoice.service';
 import { DeleteSaleInvoice } from './commands/DeleteSaleInvoice.service';
 import { DeliverSaleInvoice } from './commands/DeliverSaleInvoice.service';
@@ -90,6 +91,7 @@ import { SubscriptionModule } from '../Subscription/Subscription.module';
     MailNotificationModule,
     BullModule.registerQueue({ name: SMS_QUEUE }),
     forwardRef(() => InventoryCostModule),
+    BatchAllocationsIntegrationModule,
     forwardRef(() => PaymentLinksModule),
     DynamicListModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),

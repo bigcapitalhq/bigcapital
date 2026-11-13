@@ -721,6 +721,10 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
           },
           {
+            label: intl.get('permissions.batch_details'),
+            key: ReportsAction.READ_BATCH_DETAILS,
+          },
+          {
             label: intl.get('permissions.cashflow_account_transactions'),
             key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
           },

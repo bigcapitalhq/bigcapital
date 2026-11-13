@@ -34,6 +34,8 @@ export class GetSaleInvoice {
       .query(trx)
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item')
+      .withGraphFetched('entries.batch')
+      .withGraphFetched('entries.batches.batch')
       .withGraphFetched('entries.tax')
       .withGraphFetched('customer')
       .withGraphFetched('branch')

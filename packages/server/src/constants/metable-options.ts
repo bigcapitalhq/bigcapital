@@ -374,5 +374,8 @@ export const SettingsOptions = {
     recurring_journals: {
       type: 'boolean',
     },
+    batch_tracking: {
+      type: 'boolean',
+    },
   },
 };

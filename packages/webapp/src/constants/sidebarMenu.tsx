@@ -783,6 +783,16 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 },
               },
               {
+                text: <T id={'sidebar.batch_details'} />,
+                href: '/financial-reports/batch-details',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.BatchTracking,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_BATCH_DETAILS,
+                },
+              },
+              {
                 text: <T id={'sidebar.inventory_valuation'} />,
                 href: '/financial-reports/inventory-valuation',
                 type: ISidebarMenuItemType.Link,

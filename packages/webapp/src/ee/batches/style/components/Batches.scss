@@ -1,0 +1,268 @@
+.batch-form-popover {
+  width: min(630px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px;
+}
+
+.batch-form {
+  .batch-form__header {
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .batch-form__required {
+    margin-left: 3px;
+    color: var(--color-red1, #cd4246);
+  }
+
+  .batch-form__hint {
+    margin: 8px 0 0;
+    font-size: 11px;
+    opacity: 0.65;
+  }
+
+  .batch-form__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 10px;
+  }
+}
+
+.batch-form__cell-error {
+  display: block;
+  margin-top: 2px;
+  color: var(--color-red1, #cd4246);
+  font-size: 11px;
+}
+
+.batch-form__table-wrapper,
+.batch-allocations__table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+}
+
+.batch-form-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th {
+    padding: 0 6px 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    opacity: 0.72;
+  }
+
+  td {
+    padding: 4px 6px;
+    vertical-align: top;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  tbody tr:first-child td {
+    border-top: none;
+  }
+
+  th:first-child,
+  td:first-child {
+    padding-left: 0;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 0;
+  }
+
+  .bp4-input-group,
+  .bp4-input,
+  .bp4-numeric-input {
+    width: 100%;
+    background-color: transparent !important;
+  }
+
+  .batch-form-table__text {
+    font-size: 12px;
+    line-height: 30px;
+    white-space: nowrap;
+  }
+
+  .batch-form-table__number {
+    font-size: 12px;
+    line-height: 30px;
+    text-align: right;
+  }
+
+  .batch-form-table__col-quantity {
+    width: 100px;
+  }
+
+  .batch-form-table__col-date {
+    width: 120px;
+    max-width: 120px;
+  }
+
+  .batch-form-table__col-available {
+    width: 90px;
+    text-align: right;
+  }
+
+  .batch-form-table__col-actions {
+    width: 36px;
+  }
+}
+
+.batch-tab__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+
+  h4 {
+    margin: 0 0 4px;
+  }
+}
+
+.batch-tab__description {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.7;
+  max-width: 520px;
+}
+
+.batch-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.batch-details-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .bp4-form-group {
+    margin-bottom: 0;
+    min-width: 150px;
+  }
+
+  .bp4-form-group.bp4-inline .bp4-form-content {
+    width: 100%;
+  }
+
+  .batch-details-filters__actions {
+    margin-left: auto;
+  }
+}
+
+.batch-allocations {
+  width: min(610px, calc(100vw - 24px));
+  max-height: min(520px, calc(100vh - 24px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px;
+
+  &.batch-allocations--purchase {
+    width: min(750px, calc(100vw - 24px));
+  }
+
+  .batch-allocations__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 1.4rem;
+    font-size: 13px;
+  }
+
+  .batch-allocations__required {
+    color: var(--color-muted-text);
+  }
+
+  .batch-allocations__allocated {
+    color: var(--color-muted-text);
+  }
+
+  .batch-allocations__header-meta {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .batch-allocations__empty {
+    padding: 0 0 1rem;
+    opacity: 0.7;
+  }
+
+  .batch-allocations__table-wrapper {
+    margin-bottom: 1rem;
+  }
+
+  .batch-allocations__toolbar {
+    display: flex;
+    justify-content: flex-start;
+    gap: 4px;
+    margin-bottom: 6px;
+
+    &.batch-allocations__toolbar--purchase {
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
+  .batch-allocations__toolbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .batch-allocations__apply-btn {
+    min-width: 100px;
+  }
+
+  .batch-allocations__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+
+  .batch-allocations__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 10px;
+  }
+}
+
+.batch-allocations-popover {
+  max-width: min(810px, calc(100vw - 24px));
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

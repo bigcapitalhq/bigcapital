@@ -7,6 +7,7 @@ export enum Features {
   SALES_TAX = 'sales_tax',
   TRACKING_CATEGORIES = 'tracking_categories',
   RECURRING_JOURNALS = 'recurring_journals',
+  BATCH_TRACKING = 'batch_tracking',
 }
 
 export interface IFeatureAllItem {

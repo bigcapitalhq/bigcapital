@@ -76,7 +76,7 @@ export class CommandSaleInvoiceDTOTransformer {
     const initialEntries = saleInvoiceDTO.entries.map((entry) => ({
       referenceType: 'SaleInvoice',
       isInclusiveTax: saleInvoiceDTO.isInclusiveTax,
-      ...entry,
+      ...omit(entry, ['batches']),
     }));
     const asyncEntries = await composeAsync(
       // Associate tax rate from tax id to entries.

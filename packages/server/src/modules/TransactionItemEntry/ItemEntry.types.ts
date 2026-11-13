@@ -11,6 +11,8 @@ export interface IItemEntryDTO {
   itemId: number;
   landedCost?: boolean;
   warehouseId?: number;
+  batchId?: number;
+  batches?: Array<{ batchId: number; quantity: number }>;
 
   sellAccountId?: number;
   costAccountId?: number;
