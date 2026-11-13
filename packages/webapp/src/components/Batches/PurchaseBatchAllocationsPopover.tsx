@@ -174,26 +174,6 @@ export function PurchaseBatchAllocationsPopover({
       minimal={true}
       disabled={disabled}
       popoverClassName={'batch-allocations-popover'}
-      renderTarget={(targetProps) => (
-        <Tooltip2
-          content={intl.get('batch.allocate.purchase_tooltip')}
-          placement={'top'}
-          disabled={isOpen}
-        >
-          <Button
-            {...targetProps}
-            small={true}
-            minimal={true}
-            icon={'full-stacked-chart'}
-            intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
-            aria-label={intl.get('batch.allocate.purchase_tooltip')}
-            onClick={(event) => {
-              event.stopPropagation();
-              targetProps.onClick?.(event);
-            }}
-          />
-        </Tooltip2>
-      )}
       content={
         <div
           className={'batch-allocations batch-allocations--purchase'}
@@ -383,6 +363,19 @@ export function PurchaseBatchAllocationsPopover({
           </div>
         </div>
       }
-    />
+    >
+      <Tooltip2
+        content={intl.get('batch.allocate.purchase_tooltip')}
+        placement={'top'}
+      >
+        <Button
+          small={true}
+          minimal={true}
+          icon={'full-stacked-chart'}
+          intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
+          aria-label={intl.get('batch.allocate.purchase_tooltip')}
+        />
+      </Tooltip2>
+    </Popover2>
   );
 }

@@ -182,14 +182,24 @@ export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
 }
 
 /**
- * Quantity cell with the batch allocation trigger on the left.
+ * Quantity cell with the batch allocation trigger inside the input's left
+ * element.
  */
 function BatchQuantityCell(props: any) {
+  const { row, payload } = props;
+  const item = payload.items?.find(
+    (item: { id: number }) => Number(item.id) === Number(row.original.itemId),
+  );
+
   return (
-    <div className={'batch-quantity-cell'}>
-      <BatchEntryCell row={props.row} payload={props.payload} />
-      <NumericInputCell {...props} />
-    </div>
+    <NumericInputCell
+      {...props}
+      leftElement={
+        item?.type === 'inventory' ? (
+          <BatchEntryCell row={row} payload={payload} />
+        ) : undefined
+      }
+    />
   );
 }
 BatchQuantityCell.cellType = NumericInputCell.cellType;
