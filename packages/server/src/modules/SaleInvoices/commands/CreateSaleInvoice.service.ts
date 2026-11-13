@@ -17,7 +17,7 @@ import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
-import { BatchAllocationsService } from '@/modules/Batches/BatchAllocations.service';
+import { BatchAllocationsBridge } from '@/modules/TransactionItemEntry/integrations/BatchAllocationsBridge';
 
 @Injectable()
 export class CreateSaleInvoice {
@@ -40,7 +40,7 @@ export class CreateSaleInvoice {
     private readonly commandEstimateValidators: SaleEstimateValidators,
     private readonly uow: UnitOfWork,
     private readonly subscriptionAccess: SubscriptionAccessService,
-    private readonly batchAllocations: BatchAllocationsService,
+    private readonly batchAllocationsBridge: BatchAllocationsBridge,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -117,7 +117,7 @@ export class CreateSaleInvoice {
         .upsertGraph(saleInvoiceObj);
 
       // Replaces the batch allocations of the invoice entries.
-      await this.batchAllocations.syncEntriesAllocations(
+      await this.batchAllocationsBridge.syncEntriesAllocations(
         'SaleInvoice',
         saleInvoice.id,
         saleInvoiceDTO.entries,

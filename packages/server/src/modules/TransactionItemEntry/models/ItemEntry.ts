@@ -190,7 +190,7 @@ export class ItemEntry extends BaseModel {
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
-    const { Batch } = require('../../Batches/models/Batch');
+    const { Batch } = require('../../EE/Batches/models/Batch');
     const { ItemEntryBatch } = require('./ItemEntryBatch');
     // const { Expense } = require('../../Expenses/models/Expense.model');
     // const ProjectTask = require('models/Task');

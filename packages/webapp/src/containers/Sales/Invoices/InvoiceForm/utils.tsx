@@ -6,7 +6,7 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import type { Batch } from '@/hooks/query/batches/queries';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { SaleInvoice, CreateSaleInvoiceBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';

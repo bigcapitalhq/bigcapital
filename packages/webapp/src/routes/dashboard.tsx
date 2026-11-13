@@ -448,9 +448,9 @@ export const getDashboardRoutes = () => [
   {
     path: `/financial-reports/batch-details`,
     component: lazy(() =>
-      import('@/containers/FinancialStatements/BatchDetails/BatchDetails').then(
-        (m) => ({ default: m.BatchDetails }),
-      ),
+      import('@/ee/batches/containers/BatchDetails/BatchDetails').then((m) => ({
+        default: m.BatchDetails,
+      })),
     ),
     breadcrumb: intl.get('batch_details'),
     hint: intl.get('batch_details_desc'),

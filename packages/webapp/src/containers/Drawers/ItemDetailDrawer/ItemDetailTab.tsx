@@ -1,12 +1,12 @@
 import { Tab } from '@blueprintjs/core';
 import React from 'react';
-import { ItemBatchesTable } from './Batches';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { ItemDetailHeader } from './ItemDetailHeader';
 import { ItemPaymentTransactions } from './ItemPaymentTransactions';
 import { WarehouseLocationsTable as WarehousesLocationsTable } from './WarehousesLocations';
 import { DrawerMainTabs, FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { ItemBatchesTable } from '@/ee/batches/containers/ItemBatches';
 import { useFeatureCan } from '@/hooks/state';
 
 export function ItemDetailTab() {

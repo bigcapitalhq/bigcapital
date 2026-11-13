@@ -32,7 +32,7 @@ export class ItemEntryBatch extends TenantBaseModel {
    */
   static get relationMappings() {
     const { ItemEntry } = require('./ItemEntry');
-    const { Batch } = require('../../Batches/models/Batch');
+    const { Batch } = require('../../EE/Batches/models/Batch');
 
     return {
       entry: {

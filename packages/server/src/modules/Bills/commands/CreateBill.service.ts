@@ -12,7 +12,7 @@ import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateBillDto } from '../dtos/Bill.dto';
-import { BatchAllocationsService } from '@/modules/Batches/BatchAllocations.service';
+import { BatchAllocationsBridge } from '@/modules/TransactionItemEntry/integrations/BatchAllocationsBridge';
 
 @Injectable()
 export class CreateBill {
@@ -23,7 +23,7 @@ export class CreateBill {
     private itemsEntriesService: ItemsEntriesService,
     private transformerDTO: BillDTOTransformer,
     private subscriptionAccess: SubscriptionAccessService,
-    private batchAllocations: BatchAllocationsService,
+    private batchAllocationsBridge: BatchAllocationsBridge,
 
     @Inject(Bill.name)
     private billModel: TenantModelProxy<typeof Bill>,
@@ -90,7 +90,7 @@ export class CreateBill {
         .upsertGraphAndFetch(billObj);
 
       // Replaces the batch allocations of the bill entries.
-      await this.batchAllocations.syncEntriesAllocations(
+      await this.batchAllocationsBridge.syncEntriesAllocations(
         'Bill',
         bill.id,
         billDTO.entries,

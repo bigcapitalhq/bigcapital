@@ -26,6 +26,7 @@ export enum SubscriptionFeature {
   SmsNotifications = 'sms_notifications',
   LandedCost = 'landed_cost',
   TrackingCategories = 'tracking_categories',
+  BatchTracking = 'batch_tracking',
 }
 
 export const ALL_SUBSCRIPTION_FEATURES: SubscriptionFeature[] =

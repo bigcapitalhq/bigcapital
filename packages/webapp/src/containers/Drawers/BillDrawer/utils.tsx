@@ -15,12 +15,12 @@ import { useBillDrawerContext } from './BillDrawerProvider';
 import type { Bill } from '@bigcapital/sdk-ts';
 import {
   TextOverviewTooltipCell,
-  getEntryBatchAllocationsSummary,
   FormattedMessage as T,
   Choose,
   Icon,
 } from '@/components';
 import { Features } from '@/constants/features';
+import { getEntryBatchAllocationsSummary } from '@/ee/batches/components';
 import { useFeatureCan } from '@/hooks/state';
 import { getColumnWidth } from '@/utils';
 

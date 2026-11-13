@@ -1,4 +1,4 @@
-import type { Batch } from '@/hooks/query/batches/queries';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
 
 export interface ItemEntryBatchAllocation {
   id?: number;

@@ -115,7 +115,7 @@ export class InventoryTransaction extends TenantBaseModel {
     } = require('../../TransactionItemEntry/models/ItemEntry');
     const { InventoryTransactionMeta } = require('./InventoryTransactionMeta');
     const { InventoryCostLotTracker } = require('./InventoryCostLotTracker');
-    const { Batch } = require('../../Batches/models/Batch');
+    const { Batch } = require('../../EE/Batches/models/Batch');
 
     return {
       // Transaction meta.

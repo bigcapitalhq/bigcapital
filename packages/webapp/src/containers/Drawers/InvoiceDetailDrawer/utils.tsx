@@ -20,11 +20,11 @@ import {
   Can,
   If,
   TextOverviewTooltipCell,
-  getEntryBatchAllocationsSummary,
   FeatureCan,
 } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { Features } from '@/constants/features';
+import { getEntryBatchAllocationsSummary } from '@/ee/batches/components';
 import { useFeatureCan } from '@/hooks/state';
 import { getColumnWidth } from '@/utils';
 

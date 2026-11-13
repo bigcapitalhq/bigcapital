@@ -3,16 +3,10 @@ import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
-import type { Batch } from '@/hooks/query/batches/queries';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { Tooltip2Props } from '@blueprintjs/popover2';
-import {
-  Hint,
-  Icon,
-  FormattedMessage as T,
-  PurchaseBatchAllocationsPopover,
-  SaleBatchAllocationsPopover,
-} from '@/components';
+import { Hint, Icon, FormattedMessage as T } from '@/components';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -23,6 +17,10 @@ import {
 } from '@/components/DataTableCells';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
 import { Align, CellType } from '@/constants';
+import {
+  PurchaseBatchAllocationsPopover,
+  SaleBatchAllocationsPopover,
+} from '@/ee/batches/components';
 import { formattedAmount } from '@/utils';
 
 /**

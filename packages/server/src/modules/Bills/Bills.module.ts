@@ -33,7 +33,7 @@ import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
 import { BulkDeleteBillsService } from './BulkDeleteBills.service';
 import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.service';
 import { SubscriptionModule } from '../Subscription/Subscription.module';
-import { BatchAllocationsModule } from '../Batches/BatchAllocations.module';
+import { BatchAllocationsIntegrationModule } from '../TransactionItemEntry/integrations/BatchAllocationsIntegration.module';
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { BatchAllocationsModule } from '../Batches/BatchAllocations.module';
     AccountsModule,
     DynamicListModule,
     InventoryCostModule,
-    BatchAllocationsModule,
+    BatchAllocationsIntegrationModule,
   ],
   providers: [
     BillsApplication,

@@ -110,7 +110,7 @@ export class Item extends TenantBaseModel {
       InventoryAdjustmentEntry,
     } = require('../../InventoryAdjutments/models/InventoryAdjustmentEntry');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
-    const { Batch } = require('../../Batches/models/Batch');
+    const { Batch } = require('../../EE/Batches/models/Batch');
 
     return {
       /**

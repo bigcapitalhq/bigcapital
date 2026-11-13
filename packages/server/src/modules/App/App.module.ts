@@ -79,7 +79,6 @@ import { FinancialStatementsModule } from '../FinancialStatements/FinancialState
 import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 import { FeaturesModule } from '../Features/Features.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
-import { BatchesModule } from '../Batches/Batches.module';
 import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTransfers.module';
 import { DashboardModule } from '../Dashboard/Dashboard.module';
 import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
@@ -246,7 +245,6 @@ import { AppThrottleModule } from './AppThrottle.module';
     FeaturesModule,
     InventoryAdjustmentsModule,
     InventoryCostModule,
-    BatchesModule,
     PostHogModule,
     EventTrackerModule,
     FinancialStatementsModule,

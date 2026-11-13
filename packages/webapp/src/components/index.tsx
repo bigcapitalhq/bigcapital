@@ -48,7 +48,6 @@ export * from './FlexGrid';
 export * from './Menu';
 export * from './Icon';
 export * from './Items';
-export * from './Batches';
 export * from './TrackingCategories';
 export * from './Select';
 export * from './FormattedMessage';
