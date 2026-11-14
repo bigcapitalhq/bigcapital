@@ -3,8 +3,12 @@ import { raw } from 'objection';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Batch } from './models/Batch';
-import { calcBatchBalance, getBatchStatus } from './Batches.utils';
-import type { IBatchWithBalance } from './types/Batches.types';
+import {
+  calcBatchBalance,
+  getBatchStatus,
+  toBatchQuantity,
+} from './Batches.utils';
+import type { IBatchBalance, IBatchWithBalance } from './types/Batches.types';
 
 interface IBatchTransactionsTotals {
   quantityIn: number;
@@ -29,11 +33,36 @@ export class BatchesBalanceService {
   ) {}
 
   /**
-   * Retrieves the total quantity in/out grouped by batch id.
+   * Sums the quantity in/out of the given batches from the inventory
+   * transactions. This is only used by the batch details report.
    */
   public async getTransactionsTotals(
     batchesIds: number[],
-    excludeTransaction?: IExcludeTransaction,
+  ): Promise<Map<number, IBatchTransactionsTotals>> {
+    return this.sumTransactionsTotals(batchesIds);
+  }
+
+  /**
+   * Sums the quantity in/out of the given batches for a specific transaction.
+   * Used to exclude the current transaction when validating an edit.
+   */
+  private async getTransactionTotalsForReference(
+    transactionType: string,
+    transactionId: number,
+    batchesIds: number[],
+  ): Promise<Map<number, IBatchTransactionsTotals>> {
+    return this.sumTransactionsTotals(batchesIds, {
+      transactionType,
+      transactionId,
+    });
+  }
+
+  /**
+   * Aggregates the inventory transactions quantity in/out by batch id.
+   */
+  private async sumTransactionsTotals(
+    batchesIds: number[],
+    filter?: { transactionType: string; transactionId: number },
   ): Promise<Map<number, IBatchTransactionsTotals>> {
     if (batchesIds.length === 0) {
       return new Map();
@@ -54,10 +83,10 @@ export class BatchesBalanceService {
       .whereIn('batchId', batchesIds)
       .groupBy('batchId');
 
-    if (excludeTransaction) {
-      query.whereNot({
-        transactionType: excludeTransaction.transactionType,
-        transactionId: excludeTransaction.transactionId,
+    if (filter) {
+      query.where({
+        transactionType: filter.transactionType,
+        transactionId: filter.transactionId,
       });
     }
     const totals = await query;
@@ -72,54 +101,86 @@ export class BatchesBalanceService {
   }
 
   /**
-   * Attaches the balance and status to the given batches.
+   * Attaches the stored quantity on hand and status to the given batches.
    */
   public async attachBalance<
     T extends {
       id: number;
-      itemId: number;
-      quantity: number;
-      batchNumber: string;
+      quantityOnHand: number;
       expiryDate?: Date | string | null;
     },
   >(batches: T[]): Promise<Array<T & IBatchWithBalance>> {
+    return batches.map((batch) => {
+      const quantityOnHand = toBatchQuantity(batch.quantityOnHand);
+
+      return {
+        ...batch,
+        quantityOnHand,
+        status: getBatchStatus(batch.expiryDate, quantityOnHand),
+      } as T & IBatchWithBalance;
+    });
+  }
+
+  /**
+   * Attaches the transaction quantity in/out to the given batches. Only used
+   * by the batch details report.
+   */
+  public async attachTransactionTotals<T extends IBatchWithBalance>(
+    batches: T[],
+  ): Promise<Array<T & IBatchBalance>> {
     const totals = await this.getTransactionsTotals(
       batches.map((batch) => batch.id),
     );
 
     return batches.map((batch) => {
       const batchTotals = totals.get(batch.id);
+      const openingQuantity =
+        batch.sourceTransactionType == null
+          ? toBatchQuantity(batch.quantity)
+          : 0;
       const balance = calcBatchBalance(
-        batch.quantity,
+        openingQuantity,
         batchTotals?.quantityIn ?? 0,
         batchTotals?.quantityOut ?? 0,
       );
+
       return {
         ...batch,
-        ...balance,
-        status: getBatchStatus(batch.expiryDate, balance.quantityOnHand),
-      } as T & IBatchWithBalance;
+        quantityIn: balance.quantityIn,
+        quantityOut: balance.quantityOut,
+      } as T & IBatchBalance;
     });
   }
 
   /**
-   * Retrieves the available quantity of the given batch excluding the given
-   * transaction (used when editing an invoice that already consumed the batch).
+   * Retrieves the available quantity on hand of each given batch, excluding
+   * the given transaction when editing an invoice that already consumed the
+   * batch.
    */
-  public async getAvailableQuantity(
-    batch: Batch,
+  public async getAvailableQuantities(
+    batches: Batch[],
     excludeTransaction?: IExcludeTransaction,
-  ): Promise<number> {
-    const totals = await this.getTransactionsTotals(
-      [batch.id],
-      excludeTransaction,
+  ): Promise<Map<number, number>> {
+    const quantities = new Map<number, number>(
+      batches.map((batch) => [batch.id, toBatchQuantity(batch.quantityOnHand)]),
     );
-    const batchTotals = totals.get(batch.id);
-    const balance = calcBatchBalance(
-      batch.quantity,
-      batchTotals?.quantityIn ?? 0,
-      batchTotals?.quantityOut ?? 0,
+
+    if (!excludeTransaction || batches.length === 0) {
+      return quantities;
+    }
+    const totals = await this.getTransactionTotalsForReference(
+      excludeTransaction.transactionType,
+      excludeTransaction.transactionId,
+      batches.map((batch) => batch.id),
     );
-    return balance.quantityOnHand;
+
+    totals.forEach((total, batchId) => {
+      const current = quantities.get(batchId) ?? 0;
+      quantities.set(
+        batchId,
+        toBatchQuantity(current + total.quantityOut - total.quantityIn),
+      );
+    });
+    return quantities;
   }
 }

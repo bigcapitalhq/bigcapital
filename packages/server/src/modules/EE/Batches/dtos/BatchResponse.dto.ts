@@ -38,12 +38,6 @@ export class BatchResponseDto {
   quantity: number;
 
   @ApiProperty()
-  quantityIn: number;
-
-  @ApiProperty()
-  quantityOut: number;
-
-  @ApiProperty()
   quantityOnHand: number;
 
   @ApiProperty({ enum: BatchStatus })

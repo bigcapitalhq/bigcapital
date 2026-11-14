@@ -39,21 +39,25 @@ export class EditBatchService {
     dto: EditBatchDto,
     trx?: Knex.Transaction,
   ): Promise<Batch> {
-    const oldBatch = await this.batchModel().query().findById(id);
-    this.validators.validateBatchExistance(oldBatch);
-
-    const batchNumber = dto.batchNumber?.trim() ?? oldBatch.batchNumber;
-    await this.validators.validateBatchNumberUnique(
-      oldBatch.itemId,
-      batchNumber,
-      oldBatch.id,
-    );
-    this.validators.validateBatchDates(
-      dto.manufacturedDate ?? oldBatch.manufacturedDate,
-      dto.expiryDate ?? oldBatch.expiryDate,
-    );
-
     return this.uow.withTransaction(async (transaction: Knex.Transaction) => {
+      const oldBatch = await this.batchModel()
+        .query(transaction)
+        .findById(id)
+        .forUpdate();
+
+      this.validators.validateBatchExistance(oldBatch);
+
+      const batchNumber = dto.batchNumber?.trim() ?? oldBatch.batchNumber;
+      await this.validators.validateBatchNumberUnique(
+        oldBatch.itemId,
+        batchNumber,
+        oldBatch.id,
+      );
+      this.validators.validateBatchDates(
+        dto.manufacturedDate ?? oldBatch.manufacturedDate,
+        dto.expiryDate ?? oldBatch.expiryDate,
+      );
+
       // Triggers `onBatchEditing` event.
       await this.eventEmitter.emitAsync(batchEvents.onEditing, {
         batchId: id,
@@ -61,6 +65,20 @@ export class EditBatchService {
         oldBatch,
         trx: transaction,
       } as IBatchEditingPayload);
+
+      const quantity =
+        dto.quantity !== undefined ? toBatchQuantity(dto.quantity) : undefined;
+
+      // Only manually created batches use the entered quantity as opening
+      // stock. Transaction-backed batches are driven by their inventory
+      // transactions, so editing the quantity does not alter the balance.
+      const quantityOnHand =
+        quantity !== undefined && oldBatch.sourceTransactionType == null
+          ? toBatchQuantity(
+              toBatchQuantity(oldBatch.quantityOnHand) +
+                toBatchQuantity(quantity - toBatchQuantity(oldBatch.quantity)),
+            )
+          : undefined;
 
       const batch = await this.batchModel()
         .query(transaction)
@@ -77,9 +95,8 @@ export class EditBatchService {
           ...(dto.expiryDate !== undefined
             ? { expiryDate: formatBatchDate(dto.expiryDate) }
             : {}),
-          ...(dto.quantity !== undefined
-            ? { quantity: toBatchQuantity(dto.quantity) }
-            : {}),
+          ...(quantity !== undefined ? { quantity } : {}),
+          ...(quantityOnHand !== undefined ? { quantityOnHand } : {}),
         });
 
       // Triggers `onBatchEdited` event.

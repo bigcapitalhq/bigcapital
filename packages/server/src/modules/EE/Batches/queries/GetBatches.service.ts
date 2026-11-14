@@ -5,7 +5,10 @@ import { Item } from '@/modules/Items/models/Item';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { BatchesBalanceService } from '../BatchesBalance.service';
 import { BatchStatus, IGetBatchesFilter } from '../types/Batches.types';
-import type { IBatchWithBalance } from '../types/Batches.types';
+import type {
+  IBatchWithBalance,
+  IBatchWithTotals,
+} from '../types/Batches.types';
 
 export interface IBatchesListResult {
   results: IBatchWithBalance[];
@@ -14,6 +17,19 @@ export interface IBatchesListResult {
     page: number;
     pageSize: number;
   };
+}
+
+export interface IBatchesListResultWithTotals
+  extends Omit<IBatchesListResult, 'results'> {
+  results: IBatchWithTotals[];
+}
+
+export interface IGetBatchesOptions {
+  /**
+   * Attaches the quantity in/out calculated from the inventory transactions.
+   * Only the batch details report needs them.
+   */
+  includeTransactionTotals?: boolean;
 }
 
 @Injectable()
@@ -34,11 +50,24 @@ export class GetBatchesService {
   ) {}
 
   /**
-   * Retrieves the batches list with computed balances.
+   * Retrieves the batches list with the stored quantity on hand.
    */
   public async getBatches(
+    filter?: IGetBatchesFilter,
+  ): Promise<IBatchesListResult>;
+
+  /**
+   * Retrieves the batches list with the transaction quantity in/out.
+   */
+  public async getBatches(
+    filter: IGetBatchesFilter | undefined,
+    options: { includeTransactionTotals: true },
+  ): Promise<IBatchesListResultWithTotals>;
+
+  public async getBatches(
     filter: IGetBatchesFilter = {},
-  ): Promise<IBatchesListResult> {
+    options: IGetBatchesOptions = {},
+  ): Promise<IBatchesListResult | IBatchesListResultWithTotals> {
     const query = this.batchModel()
       .query()
       .withGraphFetched('item')
@@ -99,14 +128,19 @@ export class GetBatchesService {
       ? filteredBatches.slice(offset, offset + pageSize)
       : filteredBatches;
 
-    return {
-      results,
-      pagination: {
-        total: filteredBatches.length,
-        page,
-        pageSize: pageSize || filteredBatches.length,
-      },
+    const pagination = {
+      total: filteredBatches.length,
+      page,
+      pageSize: pageSize || filteredBatches.length,
     };
+
+    if (options.includeTransactionTotals) {
+      return {
+        results: await this.batchesBalance.attachTransactionTotals(results),
+        pagination,
+      };
+    }
+    return { results, pagination };
   }
 
   /**

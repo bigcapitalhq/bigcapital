@@ -26,8 +26,6 @@ export interface Batch {
   manufacturedDate?: string | null;
   expiryDate?: string | null;
   quantity: number;
-  quantityIn: number;
-  quantityOut: number;
   quantityOnHand: number;
   status: BatchStatus;
   createdAt?: string;
