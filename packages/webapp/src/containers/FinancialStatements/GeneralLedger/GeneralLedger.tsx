@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { useGeneralLedgerQuery } from './common';
 import {
   GeneralLedgerSheetAlerts,
@@ -41,6 +42,7 @@ function GeneralLedgerInner({
         fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod(parsedFilter);
       setLocationQuery(parsedFilter);
     },
     [setLocationQuery],

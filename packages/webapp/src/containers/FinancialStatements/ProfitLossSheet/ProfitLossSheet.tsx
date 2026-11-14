@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
 import { ProfitLossActionsBar } from './ProfitLossActionsBar';
 import { ProfitLossBody } from './ProfitLossBody';
@@ -31,6 +32,7 @@ function ProfitLossSheetInner({
       fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(newFilter);
     setLocationQuery(newFilter);
   };
 

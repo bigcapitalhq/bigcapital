@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useCallback, useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { APAgingSummaryActionsBar } from './APAgingSummaryActionsBar';
 import { APAgingSummaryBody } from './APAgingSummaryBody';
 import { APAgingSummaryHeader } from './APAgingSummaryHeader';
@@ -31,6 +32,7 @@ function APAgingSummaryInner({
         ...filter,
         asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod({ toDate: _filter.asDate });
       setLocationQuery(_filter);
     },
     [setLocationQuery],
