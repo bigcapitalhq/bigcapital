@@ -93,8 +93,9 @@ export class BatchDetailsReportService {
     const rows: ITableRow[] = results.map((batch) => ({
       id: String(batch.id),
       rowTypes: ['BATCH'],
+      meta: { status: batch.status },
       cells: [
-        { key: COLUMN_KEYS.ITEM_NAME, value: batch.item?.name ?? '' },
+        { key: COLUMN_KEYS.ITEM_NAME, value: batch.item?.name.trim() ?? '' },
         { key: COLUMN_KEYS.BATCH_NUMBER, value: batch.batchNumber },
         { key: COLUMN_KEYS.BATCH_REF, value: batch.batchRef ?? '' },
         {
