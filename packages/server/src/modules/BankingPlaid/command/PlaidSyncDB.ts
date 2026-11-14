@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import * as bluebird from 'bluebird';
 import * as uniqid from 'uniqid';
-import { entries, groupBy } from 'lodash';
+import { entries, groupBy, uniqBy } from 'lodash';
 import {
   AccountBase as PlaidAccountBase,
   Item as PlaidItem,
@@ -111,12 +111,26 @@ export class PlaidSyncDb {
       .findOne({ plaidAccountId })
       .throwIfNotFound();
 
+    // Plaid sends a changed transaction again in `modified` under the same
+    // transaction id, so skip the ones already synced, or repeated in this
+    // batch, instead of inserting them twice.
+    const syncedTransactions = await this.uncategorizedBankTransactionModel()
+      .query(trx)
+      .whereIn(
+        'plaidTransactionId',
+        plaidTranasctions.map((transaction) => transaction.transaction_id),
+      );
+    const syncedTransactionsIds = new Set(
+      syncedTransactions.map((transaction) => transaction.plaidTransactionId),
+    );
+    const newTransactions = uniqBy(plaidTranasctions, 'transaction_id').filter(
+      (transaction) => !syncedTransactionsIds.has(transaction.transaction_id),
+    );
     // Transformes the Plaid transactions to cashflow create DTOs.
     const transformTransaction = R.curry(transformPlaidTrxsToCashflowCreate)(
       cashflowAccount.id,
     );
-    const uncategorizedTransDTOs =
-      R.map(transformTransaction)(plaidTranasctions);
+    const uncategorizedTransDTOs = R.map(transformTransaction)(newTransactions);
 
     // Creating account transaction queue.
     await bluebird.map(
