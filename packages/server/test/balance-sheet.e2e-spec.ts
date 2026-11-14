@@ -19,6 +19,8 @@ import {
   fetchAccountsByCode,
   fetchBalanceSheet,
   findNode,
+  findNodePeriodTotal,
+  findNodeTotal,
 } from './_utils/balance-sheet';
 
 const FY2023 = { fromDate: '2023-01-01', toDate: '2023-12-31' };
@@ -266,8 +268,7 @@ describe('Balance Sheet (e2e)', () => {
 
     it('aggregates cash and cash equivalents balances', () => {
       const cashNode = findNode(data, 'CASH_EQUIVALENTS');
-      const beforeCash = findNode(baseline.data, 'CASH_EQUIVALENTS').total
-        .amount;
+      const beforeCash = findNodeTotal(baseline.data, 'CASH_EQUIVALENTS');
 
       expectDelta(cashNode.total.amount, beforeCash, 11700);
       expect(cashNode.total.amount).toBeCloseTo(childrenTotalSum(cashNode), 2);
@@ -323,8 +324,7 @@ describe('Balance Sheet (e2e)', () => {
         currentLiabilities.children.find((c) => c.id === unearnedId),
       ).toBeDefined();
 
-      const beforeCurrent = findNode(baseline.data, 'CURRENT_LIABILITY').total
-        .amount;
+      const beforeCurrent = findNodeTotal(baseline.data, 'CURRENT_LIABILITY');
       expectDelta(currentLiabilities.total.amount, beforeCurrent, 700);
     });
 
@@ -346,8 +346,7 @@ describe('Balance Sheet (e2e)', () => {
 
     it('computes net income as cumulative income minus expenses', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(baseline.data, 'NET_INCOME').total
-        .amount;
+      const beforeNetIncome = findNodeTotal(baseline.data, 'NET_INCOME');
 
       expectDelta(netIncome.total.amount, beforeNetIncome, 2700);
     });
@@ -375,11 +374,11 @@ describe('Balance Sheet (e2e)', () => {
       // The pre-existing tenant data may include unbalanced legacy entries,
       // so the accounting equation is asserted on the seeded activity only:
       // balanced journals must increase both sides by the same amount.
-      const assetsBefore = findNode(baseline.data, 'ASSETS').total.amount;
+      const assetsBefore = findNodeTotal(baseline.data, 'ASSETS');
       const assetsAfter = findNode(data, 'ASSETS').total.amount;
       expectDelta(assetsAfter, assetsBefore, 13400);
 
-      const leBefore = findNode(baseline.data, 'LIABILITY_EQUITY').total.amount;
+      const leBefore = findNodeTotal(baseline.data, 'LIABILITY_EQUITY');
       const leAfter = findNode(data, 'LIABILITY_EQUITY').total.amount;
       expectDelta(leAfter, leBefore, 13400);
       expect(assetsAfter - assetsBefore).toBeCloseTo(leAfter - leBefore, 2);
@@ -400,8 +399,7 @@ describe('Balance Sheet (e2e)', () => {
       expectDelta(bank.total.amount, before[bankId] ?? 0, 11600);
 
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(baseline.data, 'NET_INCOME').total
-        .amount;
+      const beforeNetIncome = findNodeTotal(baseline.data, 'NET_INCOME');
       expectDelta(netIncome.total.amount, beforeNetIncome, 2700);
     });
 
@@ -414,8 +412,7 @@ describe('Balance Sheet (e2e)', () => {
       // Compared against a baseline captured with the same extended range so
       // transactions of other spec files dated within 2024 cancel out.
       const bank = findNode(extended, bankId);
-      const beforeExtendedBank = findNode(baselineExtended.data, bankId).total
-        .amount;
+      const beforeExtendedBank = findNodeTotal(baselineExtended.data, bankId);
       expectDelta(bank.total.amount, beforeExtendedBank, 12599);
     });
 
@@ -451,19 +448,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('carries cumulative closing balances per period end', () => {
       const bank = findNode(data, bankId);
-      const beforeBank = findNode(
-        baselinePeriods.data,
-        bankId,
-      ).horizontal_totals;
 
       expectDelta(
         bank.horizontal_totals[0].total.amount,
-        beforeBank[0].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, bankId, 0),
         10000,
       );
       expectDelta(
         bank.horizontal_totals[1].total.amount,
-        beforeBank[1].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, bankId, 1),
         11600,
       );
       expect(bank.horizontal_totals[1].total.amount).toBeCloseTo(
@@ -489,19 +482,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('accumulates net income per period end', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(
-        baselinePeriods.data,
-        'NET_INCOME',
-      ).horizontal_totals;
 
       expectDelta(
         netIncome.horizontal_totals[0].total.amount,
-        beforeNetIncome[0].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, 'NET_INCOME', 0),
         500,
       );
       expectDelta(
         netIncome.horizontal_totals[1].total.amount,
-        beforeNetIncome[1].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, 'NET_INCOME', 1),
         2700,
       );
       expect(netIncome.horizontal_totals[1].total.amount).toBeCloseTo(
@@ -671,8 +660,8 @@ describe('Balance Sheet (e2e)', () => {
 
     it('attaches the previous year net income', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(baselinePY.data, 'NET_INCOME')
-        .previous_year.amount;
+      const beforeNetIncome =
+        findNode(baselinePY.data, 'NET_INCOME')?.previous_year?.amount ?? 0;
 
       expectDelta(netIncome.previous_year.amount, beforeNetIncome, 500);
     });
