@@ -47,7 +47,12 @@ function UserFormContentInner({
           label={intl.get('email')}
           labelInfo={<FieldRequiredHint />}
         >
-          <FInputGroup name={'email'} />
+          {/*
+           * The email is the global identity of the user which is used to sign
+           * in and to reset the password across all of the workspaces, so it
+           * can only be changed by the user themselves.
+           */}
+          <FInputGroup name={'email'} disabled={!isAuth} />
         </FFormGroup>
 
         {/* ----------- First name ----------- */}
