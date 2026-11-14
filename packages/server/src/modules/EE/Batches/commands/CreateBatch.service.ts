@@ -52,6 +52,8 @@ export class CreateBatchService {
         trx: transaction,
       } as IBatchCreatingPayload);
 
+      const quantity = toBatchQuantity(dto.quantity);
+
       const batch = await this.batchModel()
         .query(transaction)
         .insertAndFetch({
@@ -60,7 +62,11 @@ export class CreateBatchService {
           batchRef: dto.batchRef?.trim() || null,
           manufacturedDate: formatBatchDate(dto.manufacturedDate),
           expiryDate: formatBatchDate(dto.expiryDate),
-          quantity: toBatchQuantity(dto.quantity),
+          quantity,
+          // A batch created for a transaction (e.g. a bill) starts empty; its
+          // quantity is driven by the linked inventory transactions. A batch
+          // created manually stores the entered quantity as opening stock.
+          quantityOnHand: dto.sourceTransactionType ? 0 : quantity,
           sourceTransactionType: dto.sourceTransactionType || null,
           sourceTransactionId: dto.sourceTransactionId || null,
         });

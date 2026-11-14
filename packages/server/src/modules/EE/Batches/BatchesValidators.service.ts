@@ -192,12 +192,15 @@ export class BatchesValidators {
           }
         : undefined;
 
-    for (const [batchId, requestedQuantity] of requestedQuantities.entries()) {
-      const batch = batchesMap.get(batchId)!;
-      const availableQuantity = await this.batchesBalance.getAvailableQuantity(
-        batch,
+    const availableQuantities =
+      await this.batchesBalance.getAvailableQuantities(
+        batches,
         excludeTransaction,
       );
+
+    for (const [batchId, requestedQuantity] of requestedQuantities.entries()) {
+      const batch = batchesMap.get(batchId)!;
+      const availableQuantity = availableQuantities.get(batchId) ?? 0;
 
       if (requestedQuantity - availableQuantity > 0.0001) {
         throw new ServiceError(

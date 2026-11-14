@@ -52597,12 +52597,6 @@
           "quantity": {
             "type": "number"
           },
-          "quantityIn": {
-            "type": "number"
-          },
-          "quantityOut": {
-            "type": "number"
-          },
           "quantityOnHand": {
             "type": "number"
           },
@@ -52638,8 +52632,6 @@
           "itemId",
           "batchNumber",
           "quantity",
-          "quantityIn",
-          "quantityOut",
           "quantityOnHand",
           "status"
         ]

@@ -3,7 +3,7 @@ import { BatchStatus } from './types/Batches.types';
 
 describe('Batches utils', () => {
   describe('calcBatchBalance', () => {
-    it('falls back to the batch quantity when there are no IN transactions', () => {
+    it('includes the opening quantity in the quantity in', () => {
       expect(calcBatchBalance(10, 0, 3)).toEqual({
         quantityIn: 10,
         quantityOut: 3,
@@ -11,11 +11,11 @@ describe('Batches utils', () => {
       });
     });
 
-    it('uses the inventory transactions as the source of truth once they exist', () => {
+    it('adds the opening quantity to the inventory transactions totals', () => {
       expect(calcBatchBalance(10, 12, 3)).toEqual({
-        quantityIn: 12,
+        quantityIn: 22,
         quantityOut: 3,
-        quantityOnHand: 9,
+        quantityOnHand: 19,
       });
     });
   });

@@ -56,22 +56,6 @@ function useItemBatchesColumns() {
         width: 120,
       },
       {
-        id: 'quantity_in',
-        accessor: 'quantityIn',
-        Header: intl.get('batch.column.quantity_in'),
-        Cell: FormatNumberCell,
-        align: 'right',
-        width: 90,
-      },
-      {
-        id: 'quantity_out',
-        accessor: 'quantityOut',
-        Header: intl.get('batch.column.quantity_out'),
-        Cell: FormatNumberCell,
-        align: 'right',
-        width: 90,
-      },
-      {
         id: 'quantity_on_hand',
         accessor: 'quantityOnHand',
         Header: intl.get('batch.column.quantity_on_hand'),

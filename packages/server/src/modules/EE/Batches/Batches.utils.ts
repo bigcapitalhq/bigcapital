@@ -14,24 +14,21 @@ export const toBatchQuantity = (quantity: unknown): number => {
 };
 
 /**
- * Retrieves the batch quantity in/out/on-hand from the given batch and its
+ * Retrieves the batch quantity in/out from its opening quantity and its
  * inventory transactions totals.
  *
- * The stored `quantity` is used as the opening quantity when the batch has no
- * `IN` inventory transactions yet (e.g. a batch created from the item details
- * page). Once an `IN` transaction exists (created by a bill), the transactions
- * become the source of truth.
+ * This is only used by the batch details report, which keeps displaying the
+ * transaction totals. The batches list reads the stored quantity on hand.
  */
 export const calcBatchBalance = (
-  batchQuantity: number,
+  openingQuantity: number,
   quantityInFromTransactions: number,
   quantityOutFromTransactions: number,
 ): IBatchBalance => {
-  const quantityIn =
-    toBatchQuantity(quantityInFromTransactions) > 0
-      ? toBatchQuantity(quantityInFromTransactions)
-      : toBatchQuantity(batchQuantity);
-
+  const quantityIn = toBatchQuantity(
+    toBatchQuantity(openingQuantity) +
+      toBatchQuantity(quantityInFromTransactions),
+  );
   const quantityOut = toBatchQuantity(quantityOutFromTransactions);
 
   return {

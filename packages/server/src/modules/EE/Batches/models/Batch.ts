@@ -12,6 +12,7 @@ export class Batch extends TenantBaseModel {
   public manufacturedDate?: Date | string | null;
   public expiryDate?: Date | string | null;
   public quantity!: number;
+  public quantityOnHand!: number;
   public sourceTransactionType?: string | null;
   public sourceTransactionId?: number | null;
 

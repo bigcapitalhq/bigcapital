@@ -43,13 +43,16 @@ export class BatchDetailsReportService {
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
     const dateFormat = tenantMetadata.dateFormat || 'YYYY MMM DD';
 
-    const { results } = await this.getBatchesService.getBatches({
-      itemsIds: query.itemsIds,
-      status: query.status,
-      search: query.search,
-      fromDate: query.fromDate,
-      toDate: query.toDate,
-    });
+    const { results } = await this.getBatchesService.getBatches(
+      {
+        itemsIds: query.itemsIds,
+        status: query.status,
+        search: query.search,
+        fromDate: query.fromDate,
+        toDate: query.toDate,
+      },
+      { includeTransactionTotals: true },
+    );
 
     const columns: ITableColumn[] = [
       {

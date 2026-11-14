@@ -45,7 +45,7 @@ export interface IBatchBalance {
   quantityOnHand: number;
 }
 
-export interface IBatchWithBalance extends IBatchBalance {
+export interface IBatchWithBalance {
   id: number;
   itemId: number;
   batchNumber: string;
@@ -53,6 +53,8 @@ export interface IBatchWithBalance extends IBatchBalance {
   manufacturedDate?: string | Date | null;
   expiryDate?: string | Date | null;
   quantity: number;
+  quantityOnHand: number;
+  sourceTransactionType?: string | null;
   status: BatchStatus;
   createdAt?: Date;
   updatedAt?: Date;
@@ -63,6 +65,8 @@ export interface IBatchWithBalance extends IBatchBalance {
     type?: string;
   };
 }
+
+export interface IBatchWithTotals extends IBatchWithBalance, IBatchBalance {}
 
 export interface IGetBatchesFilter {
   itemId?: number;

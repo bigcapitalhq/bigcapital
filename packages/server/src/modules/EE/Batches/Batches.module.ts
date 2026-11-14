@@ -13,6 +13,8 @@ import { BulkSaveBatchesService } from './commands/BulkSaveBatches.service';
 import { GetBatchesService } from './queries/GetBatches.service';
 import { BatchDetailsReportService } from './BatchDetailsReport.service';
 import { BatchesSubscriber } from './BatchesSubscriber';
+import { BatchesQuantitySyncService } from './BatchesQuantitySync.service';
+import { BatchesQuantitySyncSubscriber } from './BatchesQuantitySyncSubscriber';
 import { BatchesFeatureGuard } from './BatchesFeatureGuard';
 import { FeaturesModule } from '../../Features/Features.module';
 import { TenancyModule } from '../../Tenancy/Tenancy.module';
@@ -42,6 +44,8 @@ const models = [RegisterTenancyModel(Batch)];
     GetBatchesService,
     BatchDetailsReportService,
     BatchesSubscriber,
+    BatchesQuantitySyncService,
+    BatchesQuantitySyncSubscriber,
     BatchesFeatureGuard,
   ],
   controllers: [BatchesController, BatchDetailsReportController],

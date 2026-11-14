@@ -19617,8 +19617,6 @@ export interface components {
             manufacturedDate?: string | null;
             expiryDate?: string | null;
             quantity: number;
-            quantityIn: number;
-            quantityOut: number;
             quantityOnHand: number;
             /** @enum {string} */
             status: "active" | "expiring_soon" | "expired" | "depleted";
