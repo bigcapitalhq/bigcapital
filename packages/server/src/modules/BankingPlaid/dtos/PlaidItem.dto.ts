@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { PlaidItemAccountLinkDto } from './PlaidItemAccountLink.dto';
 
 export class PlaidItemDto {
   @IsString()
@@ -11,6 +19,18 @@ export class PlaidItemDto {
   @IsNotEmpty()
   @ApiProperty({ example: '123', description: 'The institution ID' })
   institutionId: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PlaidItemAccountLinkDto)
+  @ApiProperty({
+    type: [PlaidItemAccountLinkDto],
+    required: false,
+    description:
+      'Plaid accounts to link to existing accounts instead of creating new ones',
+  })
+  accounts?: PlaidItemAccountLinkDto[];
 }
 
 export class PlaidWebhookDto {
