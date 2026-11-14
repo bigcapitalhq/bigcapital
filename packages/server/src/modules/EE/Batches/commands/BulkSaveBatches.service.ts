@@ -4,8 +4,9 @@ import { Batch } from '../models/Batch';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { BatchesBalanceService } from '../BatchesBalance.service';
 import { BatchesValidators } from '../BatchesValidators.service';
-import { BATCHES_ERRORS } from '../types/Batches.types';
+import { BATCHES_ERRORS, IBatchWithBalance } from '../types/Batches.types';
 import { BulkSaveBatchesDto } from '../dtos/BulkSaveBatches.dto';
 import { EditBatchDto } from '../dtos/EditBatch.dto';
 import { CreateBatchService } from './CreateBatch.service';
@@ -19,6 +20,7 @@ export class BulkSaveBatchesService {
    * @param {BatchesValidators} validators
    * @param {CreateBatchService} createBatchService
    * @param {EditBatchService} editBatchService
+   * @param {BatchesBalanceService} batchesBalance
    */
   constructor(
     private readonly uow: UnitOfWork,
@@ -29,54 +31,60 @@ export class BulkSaveBatchesService {
     private readonly validators: BatchesValidators,
     private readonly createBatchService: CreateBatchService,
     private readonly editBatchService: EditBatchService,
+    private readonly batchesBalance: BatchesBalanceService,
   ) {}
 
   /**
    * Creates new batches and updates the existing ones in a single transaction.
    */
-  public async bulkSaveBatches(dto: BulkSaveBatchesDto): Promise<Batch[]> {
+  public async bulkSaveBatches(
+    dto: BulkSaveBatchesDto,
+  ): Promise<IBatchWithBalance[]> {
     await this.validateBulkSave(dto);
 
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      const savedBatches: Batch[] = [];
+    const savedBatches = await this.uow.withTransaction(
+      async (trx: Knex.Transaction) => {
+        const batches: Batch[] = [];
 
-      for (const batchDto of dto.batches) {
-        if (batchDto.batchId) {
-          const editBatchDto: EditBatchDto = {
-            id: batchDto.batchId,
-            batchNumber: batchDto.batchNumber,
-            batchRef: batchDto.batchRef,
-            manufacturedDate: batchDto.manufacturedDate,
-            expiryDate: batchDto.expiryDate,
-            ...(batchDto.quantity !== undefined
-              ? { quantity: batchDto.quantity }
-              : {}),
-          };
-          const batch = await this.editBatchService.editBatch(
-            batchDto.batchId,
-            editBatchDto,
+        for (const batchDto of dto.batches) {
+          if (batchDto.batchId) {
+            const editBatchDto: EditBatchDto = {
+              id: batchDto.batchId,
+              batchNumber: batchDto.batchNumber,
+              batchRef: batchDto.batchRef,
+              manufacturedDate: batchDto.manufacturedDate,
+              expiryDate: batchDto.expiryDate,
+              ...(batchDto.quantity !== undefined
+                ? { quantity: batchDto.quantity }
+                : {}),
+            };
+            const batch = await this.editBatchService.editBatch(
+              batchDto.batchId,
+              editBatchDto,
+              trx,
+            );
+            batches.push(batch);
+            continue;
+          }
+          const batch = await this.createBatchService.createBatch(
+            {
+              itemId: dto.itemId,
+              batchNumber: batchDto.batchNumber,
+              batchRef: batchDto.batchRef ?? undefined,
+              manufacturedDate: batchDto.manufacturedDate ?? undefined,
+              expiryDate: batchDto.expiryDate ?? undefined,
+              quantity: batchDto.quantity ?? 0,
+              sourceTransactionType: batchDto.sourceTransactionType,
+              sourceTransactionId: batchDto.sourceTransactionId,
+            },
             trx,
           );
-          savedBatches.push(batch);
-          continue;
+          batches.push(batch);
         }
-        const batch = await this.createBatchService.createBatch(
-          {
-            itemId: dto.itemId,
-            batchNumber: batchDto.batchNumber,
-            batchRef: batchDto.batchRef ?? undefined,
-            manufacturedDate: batchDto.manufacturedDate ?? undefined,
-            expiryDate: batchDto.expiryDate ?? undefined,
-            quantity: batchDto.quantity ?? 0,
-            sourceTransactionType: batchDto.sourceTransactionType,
-            sourceTransactionId: batchDto.sourceTransactionId,
-          },
-          trx,
-        );
-        savedBatches.push(batch);
-      }
-      return savedBatches;
-    });
+        return batches;
+      },
+    );
+    return this.batchesBalance.attachBalance(savedBatches);
   }
 
   /**

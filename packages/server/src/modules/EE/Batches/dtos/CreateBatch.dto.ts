@@ -44,6 +44,8 @@ export class CreateBatchDto {
   @ApiProperty({
     description: 'The manufacturing date',
     example: '2026-01-01',
+    type: String,
+    format: 'date',
     required: false,
     nullable: true,
   })
@@ -54,6 +56,8 @@ export class CreateBatchDto {
   @ApiProperty({
     description: 'The expiry date',
     example: '2027-01-01',
+    type: String,
+    format: 'date',
     required: false,
     nullable: true,
   })

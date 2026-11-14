@@ -26819,6 +26819,489 @@
         ]
       }
     },
+    "/api/batches": {
+      "get": {
+        "operationId": "BatchesController_list",
+        "summary": "Retrieves the batches list",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": false,
+            "in": "query",
+            "description": "The item id",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "itemsIds",
+            "required": false,
+            "in": "query",
+            "description": "The item ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term applied to batch number, batch ref and item name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "The batch status",
+            "schema": {
+              "enum": [
+                "active",
+                "expiring_soon",
+                "expired",
+                "depleted"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter batches created on or after this date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter batches created on or before this date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "The page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "The page size",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      },
+      "post": {
+        "operationId": "BatchesController_create",
+        "summary": "Creates a new batch",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      }
+    },
+    "/api/batches/available": {
+      "get": {
+        "operationId": "BatchesController_available",
+        "summary": "Retrieves the available batches of an item",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "query",
+            "description": "The item id",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      }
+    },
+    "/api/batches/{id}": {
+      "get": {
+        "operationId": "BatchesController_get",
+        "summary": "Retrieves the given batch",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      },
+      "put": {
+        "operationId": "BatchesController_edit",
+        "summary": "Updates the given batch",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      },
+      "delete": {
+        "operationId": "BatchesController_delete",
+        "summary": "Deletes the given batch",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      }
+    },
+    "/api/batches/bulk": {
+      "put": {
+        "operationId": "BatchesController_bulkSave",
+        "summary": "Creates or updates multiple batches",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkSaveBatchesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The batches have been saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BatchResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Batches"
+        ]
+      }
+    },
+    "/api/reports/batch-details": {
+      "get": {
+        "operationId": "BatchDetailsReportController_report",
+        "summary": "Retrieves the batch details report",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "From date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "To date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemsIds",
+            "required": false,
+            "in": "query",
+            "description": "The item ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "The batch status",
+            "schema": {
+              "enum": [
+                "active",
+                "expiring_soon",
+                "expired",
+                "depleted"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term applied to batch number, batch ref and item name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/api/landed-cost/transactions": {
       "get": {
         "operationId": "BillAllocateLandedCostController_getLandedCostTransactions",
@@ -31330,6 +31813,25 @@
           "defaultTemplateId"
         ]
       },
+      "ItemEntryBatchDto": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "number",
+            "description": "The id of the batch",
+            "example": 1
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity allocated from the batch",
+            "example": 5
+          }
+        },
+        "required": [
+          "batchId",
+          "quantity"
+        ]
+      },
       "ItemEntryDto": {
         "type": "object",
         "properties": {
@@ -31390,6 +31892,18 @@
             "type": "number",
             "description": "The warehouse id of the item entry",
             "example": 1
+          },
+          "batchId": {
+            "type": "number",
+            "description": "The batch id of the item entry",
+            "example": 1
+          },
+          "batches": {
+            "description": "The batch allocations of the item entry",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryBatchDto"
+            }
           },
           "projectId": {
             "type": "number",
@@ -38922,6 +39436,18 @@
             "type": "number",
             "description": "The warehouse id of the item entry",
             "example": 1
+          },
+          "batchId": {
+            "type": "number",
+            "description": "The batch id of the item entry",
+            "example": 1
+          },
+          "batches": {
+            "description": "The batch allocations of the item entry",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryBatchDto"
+            }
           },
           "projectId": {
             "type": "number",
@@ -51892,6 +52418,281 @@
           "data",
           "pagination"
         ]
+      },
+      "CreateBatchDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "number",
+            "description": "The id of the inventory item",
+            "example": 1
+          },
+          "batchNumber": {
+            "type": "string",
+            "description": "The batch number",
+            "example": "BATCH-001"
+          },
+          "batchRef": {
+            "type": "string",
+            "description": "The manufacturer batch reference",
+            "example": "MFG-2026-01",
+            "nullable": true
+          },
+          "manufacturedDate": {
+            "type": "string",
+            "description": "The manufacturing date",
+            "example": "2026-01-01",
+            "format": "date",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "The expiry date",
+            "example": "2027-01-01",
+            "format": "date",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity received in this batch",
+            "example": 100
+          },
+          "sourceTransactionType": {
+            "type": "string",
+            "description": "The transaction type that created the batch",
+            "example": "Bill"
+          },
+          "sourceTransactionId": {
+            "type": "number",
+            "description": "The transaction id that created the batch",
+            "example": 10
+          }
+        },
+        "required": [
+          "itemId",
+          "batchNumber",
+          "quantity"
+        ]
+      },
+      "BulkSaveBatchItemDto": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "number",
+            "description": "The id of an existing batch to update. Omit it to create a new batch.",
+            "example": 1
+          },
+          "batchNumber": {
+            "type": "string",
+            "description": "The batch number",
+            "example": "BATCH-001"
+          },
+          "batchRef": {
+            "type": "string",
+            "description": "The manufacturer batch reference",
+            "example": "MFG-2026-01",
+            "nullable": true
+          },
+          "manufacturedDate": {
+            "type": "string",
+            "description": "The manufacturing date",
+            "example": "2026-01-01",
+            "format": "date",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "The expiry date",
+            "example": "2027-01-01",
+            "format": "date",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity received in this batch",
+            "example": 100
+          },
+          "sourceTransactionType": {
+            "type": "string",
+            "description": "The transaction type that created the batch",
+            "example": "Bill"
+          },
+          "sourceTransactionId": {
+            "type": "number",
+            "description": "The transaction id that created the batch",
+            "example": 10
+          }
+        },
+        "required": [
+          "batchNumber"
+        ]
+      },
+      "BulkSaveBatchesDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "number",
+            "description": "The id of the inventory item",
+            "example": 1
+          },
+          "batches": {
+            "description": "The batches to create or update",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkSaveBatchItemDto"
+            }
+          }
+        },
+        "required": [
+          "itemId",
+          "batches"
+        ]
+      },
+      "BatchItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "BatchResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "itemId": {
+            "type": "number"
+          },
+          "batchNumber": {
+            "type": "string"
+          },
+          "batchRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "manufacturedDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "quantityIn": {
+            "type": "number"
+          },
+          "quantityOut": {
+            "type": "number"
+          },
+          "quantityOnHand": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "expiring_soon",
+              "expired",
+              "depleted"
+            ]
+          },
+          "sourceTransactionType": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceTransactionId": {
+            "type": "number",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "item": {
+            "$ref": "#/components/schemas/BatchItemResponseDto"
+          }
+        },
+        "required": [
+          "id",
+          "itemId",
+          "batchNumber",
+          "quantity",
+          "quantityIn",
+          "quantityOut",
+          "quantityOnHand",
+          "status"
+        ]
+      },
+      "EditBatchDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "number",
+            "description": "The id of the inventory item",
+            "example": 1
+          },
+          "batchNumber": {
+            "type": "string",
+            "description": "The batch number",
+            "example": "BATCH-001"
+          },
+          "batchRef": {
+            "type": "string",
+            "description": "The manufacturer batch reference",
+            "example": "MFG-2026-01",
+            "nullable": true
+          },
+          "manufacturedDate": {
+            "type": "string",
+            "description": "The manufacturing date",
+            "example": "2026-01-01",
+            "format": "date",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "The expiry date",
+            "example": "2027-01-01",
+            "format": "date",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity received in this batch",
+            "example": 100
+          },
+          "sourceTransactionType": {
+            "type": "string",
+            "description": "The transaction type that created the batch",
+            "example": "Bill"
+          },
+          "sourceTransactionId": {
+            "type": "number",
+            "description": "The transaction id that created the batch",
+            "example": 10
+          }
+        }
       },
       "BillLandedCostTransactionDto": {
         "type": "object",

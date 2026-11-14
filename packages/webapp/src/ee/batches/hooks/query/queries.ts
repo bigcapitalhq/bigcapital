@@ -1,4 +1,9 @@
-import { rawRequest } from '@bigcapital/sdk-ts';
+import {
+  bulkSaveBatches,
+  rawRequest,
+  type BulkSaveBatchesBody,
+  type BulkSaveBatchesResponse,
+} from '@bigcapital/sdk-ts';
 import {
   useMutation,
   useQuery,
@@ -76,22 +81,6 @@ export type EditBatchBody = Omit<
   manufacturedDate?: string | null;
   expiryDate?: string | null;
 };
-
-export interface BulkSaveBatchItem {
-  batchId?: number;
-  batchNumber: string;
-  batchRef?: string | null;
-  manufacturedDate?: string | null;
-  expiryDate?: string | null;
-  quantity?: number;
-  sourceTransactionType?: string;
-  sourceTransactionId?: number;
-}
-
-export interface BulkSaveBatchesBody {
-  itemId: number;
-  batches: BulkSaveBatchItem[];
-}
 
 export interface BatchDetailsReportQuery {
   fromDate?: string;
@@ -241,7 +230,11 @@ export function useEditBatch(
  * Creates or updates multiple batches in a single request.
  */
 export function useBulkSaveBatches(
-  props?: UseMutationOptions<Batch[], Error, BulkSaveBatchesBody>,
+  props?: UseMutationOptions<
+    BulkSaveBatchesResponse,
+    Error,
+    BulkSaveBatchesBody
+  >,
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
@@ -249,9 +242,7 @@ export function useBulkSaveBatches(
   return useMutation({
     ...props,
     mutationFn: (values: BulkSaveBatchesBody) =>
-      rawRequest<Batch[]>(fetcher, 'PUT', '/api/batches/bulk', {
-        ...values,
-      }),
+      bulkSaveBatches(fetcher, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: batchesKeys.all() });
       queryClient.invalidateQueries({ queryKey: batchesKeys.reportAll() });

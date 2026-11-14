@@ -11,11 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
 import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 import { BatchesApplication } from './BatchesApplication';
 import { BatchesFeatureGuard } from './BatchesFeatureGuard';
+import { BatchResponseDto } from './dtos/BatchResponse.dto';
 import { BulkSaveBatchesDto } from './dtos/BulkSaveBatches.dto';
 import { CreateBatchDto } from './dtos/CreateBatch.dto';
 import { EditBatchDto } from './dtos/EditBatch.dto';
@@ -56,6 +57,11 @@ export class BatchesController {
 
   @Put('/bulk')
   @ApiOperation({ summary: 'Creates or updates multiple batches' })
+  @ApiResponse({
+    status: 200,
+    description: 'The batches have been saved.',
+    type: [BatchResponseDto],
+  })
   public bulkSave(@Body() dto: BulkSaveBatchesDto) {
     return this.batchesApplication.bulkSave(dto);
   }

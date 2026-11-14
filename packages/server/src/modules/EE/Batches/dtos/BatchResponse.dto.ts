@@ -1,5 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BatchStatus } from '../types/Batches.types';
+
+export class BatchItemResponseDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  code?: string | null;
+
+  @ApiPropertyOptional({ type: String })
+  type?: string;
+}
 
 export class BatchResponseDto {
   @ApiProperty()
@@ -11,13 +25,13 @@ export class BatchResponseDto {
   @ApiProperty()
   batchNumber: string;
 
-  @ApiProperty({ required: false, nullable: true })
+  @ApiPropertyOptional({ type: String, nullable: true })
   batchRef?: string | null;
 
-  @ApiProperty({ required: false, nullable: true })
+  @ApiPropertyOptional({ type: String, nullable: true })
   manufacturedDate?: string | null;
 
-  @ApiProperty({ required: false, nullable: true })
+  @ApiPropertyOptional({ type: String, nullable: true })
   expiryDate?: string | null;
 
   @ApiProperty()
@@ -35,12 +49,20 @@ export class BatchResponseDto {
   @ApiProperty({ enum: BatchStatus })
   status: BatchStatus;
 
-  @ApiProperty({ required: false })
-  item?: {
-    id: number;
-    name: string;
-    code?: string | null;
-  };
+  @ApiPropertyOptional({ type: String, nullable: true })
+  sourceTransactionType?: string | null;
+
+  @ApiPropertyOptional({ type: Number, nullable: true })
+  sourceTransactionId?: number | null;
+
+  @ApiPropertyOptional({ type: String })
+  createdAt?: string;
+
+  @ApiPropertyOptional({ type: String })
+  updatedAt?: string;
+
+  @ApiPropertyOptional({ type: BatchItemResponseDto })
+  item?: BatchItemResponseDto;
 }
 
 export class BatchesListResponseDto {

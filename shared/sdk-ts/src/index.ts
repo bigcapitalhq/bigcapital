@@ -10,6 +10,7 @@ export * from './credit-notes';
 export * from './api-keys';
 export * from './sale-invoices';
 export * from './recurring-invoices';
+export * from './ee/batches';
 export * from './ee/recurring-journals';
 export * from './customers';
 export * from './vendors';

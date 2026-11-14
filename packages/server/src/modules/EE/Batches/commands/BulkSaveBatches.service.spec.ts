@@ -10,6 +10,7 @@ describe('BulkSaveBatchesService', () => {
   let validators: any;
   let createBatchService: any;
   let editBatchService: any;
+  let batchesBalance: any;
 
   beforeEach(() => {
     uow = {
@@ -32,12 +33,16 @@ describe('BulkSaveBatchesService', () => {
         .fn()
         .mockImplementation((id, dto) => Promise.resolve({ id, ...dto })),
     };
+    batchesBalance = {
+      attachBalance: jest.fn((batches) => Promise.resolve(batches)),
+    };
     service = new BulkSaveBatchesService(
       uow,
       batchModel,
       validators,
       createBatchService,
       editBatchService,
+      batchesBalance,
     );
   });
 
@@ -83,6 +88,10 @@ describe('BulkSaveBatchesService', () => {
       trx,
     );
     expect(result.map((batch) => batch.id)).toEqual([2, 10]);
+    expect(batchesBalance.attachBalance).toHaveBeenCalledWith([
+      expect.objectContaining({ id: 2 }),
+      expect.objectContaining({ id: 10 }),
+    ]);
   });
 
   it('rejects batches that belong to another item', async () => {

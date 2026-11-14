@@ -39,6 +39,7 @@ export class BulkSaveBatchItemDto {
   @ApiPropertyOptional({
     description: 'The manufacturer batch reference',
     example: 'MFG-2026-01',
+    type: String,
     nullable: true,
   })
   @IsString()
@@ -49,6 +50,8 @@ export class BulkSaveBatchItemDto {
   @ApiPropertyOptional({
     description: 'The manufacturing date',
     example: '2026-01-01',
+    type: String,
+    format: 'date',
     nullable: true,
   })
   @IsDateString()
@@ -58,6 +61,8 @@ export class BulkSaveBatchItemDto {
   @ApiPropertyOptional({
     description: 'The expiry date',
     example: '2027-01-01',
+    type: String,
+    format: 'date',
     nullable: true,
   })
   @IsDateString()
