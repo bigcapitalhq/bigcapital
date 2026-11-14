@@ -170,6 +170,26 @@ export const findNode = (
 };
 
 /**
+ * Retrieves the total amount of the node by its id and defaults to zero when
+ * the node is missing. The balance sheet suppresses its whole tree when the
+ * tenant has no ledger transactions up to the requested `toDate`, so a
+ * pre-seed baseline can legitimately be empty.
+ */
+export const findNodeTotal = (nodes: BSNode[], id: string | number): number =>
+  findNode(nodes, id)?.total?.amount ?? 0;
+
+/**
+ * Retrieves the amount of the node period column and defaults to zero when
+ * the node or the period column is missing.
+ */
+export const findNodePeriodTotal = (
+  nodes: BSNode[],
+  id: string | number,
+  index: number,
+): number =>
+  findNode(nodes, id)?.horizontal_totals?.[index]?.total?.amount ?? 0;
+
+/**
  * Collects all nodes of the given node type.
  */
 export const collectNodesByType = (
