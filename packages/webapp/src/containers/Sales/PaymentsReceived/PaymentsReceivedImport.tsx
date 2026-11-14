@@ -15,7 +15,7 @@ export function PaymentsReceiveImport() {
   return (
     <DashboardInsider name={'import-accounts'}>
       <ImportView
-        resource={'payment_receive'}
+        resource={'payment_received'}
         onCancelClick={handleCancelBtnClick}
         onImportSuccess={handleImportSuccess}
       />
