@@ -11,10 +11,10 @@ import {
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import styles from './ExpenseForm.module.scss';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import type { ExpenseFormValues } from './types';
-import { FormattedMessage as T, PageForm, Group } from '@/components';
-import { Icon, If } from '@/components';
+import { FormattedMessage as T, Icon, If } from '@/components';
 
 /**
  * Expense form floating actions.
@@ -70,8 +70,8 @@ export function ExpenseFloatingFooter() {
   };
 
   return (
-    <PageForm.FooterActions spacing={10} position="apart">
-      <Group spacing={10}>
+    <div className={styles.footerActions}>
+      <div className={styles.footerActionsGroup}>
         {/* ----------- Save And Publish ----------- */}
         <If condition={isNewMode}>
           <ButtonGroup>
@@ -110,7 +110,6 @@ export function ExpenseFloatingFooter() {
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
-              className={'ml1'}
               onClick={handleSubmitDraftBtnClick}
               text={<T id={'save_as_draft'} />}
             />
@@ -146,7 +145,7 @@ export function ExpenseFloatingFooter() {
               loading={isSubmitting}
               intent={Intent.PRIMARY}
               onClick={handleSubmitPublishBtnClick}
-              style={{ minWidth: '85px' }}
+              className={styles.saveButton}
               text={<T id={'save'} />}
             />
             <Popover
@@ -172,18 +171,13 @@ export function ExpenseFloatingFooter() {
         </If>
         {/* ----------- Clear & Reset----------- */}
         <Button
-          className={'ml1'}
           disabled={isSubmitting}
           onClick={handleClearBtnClick}
           text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
         />
         {/* ----------- Cancel ----------- */}
-        <Button
-          className={'ml1'}
-          onClick={handleCancelBtnClick}
-          text={<T id={'cancel'} />}
-        />
-      </Group>
-    </PageForm.FooterActions>
+        <Button onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
+      </div>
+    </div>
   );
 }

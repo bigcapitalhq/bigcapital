@@ -1,7 +1,6 @@
-import { css } from '@emotion/css';
 import React, { createContext } from 'react';
+import styles from './ExpenseForm.module.scss';
 import type { ExpenseFormContext } from './types';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
 import {
@@ -115,10 +114,7 @@ function ExpenseFormPageProvider({
         isAccountsLoading
       }
       name={'expense-form'}
-      className={css`
-        min-height: calc(100vh - var(--top-offset));
-        max-height: calc(100vh - var(--top-offset));
-      `}
+      className={styles.insider}
     >
       <ExpenseFormPageContext.Provider value={provider} {...props} />
     </DashboardInsider>
