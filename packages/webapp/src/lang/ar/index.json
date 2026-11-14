@@ -2170,6 +2170,8 @@
   "batch.select.quantity_out": "الكمية الصادرة",
   "batch.select.quantity_exceeds_available": "الكمية تتجاوز الكمية المتاحة ({available}).",
   "batch.select.batches_count": "{count} دفعات",
+  "batch.search.placeholder": "بحث في الدفعات...",
+  "batch.search.no_results": "لم يتم العثور على دفعات مطابقة.",
   "batch.allocate.title": "تخصيص الدفعات",
   "batch.allocate.purchase_title": "تخصيص الدفعات",
   "batch.allocate.required": "كمية البند",

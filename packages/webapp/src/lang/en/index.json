@@ -2606,6 +2606,8 @@
   "batch.select.quantity_out": "Quantity out",
   "batch.select.quantity_exceeds_available": "The quantity exceeds the available quantity ({available}).",
   "batch.select.batches_count": "{count} batches",
+  "batch.search.placeholder": "Search batches...",
+  "batch.search.no_results": "No matching batches found.",
   "batch.allocate.title": "Allocate batches",
   "batch.allocate.purchase_title": "Batch allocations",
   "batch.allocate.required": "Line quantity",
