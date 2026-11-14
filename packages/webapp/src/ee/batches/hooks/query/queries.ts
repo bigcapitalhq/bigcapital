@@ -96,6 +96,7 @@ export interface BatchDetailsReportResponse {
     rows: Array<{
       id?: string;
       rowTypes?: string[];
+      meta?: { status?: BatchStatus };
       cells: Array<{ key: string; value: string }>;
     }>;
   };
