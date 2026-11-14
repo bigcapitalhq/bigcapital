@@ -34,7 +34,10 @@ export class CreateBatchService {
   /**
    * Creates a new batch.
    */
-  public async createBatch(dto: CreateBatchDto): Promise<Batch> {
+  public async createBatch(
+    dto: CreateBatchDto,
+    trx?: Knex.Transaction,
+  ): Promise<Batch> {
     await this.validators.validateBatchItem(dto.itemId);
     await this.validators.validateBatchNumberUnique(
       dto.itemId,
@@ -42,15 +45,15 @@ export class CreateBatchService {
     );
     this.validators.validateBatchDates(dto.manufacturedDate, dto.expiryDate);
 
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction(async (transaction: Knex.Transaction) => {
       // Triggers `onBatchCreating` event.
       await this.eventEmitter.emitAsync(batchEvents.onCreating, {
         batchDTO: dto,
-        trx,
+        trx: transaction,
       } as IBatchCreatingPayload);
 
       const batch = await this.batchModel()
-        .query(trx)
+        .query(transaction)
         .insertAndFetch({
           itemId: dto.itemId,
           batchNumber: dto.batchNumber.trim(),
@@ -67,10 +70,10 @@ export class CreateBatchService {
         batch,
         batchId: batch.id,
         batchDTO: dto,
-        trx,
+        trx: transaction,
       } as IBatchCreatedPayload);
 
       return batch;
-    });
+    }, trx);
   }
 }

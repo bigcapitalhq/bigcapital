@@ -16,6 +16,7 @@ import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/Re
 import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 import { BatchesApplication } from './BatchesApplication';
 import { BatchesFeatureGuard } from './BatchesFeatureGuard';
+import { BulkSaveBatchesDto } from './dtos/BulkSaveBatches.dto';
 import { CreateBatchDto } from './dtos/CreateBatch.dto';
 import { EditBatchDto } from './dtos/EditBatch.dto';
 import { GetBatchesQueryDto } from './dtos/GetBatchesQuery.dto';
@@ -51,6 +52,12 @@ export class BatchesController {
   @ApiOperation({ summary: 'Creates a new batch' })
   public create(@Body() dto: CreateBatchDto) {
     return this.batchesApplication.create(dto);
+  }
+
+  @Put('/bulk')
+  @ApiOperation({ summary: 'Creates or updates multiple batches' })
+  public bulkSave(@Body() dto: BulkSaveBatchesDto) {
+    return this.batchesApplication.bulkSave(dto);
   }
 
   @Put('/:id')
