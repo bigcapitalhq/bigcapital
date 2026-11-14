@@ -40,6 +40,8 @@ export function SaleBatchAllocationsPopover({
   const [quantities, setQuantities] = React.useState<Record<number, number>>(
     {},
   );
+  const hasDraftRef = React.useRef(false);
+  const prevItemIdRef = React.useRef(itemId);
   const { data: batchesData, isLoading } = useItemBatches(itemId, {
     enabled: isOpen && !!itemId,
   });
@@ -57,13 +59,26 @@ export function SaleBatchAllocationsPopover({
   }, [allocations]);
 
   React.useEffect(() => {
-    if (isOpen) {
-      setQuantities({ ...allocatedByBatch });
-    }
+    if (!isOpen) return;
+    // Reopening with an unapplied draft must restore the user's input instead
+    // of resetting it from the parent allocations.
+    if (hasDraftRef.current) return;
+
+    setQuantities({ ...allocatedByBatch });
     // The quantities are only initialized when the popover transitions to
     // open; subsequent parent re-renders must not reset the user's input.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  // A draft belongs to one item entry line. Clear it if the row is reused for
+  // another item.
+  React.useEffect(() => {
+    if (prevItemIdRef.current === itemId) return;
+
+    prevItemIdRef.current = itemId;
+    hasDraftRef.current = false;
+    setIsOpen(false);
+  }, [itemId]);
 
   const rows: BatchRow[] = React.useMemo(() => {
     const batches = (batchesData?.results ?? []) as Batch[];
@@ -107,6 +122,7 @@ export function SaleBatchAllocationsPopover({
     !hasExceededAvailable;
 
   const setQuantity = (batchId: number, quantity: number) => {
+    hasDraftRef.current = true;
     setQuantities((current) => ({
       ...current,
       [batchId]: Math.max(toNumber(quantity), 0),
@@ -125,6 +141,7 @@ export function SaleBatchAllocationsPopover({
         remaining -= quantity;
       }
     });
+    hasDraftRef.current = true;
     setQuantities(next);
   };
 
@@ -138,13 +155,28 @@ export function SaleBatchAllocationsPopover({
         batch: row.batch,
       }));
     onApply(nextAllocations);
+    hasDraftRef.current = false;
+    setIsOpen(false);
+  };
+
+  // Closing hides the popover but keeps the current quantities as a draft so
+  // reopening restores the user's input.
+  const handleClose = () => {
     setIsOpen(false);
   };
 
   return (
     <Popover2
       isOpen={isOpen}
-      onInteraction={(nextOpenState) => setIsOpen(nextOpenState)}
+      // The popover is closed only through its Close button. Ignoring the
+      // close interaction avoids accidental dismissal when clicking outside.
+      onInteraction={(nextOpenState) => {
+        if (nextOpenState) setIsOpen(true);
+      }}
+      canEscapeKeyClose={false}
+      // Keep the page usable while the popover stays open; outside clicks
+      // must not be blocked or forced back into the popover.
+      enforceFocus={false}
       placement={'bottom-start'}
       minimal={true}
       disabled={disabled}
@@ -190,7 +222,10 @@ export function SaleBatchAllocationsPopover({
                 <Button
                   small={true}
                   minimal={true}
-                  onClick={() => setQuantities({})}
+                  onClick={() => {
+                    hasDraftRef.current = true;
+                    setQuantities({});
+                  }}
                 >
                   <T id={'batch.allocate.clear'} />
                 </Button>
@@ -280,12 +315,8 @@ export function SaleBatchAllocationsPopover({
           )}
 
           <div className={'batch-allocations__footer'}>
-            <Button
-              small={true}
-              minimal={true}
-              onClick={() => setIsOpen(false)}
-            >
-              <T id={'cancel'} />
+            <Button small={true} minimal={true} onClick={handleClose}>
+              <T id={'close'} />
             </Button>
             <Button
               small={true}
