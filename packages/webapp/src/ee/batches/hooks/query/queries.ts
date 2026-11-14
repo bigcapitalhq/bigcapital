@@ -1,4 +1,9 @@
-import { rawRequest } from '@bigcapital/sdk-ts';
+import {
+  bulkSaveBatches,
+  rawRequest,
+  type BulkSaveBatchesBody,
+  type BulkSaveBatchesResponse,
+} from '@bigcapital/sdk-ts';
 import {
   useMutation,
   useQuery,
@@ -66,9 +71,16 @@ export interface CreateBatchBody {
   sourceTransactionId?: number;
 }
 
-export interface EditBatchBody extends Partial<CreateBatchBody> {
+export type EditBatchBody = Omit<
+  Partial<CreateBatchBody>,
+  'batchRef' | 'manufacturedDate' | 'expiryDate'
+> & {
   id: number;
-}
+  // Null clears the optional field; undefined leaves it untouched.
+  batchRef?: string | null;
+  manufacturedDate?: string | null;
+  expiryDate?: string | null;
+};
 
 export interface BatchDetailsReportQuery {
   fromDate?: string;
@@ -207,6 +219,30 @@ export function useEditBatch(
     ...props,
     mutationFn: ({ id, ...values }: EditBatchBody) =>
       rawRequest<Batch>(fetcher, 'PUT', `/api/batches/${id}`, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: batchesKeys.all() });
+      queryClient.invalidateQueries({ queryKey: batchesKeys.reportAll() });
+    },
+  });
+}
+
+/**
+ * Creates or updates multiple batches in a single request.
+ */
+export function useBulkSaveBatches(
+  props?: UseMutationOptions<
+    BulkSaveBatchesResponse,
+    Error,
+    BulkSaveBatchesBody
+  >,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: BulkSaveBatchesBody) =>
+      bulkSaveBatches(fetcher, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: batchesKeys.all() });
       queryClient.invalidateQueries({ queryKey: batchesKeys.reportAll() });

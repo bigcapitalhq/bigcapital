@@ -34,7 +34,11 @@ export class EditBatchService {
   /**
    * Updates the given batch.
    */
-  public async editBatch(id: number, dto: EditBatchDto): Promise<Batch> {
+  public async editBatch(
+    id: number,
+    dto: EditBatchDto,
+    trx?: Knex.Transaction,
+  ): Promise<Batch> {
     const oldBatch = await this.batchModel().query().findById(id);
     this.validators.validateBatchExistance(oldBatch);
 
@@ -49,17 +53,17 @@ export class EditBatchService {
       dto.expiryDate ?? oldBatch.expiryDate,
     );
 
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction(async (transaction: Knex.Transaction) => {
       // Triggers `onBatchEditing` event.
       await this.eventEmitter.emitAsync(batchEvents.onEditing, {
         batchId: id,
         batchDTO: dto,
         oldBatch,
-        trx,
+        trx: transaction,
       } as IBatchEditingPayload);
 
       const batch = await this.batchModel()
-        .query(trx)
+        .query(transaction)
         .patchAndFetchById(id, {
           ...(dto.batchNumber !== undefined
             ? { batchNumber: batchNumber }
@@ -84,10 +88,10 @@ export class EditBatchService {
         batchId: batch.id,
         batchDTO: dto,
         oldBatch,
-        trx,
+        trx: transaction,
       } as IBatchEditedPayload);
 
       return batch;
-    });
+    }, trx);
   }
 }

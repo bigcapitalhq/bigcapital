@@ -9,6 +9,7 @@ import { BatchesBalanceService } from './BatchesBalance.service';
 import { CreateBatchService } from './commands/CreateBatch.service';
 import { EditBatchService } from './commands/EditBatch.service';
 import { DeleteBatchService } from './commands/DeleteBatch.service';
+import { BulkSaveBatchesService } from './commands/BulkSaveBatches.service';
 import { GetBatchesService } from './queries/GetBatches.service';
 import { BatchDetailsReportService } from './BatchDetailsReport.service';
 import { BatchesSubscriber } from './BatchesSubscriber';
@@ -37,6 +38,7 @@ const models = [RegisterTenancyModel(Batch)];
     CreateBatchService,
     EditBatchService,
     DeleteBatchService,
+    BulkSaveBatchesService,
     GetBatchesService,
     BatchDetailsReportService,
     BatchesSubscriber,

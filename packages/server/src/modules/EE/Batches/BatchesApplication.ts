@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateBatchService } from './commands/CreateBatch.service';
 import { EditBatchService } from './commands/EditBatch.service';
 import { DeleteBatchService } from './commands/DeleteBatch.service';
+import { BulkSaveBatchesService } from './commands/BulkSaveBatches.service';
 import { GetBatchesService } from './queries/GetBatches.service';
 import { CreateBatchDto } from './dtos/CreateBatch.dto';
 import { EditBatchDto } from './dtos/EditBatch.dto';
+import { BulkSaveBatchesDto } from './dtos/BulkSaveBatches.dto';
 import { GetBatchesQueryDto } from './dtos/GetBatchesQuery.dto';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { BATCHES_ERRORS } from './types/Batches.types';
@@ -15,6 +17,7 @@ export class BatchesApplication {
     private readonly createBatchService: CreateBatchService,
     private readonly editBatchService: EditBatchService,
     private readonly deleteBatchService: DeleteBatchService,
+    private readonly bulkSaveBatchesService: BulkSaveBatchesService,
     private readonly getBatchesService: GetBatchesService,
   ) {}
 
@@ -56,6 +59,13 @@ export class BatchesApplication {
    */
   public edit(id: number, dto: EditBatchDto) {
     return this.editBatchService.editBatch(id, dto);
+  }
+
+  /**
+   * Creates or updates multiple batches in a single request.
+   */
+  public bulkSave(dto: BulkSaveBatchesDto) {
+    return this.bulkSaveBatchesService.bulkSaveBatches(dto);
   }
 
   /**

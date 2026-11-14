@@ -5612,6 +5612,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/batches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the batches list */
+        get: operations["BatchesController_list"];
+        put?: never;
+        /** Creates a new batch */
+        post: operations["BatchesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/batches/available": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the available batches of an item */
+        get: operations["BatchesController_available"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/batches/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the given batch */
+        get: operations["BatchesController_get"];
+        /** Updates the given batch */
+        put: operations["BatchesController_edit"];
+        post?: never;
+        /** Deletes the given batch */
+        delete: operations["BatchesController_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/batches/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Creates or updates multiple batches */
+        put: operations["BatchesController_bulkSave"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports/batch-details": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the batch details report */
+        get: operations["BatchDetailsReportController_report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/landed-cost/transactions": {
         parameters: {
             query?: never;
@@ -7958,6 +8046,18 @@ export interface components {
              */
             defaultTemplateId: number | null;
         };
+        ItemEntryBatchDto: {
+            /**
+             * @description The id of the batch
+             * @example 1
+             */
+            batchId: number;
+            /**
+             * @description The quantity allocated from the batch
+             * @example 5
+             */
+            quantity: number;
+        };
         ItemEntryDto: {
             /**
              * @description The index of the item entry
@@ -8011,6 +8111,13 @@ export interface components {
              * @example 1
              */
             warehouseId: number;
+            /**
+             * @description The batch id of the item entry
+             * @example 1
+             */
+            batchId?: number;
+            /** @description The batch allocations of the item entry */
+            batches?: components["schemas"]["ItemEntryBatchDto"][];
             /**
              * @description The project id of the item entry
              * @example 1
@@ -12924,6 +13031,13 @@ export interface components {
              * @example 1
              */
             warehouseId: number;
+            /**
+             * @description The batch id of the item entry
+             * @example 1
+             */
+            batchId?: number;
+            /** @description The batch allocations of the item entry */
+            batches?: components["schemas"]["ItemEntryBatchDto"][];
             /**
              * @description The project id of the item entry
              * @example 1
@@ -19391,6 +19505,172 @@ export interface components {
         GetAuditLogsResponseDto: {
             data: components["schemas"]["AuditLogListItemDto"][];
             pagination: components["schemas"]["PaginationMetaDto"];
+        };
+        CreateBatchDto: {
+            /**
+             * @description The id of the inventory item
+             * @example 1
+             */
+            itemId: number;
+            /**
+             * @description The batch number
+             * @example BATCH-001
+             */
+            batchNumber: string;
+            /**
+             * @description The manufacturer batch reference
+             * @example MFG-2026-01
+             */
+            batchRef?: string | null;
+            /**
+             * Format: date
+             * @description The manufacturing date
+             * @example 2026-01-01
+             */
+            manufacturedDate?: string | null;
+            /**
+             * Format: date
+             * @description The expiry date
+             * @example 2027-01-01
+             */
+            expiryDate?: string | null;
+            /**
+             * @description The quantity received in this batch
+             * @example 100
+             */
+            quantity: number;
+            /**
+             * @description The transaction type that created the batch
+             * @example Bill
+             */
+            sourceTransactionType?: string;
+            /**
+             * @description The transaction id that created the batch
+             * @example 10
+             */
+            sourceTransactionId?: number;
+        };
+        BulkSaveBatchItemDto: {
+            /**
+             * @description The id of an existing batch to update. Omit it to create a new batch.
+             * @example 1
+             */
+            batchId?: number;
+            /**
+             * @description The batch number
+             * @example BATCH-001
+             */
+            batchNumber: string;
+            /**
+             * @description The manufacturer batch reference
+             * @example MFG-2026-01
+             */
+            batchRef?: string | null;
+            /**
+             * Format: date
+             * @description The manufacturing date
+             * @example 2026-01-01
+             */
+            manufacturedDate?: string | null;
+            /**
+             * Format: date
+             * @description The expiry date
+             * @example 2027-01-01
+             */
+            expiryDate?: string | null;
+            /**
+             * @description The quantity received in this batch
+             * @example 100
+             */
+            quantity?: number;
+            /**
+             * @description The transaction type that created the batch
+             * @example Bill
+             */
+            sourceTransactionType?: string;
+            /**
+             * @description The transaction id that created the batch
+             * @example 10
+             */
+            sourceTransactionId?: number;
+        };
+        BulkSaveBatchesDto: {
+            /**
+             * @description The id of the inventory item
+             * @example 1
+             */
+            itemId: number;
+            /** @description The batches to create or update */
+            batches: components["schemas"]["BulkSaveBatchItemDto"][];
+        };
+        BatchItemResponseDto: {
+            id: number;
+            name: string;
+            code?: string | null;
+            type?: string;
+        };
+        BatchResponseDto: {
+            id: number;
+            itemId: number;
+            batchNumber: string;
+            batchRef?: string | null;
+            manufacturedDate?: string | null;
+            expiryDate?: string | null;
+            quantity: number;
+            quantityIn: number;
+            quantityOut: number;
+            quantityOnHand: number;
+            /** @enum {string} */
+            status: "active" | "expiring_soon" | "expired" | "depleted";
+            sourceTransactionType?: string | null;
+            sourceTransactionId?: number | null;
+            createdAt?: string;
+            updatedAt?: string;
+            item?: components["schemas"]["BatchItemResponseDto"];
+        };
+        EditBatchDto: {
+            /**
+             * @description The id of the inventory item
+             * @example 1
+             */
+            itemId?: number;
+            /**
+             * @description The batch number
+             * @example BATCH-001
+             */
+            batchNumber?: string;
+            /**
+             * @description The manufacturer batch reference
+             * @example MFG-2026-01
+             */
+            batchRef?: string | null;
+            /**
+             * Format: date
+             * @description The manufacturing date
+             * @example 2026-01-01
+             */
+            manufacturedDate?: string | null;
+            /**
+             * Format: date
+             * @description The expiry date
+             * @example 2027-01-01
+             */
+            expiryDate?: string | null;
+            /**
+             * @description The quantity received in this batch
+             * @example 100
+             */
+            quantity?: number;
+            /**
+             * @description The transaction type that created the batch
+             * @example Bill
+             */
+            sourceTransactionType?: string;
+            /**
+             * @description The transaction id that created the batch
+             * @example 10
+             */
+            sourceTransactionId?: number;
         };
         BillLandedCostTransactionDto: {
             /**
@@ -36571,6 +36851,234 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["GetAuditLogsResponseDto"];
                 };
+            };
+        };
+    };
+    BatchesController_list: {
+        parameters: {
+            query?: {
+                /** @description The item id */
+                itemId?: number;
+                /** @description The item ids */
+                itemsIds?: number[];
+                /** @description Search term applied to batch number, batch ref and item name */
+                search?: string;
+                /** @description The batch status */
+                status?: "active" | "expiring_soon" | "expired" | "depleted";
+                /** @description Filter batches created on or after this date */
+                fromDate?: string;
+                /** @description Filter batches created on or before this date */
+                toDate?: string;
+                /** @description The page number */
+                page?: number;
+                /** @description The page size */
+                pageSize?: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BatchesController_create: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBatchDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BatchesController_available: {
+        parameters: {
+            query: {
+                /** @description The item id */
+                itemId: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BatchesController_get: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BatchesController_edit: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditBatchDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BatchesController_delete: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BatchesController_bulkSave: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkSaveBatchesDto"];
+            };
+        };
+        responses: {
+            /** @description The batches have been saved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchResponseDto"][];
+                };
+            };
+        };
+    };
+    BatchDetailsReportController_report: {
+        parameters: {
+            query?: {
+                /** @description From date */
+                fromDate?: string;
+                /** @description To date */
+                toDate?: string;
+                /** @description The item ids */
+                itemsIds?: number[];
+                /** @description The batch status */
+                status?: "active" | "expiring_soon" | "expired" | "depleted";
+                /** @description Search term applied to batch number, batch ref and item name */
+                search?: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

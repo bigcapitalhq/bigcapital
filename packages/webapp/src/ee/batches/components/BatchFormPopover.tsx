@@ -7,6 +7,7 @@ import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import '../style/components/Batches.scss';
 import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { FormikProps } from 'formik';
 import {
   AppToaster,
   FDateInput,
@@ -51,23 +52,68 @@ const getBatchFormSchema = () =>
       ),
   });
 
-type BatchFormContentProps = Pick<
-  BatchFormProps,
-  'batch' | 'onSaved' | 'onCancel'
->;
+type BatchFormContentProps = Pick<BatchFormProps, 'batch'> & {
+  onClose: () => void;
+};
+
+/**
+ * Builds the form values for the given batch, or blank values for a new one.
+ */
+function buildInitialValues(
+  batch: Batch | null | undefined,
+  defaultQuantity?: number | string,
+): BatchFormValues {
+  return {
+    batchNumber: batch?.batchNumber ?? '',
+    batchRef: batch?.batchRef ?? '',
+    manufacturedDate: batch?.manufacturedDate
+      ? moment(batch.manufacturedDate).toDate()
+      : null,
+    expiryDate: batch?.expiryDate ? moment(batch.expiryDate).toDate() : null,
+    quantity:
+      defaultQuantity !== undefined && defaultQuantity !== ''
+        ? Number(defaultQuantity) || 0
+        : (batch?.quantity ?? 0),
+  };
+}
+
+/**
+ * Form footer that submits the batch form.
+ */
+function BatchFormFooter({ onClose }: { onClose: () => void }) {
+  const { submitForm, isSubmitting } = useFormikContext<BatchFormValues>();
+
+  return (
+    <div className="batch-form__footer">
+      <Button
+        small={true}
+        minimal={true}
+        onClick={onClose}
+        disabled={isSubmitting}
+      >
+        <T id={'close'} />
+      </Button>
+      <Button
+        small={true}
+        intent={Intent.PRIMARY}
+        loading={isSubmitting}
+        onClick={submitForm}
+        type={'button'}
+      >
+        <T id={'save'} />
+      </Button>
+    </div>
+  );
+}
 
 /**
  * Form rendered inside the batch popover.
  */
-function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
+function BatchFormContent({ batch, onClose }: BatchFormContentProps) {
   const dateInputFormatter = useDateInputFormatter();
-  const { submitForm, isSubmitting } = useFormikContext<BatchFormValues>();
 
   return (
-    <Form
-      className="batch-form batch-form--table"
-      onSubmitCapture={(event) => event.stopPropagation()}
-    >
+    <Form className="batch-form batch-form--table">
       <div className="batch-form__header">
         <strong>
           {batch ? (
@@ -106,6 +152,7 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
                   placeholder={intl.get('batch.form.batch_number_placeholder')}
                   autoFocus
                   fill={true}
+                  fastField={true}
                 />
                 <ErrorMessage
                   name={'batchNumber'}
@@ -118,6 +165,7 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
                   name={'batchRef'}
                   placeholder={intl.get('batch.form.batch_ref_placeholder')}
                   fill={true}
+                  fastField={true}
                 />
               </td>
               <td className={'batch-form-table__col-date'}>
@@ -127,6 +175,7 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
                   placeholder={dateInputFormatter.placeholder}
                   popoverProps={{ position: Position.BOTTOM, minimal: true }}
                   fill={true}
+                  fastField={true}
                 />
               </td>
               <td className={'batch-form-table__col-date'}>
@@ -136,6 +185,7 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
                   placeholder={dateInputFormatter.placeholder}
                   popoverProps={{ position: Position.BOTTOM, minimal: true }}
                   fill={true}
+                  fastField={true}
                 />
                 <ErrorMessage
                   name={'expiryDate'}
@@ -144,7 +194,12 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
                 />
               </td>
               <td>
-                <FNumericInput name={'quantity'} min={0} fill={true} />
+                <FNumericInput
+                  name={'quantity'}
+                  min={0}
+                  fill={true}
+                  fastField={true}
+                />
               </td>
             </tr>
           </tbody>
@@ -155,25 +210,7 @@ function BatchFormContent({ batch, onSaved, onCancel }: BatchFormContentProps) {
         <T id={'batch.form.quantity_hint'} />
       </p>
 
-      <div className="batch-form__footer">
-        <Button
-          small={true}
-          minimal={true}
-          onClick={onCancel}
-          disabled={isSubmitting}
-        >
-          <T id={'cancel'} />
-        </Button>
-        <Button
-          small={true}
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          onClick={submitForm}
-          type={'button'}
-        >
-          <T id={'save'} />
-        </Button>
-      </div>
+      <BatchFormFooter onClose={onClose} />
     </Form>
   );
 }
@@ -204,46 +241,73 @@ export function BatchFormPopover({
   popoverClassName,
 }: BatchFormPopoverProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const isOpenRef = React.useRef(isOpen);
+  const formikRef = React.useRef<FormikProps<BatchFormValues>>(null);
   const { mutateAsync: createBatch } = useCreateBatch();
   const { mutateAsync: editBatch } = useEditBatch();
   const batchFormSchema = React.useMemo(() => getBatchFormSchema(), []);
 
-  const initialValues: BatchFormValues = React.useMemo(
-    () => ({
-      batchNumber: batch?.batchNumber ?? '',
-      batchRef: batch?.batchRef ?? '',
-      manufacturedDate: batch?.manufacturedDate
-        ? moment(batch.manufacturedDate).toDate()
-        : null,
-      expiryDate: batch?.expiryDate ? moment(batch.expiryDate).toDate() : null,
-      quantity:
-        defaultQuantity !== undefined && defaultQuantity !== ''
-          ? Number(defaultQuantity) || 0
-          : (batch?.quantity ?? 0),
-    }),
+  const initialValues = React.useMemo(
+    () => buildInitialValues(batch, defaultQuantity),
     [batch, defaultQuantity],
   );
 
+  // Keep the latest open state available to effects without making them
+  // re-run whenever the popover opens or closes.
+  React.useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  // Re-sync the form only when the underlying batch changes while the popover
+  // is closed. A closed form may still hold an unapplied draft that must
+  // survive reopening, so values are never reset just because the popover
+  // closed.
+  React.useEffect(() => {
+    if (!isOpenRef.current) {
+      formikRef.current?.resetForm({ values: initialValues });
+    }
+    // The record identity intentionally drives this reset; quantity/default
+    // changes must not wipe a draft.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemId, batch?.id]);
+
   const handleSubmit = async (values: BatchFormValues) => {
+    const manufacturedDate = values.manufacturedDate
+      ? moment(values.manufacturedDate).format('YYYY-MM-DD')
+      : null;
+    const expiryDate = values.expiryDate
+      ? moment(values.expiryDate).format('YYYY-MM-DD')
+      : null;
     const payload = {
-      itemId,
       batchNumber: values.batchNumber.trim(),
-      batchRef: values.batchRef?.trim() || undefined,
-      manufacturedDate: values.manufacturedDate
-        ? moment(values.manufacturedDate).format('YYYY-MM-DD')
-        : undefined,
-      expiryDate: values.expiryDate
-        ? moment(values.expiryDate).format('YYYY-MM-DD')
-        : undefined,
+      batchRef: values.batchRef?.trim() ?? '',
+      manufacturedDate,
+      expiryDate,
       quantity: Number(values.quantity) || 0,
       sourceTransactionType,
     };
     try {
       const savedBatch = batch
         ? await editBatch({ id: batch.id, ...payload })
-        : await createBatch(payload);
+        : await createBatch({
+            itemId,
+            ...payload,
+            batchRef: payload.batchRef || undefined,
+            manufacturedDate: payload.manufacturedDate ?? undefined,
+            expiryDate: payload.expiryDate ?? undefined,
+          });
 
       onSaved?.(savedBatch as Batch);
+
+      // Re-sync the form baseline with the saved record. For a new batch the
+      // form is reset to blank values so reopening does not reuse the batch
+      // that was just created.
+      formikRef.current?.resetForm({
+        values: buildInitialValues(
+          batch ? (savedBatch as Batch) : null,
+          defaultQuantity,
+        ),
+      });
       setIsOpen(false);
       AppToaster.show({
         message: batch
@@ -256,49 +320,59 @@ export function BatchFormPopover({
     }
   };
 
+  // Closing only hides the popover. The draft is intentionally preserved so
+  // reopening restores the user's input; the form is reset by Save instead.
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Popover2
-      isOpen={isOpen}
-      onInteraction={(nextOpenState) => setIsOpen(nextOpenState)}
-      placement={placement}
-      minimal={true}
-      usePortal={usePortal}
-      disabled={disabled}
-      popoverClassName={popoverClassName}
-      content={
-        <div
-          className={'batch-form-popover'}
-          onClick={(event) => event.stopPropagation()}
-        >
-          <Formik
-            initialValues={initialValues}
-            validationSchema={batchFormSchema}
-            onSubmit={handleSubmit}
-            enableReinitialize={true}
-          >
-            <BatchFormContent
-              batch={batch}
-              onSaved={onSaved}
-              onCancel={() => setIsOpen(false)}
-            />
-          </Formik>
-        </div>
-      }
+    <Formik
+      innerRef={formikRef}
+      initialValues={initialValues}
+      validationSchema={batchFormSchema}
+      onSubmit={handleSubmit}
     >
-      <Button
-        small={true}
-        minimal={true}
-        icon={batch ? 'edit' : 'add'}
-        intent={batch ? Intent.NONE : Intent.PRIMARY}
-        {...buttonProps}
-        onClick={(event) => {
-          event.stopPropagation();
-          setIsOpen(true);
-          buttonProps?.onClick?.(event);
+      <Popover2
+        isOpen={isOpen}
+        // The popover is closed only through its Close button. Ignoring the
+        // close interaction avoids accidental dismissal when clicking outside.
+        onInteraction={(nextOpenState) => {
+          if (nextOpenState) setIsOpen(true);
         }}
+        canEscapeKeyClose={false}
+        // Keep the page usable while the popover stays open; outside clicks
+        // must not be blocked or forced back into the popover.
+        enforceFocus={false}
+        placement={placement}
+        minimal={true}
+        usePortal={usePortal}
+        disabled={disabled}
+        popoverClassName={popoverClassName}
+        content={
+          <div
+            className={'batch-form-popover'}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <BatchFormContent batch={batch} onClose={handleClose} />
+          </div>
+        }
       >
-        {buttonText ?? (batch ? batch.batchNumber : intl.get('batch.add'))}
-      </Button>
-    </Popover2>
+        <Button
+          small={true}
+          minimal={true}
+          icon={batch ? 'edit' : 'plus'}
+          intent={batch ? Intent.NONE : Intent.PRIMARY}
+          {...buttonProps}
+          onClick={(event) => {
+            event.stopPropagation();
+            setIsOpen(true);
+            buttonProps?.onClick?.(event);
+          }}
+        >
+          {buttonText ?? (batch ? batch.batchNumber : intl.get('batch.add'))}
+        </Button>
+      </Popover2>
+    </Formik>
   );
 }

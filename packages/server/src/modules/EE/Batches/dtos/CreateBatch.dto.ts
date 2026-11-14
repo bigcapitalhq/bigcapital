@@ -34,29 +34,36 @@ export class CreateBatchDto {
     description: 'The manufacturer batch reference',
     example: 'MFG-2026-01',
     required: false,
+    nullable: true,
   })
   @IsString()
   @IsOptional()
   @MaxLength(191)
-  batchRef?: string;
+  batchRef?: string | null;
 
   @ApiProperty({
     description: 'The manufacturing date',
     example: '2026-01-01',
+    type: String,
+    format: 'date',
     required: false,
+    nullable: true,
   })
   @IsDateString()
   @IsOptional()
-  manufacturedDate?: Date | string;
+  manufacturedDate?: Date | string | null;
 
   @ApiProperty({
     description: 'The expiry date',
     example: '2027-01-01',
+    type: String,
+    format: 'date',
     required: false,
+    nullable: true,
   })
   @IsDateString()
   @IsOptional()
-  expiryDate?: Date | string;
+  expiryDate?: Date | string | null;
 
   @ApiProperty({
     description: 'The quantity received in this batch',
