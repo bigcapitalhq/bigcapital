@@ -1,5 +1,6 @@
 import {
   fetchReceivableAgingTable,
+  fetchReceivableAgingJson,
   fetchReceivableAgingXlsx,
   fetchReceivableAgingCsv,
   fetchReceivableAgingPdf,
@@ -17,6 +18,8 @@ import { financialReportsKeys } from './query-keys';
 import type {
   ReceivableAgingTableQuery,
   ReceivableAgingTableResponse,
+  ReceivableAgingJsonQuery,
+  ReceivableAgingJsonResponse,
   ReceivableAgingXlsxQuery,
   ReceivableAgingCsvQuery,
   ReceivableAgingPdfQuery,
@@ -34,6 +37,26 @@ export function useARAgingSummaryReport(
     ...props,
     queryKey: financialReportsKeys.arAgingSummary(query),
     queryFn: () => fetchReceivableAgingTable(fetcher, query),
+  });
+}
+
+/**
+ * Retrieves the A/R aging summary as JSON nodes rather than table rows, for
+ * consumers that compute from the numbers (the homepage overview).
+ */
+export function useARAgingSummaryJson(
+  query: ReceivableAgingJsonQuery,
+  props?: Omit<
+    UseQueryOptions<ReceivableAgingJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    // distinct from the table key: same query, different response shape.
+    queryKey: [...financialReportsKeys.arAgingSummary(query), 'json'],
+    queryFn: () => fetchReceivableAgingJson(fetcher, query),
   });
 }
 

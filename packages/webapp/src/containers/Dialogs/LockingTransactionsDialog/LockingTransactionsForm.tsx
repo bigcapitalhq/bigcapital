@@ -33,6 +33,7 @@ function LockingTransactionsFormInner({
     moduleName,
     transactionLocking,
     isEnabled,
+    lockToDate,
     createLockingTransactionMutate,
   } = useLockingTransactionsContext();
 
@@ -50,6 +51,7 @@ function LockingTransactionsFormInner({
           }
         : {
             ...defaultInitialValues,
+            ...(lockToDate ? { lockToDate } : {}),
             module: moduleName,
           }),
     }),

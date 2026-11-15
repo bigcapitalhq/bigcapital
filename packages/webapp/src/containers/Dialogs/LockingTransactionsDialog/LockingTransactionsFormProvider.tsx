@@ -15,6 +15,7 @@ interface LockingTransactionsFormProviderProps {
   moduleName: string;
   isEnabled: boolean;
   dialogName: string;
+  lockToDate?: string;
   children?: React.ReactNode;
 }
 
@@ -25,6 +26,7 @@ function LockingTransactionsFormProvider({
   moduleName,
   isEnabled,
   dialogName,
+  lockToDate,
   ...props
 }: LockingTransactionsFormProviderProps) {
   // Create locking transactions mutations.
@@ -43,6 +45,7 @@ function LockingTransactionsFormProvider({
     createLockingTransactionMutate,
     transactionLocking,
     isEnabled,
+    lockToDate,
   };
   return (
     <DialogContent isLoading={isTransactionsLockingLoading}>

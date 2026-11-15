@@ -6,6 +6,7 @@ interface LockingTransactionsDialogContentProps {
   dialogName: string;
   moduleName: string;
   isEnabled: boolean;
+  lockToDate?: string;
 }
 
 /**
@@ -15,12 +16,14 @@ export function LockingTransactionsDialogContent({
   dialogName,
   moduleName,
   isEnabled,
+  lockToDate,
 }: LockingTransactionsDialogContentProps): React.ReactElement {
   return (
     <LockingTransactionsFormProvider
       isEnabled={isEnabled}
       moduleName={moduleName}
       dialogName={dialogName}
+      lockToDate={lockToDate}
     >
       <LockingTransactionsForm />
     </LockingTransactionsFormProvider>

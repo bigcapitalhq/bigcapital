@@ -1,5 +1,6 @@
 import {
   fetchPayableAgingTable,
+  fetchPayableAgingJson,
   fetchPayableAgingXlsx,
   fetchPayableAgingCsv,
   fetchPayableAgingPdf,
@@ -17,6 +18,8 @@ import { financialReportsKeys } from './query-keys';
 import type {
   PayableAgingTableQuery,
   PayableAgingTableResponse,
+  PayableAgingJsonQuery,
+  PayableAgingJsonResponse,
   PayableAgingXlsxQuery,
   PayableAgingCsvQuery,
   PayableAgingPdfQuery,
@@ -34,6 +37,26 @@ export function useAPAgingSummaryReport(
     ...props,
     queryKey: financialReportsKeys.apAgingSummary(query),
     queryFn: () => fetchPayableAgingTable(fetcher, query),
+  });
+}
+
+/**
+ * Retrieves the A/P aging summary as JSON nodes rather than table rows, for
+ * consumers that compute from the numbers (the homepage overview).
+ */
+export function useAPAgingSummaryJson(
+  query: PayableAgingJsonQuery,
+  props?: Omit<
+    UseQueryOptions<PayableAgingJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    // distinct from the table key: same query, different response shape.
+    queryKey: [...financialReportsKeys.apAgingSummary(query), 'json'],
+    queryFn: () => fetchPayableAgingJson(fetcher, query),
   });
 }
 

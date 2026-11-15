@@ -348,6 +348,18 @@ test.describe('app screenshots', () => {
   test('captures the dashboard', async ({ page }) => {
     await capture(page, '/', 'dashboard.png', {
       rowSelector: '.financial-reports__item',
+      prepare: async (currentPage) => {
+        await currentPage.getByTestId('homepage-view-classic').click();
+      },
+    });
+  });
+
+  test('captures the overview', async ({ page }) => {
+    await capture(page, '/', 'overview.png', {
+      rowTestId: /^overview-tile-/,
+      prepare: async (currentPage) => {
+        await currentPage.getByTestId('homepage-view-overview').click();
+      },
     });
   });
 
