@@ -1,6 +1,6 @@
 import { categorizeTransactionsBulk } from '@bigcapital/sdk-ts';
 import { Intent } from '@blueprintjs/core';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as FF from 'fp-ts/function';
 import React from 'react';
@@ -18,6 +18,7 @@ import type { CategorizeTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
+import { invalidateBankingQueries } from '@/hooks/query/banking/invalidate-banking';
 import { useApiFetcher } from '@/hooks/useRequest';
 
 interface CategorizeTransactionFormRootProps
@@ -32,12 +33,16 @@ function CategorizeTransactionFormRoot({
 }: CategorizeTransactionFormRootProps) {
   const { uncategorizedTransactionIds } = useCategorizeTransactionTabsBoot();
   const fetcher = useApiFetcher();
+  const queryClient = useQueryClient();
   const { mutateAsync: categorizeBulk } = useMutation<
     void,
     Error,
     CategorizeTransactionBody
   >({
     mutationFn: (body) => categorizeTransactionsBulk(fetcher, body),
+    onSuccess: () => {
+      invalidateBankingQueries(queryClient);
+    },
   });
 
   // Form initial values in create and edit mode.
