@@ -42,10 +42,10 @@ function commonInvalidateQueries(
   queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
   queryClient.invalidateQueries({ queryKey: financialReportsKeys.all() });
   queryClient.invalidateQueries({
-    queryKey: cashflowAccountsKeys.transactions(),
+    queryKey: cashflowAccountsKeys.transactions().slice(0, 1),
   });
   queryClient.invalidateQueries({
-    queryKey: cashflowAccountsKeys.transactionsInfinity(),
+    queryKey: cashflowAccountsKeys.transactionsInfinity().slice(0, 1),
   });
   queryClient.invalidateQueries({ queryKey: settingsKeys.manualJournals() });
 }
