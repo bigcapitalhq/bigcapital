@@ -2218,5 +2218,11 @@
   "batch.error.BATCH_INVALID_EXPIRY_DATE": "يجب أن يكون تاريخ الانتهاء في تاريخ التصنيع أو بعده.",
   "batch.error.BATCH_ALLOCATION_QUANTITY_MISMATCH": "يجب أن تساوي كميات الدفعات كمية البند (المطلوب: {entryQuantity}، المخصص: {allocatedQuantity}).",
   "batch.error.BATCH_ALLOCATION_INVALID_QUANTITY": "يجب أن تكون كمية كل دفعة أكبر من صفر.",
-  "batch.error.BATCH_ALLOCATION_DUPLICATE": "لا يمكن إضافة نفس الدفعة مرتين في البند نفسه."
+  "batch.error.BATCH_ALLOCATION_DUPLICATE": "لا يمكن إضافة نفس الدفعة مرتين في البند نفسه.",
+  "appearance.title": "المظهر",
+  "appearance.system": "النظام",
+  "appearance.light": "فاتح",
+  "appearance.dark": "داكن",
+  "appearance.mode": "الوضع",
+  "appearance.mode_description": "اختر كيف يظهر Bigcapital في هذا المتصفح."
 }
