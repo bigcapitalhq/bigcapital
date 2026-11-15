@@ -1532,7 +1532,7 @@
   "landed_cost.action.delete.success_message": "The landed cost has been deleted successfully.",
   "sidebar.banking": "Banking",
   "siebar.banking.bank_accounts": "Bank Accounts",
-  "banking.label_account_transcations": "Account Transcations",
+  "banking.label_account_transactions": "Account Transactions",
   "banking.transactions_for_review": "Transactions for review",
   "banking.label.deposit": "Deposit",
   "banking.label.withdrawal": "Withdrawal",

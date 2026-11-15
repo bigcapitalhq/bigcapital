@@ -157,11 +157,11 @@ function AccountSwitchMenuItem({
       text={
         <React.Fragment>
           <AccountSwitchItemName>{name}</AccountSwitchItemName>
-          <AccountSwitchItemTranscations>
+          <AccountSwitchItemTransactions>
             {intl.get('cash_flow_transaction.switch_item', {
               value: uncategorizedTransactionsCount ?? 0,
             })}
-          </AccountSwitchItemTranscations>
+          </AccountSwitchItemTransactions>
 
           <AccountSwitchItemUpdatedAt></AccountSwitchItemUpdatedAt>
         </React.Fragment>
@@ -205,7 +205,7 @@ const AccountBalanceAmount = styled.span`
 const AccountSwitchItemName = styled.div`
   font-weight: 600;
 `;
-const AccountSwitchItemTranscations = styled.div`
+const AccountSwitchItemTransactions = styled.div`
   font-size: 12px;
   opacity: 0.7;
 `;

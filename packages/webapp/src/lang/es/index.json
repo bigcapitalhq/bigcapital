@@ -1466,7 +1466,7 @@
   "landed_cost.action.delete.success_message": "El costo de importación se ha eliminado con éxito.",
   "siebar.cashflow": "Flujo de caja",
   "siebar.cashflow.label_cash_and_bank_accounts": "Cuentas de efectivo y banco",
-  "cash_flow.label_account_transcations": "Transacciones de cuenta",
+  "banking.label_account_transactions": "Transacciones de cuenta",
   "cash_flow.transactions_for_review": "Transacciones para revisión",
   "cash_flow.label.deposit": "Depósito",
   "cash_flow.label.withdrawal": "Retiro",
