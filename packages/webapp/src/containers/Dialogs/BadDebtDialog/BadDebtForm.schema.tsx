@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
+  date: Yup.date().required().label(intl.get('date')),
   expenseAccountId: Yup.number()
     .required()
     .label(intl.get('expense_account_id')),

@@ -9,6 +9,7 @@ const buildSaleInvoice = (overrides: Record<string, any> = {}) =>
   ({
     id: 1,
     invoiceDate: '2023-01-01',
+    writtenoffAt: '2023-01-15',
     currencyCode: 'USD',
     exchangeRate: 1,
     invoiceNo: 'INV-100',
@@ -52,5 +53,11 @@ describe('SaleInvoiceWriteoffGL', () => {
     expect(
       entries.every((entry) => entry.basis === AccountingBasis.Accrual),
     ).toBe(true);
+  });
+
+  it('dates the entries on the write-off date instead of the invoice date', () => {
+    const entries = buildLedger(buildSaleInvoice()).getEntries();
+
+    expect(entries.every((entry) => entry.date === '2023-01-15')).toBe(true);
   });
 });

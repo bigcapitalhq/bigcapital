@@ -15,6 +15,7 @@ export interface GLTestLeg {
   contactType: string;
   credit: { amount: number };
   debit: { amount: number };
+  date?: string;
   referenceType: string;
   referenceId: number;
   basis: string;
@@ -28,6 +29,7 @@ export interface RawGLTestLeg {
   contact_type?: string;
   credit?: { amount?: number } | number;
   debit?: { amount?: number } | number;
+  date?: { date?: string; formatted_date?: string };
   reference_type?: string;
   reference_id?: number;
   basis?: string;
@@ -85,6 +87,7 @@ export const fetchLegs = async (
     contactType: t.contact_type,
     credit: { amount: legAmount(t.credit) },
     debit: { amount: legAmount(t.debit) },
+    date: t.date?.date,
     referenceType: t.reference_type,
     referenceId: t.reference_id,
     basis: t.basis,

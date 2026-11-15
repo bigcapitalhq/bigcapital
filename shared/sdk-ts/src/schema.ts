@@ -8822,6 +8822,24 @@ export interface components {
              */
             attachments: string[];
         };
+        SaleInvoiceWriteoffDto: {
+            /**
+             * @description The id of the bad debt expense account
+             * @example 1024
+             */
+            expenseAccountId: number;
+            /**
+             * Format: date-time
+             * @description The date of the write-off. Defaults to the current date when omitted.
+             * @example 2023-01-01
+             */
+            date?: string;
+            /**
+             * @description The reason of writing off the invoice
+             * @example Customer is bankrupt
+             */
+            reason: string;
+        };
         NotifySaleInvoiceBySmsDto: {
             /**
              * @description The notification key to determine the SMS template. Defaults to `details`.
@@ -22773,7 +22791,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaleInvoiceWriteoffDto"];
+            };
+        };
         responses: {
             /** @description The sale invoice has been successfully written off. */
             200: {
