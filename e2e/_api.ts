@@ -140,6 +140,23 @@ export async function fetchAccounts(
 }
 
 /**
+ * Formats a date as YYYY-MM-DD in the local time zone.
+ *
+ * The report pages default to the local date (moment()), so seeding documents
+ * with the UTC date (toISOString()) can put them outside the report's default
+ * range in the evening for time zones behind UTC.
+ */
+export const formatLocalDate = (date: Date = new Date()): string => {
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
+
+/**
+ * Returns today's date in the local time zone as YYYY-MM-DD.
+ */
+const today = (): string => formatLocalDate();
+
+/**
  * Posts a published expense to the REST API. Publishing the expense writes
  * the associated journal entries, which seeds the accounts transactions
  * ledger so the balance sheet report renders rows.
@@ -170,7 +187,7 @@ export async function createExpenseViaApi(
     method: 'POST',
     body: JSON.stringify({
       referenceNo: input.referenceNo,
-      paymentDate: input.paymentDate ?? new Date().toISOString().slice(0, 10),
+      paymentDate: input.paymentDate ?? today(),
       paymentAccountId: paymentAccount.id,
       description:
         input.description ?? `e2e balance sheet seed (${input.referenceNo})`,
@@ -185,8 +202,6 @@ export async function createExpenseViaApi(
     }),
   });
 }
-
-const today = () => new Date().toISOString().slice(0, 10);
 
 /**
  * Resolves an account by name, falling back to the given account type.
