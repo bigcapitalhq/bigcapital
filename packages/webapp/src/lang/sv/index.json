@@ -2388,5 +2388,9 @@
   "appearance.light": "Ljust",
   "appearance.dark": "Mörkt",
   "appearance.mode": "Läge",
-  "appearance.mode_description": "Välj hur Bigcapital ser ut i den här webbläsaren."
+  "appearance.mode_description": "Välj hur Bigcapital ser ut i den här webbläsaren.",
+  "appearance.dark_style.title": "Mörk stil",
+  "appearance.dark_style.description": "Används när Bigcapital är mörkt.",
+  "appearance.dark_style.protanopia": "Mörkt protanopi",
+  "appearance.dark_style.soft": "Mjukt mörkt"
 }

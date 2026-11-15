@@ -143,7 +143,8 @@
     .#{$ns}-menu-item {
       color: var(--color-sidebar-menu-item-text);
       border-radius: 0;
-      padding: 8px 20px;
+      // Even 30px rows.
+      padding: 5px 20px;
       font-size: 15px;
       font-weight: 400;
 
@@ -156,8 +157,28 @@
         background: var(--color-sidebar-menu-item-focus-background);
       }
       &.bp4-active.bp4-intent-primary {
+        position: relative;
         background: var(--color-sidebar-menu-item-active-background);
         color: var(--color-sidebar-menu-item-active-text);
+
+        // A short accent bar, vertically centered.
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          width: 2px;
+          height: 14px;
+          margin-top: -7px;
+          border-radius: 0 2px 2px 0;
+          background: var(--color-primary);
+
+          html[dir='rtl'] & {
+            left: auto;
+            right: 0;
+            border-radius: 2px 0 0 2px;
+          }
+        }
       }
       >.#{$ns}-icon {
         color: #767b9b;
@@ -175,11 +196,11 @@
         display: block;
         color: var(--color-sidebar-menu-label-color);
         font-size: 11px;
-        padding: 8px 20px;
-        margin-top: 4px;
+        // More air above each section than below it.
+        padding: 20px 20px 6px;
         text-transform: uppercase;
         font-weight: 500;
-        letter-spacing: 1px;
+        letter-spacing: 0.07em;
 
         html[lang^="ar"] & {
           font-size: 12px;
@@ -201,7 +222,7 @@
         }
 
         .#{$ns}-menu-item {
-          padding: 8px 20px;
+          padding: 5px 20px;
           font-size: 15px;
           color: $sidebar-submenu-item-color;
 

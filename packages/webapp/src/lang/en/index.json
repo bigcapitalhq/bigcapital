@@ -2660,5 +2660,9 @@
   "appearance.light": "Light",
   "appearance.dark": "Dark",
   "appearance.mode": "Mode",
-  "appearance.mode_description": "Choose how Bigcapital looks in this browser."
+  "appearance.mode_description": "Choose how Bigcapital looks in this browser.",
+  "appearance.dark_style.title": "Dark style",
+  "appearance.dark_style.description": "Used whenever Bigcapital is dark.",
+  "appearance.dark_style.protanopia": "Dark Protanopia",
+  "appearance.dark_style.soft": "Soft Dark"
 }

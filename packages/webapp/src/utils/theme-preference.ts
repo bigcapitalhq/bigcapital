@@ -47,3 +47,21 @@ export function resolveTheme(
 export function toggledThemePreference(current: Theme): ThemePreference {
   return current === 'dark' ? 'light' : 'dark';
 }
+
+// Which dark palette to use when the theme is dark.
+export type DarkStyle = 'protanopia' | 'soft';
+
+export const DARK_STYLES: readonly DarkStyle[] = ['protanopia', 'soft'];
+
+// The original dark theme stays the default.
+export const DEFAULT_DARK_STYLE: DarkStyle = 'protanopia';
+
+// Also read by `public/preload-theme.js` before the app boots.
+export const DARK_STYLE_STORAGE_KEY = 'dark-style';
+
+/**
+ * Parses a stored dark style, falling back to the default.
+ */
+export function parseDarkStyle(value: unknown): DarkStyle {
+  return DARK_STYLES.find((style) => style === value) ?? DEFAULT_DARK_STYLE;
+}

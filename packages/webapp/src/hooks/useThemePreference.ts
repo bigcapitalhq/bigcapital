@@ -1,9 +1,13 @@
 import { useSyncExternalStore } from 'react';
 import {
   DARK_COLOR_SCHEME_QUERY,
+  DARK_STYLE_STORAGE_KEY,
+  DEFAULT_DARK_STYLE,
   DEFAULT_THEME_PREFERENCE,
+  DarkStyle,
   THEME_STORAGE_KEY,
   ThemePreference,
+  parseDarkStyle,
   parseThemePreference,
   resolveTheme,
   toggledThemePreference,
@@ -12,6 +16,7 @@ import {
 const listeners = new Set<() => void>();
 let systemQuery: MediaQueryList | null = null;
 let currentPreference = readStoredPreference();
+let currentDarkStyle = readStoredDarkStyle();
 
 function readStoredPreference(): ThemePreference {
   try {
@@ -19,6 +24,14 @@ function readStoredPreference(): ThemePreference {
   } catch {
     // Storage can be unavailable (e.g. blocked site data).
     return DEFAULT_THEME_PREFERENCE;
+  }
+}
+
+function readStoredDarkStyle(): DarkStyle {
+  try {
+    return parseDarkStyle(window.localStorage.getItem(DARK_STYLE_STORAGE_KEY));
+  } catch {
+    return DEFAULT_DARK_STYLE;
   }
 }
 
@@ -51,6 +64,21 @@ export function setThemePreference(preference: ThemePreference) {
     // Still apply the theme for this session when it cannot be saved.
   }
   applyTheme();
+  listeners.forEach((listener) => listener());
+}
+
+/**
+ * Saves which dark palette to use and applies it immediately.
+ */
+export function setDarkStyle(style: DarkStyle) {
+  currentDarkStyle = style;
+  try {
+    window.localStorage.setItem(DARK_STYLE_STORAGE_KEY, style);
+  } catch {
+    // Still apply the style for this session when it cannot be saved.
+  }
+  // The dark style token sets are keyed on this attribute.
+  document.documentElement.dataset.darkStyle = style;
   listeners.forEach((listener) => listener());
 }
 
@@ -97,4 +125,17 @@ export function useThemePreference() {
   const preference = useSyncExternalStore(subscribe, getSnapshot);
 
   return { preference, setThemePreference, toggleTheme };
+}
+
+function getDarkStyleSnapshot() {
+  return currentDarkStyle;
+}
+
+/**
+ * The palette used when the theme is dark (Dark Protanopia or Soft Dark).
+ */
+export function useDarkStyle() {
+  const darkStyle = useSyncExternalStore(subscribe, getDarkStyleSnapshot);
+
+  return { darkStyle, setDarkStyle };
 }

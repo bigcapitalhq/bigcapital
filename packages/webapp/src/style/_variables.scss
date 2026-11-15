@@ -323,6 +323,14 @@ $ns: bp4;
   --color-appearance-switch-hover-background: rgba(143, 153, 168, 0.15);
   --color-appearance-switch-active-background: var(--color-light-gray3);
   --color-appearance-switch-active-text: #1c2127;
+
+  // Dark style previews (Preferences -> Appearance); fixed in every theme.
+  --color-dark-style-protanopia-page: #1c2127;
+  --color-dark-style-protanopia-panel: #2f343c;
+  --color-dark-style-protanopia-accent: #8abbff;
+  --color-dark-style-soft-page: #121418;
+  --color-dark-style-soft-panel: #20232a;
+  --color-dark-style-soft-accent: #6aa7f4;
 }
 
 $pt-popover-box-shadow:

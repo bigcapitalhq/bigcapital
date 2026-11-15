@@ -1,0 +1,58 @@
+// Soft Dark: an optional dark style with near-neutral graphite surfaces and
+// Bigcapital blue, softened, as the only accent. Chosen in Preferences ->
+// Appearance and applied by the `data-dark-style` attribute on <html>; the
+// default dark style (Dark Protanopia) is the `body.bp4-dark` token set.
+$soft-dark: "html[data-dark-style='soft'] body.bp4-dark";
+
+#{$soft-dark} {
+  --color-primary: #6aa7f4;
+
+  --color-dark-gray5: #33373f; // borders / dividers
+  --color-dark-gray4: #292c33;
+  --color-dark-gray3: #20232a; // raised
+  --color-dark-gray2: #181b20; // panels, cards, dialogs
+  --color-dark-gray1: #121418; // app background
+
+  --color-muted-text: #9ca2aa;
+
+  --color-datatable-sticky-background: rgba(18, 20, 24, 0.6);
+
+  // Sidebar: darker than the page, framed by a hairline edge.
+  --color-sidebar-background: #0d0f12;
+  --color-sidebar-menu-item-text: #b9bec4;
+  --color-sidebar-menu-item-hover-background: rgba(255, 255, 255, 0.045);
+  --color-sidebar-menu-item-text-hover: #edeff1;
+  --color-sidebar-menu-item-active-background: var(--color-dark-gray3);
+  --color-sidebar-menu-item-active-text: #edeff1;
+  --color-sidebar-menu-item-focus-background: var(--color-dark-gray4);
+  --color-sidebar-menu-label-color: #8d939b;
+
+  // Report and homepage shortcut boxes.
+  --color-report-item-background: var(--color-dark-gray2);
+  --color-report-item-border: rgba(255, 255, 255, 0.07);
+  --color-report-item-top-border: rgba(255, 255, 255, 0.13);
+
+  --color-appearance-switch-active-text: #edeff1;
+
+  .sidebar__scroll-wrapper {
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  // Blueprint's dark menu surface would otherwise paint a lighter block over
+  // the darker sidebar.
+  .sidebar-menu {
+    background: transparent;
+  }
+
+  // Blueprint compiles its dark surface colors in; the overlay surfaces that
+  // hold Bigcapital content follow this ramp instead. Menus, popovers and
+  // tooltips keep Blueprint's own colors.
+  .bp4-dialog,
+  .bp4-drawer {
+    background-color: var(--color-dark-gray2);
+  }
+
+  .bp4-dialog-header {
+    background-color: var(--color-dark-gray3);
+  }
+}

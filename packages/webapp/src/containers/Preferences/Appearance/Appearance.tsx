@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { AppearanceModeSetting } from './AppearanceModeSetting';
+import { DarkStyleSetting } from './DarkStyleSetting';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
@@ -30,6 +31,8 @@ function AppearancePreferences({
     <div className={classNames(CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT)}>
       <AppearanceCard>
         <AppearanceModeSetting />
+        <Divider />
+        <DarkStyleSetting />
       </AppearanceCard>
     </div>
   );
@@ -44,6 +47,12 @@ const AppearanceCard = styled(Card)`
     font-size: 16px;
     font-weight: 500;
   }
+`;
+
+const Divider = styled.hr`
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--color-dashboard-card-border);
 `;
 
 export const Appearance = FF.pipe(AppearancePreferences, withDashboardActions);

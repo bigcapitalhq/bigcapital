@@ -2224,5 +2224,9 @@
   "appearance.light": "فاتح",
   "appearance.dark": "داكن",
   "appearance.mode": "الوضع",
-  "appearance.mode_description": "اختر كيف يظهر Bigcapital في هذا المتصفح."
+  "appearance.mode_description": "اختر كيف يظهر Bigcapital في هذا المتصفح.",
+  "appearance.dark_style.title": "النمط الداكن",
+  "appearance.dark_style.description": "يُستخدم كلما كان Bigcapital داكنًا.",
+  "appearance.dark_style.protanopia": "داكن (بروتانوبيا)",
+  "appearance.dark_style.soft": "داكن ناعم"
 }

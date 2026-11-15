@@ -43,6 +43,9 @@
 @import 'pages/fonts';
 @import "section";
 
+// Themes
+@import 'themes/soft-dark';
+
 body {
   background-color: var(--color-app-body);
   overflow: hidden;
