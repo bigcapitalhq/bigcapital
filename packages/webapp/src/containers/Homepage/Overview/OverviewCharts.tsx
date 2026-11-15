@@ -186,6 +186,138 @@ export function BarChart({ values, prior, showPrior, tips }: BarChartProps) {
   );
 }
 
+interface PairedBarChartProps {
+  /** The first series of each pair (revenue, money in). */
+  first: number[];
+  /** The second series of each pair (spend, money out). */
+  second: number[];
+  /** Short month names under the pairs, in time order. */
+  labels: string[];
+  tips: React.ReactNode[];
+}
+
+/**
+ * Two bars per month, side by side: the first in the history color, the
+ * second in its companion color. The month in progress is hatched in both
+ * so a partial month never reads as a bad one.
+ */
+export function PairedBarChart({
+  first,
+  second,
+  labels,
+  tips,
+}: PairedBarChartProps) {
+  const id = React.useId().replace(/:/g, '');
+  const { index: hovered, bind } = useHoverIndex();
+  const count = first.length;
+  const slot = WIDTH / count;
+  const barWidth = Math.max(2, (slot - BAR_GAP) / 2 - 0.5);
+  const peak = Math.max(1, ...first, ...second) * 1.06;
+  const heightOf = (value: number) => barHeight(value, peak, HEIGHT - 1);
+
+  const bar = (value: number, x: number, i: number, isSecond: boolean) => {
+    const height = heightOf(value);
+    if (height <= 0) return null;
+    const isInProgress = i === count - 1;
+    return (
+      <rect
+        className={clsx(styles.bar, { [styles.barCompanion]: isSecond })}
+        x={x}
+        y={HEIGHT - 1 - height}
+        width={barWidth}
+        height={height}
+        rx={1.5}
+        style={
+          {
+            '--i': i,
+            ...(isInProgress
+              ? { fill: `url(#${id}${isSecond ? 'b' : 'a'})` }
+              : {}),
+          } as React.CSSProperties
+        }
+      />
+    );
+  };
+
+  return (
+    <div className={styles.chart}>
+      <svg
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          {(['a', 'b'] as const).map((key) => (
+            <pattern
+              key={key}
+              id={`${id}${key}`}
+              width="4"
+              height="4"
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(45)"
+            >
+              <line
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="4"
+                className={
+                  key === 'a' ? styles.hatchHistory : styles.hatchCompanion
+                }
+              />
+            </pattern>
+          ))}
+        </defs>
+        {hovered !== null && (
+          <rect
+            className={styles.hoverBand}
+            x={hovered * slot}
+            y={0}
+            width={slot}
+            height={HEIGHT}
+          />
+        )}
+        {first.map((value, i) => {
+          const x = i * slot + BAR_GAP / 2;
+          return (
+            <g key={i}>
+              {bar(value, x, i, false)}
+              {bar(second[i] ?? 0, x + barWidth + 1, i, true)}
+              <rect
+                className={styles.hit}
+                x={i * slot}
+                y={0}
+                width={slot}
+                height={HEIGHT}
+                {...bind(i)}
+              />
+            </g>
+          );
+        })}
+        <line
+          className={styles.baseline}
+          x1={0}
+          x2={WIDTH}
+          y1={HEIGHT - 0.5}
+          y2={HEIGHT - 0.5}
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      {/* text stays out of the svg so it is never mirrored in RTL. */}
+      <div className={styles.monthLabels} aria-hidden="true">
+        {labels.map((label, i) => (
+          <span key={i}>{label}</span>
+        ))}
+      </div>
+      {hovered !== null && (
+        <ChartTip left={((hovered + 0.5) / count) * 100}>
+          {tips[hovered]}
+        </ChartTip>
+      )}
+    </div>
+  );
+}
+
 interface LineChartProps {
   values: number[];
   prior: number[];

@@ -36,7 +36,7 @@ function DashboardHomepage({
   const organizationName = useCurrentOrganizationName();
   const [view, setView] = useHomepageView();
   const [compare, setCompare] = useOverviewCompare();
-  const { panels, move, toggle, reset } = useOverviewPanels();
+  const { panels, move, toggle, resize, reset } = useOverviewPanels();
   const [isPanelsOpen, setPanelsOpen] = React.useState(false);
   const priorYear = new Date().getFullYear() - 1;
 
@@ -112,6 +112,7 @@ function DashboardHomepage({
         onClose={() => setPanelsOpen(false)}
         onMove={move}
         onToggle={toggle}
+        onResize={resize}
         onReset={reset}
       />
     </DashboardInsider>

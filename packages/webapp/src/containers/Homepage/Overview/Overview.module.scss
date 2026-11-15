@@ -228,6 +228,8 @@
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  // a hidden panel (no tax rates, no permission) leaves no hole.
+  grid-auto-flow: row dense;
   gap: 16px;
 
   @media (max-width: 1100px) {
@@ -398,6 +400,60 @@
 
 .bar {
   fill: var(--color-overview-history);
+}
+
+.barCompanion {
+  fill: var(--color-overview-companion);
+}
+
+.hatchHistory {
+  stroke: var(--color-overview-history);
+  stroke-width: 1.5;
+}
+
+.hatchCompanion {
+  stroke: var(--color-overview-companion);
+  stroke-width: 1.5;
+}
+
+// month names under a paired chart, one per pair, in reading order.
+.monthLabels {
+  display: flex;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--color-overview-text-faint);
+
+  span {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+  }
+}
+
+.swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-inline-end: 5px;
+  border-radius: 2px;
+  background: var(--color-overview-history);
+}
+
+.swatchCompanion {
+  background: var(--color-overview-companion);
+}
+
+// two lead numbers side by side, wrapping in a narrow tile.
+.lead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 32px;
+}
+
+.leadItem {
+  min-width: 0;
 }
 
 .barLatest {
@@ -618,6 +674,8 @@
 }
 
 .rankMore {
+  display: flex;
+  justify-content: space-between;
   font-size: 12px;
   color: var(--color-overview-text-faint);
 }
@@ -742,6 +800,11 @@
 }
 
 // ---- panels drawer ----
+// narrow or wide, under the panel's name in the drawer.
+.sizeToggle {
+  margin-top: 6px;
+}
+
 .panelRow {
   display: grid;
   grid-template-columns: 1fr auto auto auto;
@@ -770,6 +833,97 @@
 .drawerBody {
   padding: 8px 18px;
   overflow: auto;
+}
+
+// ---- tasks and wide tiles ----
+.tileWide {
+  grid-column: span 2;
+
+  @media (max-width: 700px) {
+    grid-column: auto;
+  }
+}
+
+.tile {
+  position: relative;
+}
+
+.footnote {
+  margin-top: 10px;
+  justify-self: end;
+  font-size: 10.5px;
+  color: var(--color-overview-text-faint);
+}
+
+.tasks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 26px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-overview-text-secondary);
+  font-size: 13px;
+}
+
+.taskLabel {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.dotTask {
+  background: var(--color-severity-task);
+  transform: translateY(-1px);
+}
+
+.dotRisk {
+  background: var(--color-severity-risk);
+  transform: translateY(-1px);
+}
+
+.tasksNarrow.tasksNarrow {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.tasksMore {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--color-overview-text-muted);
+}
+
+.tasksEmpty {
+  color: var(--color-overview-text-muted);
+}
+
+.tileCompact.tileCompact {
+  // first in place, as one full-width line: beside Cash it would leave the
+  // rest of its row empty under a short tile.
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  padding-block: 12px;
+}
+
+.goTo {
+  // U+203A is bidi-mirrored, so it already points the other way in RTL.
+  &::after {
+    content: ' \203a';
+  }
 }
 
 // ---- motion: one short pass on first paint; numbers never animate ----

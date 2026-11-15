@@ -189,3 +189,15 @@ export function formatMonthYear(key: string): string {
     timeZone: 'UTC',
   }).format(toUtcDate(`${key}-01`));
 }
+
+/**
+ * Joins names the way the locale does ("A and B", "A y B", "A و B"), never
+ * with a hard-coded comma.
+ */
+export function joinNames(names: string[]): string {
+  const locale = intl.getInitOptions()?.currentLocale || 'en';
+  return new Intl.ListFormat(locale, {
+    style: 'long',
+    type: 'conjunction',
+  }).format(names);
+}

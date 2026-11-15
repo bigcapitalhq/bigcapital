@@ -65,8 +65,10 @@ interface HomepageOverviewProps {
  * compact profit and loss, all from existing report endpoints.
  */
 export function HomepageOverview({ compare, panels }: HomepageOverviewProps) {
-  const data = useOverviewData();
-  const panelIds = panels.filter((p) => p.visible).map((p) => p.id);
+  const visible = panels.filter((panel) => panel.visible);
+  const data = useOverviewData({
+    cashFlow: visible.some((panel) => panel.id === 'cash-flow'),
+  });
 
   return (
     <div className={styles.root} data-testId="homepage-overview">
@@ -76,7 +78,7 @@ export function HomepageOverview({ compare, panels }: HomepageOverviewProps) {
         <>
           <OverviewStatus data={data} compare={compare} />
           <OverviewStrip data={data} compare={compare} />
-          <OverviewTiles data={data} compare={compare} panelIds={panelIds} />
+          <OverviewTiles data={data} compare={compare} panels={visible} />
           <OverviewStatement data={data} compare={compare} />
         </>
       )}

@@ -496,3 +496,56 @@ export function agingSplit(total: AgingTotal | null | undefined): AgingSplit {
     total: notDue + overdue,
   };
 }
+
+/** One general ledger line on a bank or cash account. */
+export interface CashLedgerEntry {
+  date?: string | null;
+  debit?: number | null;
+  credit?: number | null;
+  referenceType?: string | null;
+  referenceId?: number | string | null;
+}
+
+export interface CashFlowSeries {
+  /** Money into bank and cash accounts, per month of the window. */
+  in: number[];
+  /** Money out of bank and cash accounts, per month of the window. */
+  out: number[];
+}
+
+/**
+ * Gross money in and out of bank and cash accounts per month, from their
+ * general ledger lines. Lines are netted per source transaction first, so a
+ * transfer between two of the organization's own accounts (a debit on one
+ * and a credit on the other) is neither money in nor money out.
+ */
+export function cashFlowByMonth(
+  entries: CashLedgerEntry[],
+  months: OverviewMonth[],
+): CashFlowSeries {
+  const monthIndex = new Map(months.map((month, index) => [month.key, index]));
+  const net = new Map<string, { index: number; amount: number }>();
+
+  entries.forEach((entry, position) => {
+    const index = monthIndex.get(String(entry.date ?? '').slice(0, 7));
+    if (index === undefined) return;
+    const key =
+      entry.referenceType && entry.referenceId != null
+        ? `${entry.referenceType}:${entry.referenceId}:${index}`
+        : `line:${position}`;
+    const amount = (entry.debit ?? 0) - (entry.credit ?? 0);
+    const found = net.get(key);
+    if (found) found.amount += amount;
+    else net.set(key, { index, amount });
+  });
+
+  const series: CashFlowSeries = {
+    in: months.map(() => 0),
+    out: months.map(() => 0),
+  };
+  net.forEach(({ index, amount }) => {
+    if (amount > 0) series.in[index] += amount;
+    else series.out[index] -= amount;
+  });
+  return series;
+}

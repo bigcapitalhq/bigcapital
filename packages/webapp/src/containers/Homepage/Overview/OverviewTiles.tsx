@@ -4,13 +4,21 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import styles from './Overview.module.scss';
-import { AgeBar, BarChart, LineChart, RankBars } from './OverviewCharts';
+import {
+  AgeBar,
+  BarChart,
+  LineChart,
+  PairedBarChart,
+  RankBars,
+  TipBody,
+} from './OverviewCharts';
 import {
   formatDay,
   formatAmount,
   formatDelta,
   formatMoney,
   formatMonth,
+  formatMonthYear,
   formatPercent,
   formatRange,
   moneyParts,
@@ -19,7 +27,9 @@ import {
   BANK_ACCOUNTS_LINK,
   PAYABLE_AGING_LINK,
   RECEIVABLE_AGING_LINK,
+  generalLedgerLink,
   profitLossLink,
+  salesTaxLink,
 } from './overviewLinks';
 import {
   compareAmounts,
@@ -30,9 +40,10 @@ import {
   hasData,
   sumRange,
 } from './overviewSeries';
+import { OverviewTasks } from './OverviewTasks';
 import { periodTip } from './overviewTips';
 import type { AgeSegment } from './OverviewCharts';
-import type { OverviewPanelId } from './overviewPanels';
+import type { OverviewPanelId, OverviewPanelPref } from './overviewPanels';
 import type { AgingSplit, Comparison, MonthlySeries } from './overviewSeries';
 import type { OverviewData, PanelState } from './useOverviewData';
 
@@ -48,11 +59,20 @@ interface TileContent {
   meta: React.ReactNode;
   chart: React.ReactNode;
   to: string;
+  /** Muted source line in the tile corner, e.g. which report it reads. */
+  footnote?: React.ReactNode;
+  /** Replaces the single value and meta line, e.g. two lead numbers. */
+  lead?: React.ReactNode;
 }
+
+// a wide panel shows the whole window; a narrow one its last six months.
+const NARROW_MONTHS = 6;
 
 interface TileContext {
   data: OverviewData;
   compare: boolean;
+  /** How many trailing months a sized panel shows. */
+  monthCount: number;
 }
 
 function Money({
@@ -128,6 +148,7 @@ function coverageText(months: number): string {
   if (months < 1) return intl.get('homepage.overview.cash_covers_under_month');
   return intl.get('homepage.overview.cash_covers', {
     months: Math.round(months),
+    monthsText: String(Math.round(months)),
   });
 }
 
@@ -281,6 +302,199 @@ function agingTile(
   };
 }
 
+function Swatch({ second = false }: { second?: boolean }) {
+  return (
+    <i
+      className={clsx(styles.swatch, { [styles.swatchCompanion]: second })}
+      aria-hidden="true"
+    />
+  );
+}
+
+/** Tooltip for one month of a paired chart: both amounts, then the month. */
+function pairTip(
+  monthKey: string,
+  isInProgress: boolean,
+  rows: Array<[string, number]>,
+  currencyCode: string,
+): React.ReactNode {
+  const month = formatMonthYear(monthKey);
+  return (
+    <TipBody
+      rows={rows.map(([label, value]) => ({
+        label,
+        value: formatMoney(value, currencyCode),
+      }))}
+      note={
+        isInProgress
+          ? intl.get('homepage.overview.month_so_far', { month })
+          : month
+      }
+    />
+  );
+}
+
+function revenueSpendTile(context: TileContext): TileContent | null {
+  const { data, compare, monthCount } = context;
+  const profitLoss = data.profitLoss.data;
+  if (!profitLoss) return null;
+  const { months, currencyCode } = data;
+  const start = months.length - monthCount;
+  const latest = months.length - 2;
+  const latestMonth = months[latest];
+  const monthName = formatMonth(latestMonth.key, 'MMMM');
+  const priorYear = latestMonth.year - 1;
+  const shown = months.slice(start);
+  const revenue = profitLoss.income.current.slice(start);
+  const spend = profitLoss.spend.current.slice(start);
+
+  const leadItem = (
+    series: MonthlySeries,
+    labelKey: string,
+    second: boolean,
+  ) => {
+    const comparison = compareAmounts(
+      series.current[latest],
+      series.prior[latest],
+      magnitude(
+        series.current.slice(data.fiscalStartIndex),
+        series.prior.slice(data.fiscalStartIndex),
+      ),
+    );
+    return (
+      <div className={styles.leadItem}>
+        <Money amount={series.current[latest]} currencyCode={currencyCode} />
+        <div className={styles.meta}>
+          <Swatch second={second} />
+          {intl.get(labelKey)}
+          {compare && (
+            <>
+              {' · '}
+              <ComparisonLine
+                comparison={comparison}
+                deltaText={intl.get('homepage.overview.vs_month_short', {
+                  month: monthName,
+                  year: priorYear,
+                })}
+                plainText={intl.get('homepage.overview.vs_month_plain', {
+                  amount: formatMoney(series.prior[latest], currencyCode),
+                  month: monthName,
+                  year: priorYear,
+                })}
+                noActivityText={intl.get('homepage.overview.none_in_month', {
+                  month: monthName,
+                })}
+                noPriorText={intl.get('homepage.overview.no_prior_data', {
+                  year: priorYear,
+                })}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return {
+    title: intl.get('homepage.overview.revenue_spend_months', {
+      count: monthCount,
+      countText: String(monthCount),
+    }),
+    period: monthName,
+    value: 0,
+    meta: null,
+    lead: (
+      <div className={styles.lead}>
+        {leadItem(profitLoss.income, 'homepage.overview.revenue', false)}
+        {leadItem(profitLoss.spend, 'homepage.overview.spend', true)}
+      </div>
+    ),
+    chart: (
+      <PairedBarChart
+        first={revenue}
+        second={spend}
+        labels={shown.map((month) => formatMonth(month.key, 'MMM'))}
+        tips={shown.map((month, i) =>
+          pairTip(
+            month.key,
+            i === shown.length - 1,
+            [
+              [intl.get('homepage.overview.revenue'), revenue[i]],
+              [intl.get('homepage.overview.spend'), spend[i]],
+            ],
+            currencyCode,
+          ),
+        )}
+      />
+    ),
+    to: profitLossLink({
+      fromDate: shown[0].start,
+      toDate: data.today,
+      basis: data.basis,
+      monthly: true,
+    }),
+  };
+}
+
+function cashFlowTile(context: TileContext): TileContent | null {
+  const { data, monthCount } = context;
+  const flow = data.cashFlow.data;
+  if (!flow) return null;
+  const { months, currencyCode } = data;
+  const start = months.length - monthCount;
+  const shown = months.slice(start);
+  const moneyIn = flow.in.slice(start);
+  const moneyOut = flow.out.slice(start);
+  const totalIn = moneyIn.reduce((sum, value) => sum + value, 0);
+  const totalOut = moneyOut.reduce((sum, value) => sum + value, 0);
+  const money = (amount: number) => formatMoney(amount, currencyCode);
+
+  return {
+    title: intl.get('homepage.overview.cash_flow_months', {
+      count: monthCount,
+      countText: String(monthCount),
+    }),
+    period: intl.get('homepage.overview.cash_flow_net'),
+    value: totalIn - totalOut,
+    meta:
+      totalIn === 0 && totalOut === 0 ? (
+        intl.get('homepage.overview.cash_flow_none')
+      ) : (
+        <>
+          <Swatch />
+          {intl.get('homepage.overview.cash_in_amount', {
+            amount: money(totalIn),
+          })}
+          {' · '}
+          <Swatch second />
+          {intl.get('homepage.overview.cash_out_amount', {
+            amount: money(totalOut),
+          })}
+        </>
+      ),
+    chart: (
+      <PairedBarChart
+        first={moneyIn}
+        second={moneyOut}
+        labels={shown.map((month) => formatMonth(month.key, 'MMM'))}
+        tips={shown.map((month, i) =>
+          pairTip(
+            month.key,
+            i === shown.length - 1,
+            [
+              [intl.get('homepage.overview.cash_in'), moneyIn[i]],
+              [intl.get('homepage.overview.cash_out'), moneyOut[i]],
+            ],
+            currencyCode,
+          ),
+        )}
+      />
+    ),
+    to: generalLedgerLink(shown[0].start, data.today),
+    footnote: intl.get('homepage.overview.cash_flow_source'),
+  };
+}
+
 /** Builds one tile's content, or null while its data is not ready. */
 function tileContent(
   id: OverviewPanelId,
@@ -298,6 +512,10 @@ function tileContent(
   });
 
   switch (id) {
+    case 'revenue-spend':
+      return revenueSpendTile(context);
+    case 'cash-flow':
+      return cashFlowTile(context);
     case 'cash': {
       const cash = data.cash.data;
       if (!cash) return null;
@@ -332,11 +550,18 @@ function tileContent(
               display: formatAmount(account.amount),
             }))}
             more={
-              cashRows.more > 0
-                ? intl.get('homepage.overview.more_count', {
-                    count: cashRows.more,
-                  })
-                : null
+              <>
+                <span>
+                  {cashRows.more > 0 &&
+                    intl.get('homepage.overview.more_count', {
+                      count: cashRows.more,
+                    })}
+                </span>
+                {/* the whole tile opens Banking; this names where it goes. */}
+                <span className={styles.goTo}>
+                  {intl.get('homepage.overview.banking_link')}
+                </span>
+              </>
             }
           />
         ),
@@ -481,6 +706,48 @@ function tileContent(
         to: yearToDateLink,
       };
     }
+    case 'sales-tax': {
+      const tax = data.salesTax.data;
+      if (!tax) return null;
+      return {
+        title: intl.get('homepage.overview.sales_tax_owed'),
+        period: intl.get('homepage.overview.date_range', {
+          from: formatDay(tax.fromDate),
+          to: formatDay(today),
+        }),
+        value: tax.owed,
+        meta:
+          tax.charged === 0 && tax.reduced === 0
+            ? intl.get('homepage.overview.sales_tax_none')
+            : tax.reduced > 0
+              ? intl.get('homepage.overview.sales_tax_charged_reduced', {
+                  charged: money(tax.charged),
+                  reduced: money(tax.reduced),
+                })
+              : intl.get('homepage.overview.sales_tax_charged', {
+                  charged: money(tax.charged),
+                }),
+        chart: (
+          <RankBars
+            rows={tax.rates.map((rate) => ({
+              key: rate.id,
+              label: rate.name,
+              value: rate.owed,
+              display: formatAmount(rate.owed),
+            }))}
+            more={
+              tax.moreRates > 0
+                ? intl.get('homepage.overview.more_count', {
+                    count: tax.moreRates,
+                  })
+                : null
+            }
+          />
+        ),
+        to: salesTaxLink({ fromDate: tax.fromDate, toDate: today, basis }),
+        footnote: intl.get('homepage.overview.sales_tax_source'),
+      };
+    }
     default:
       return null;
   }
@@ -498,14 +765,21 @@ function panelSource(
       return data.receivable;
     case 'bills':
       return data.payable;
+    case 'sales-tax':
+      return data.salesTax;
+    case 'cash-flow':
+      return data.cashFlow;
     default:
       return data.profitLoss;
   }
 }
 
-function TileSkeleton() {
+function TileSkeleton({ wide = false }: { wide?: boolean }) {
   return (
-    <div className={styles.tile} aria-busy="true">
+    <div
+      className={clsx(styles.tile, { [styles.tileWide]: wide })}
+      aria-busy="true"
+    >
       <div className={clsx(Classes.SKELETON, styles.skeletonLine)} />
       <div className={clsx(Classes.SKELETON, styles.skeletonValue)} />
       <div className={clsx(Classes.SKELETON, styles.skeletonChart)} />
@@ -529,30 +803,38 @@ function TileError({ onRetry }: { onRetry: () => void }) {
 interface OverviewTilesProps {
   data: OverviewData;
   compare: boolean;
-  panelIds: OverviewPanelId[];
+  /** Visible panels, in order, with their sizes. */
+  panels: OverviewPanelPref[];
 }
 
-export function OverviewTiles({ data, compare, panelIds }: OverviewTilesProps) {
-  const visible = panelIds.filter(
-    (id) => panelSource(id, data).status !== 'hidden',
+export function OverviewTiles({ data, compare, panels }: OverviewTilesProps) {
+  const visible = panels.filter(
+    ({ id }) => id === 'tasks' || panelSource(id, data).status !== 'hidden',
   );
   if (visible.length === 0) return null;
 
   return (
     <div className={styles.tiles} data-testId="overview-tiles">
-      {visible.map((id, index) => {
+      {visible.map(({ id, size }, index) => {
+        const wide = size === 'wide';
+        if (id === 'tasks') {
+          return (
+            <OverviewTasks key={id} data={data} index={index} wide={wide} />
+          );
+        }
         const source = panelSource(id, data);
         if (source.status === 'error') {
           return <TileError key={id} onRetry={source.retry} />;
         }
-        const content = tileContent(id, { data, compare });
-        if (!content) return <TileSkeleton key={id} />;
+        const monthCount = wide ? data.months.length : NARROW_MONTHS;
+        const content = tileContent(id, { data, compare, monthCount });
+        if (!content) return <TileSkeleton key={id} wide={wide} />;
 
         return (
           <Link
             key={id}
             to={content.to}
-            className={styles.tile}
+            className={clsx(styles.tile, { [styles.tileWide]: wide })}
             style={{ '--t': index } as React.CSSProperties}
             data-testId={`overview-tile-${id}`}
           >
@@ -572,9 +854,19 @@ export function OverviewTiles({ data, compare, panelIds }: OverviewTilesProps) {
                 <span className={styles.period}>{content.period}</span>
               )}
             </div>
-            <Money amount={content.value} currencyCode={data.currencyCode} />
-            <div className={styles.meta}>{content.meta}</div>
+            {content.lead ?? (
+              <>
+                <Money
+                  amount={content.value}
+                  currencyCode={data.currencyCode}
+                />
+                <div className={styles.meta}>{content.meta}</div>
+              </>
+            )}
             {content.chart}
+            {content.footnote && (
+              <span className={styles.footnote}>{content.footnote}</span>
+            )}
           </Link>
         );
       })}

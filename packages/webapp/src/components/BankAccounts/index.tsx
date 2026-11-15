@@ -27,7 +27,7 @@ function BankAccountMetaLine({ title, value, className }) {
   );
 }
 
-function BankAccountBalance({ amount, loading }) {
+function BankAccountBalance({ amount, loading, label, action }) {
   return (
     <BankAccountBalanceWrap>
       <BankAccountBalanceAmount
@@ -37,7 +37,10 @@ function BankAccountBalance({ amount, loading }) {
       >
         {amount}
       </BankAccountBalanceAmount>
-      <BankAccountBalanceLabel>{intl.get('balance')}</BankAccountBalanceLabel>
+      <BankAccountBalanceLabel>
+        {label ?? intl.get('balance')}
+      </BankAccountBalanceLabel>
+      {action && <BankAccountBalanceAction>{action}</BankAccountBalanceAction>}
     </BankAccountBalanceWrap>
   );
 }
@@ -55,16 +58,36 @@ function BankAccountTypeIcon({ type }) {
   );
 }
 
+interface BankAccountProps {
+  title: React.ReactNode;
+  code: React.ReactNode;
+  type: string;
+  balance: React.ReactNode;
+  loading?: boolean;
+  updatedBeforeText?: string;
+  uncategorizedTransactionsCount?: number;
+  subtitle?: React.ReactNode;
+  meta?: React.ReactNode;
+  balanceLabel?: React.ReactNode;
+  action?: React.ReactNode;
+  [key: string]: unknown;
+}
+
 export function BankAccount({
   title,
   code,
   type,
   balance,
   loading = false,
-  updatedBeforeText,
+  updatedBeforeText = '',
   uncategorizedTransactionsCount,
+  // optional richer content: code line, status lines and a footer action.
+  subtitle,
+  meta,
+  balanceLabel,
+  action,
   ...restProps
-}) {
+}: BankAccountProps) {
   return (
     <BankAccountWrap {...restProps}>
       <BankAccountHeader>
@@ -72,12 +95,13 @@ export function BankAccount({
           {title}
         </BankAccountTitle>
         <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
-          {code}
+          {subtitle ?? code}
         </BnakAccountCode>
         {!loading && <BankAccountTypeIcon type={type} />}
       </BankAccountHeader>
 
       <BankAccountMeta>
+        {meta}
         {uncategorizedTransactionsCount > 0 && (
           <BankAccountMetaLine
             title={intl.get('banking.transactions_for_review')}
@@ -93,7 +117,12 @@ export function BankAccount({
         )}
       </BankAccountMeta>
 
-      <BankAccountBalance amount={balance} loading={loading} />
+      <BankAccountBalance
+        amount={balance}
+        loading={loading}
+        label={balanceLabel}
+        action={action}
+      />
     </BankAccountWrap>
   );
 }
@@ -143,6 +172,7 @@ const BnakAccountCode = styled.div`
 `;
 
 const BankAccountBalanceWrap = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-top: auto;
@@ -163,6 +193,13 @@ const BankAccountBalanceLabel = styled.div`
   letter-spacing: 0.5px;
   margin-top: 3px;
   opacity: 0.6;
+`;
+
+const BankAccountBalanceAction = styled.div`
+  position: absolute;
+  inset-inline-end: 12px;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 const MetaLineWrap = styled.div`

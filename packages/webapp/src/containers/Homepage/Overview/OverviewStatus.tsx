@@ -5,15 +5,10 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styles from './Overview.module.scss';
 import { formatMoney, formatMonth, formatPercent } from './overviewFormat';
-import {
-  BANK_ACCOUNTS_LINK,
-  TRANSACTIONS_LOCKING_LINK,
-  bankAccountLink,
-} from './overviewLinks';
+import { BANK_ACCOUNTS_LINK, categorizeLink } from './overviewLinks';
 import { compareAmounts, magnitude, sumRange } from './overviewSeries';
+import { useLockMonth } from './useLockMonth';
 import type { OverviewData } from './useOverviewData';
-import { DialogsName } from '@/constants/dialogs';
-import { useDialogActions } from '@/hooks/state';
 
 interface OverviewStatusProps {
   data: OverviewData;
@@ -27,7 +22,7 @@ interface OverviewStatusProps {
  */
 export function OverviewStatus({ data, compare }: OverviewStatusProps) {
   const history = useHistory();
-  const { openDialog } = useDialogActions();
+  const handleLock = useLockMonth(data.lock.data);
   const { lock, profitLoss, cash, months, fiscalStartIndex } = data;
 
   if (lock.status === 'loading') {
@@ -102,25 +97,13 @@ export function OverviewStatus({ data, compare }: OverviewStatusProps) {
     incomeLine = intl.getHTML(key, values);
   }
 
-  const handleLock = () => {
-    if (!readyMonth) return;
-    if (lock.data?.canLockAll) {
-      openDialog(DialogsName.TransactionsLocking, {
-        module: 'all',
-        lockToDate: readyMonth.end,
-      });
-    } else {
-      // module-by-module locking is managed on its own page.
-      history.push(TRANSACTIONS_LOCKING_LINK);
-    }
-  };
   const uncategorized = cash.data?.uncategorizedCount ?? 0;
   const reviewAccountId = cash.data?.uncategorizedAccountId ?? null;
   const handleReview = () => {
     history.push(
       reviewAccountId === null
         ? BANK_ACCOUNTS_LINK
-        : bankAccountLink(reviewAccountId),
+        : categorizeLink(reviewAccountId),
     );
   };
 

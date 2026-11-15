@@ -33,3 +33,26 @@ export const NEW_INVOICE_LINK = '/invoices/new';
 
 export const bankAccountLink = (accountId: number): string =>
   `/cashflow-accounts/${accountId}/transactions`;
+
+export const BILLS_LINK = '/bills';
+
+/** The general ledger for the period, where cash in and out comes from. */
+export function generalLedgerLink(fromDate: string, toDate: string): string {
+  const query = new URLSearchParams({ fromDate, toDate });
+  return `/financial-reports/general-ledger?${query.toString()}`;
+}
+
+/** The account's uncategorized bank transactions, ready to categorize. */
+export const categorizeLink = (accountId: number): string =>
+  `${bankAccountLink(accountId)}?filter=uncategorized`;
+
+interface ReportPeriod {
+  fromDate: string;
+  toDate: string;
+  basis: string;
+}
+
+export function salesTaxLink({ fromDate, toDate, basis }: ReportPeriod) {
+  const query = new URLSearchParams({ fromDate, toDate, basis });
+  return `/financial-reports/sales-tax-liability-summary?${query.toString()}`;
+}

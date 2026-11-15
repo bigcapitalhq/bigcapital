@@ -3,9 +3,14 @@ import {
   DEFAULT_OVERVIEW_PANELS,
   movePanel,
   normalizePanels,
+  resizePanel,
   togglePanel,
 } from './overviewPanels';
-import type { OverviewPanelId, OverviewPanelPref } from './overviewPanels';
+import type {
+  OverviewPanelId,
+  OverviewPanelPref,
+  OverviewPanelSize,
+} from './overviewPanels';
 import { useLocalStorage } from '@/hooks/utils';
 
 export type HomepageView = 'overview' | 'classic';
@@ -42,6 +47,8 @@ export function useOverviewPanels() {
     move: (index: number, direction: -1 | 1) =>
       setStored(movePanel(panels, index, direction)),
     toggle: (id: OverviewPanelId) => setStored(togglePanel(panels, id)),
+    resize: (id: OverviewPanelId, size: OverviewPanelSize) =>
+      setStored(resizePanel(panels, id, size)),
     reset: () => setStored([...DEFAULT_OVERVIEW_PANELS]),
   };
 }

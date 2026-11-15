@@ -6,7 +6,16 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import {
+  AccountStatus,
+  AccountsSummary,
+  CategorizeButton,
+  accountBalance,
+  accountSubtitle,
+} from './CashflowAccountDetails';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
+import { useAccountRates } from './useAccountRates';
+import type { DetailAccount } from './CashflowAccountDetails';
 import type { CashflowAccountRow } from './components';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -27,6 +36,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { safeCallback } from '@/utils';
 
 const CASHFLOW_SKELETON_N = 4;
@@ -51,10 +61,14 @@ interface CashflowBankAccountProps
     Pick<WithDialogActionsProps, 'openDialog'>,
     Pick<WithDrawerActionsProps, 'openDrawer'> {
   account: CashflowAccountRow;
+  baseCurrency?: string;
+  rates: Record<string, number>;
 }
 
 interface CashflowAccountsGridItemsProps {
   accounts: CashflowAccountRow[];
+  baseCurrency?: string;
+  rates: Record<string, number>;
 }
 
 /**
@@ -87,6 +101,8 @@ function CashflowBankAccount({
   openDialog,
   openDrawer,
   account,
+  baseCurrency,
+  rates,
 }: CashflowBankAccountProps) {
   // Handle view detail account.
   const handleViewClick = () => {
@@ -147,13 +163,18 @@ function CashflowBankAccount({
         <BankAccount
           title={account.name}
           code={account.code}
-          balance={account.amount != null ? account.formattedAmount : '-'}
+          subtitle={accountSubtitle(account as DetailAccount)}
+          balance={accountBalance(account as DetailAccount)}
+          balanceLabel={intl.get('banking.accounts.balance_in_books')}
           type={account.accountType}
-          updatedBeforeText={
-            account.lastFeedsUpdatedFromNow
-              ? `Updated ${account.lastFeedsUpdatedFromNow} ago`
-              : ''
+          meta={
+            <AccountStatus
+              account={account as DetailAccount}
+              baseCurrency={baseCurrency}
+              rates={rates}
+            />
           }
+          action={<CategorizeButton account={account as DetailAccount} />}
           uncategorizedTransactionsCount={undefined}
         />
       </CashflowAccountAnchor>
@@ -173,11 +194,18 @@ const CashflowBankAccountEnhanced = FF.pipe(
  */
 function CashflowAccountsGridItems({
   accounts,
+  baseCurrency,
+  rates,
 }: CashflowAccountsGridItemsProps) {
   return (
     <>
       {accounts.map((account) => (
-        <CashflowBankAccountEnhanced key={account.id} account={account} />
+        <CashflowBankAccountEnhanced
+          key={account.id}
+          account={account}
+          baseCurrency={baseCurrency}
+          rates={rates}
+        />
       ))}
     </>
   );
@@ -203,16 +231,33 @@ export function CashflowAccountsGrid() {
   // Retrieve list context.
   const { cashflowAccounts, isCashFlowAccountsLoading } =
     useCashFlowAccountsContext();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const accounts = (cashflowAccounts ?? []) as DetailAccount[];
+  const rates = useAccountRates(
+    accounts.map((account) => account.currencyCode ?? ''),
+    baseCurrency,
+  );
 
   return (
     <CashflowAccountsGridWrap>
+      {!isCashFlowAccountsLoading && (
+        <AccountsSummary
+          accounts={accounts}
+          baseCurrency={baseCurrency}
+          rates={rates}
+        />
+      )}
       <BankAccountsList>
         {isCashFlowAccountsLoading ? (
           <CashflowAccountsSkeleton />
         ) : isEmpty(cashflowAccounts) ? (
           <CashflowAccountsEmptyState />
         ) : (
-          <CashflowAccountsGridItems accounts={cashflowAccounts ?? []} />
+          <CashflowAccountsGridItems
+            accounts={cashflowAccounts ?? []}
+            baseCurrency={baseCurrency}
+            rates={rates}
+          />
         )}
       </BankAccountsList>
     </CashflowAccountsGridWrap>
