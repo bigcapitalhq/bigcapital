@@ -2,6 +2,7 @@ import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
 import * as FF from 'fp-ts/function';
 import { omit } from 'lodash';
+import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { CreateBadDebtFormSchema } from './BadDebtForm.schema';
@@ -12,9 +13,8 @@ import type { BadDebtFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
-const defaultInitialValues: BadDebtFormValues = {
+const defaultInitialValues = {
   expenseAccountId: '',
   reason: '',
   amount: '',
@@ -30,6 +30,7 @@ function BadDebtFormInner({
   // Initial form values
   const initialValues: BadDebtFormValues = {
     ...defaultInitialValues,
+    date: moment().format('YYYY-MM-DD'),
     amount: invoice?.dueAmount || '',
   };
 

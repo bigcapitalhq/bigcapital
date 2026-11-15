@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject, Injectable } from '@nestjs/common';
+import * as moment from 'moment';
 import {
   ISaleInvoiceWriteoffCreatePayload,
   ISaleInvoiceWriteoffDTO,
@@ -48,11 +49,16 @@ export class WriteoffSaleInvoice {
       // Validates the write-off operation against the locked invoice row.
       const saleInvoice = await this.validate(saleInvoiceId, trx, false);
 
+      // The write-off date defaults to the current date when it is not provided.
+      const writeoffDate = writeoffDTO.date
+        ? moment(writeoffDTO.date).format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD');
+
       const eventPayload = {
         // tenantId,
         saleInvoiceId,
         saleInvoice,
-        writeoffDTO,
+        writeoffDTO: { ...writeoffDTO, date: writeoffDate },
         trx,
       } as ISaleInvoiceWriteoffCreatePayload;
 
@@ -67,7 +73,7 @@ export class WriteoffSaleInvoice {
         .patch({
           writtenoffExpenseAccountId: writeoffDTO.expenseAccountId,
           writtenoffAmount: saleInvoice.dueAmount,
-          writtenoffAt: new Date(),
+          writtenoffAt: moment(writeoffDate).toDate(),
         })
         .findById(saleInvoiceId);
 

@@ -4194,6 +4194,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaleInvoiceWriteoffDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The sale invoice has been successfully written off."
@@ -32872,6 +32882,31 @@
           "dueDate",
           "entries",
           "attachments"
+        ]
+      },
+      "SaleInvoiceWriteoffDto": {
+        "type": "object",
+        "properties": {
+          "expenseAccountId": {
+            "type": "number",
+            "description": "The id of the bad debt expense account",
+            "example": 1024
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date of the write-off. Defaults to the current date when omitted.",
+            "example": "2023-01-01"
+          },
+          "reason": {
+            "type": "string",
+            "description": "The reason of writing off the invoice",
+            "example": "Customer is bankrupt"
+          }
+        },
+        "required": [
+          "expenseAccountId",
+          "reason"
         ]
       },
       "NotifySaleInvoiceBySmsDto": {
