@@ -1478,7 +1478,7 @@
   "sidebar.banking": "التدفق النقدي",
   "sidebar.bank_accounts": "الحسابات البنكية",
   "siebar.banking.bank_accounts": "حسابات نقدية والمصارف ",
-  "banking.label_account_transcations": "معاملات الحساب",
+  "banking.label_account_transactions": "معاملات الحساب",
   "banking.label.deposit": "الإيداع",
   "banking.label.withdrawal": "السحب",
   "banking.label.running_balance": "الرصيد التحليلي",

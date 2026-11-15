@@ -1264,7 +1264,7 @@ export const getDashboardRoutes = () => [
     ),
     sidebarExpand: false,
     backLink: true,
-    pageTitle: intl.get('banking.label_account_transcations'),
+    pageTitle: intl.get('banking.label_account_transactions'),
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
   {
