@@ -7,7 +7,7 @@ import { Errors, ExportFormat } from './common';
 import { flatDataCollections, getDataAccessor } from './utils';
 import { ExportPdf } from './ExportPdf';
 import { ExportAls } from './ExportAls';
-import { IModelMeta, IModelMetaColumn } from '@/interfaces/Model';
+import { IModelMetaColumn } from '@/interfaces/Model';
 import { ServiceError } from '../Items/ServiceError';
 import { ResourceService } from '../Resource/ResourceService';
 import { getExportableService } from './decorators/ExportableModel.decorator';
@@ -63,7 +63,7 @@ export class ExportResourceService {
       return this.exportWorkbook(workbook, format);
       // Returns the pdf format.
     } else if (format === ExportFormat.Pdf) {
-      const printableColumns = this.getPrintableColumns(resourceMeta);
+      const printableColumns = this.getPrintableColumns(resourceColumns);
 
       return this.exportPdf.pdf(
         printableColumns,
@@ -164,7 +164,9 @@ export class ExportResourceService {
     return processColumns(resourceColumns);
   }
 
-  private getPrintableColumns(resourceMeta: IModelMeta) {
+  private getPrintableColumns(resourceColumns: {
+    [key: string]: IModelMetaColumn;
+  }) {
     const processColumns = (
       columns: { [key: string]: IModelMetaColumn },
       parent = '',
@@ -195,7 +197,7 @@ export class ExportResourceService {
           })
       );
     };
-    return processColumns(resourceMeta.columns);
+    return processColumns(resourceColumns);
   }
 
   /**

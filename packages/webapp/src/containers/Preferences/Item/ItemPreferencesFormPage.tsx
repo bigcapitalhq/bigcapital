@@ -23,6 +23,8 @@ const defaultFormValues: ItemPreferencesFormValues = {
   preferredSellAccount: '',
   preferredCostAccount: '',
   preferredInventoryAccount: '',
+  skuEnabled: false,
+  skuRequired: false,
   reorderPointNotifications: false,
   reorderPointNotificationEmail: '',
   preventStockFromGoingBelowZero: false,
@@ -53,6 +55,8 @@ function ItemPreferencesFormPageInner({
         preferredSellAccount: values.preferredSellAccount,
         preferredCostAccount: values.preferredCostAccount,
         preferredInventoryAccount: values.preferredInventoryAccount,
+        skuEnabled: Boolean(values.skuEnabled),
+        skuRequired: values.skuEnabled ? Boolean(values.skuRequired) : false,
         reorderPointNotifications: Boolean(values.reorderPointNotifications),
         reorderPointNotificationEmail:
           values.reorderPointNotificationEmail ?? '',

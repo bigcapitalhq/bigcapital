@@ -6698,6 +6698,11 @@ export interface components {
              */
             code?: string;
             /**
+             * @description The item SKU (stock keeping unit)
+             * @example CHAIR-X2000-BLK
+             */
+            sku?: string | null;
+            /**
              * @description Unit of measure the item is measured in
              * @default piece
              * @example kg
@@ -6844,6 +6849,11 @@ export interface components {
              */
             code?: string;
             /**
+             * @description Item SKU (stock keeping unit)
+             * @example CHAIR-X2000-BLK
+             */
+            sku?: string;
+            /**
              * @description Stock level at which the item should be reordered (inventory items only)
              * @example 10
              */
@@ -6968,6 +6978,11 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
+            /**
+             * @description Item SKU (stock keeping unit)
+             * @example CHAIR-X2000-BLK
+             */
+            sku?: string;
             /**
              * @description Stock level at which the item should be reordered (inventory items only)
              * @example 10

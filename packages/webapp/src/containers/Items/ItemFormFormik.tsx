@@ -4,7 +4,7 @@ import { Formik, Form, type FormikHelpers } from 'formik';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import '@/style/pages/Items/Form.scss';
-import { CreateItemFormSchema, EditItemFormSchema } from './ItemForm.schema';
+import { getItemFormSchema } from './ItemForm.schema';
 import { ItemFormContent } from './ItemFormContent';
 import { useItemFormContext } from './ItemFormProvider';
 import {
@@ -15,8 +15,8 @@ import type { ItemFormValues, ItemFormSubmitPayload } from './types';
 import type { CreateItemBody, EditItemBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
+import { useItemSkuSettings } from '@/hooks/query';
 import { safeInvoke } from '@/utils';
-
 type SubmitSuccessHandler = (
   values: ItemFormValues,
   form: FormikHelpers<ItemFormValues>,
@@ -59,6 +59,9 @@ export function ItemFormFormik({
 
   // Initial values in create and edit mode.
   const initialValues = useItemFormInitialValues(item, initialValuesComponent);
+
+  // Item SKU preferences.
+  const { required: isSkuRequired } = useItemSkuSettings();
 
   // Handles the form submit.
   const handleFormSubmit = (
@@ -121,7 +124,7 @@ export function ItemFormFormik({
     >
       <Formik<ItemFormValues>
         enableReinitialize={true}
-        validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
+        validationSchema={getItemFormSchema(isSkuRequired)}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >

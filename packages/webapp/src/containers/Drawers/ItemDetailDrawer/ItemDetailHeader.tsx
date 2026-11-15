@@ -4,6 +4,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { If, DetailsMenu, DetailItem, Card } from '@/components';
+import { useItemSkuSettings } from '@/hooks/query';
 
 /**
  * Item header drawer of readonly details.
@@ -19,6 +20,7 @@ const toNullableNumber = (value: unknown): number | null => {
 
 export function ItemDetailHeader() {
   const { item } = useItemDetailDrawerContext();
+  const { enabled: isSkuEnabled } = useItemSkuSettings();
   const quantityOnHand = toNullableNumber(item?.quantityOnHand);
   const reorderPoint = toNullableNumber(item?.reorderPoint);
   const isLowStock =
@@ -52,6 +54,12 @@ export function ItemDetailHeader() {
             label={intl.get('item_type')}
             children={item?.typeFormatted}
           />
+          {isSkuEnabled && (
+            <DetailItem
+              label={intl.get('item_sku')}
+              children={defaultTo(item?.sku, '-')}
+            />
+          )}
           <DetailItem
             label={intl.get('item_code')}
             children={defaultTo(item?.code, '-')}

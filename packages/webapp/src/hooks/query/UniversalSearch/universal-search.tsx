@@ -1,4 +1,5 @@
 import { useResourceData } from '../GenericResource';
+import { useItemSkuSettings } from '../settings/queries';
 import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
 
 /**
@@ -8,8 +9,15 @@ import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
  * @param {any} resource
  * @returns
  */
-function transfromResourceDataToSearch(resource: any) {
-  const selectItem = getUniversalSearchBind(resource?._type, 'itemSelect');
+function transfromResourceDataToSearch(
+  resource: any,
+  options?: { itemSkuEnabled?: boolean },
+) {
+  const selectItem = getUniversalSearchBind(
+    resource?._type,
+    'itemSelect',
+    options,
+  );
 
   if (!resource || !Array.isArray(resource.items)) {
     return [];
@@ -31,6 +39,7 @@ export function useUniversalSearch(
   searchKeyword: string,
   props?: unknown,
 ) {
+  const { enabled: itemSkuEnabled } = useItemSkuSettings();
   const { data, ...restProps } = useResourceData(
     type,
     {
@@ -38,7 +47,7 @@ export function useUniversalSearch(
     },
     props,
   );
-  const searchData = transfromResourceDataToSearch(data);
+  const searchData = transfromResourceDataToSearch(data, { itemSkuEnabled });
 
   return {
     data: searchData,

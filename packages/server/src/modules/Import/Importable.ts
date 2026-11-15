@@ -40,7 +40,7 @@ export abstract class Importable {
    * Retrieves the sample data of importable.
    * @returns {Array<any>}
    */
-  public sampleData(): Array<any> {
+  public sampleData(): Array<any> | Promise<Array<any>> {
     return [];
   }
 

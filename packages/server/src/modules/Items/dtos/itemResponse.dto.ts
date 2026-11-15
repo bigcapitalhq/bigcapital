@@ -35,6 +35,14 @@ export class ItemResponseDto {
   code?: string;
 
   @ApiProperty({
+    description: 'The item SKU (stock keeping unit)',
+    example: 'CHAIR-X2000-BLK',
+    required: false,
+    nullable: true,
+  })
+  sku?: string | null;
+
+  @ApiProperty({
     description: 'Unit of measure the item is measured in',
     enum: [...ITEM_UNITS],
     default: DEFAULT_ITEM_UNIT,

@@ -8,6 +8,7 @@ import type { SelectOptionProps } from '@blueprintjs-formik/select';
 import { FSuggest, Suggest, FormattedMessage as T } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useItemSkuSettings } from '@/hooks/query';
 
 type ItemItemRenderer = ItemRenderer<ItemSuggestModel>;
 type ItemItemPredicate = ItemPredicate<ItemSuggestModel>;
@@ -35,40 +36,48 @@ const createNewItemFromQuery = (name: string): Partial<ItemSuggestModel> => ({
 });
 
 // Filters items.
-const filterItemsPredicater: ItemItemPredicate = (
-  query: string,
-  item: ItemSuggestModel,
-  _index?: number,
-  exactMatch?: boolean,
-): boolean => {
-  const normalizedTitle = (item.name ?? '').toLowerCase();
-  const normalizedQuery = query.toLowerCase();
+const createFilterItemsPredicater =
+  (isSkuEnabled: boolean): ItemItemPredicate =>
+  (
+    query: string,
+    item: ItemSuggestModel,
+    _index?: number,
+    exactMatch?: boolean,
+  ): boolean => {
+    const normalizedTitle = (item.name ?? '').toLowerCase();
+    const normalizedQuery = query.toLowerCase();
 
-  if (exactMatch) {
-    return normalizedTitle === normalizedQuery;
-  }
-  return `${normalizedTitle} ${item.code ?? ''}`.indexOf(normalizedQuery) >= 0;
-};
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    }
+    return (
+      `${normalizedTitle} ${isSkuEnabled ? (item.sku ?? '') : ''} ${
+        item.code ?? ''
+      }`.indexOf(normalizedQuery) >= 0
+    );
+  };
 
 // Item renderer.
-const itemRenderer: ItemItemRenderer = (
-  item: ItemSuggestModel,
-  { handleClick, modifiers },
-): React.ReactElement | null => {
-  if (!modifiers.matchesPredicate) {
-    return null;
-  }
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      label={item.code}
-      key={item.id}
-      text={item.name}
-      onClick={handleClick}
-    />
-  );
-};
+const createItemRenderer =
+  (isSkuEnabled: boolean): ItemItemRenderer =>
+  (
+    item: ItemSuggestModel,
+    { handleClick, modifiers },
+  ): React.ReactElement | null => {
+    if (!modifiers.matchesPredicate) {
+      return null;
+    }
+    return (
+      <MenuItem
+        active={modifiers.active}
+        disabled={modifiers.disabled}
+        label={isSkuEnabled ? item.sku || item.code : item.code}
+        key={item.id}
+        text={item.name}
+        onClick={handleClick}
+      />
+    );
+  };
 
 // Input value renderer.
 const inputValueRenderer = (item: ItemSuggestModel | null): string => {
@@ -123,6 +132,8 @@ function withItemsSuggestLogic<C extends ComponentType<any>>(
     allowCreate,
     ...suggestProps
   }: ItemsSuggestOwnProps & Omit<ComponentProps<C>, ProvidedSuggestProps>) {
+    const { enabled: isSkuEnabled } = useItemSkuSettings();
+
     const filteredItems = useMemo(() => {
       return items.filter((item) => {
         if (sellable && !item.sellable) return false;
@@ -148,11 +159,20 @@ function withItemsSuggestLogic<C extends ComponentType<any>>(
       ? createNewItemFromQuery
       : undefined;
 
+    const itemRenderer = useMemo(
+      () => createItemRenderer(isSkuEnabled),
+      [isSkuEnabled],
+    );
+    const itemPredicate = useMemo(
+      () => createFilterItemsPredicater(isSkuEnabled),
+      [isSkuEnabled],
+    );
+
     const processedSuggestProps = {
       items: filteredItems,
       noResults: <MenuItem disabled={true} text={<T id={'no_results'} />} />,
       itemRenderer,
-      itemPredicate: filterItemsPredicater,
+      itemPredicate,
       inputValueRenderer,
       onCreateItemSelect: handleCreateItemSelect,
       valueAccessor: 'id' as const,

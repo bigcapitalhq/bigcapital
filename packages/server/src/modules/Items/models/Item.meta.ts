@@ -1,3 +1,5 @@
+import { ITEM_SKU_FEATURE } from '../Items.constants';
+
 export const ItemMeta = {
   importable: true,
   exportable: true,
@@ -28,6 +30,11 @@ export const ItemMeta = {
     code: {
       name: 'item.field.code',
       column: 'code',
+      fieldType: 'text',
+    },
+    sku: {
+      name: 'item.field.sku',
+      column: 'sku',
       fieldType: 'text',
     },
     sellable: {
@@ -147,6 +154,12 @@ export const ItemMeta = {
       type: 'text',
       exportable: true,
     },
+    sku: {
+      name: 'item.field.sku',
+      type: 'text',
+      exportable: true,
+      features: [ITEM_SKU_FEATURE],
+    },
     sellable: {
       name: 'item.field.sellable',
       type: 'boolean',
@@ -254,6 +267,11 @@ export const ItemMeta = {
     code: {
       name: 'item.field.code',
       fieldType: 'text',
+    },
+    sku: {
+      name: 'item.field.sku',
+      fieldType: 'text',
+      features: [ITEM_SKU_FEATURE],
     },
     sellable: {
       name: 'item.field.sellable',

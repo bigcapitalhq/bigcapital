@@ -9,8 +9,10 @@ import { useAbilitiesFilter } from '@/hooks/utils';
 /**
  * Retrieves the universal search binds.
  */
-export const getUniversalSearchBinds = (): UniversalSearchBind[] => {
-  return universalSearchBinds.map((binder) => binder());
+export const getUniversalSearchBinds = (options?: {
+  itemSkuEnabled?: boolean;
+}): UniversalSearchBind[] => {
+  return universalSearchBinds.map((binder) => binder(options));
 };
 
 /**
@@ -18,19 +20,25 @@ export const getUniversalSearchBinds = (): UniversalSearchBind[] => {
  */
 export function getUniversalSearchBind(
   resourceType: string,
+  options?: { itemSkuEnabled?: boolean },
 ): UniversalSearchBind | undefined;
 export function getUniversalSearchBind<K extends keyof UniversalSearchBind>(
   resourceType: string,
   key: K,
+  options?: { itemSkuEnabled?: boolean },
 ): UniversalSearchBind[K] | undefined;
 export function getUniversalSearchBind(
   resourceType: string,
-  key?: keyof UniversalSearchBind,
+  key?: keyof UniversalSearchBind | { itemSkuEnabled?: boolean },
+  options?: { itemSkuEnabled?: boolean },
 ) {
-  const resourceConfig = getUniversalSearchBinds().find(
+  const bindOptions = key && typeof key === 'object' ? key : options;
+  const resourceConfig = getUniversalSearchBinds(bindOptions).find(
     (meta) => meta.resourceType === resourceType,
   );
-  return key ? get(resourceConfig, key) : resourceConfig;
+  return key && typeof key !== 'object'
+    ? get(resourceConfig, key)
+    : resourceConfig;
 }
 
 /**

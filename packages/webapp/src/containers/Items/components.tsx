@@ -20,6 +20,7 @@ import {
   ItemAction,
   InventoryAdjustmentAction,
 } from '@/constants/abilityOption';
+import { useItemSkuSettings } from '@/hooks/query';
 import { isBlank, safeCallback } from '@/utils';
 
 export type ItemTableRow = Item & {
@@ -227,6 +228,8 @@ export const ItemsActionsTableCell = (props: ActionsMenuProps) => {
  * Retrieve all items table columns.
  */
 export const useItemsTableColumns = (): DataTableColumn<ItemTableRow>[] => {
+  const { enabled: isSkuEnabled } = useItemSkuSettings();
+
   return React.useMemo(
     () =>
       [
@@ -239,6 +242,18 @@ export const useItemsTableColumns = (): DataTableColumn<ItemTableRow>[] => {
           clickable: true,
           textOverview: true,
         },
+        ...(isSkuEnabled
+          ? [
+              {
+                id: 'sku',
+                Header: intl.get('item_sku'),
+                accessor: 'sku',
+                className: clsx(Classes.TEXT_MUTED),
+                width: 140,
+                clickable: true,
+              } as DataTableColumn<ItemTableRow>,
+            ]
+          : []),
         {
           id: 'code',
           Header: intl.get('item_code'),
@@ -293,6 +308,6 @@ export const useItemsTableColumns = (): DataTableColumn<ItemTableRow>[] => {
           money: true,
         },
       ] as DataTableColumn<ItemTableRow>[],
-    [],
+    [isSkuEnabled],
   );
 };

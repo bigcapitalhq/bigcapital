@@ -23,6 +23,9 @@ type ItemError = { type: string };
  */
 export const ItemErrorType = {
   ItemNameExists: 'ITEM_NAME_EXISTS',
+  ItemSkuExists: 'ITEM_SKU_EXISTS',
+  ItemSkuRequired: 'ITEM_SKU_REQUIRED',
+  ItemSkuFeatureNotEnabled: 'ITEM_SKU_FEATURE_NOT_ENABLED',
   InventoryAccountCannotModified: 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
   TypeCannotChangeWithItemHasTransactions:
     'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
@@ -37,6 +40,7 @@ const defaultInitialValues: ItemFormValues = {
   name: '',
   type: 'service',
   code: '',
+  sku: '',
   reorderPoint: '',
   unit: DEFAULT_ITEM_UNIT,
   costPrice: '',
@@ -285,6 +289,18 @@ export const transformSubmitRequestErrors = (error: {
 
   if (errors.find((e) => e.type === ItemErrorType.ItemNameExists)) {
     fields.name = intl.get('the_name_used_before');
+  }
+  if (errors.find((e) => e.type === ItemErrorType.ItemSkuExists)) {
+    fields.sku = intl.get('the_sku_used_before');
+  }
+  if (errors.find((e) => e.type === ItemErrorType.ItemSkuRequired)) {
+    fields.sku = intl.get('the_sku_is_required');
+  }
+  if (errors.find((e) => e.type === ItemErrorType.ItemSkuFeatureNotEnabled)) {
+    AppToaster.show({
+      message: intl.get('item_sku_feature_not_enabled'),
+      intent: Intent.DANGER,
+    });
   }
   if (
     errors.find((e) => e.type === ItemErrorType.InventoryAccountCannotModified)

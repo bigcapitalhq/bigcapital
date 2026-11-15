@@ -29848,6 +29848,12 @@
             "description": "The item code/SKU",
             "example": "CHAIR-X2000"
           },
+          "sku": {
+            "type": "string",
+            "description": "The item SKU (stock keeping unit)",
+            "example": "CHAIR-X2000-BLK",
+            "nullable": true
+          },
           "unit": {
             "type": "string",
             "description": "Unit of measure the item is measured in",
@@ -30047,6 +30053,11 @@
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
           },
+          "sku": {
+            "type": "string",
+            "description": "Item SKU (stock keeping unit)",
+            "example": "CHAIR-X2000-BLK"
+          },
           "reorderPoint": {
             "type": "number",
             "description": "Stock level at which the item should be reordered (inventory items only)",
@@ -30220,6 +30231,11 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "sku": {
+            "type": "string",
+            "description": "Item SKU (stock keeping unit)",
+            "example": "CHAIR-X2000-BLK"
           },
           "reorderPoint": {
             "type": "number",

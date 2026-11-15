@@ -22,6 +22,7 @@ export class Item extends TenantBaseModel {
   public readonly active: boolean;
   public readonly type: string;
   public readonly code: string;
+  public readonly sku: string | null;
   public readonly unit: string;
   public readonly sellable: boolean;
   public readonly purchasable: boolean;
@@ -87,6 +88,7 @@ export class Item extends TenantBaseModel {
     return [
       { condition: 'or', fieldKey: 'name', comparator: 'contains' },
       { condition: 'or', fieldKey: 'code', comparator: 'like' },
+      { condition: 'or', fieldKey: 'sku', comparator: 'like' },
     ];
   }
 

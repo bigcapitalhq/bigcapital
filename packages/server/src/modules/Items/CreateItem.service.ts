@@ -9,7 +9,7 @@ import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { CreateItemDto } from './dtos/Item.dto';
-import { DEFAULT_ITEM_UNIT } from './Items.constants';
+import { DEFAULT_ITEM_UNIT, normalizeItemSku } from './Items.constants';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -37,6 +37,9 @@ export class CreateItemService {
   async authorize(itemDTO: CreateItemDto) {
     // Validate whether the given item name already exists on the storage.
     await this.validators.validateItemNameUniquiness(itemDTO.name);
+
+    // Validate the item SKU preferences and uniqueness.
+    await this.validators.validateItemSku(itemDTO.sku);
 
     if (itemDTO.categoryId) {
       await this.validators.validateItemCategoryExistance(itemDTO.categoryId);
@@ -84,6 +87,7 @@ export class CreateItemService {
   private transformNewItemDTOToModel(itemDTO: CreateItemDto) {
     return {
       ...itemDTO,
+      sku: normalizeItemSku(itemDTO.sku),
       unit: defaultTo(itemDTO.unit, DEFAULT_ITEM_UNIT),
       active: Boolean(defaultTo(itemDTO.active, true)),
       quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,

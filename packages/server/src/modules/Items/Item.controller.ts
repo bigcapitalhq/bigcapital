@@ -161,7 +161,7 @@ export class ItemsController extends TenantController {
   @ApiResponse({
     status: 400,
     description:
-      'Validation error. Possible error types: ITEM_NAME_EXISTS, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc.',
+      'Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_SKU_EXISTS, ITEM_SKU_REQUIRED, ITEM_SKU_FEATURE_NOT_ENABLED, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc.',
     schema: {
       $ref: getSchemaPath(ItemApiErrorResponseDto),
     },
@@ -229,7 +229,7 @@ export class ItemsController extends TenantController {
   @ApiResponse({
     status: 400,
     description:
-      'Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc.',
+      'Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_SKU_EXISTS, ITEM_SKU_REQUIRED, ITEM_SKU_FEATURE_NOT_ENABLED, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc.',
     schema: {
       $ref: getSchemaPath(ItemApiErrorResponseDto),
     },

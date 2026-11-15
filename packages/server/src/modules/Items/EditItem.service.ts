@@ -8,6 +8,7 @@ import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { EditItemDto } from './dtos/Item.dto';
+import { normalizeItemSku } from './Items.constants';
 
 @Injectable()
 export class EditItemService {
@@ -41,6 +42,12 @@ export class EditItemService {
 
     // Validate whether the given item name already exists on the storage.
     await this.validators.validateItemNameUniquiness(itemDTO.name, oldItem.id);
+
+    // Validate the item SKU preferences and uniqueness.
+    await this.validators.validateItemSku(itemDTO.sku, {
+      oldSku: oldItem.sku,
+      notItemId: oldItem.id,
+    });
 
     if (itemDTO.categoryId) {
       await this.validators.validateItemCategoryExistance(itemDTO.categoryId);
@@ -112,6 +119,9 @@ export class EditItemService {
 
     return {
       ...itemDTO,
+      ...(itemDTO.sku !== undefined
+        ? { sku: normalizeItemSku(itemDTO.sku) }
+        : {}),
       ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
         ? {
             quantityOnHand: 0,

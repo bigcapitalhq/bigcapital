@@ -5,6 +5,7 @@
   "field.type.non-inventory": "Non Inventory",
   "field.name": "Item Name",
   "field.code": "Item Code",
+  "field.sku": "SKU",
   "field.sellable": "Sellable",
   "field.purchasable": "Purchasable",
   "field.cost_price": "Cost Price",
