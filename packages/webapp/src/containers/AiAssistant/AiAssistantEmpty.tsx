@@ -1,5 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
+import styles from './AiAssistantEmpty.module.scss';
 
 const SUGGESTIONS = [
   'ai_assistant.suggestion.customer_profit',
@@ -20,25 +21,23 @@ export function AiAssistantEmpty({
   composer,
 }: AiAssistantEmptyProps) {
   return (
-    <div className="ai-empty">
-      <div className="ai-empty__inner">
-        <h1 className="ai-empty__title">
-          {intl.get('ai_assistant.empty_title')}
-        </h1>
+    <div className={styles.empty}>
+      <div className={styles.inner}>
+        <h1 className={styles.title}>{intl.get('ai_assistant.empty_title')}</h1>
 
-        {composer ? <div className="ai-empty__composer">{composer}</div> : null}
+        {composer ? <div className={styles.composer}>{composer}</div> : null}
 
-        <div className="ai-empty__suggestions-block">
-          <h2 className="ai-empty__suggestions-title">
+        <div className={styles.suggestionsBlock}>
+          <h2 className={styles.suggestionsTitle}>
             {intl.get('ai_assistant.suggestions_title')}
           </h2>
 
-          <div className="ai-empty__suggestions">
+          <div className={styles.suggestions}>
             {SUGGESTIONS.map((suggestion) => (
               <button
                 key={suggestion}
                 type="button"
-                className="ai-empty__suggestion"
+                className={styles.suggestion}
                 disabled={disabled}
                 onClick={() => onSelect(intl.get(suggestion))}
               >

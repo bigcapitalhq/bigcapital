@@ -1,11 +1,13 @@
 import { useChat } from '@ai-sdk/react';
 import { Button, Spinner } from '@blueprintjs/core';
 import { DefaultChatTransport, type UIMessage } from 'ai';
+import classnames from 'classnames';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import { AiAssistantComposer } from './AiAssistantComposer';
 import { AiAssistantEmpty } from './AiAssistantEmpty';
+import styles from './AiAssistantPage.module.scss';
 import { AiAssistantThread } from './AiAssistantThread';
 import { stripHistoricalToolParts } from './utils';
 import { Icon } from '@/components';
@@ -15,7 +17,6 @@ import {
   useCreateAiConversation,
 } from '@/hooks/query/ai-assistant';
 import { useAuthOrganizationId, useAuthToken } from '@/hooks/state';
-import '@/style/pages/AiAssistant/AiAssistantPage.scss';
 
 interface AiPageStateProps {
   title: string;
@@ -24,14 +25,14 @@ interface AiPageStateProps {
 
 function AiPageState({ title, description }: AiPageStateProps) {
   return (
-    <div className="ai-page__state">
-      <div className="ai-page__state-card">
-        <div className="ai-page__state-logo">
+    <div className={styles.state}>
+      <div className={styles.stateCard}>
+        <div className={styles.stateLogo}>
           <Icon icon="star-18dp" iconSize={20} />
         </div>
         <h1>{title}</h1>
         <p>{description}</p>
-        <Link to="/" className="ai-page__state-link">
+        <Link to="/" className={styles.stateLink}>
           {intl.get('ai_assistant.back_home')}
         </Link>
       </div>
@@ -139,14 +140,19 @@ export function AiAssistantPage() {
   const composer = (
     <>
       {displayError ? (
-        <div className="ai-page__error" role="alert">
+        <div
+          className={classnames(styles.error, {
+            [styles.errorInline]: isEmpty,
+          })}
+          role="alert"
+        >
           <Icon icon="times-circle" iconSize={14} />
           <span>{displayError}</span>
           {conversationId && !isBusy ? (
             <Button
               minimal
               small
-              className="ai-page__retry"
+              className={styles.retry}
               icon={<Icon icon="refresh-16" iconSize={12} />}
               onClick={() => {
                 setActionError(null);
@@ -172,7 +178,7 @@ export function AiAssistantPage() {
   if (statusLoading) {
     return (
       <DashboardInsider name="ai-assistant">
-        <div className="ai-page__loading">
+        <div className={styles.loading}>
           <Spinner size={36} />
         </div>
       </DashboardInsider>
@@ -203,9 +209,9 @@ export function AiAssistantPage() {
 
   return (
     <DashboardInsider name="ai-assistant">
-      <div className="ai-page">
-        <main className="ai-page__main">
-          <div className="ai-page__body">
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <div className={styles.body}>
             {isEmpty ? (
               <AiAssistantEmpty onSelect={handleSend} composer={composer} />
             ) : (
@@ -218,7 +224,7 @@ export function AiAssistantPage() {
           </div>
 
           {!isEmpty ? (
-            <div className="ai-page__composer-wrap">{composer}</div>
+            <div className={styles.composerWrap}>{composer}</div>
           ) : null}
         </main>
       </div>

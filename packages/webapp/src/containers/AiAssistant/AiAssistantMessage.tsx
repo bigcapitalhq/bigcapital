@@ -1,7 +1,9 @@
 import { Button } from '@blueprintjs/core';
 import { getToolName, isDynamicToolUIPart, isToolUIPart } from 'ai';
+import classnames from 'classnames';
 import React, { useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
+import styles from './AiAssistantMessage.module.scss';
 import { AiMarkdown } from './AiMarkdown';
 import { formatToolNumber } from './utils';
 import type { AiMessageFeedback } from '@/hooks/query/ai-assistant';
@@ -44,7 +46,7 @@ function ToolResultPreview({ toolName, output }: ToolResultPreviewProps) {
 
   if (Array.isArray(data.customers)) {
     return (
-      <div className="ai-assistant-tool__preview">
+      <div className={styles.preview}>
         <table>
           <thead>
             <tr>
@@ -65,16 +67,14 @@ function ToolResultPreview({ toolName, output }: ToolResultPreviewProps) {
             ))}
           </tbody>
         </table>
-        {currency ? (
-          <div className="ai-assistant-tool__currency">{currency}</div>
-        ) : null}
+        {currency ? <div className={styles.currency}>{currency}</div> : null}
       </div>
     );
   }
 
   if (Array.isArray(data.items)) {
     return (
-      <div className="ai-assistant-tool__preview">
+      <div className={styles.preview}>
         <table>
           <thead>
             <tr>
@@ -95,16 +95,14 @@ function ToolResultPreview({ toolName, output }: ToolResultPreviewProps) {
             ))}
           </tbody>
         </table>
-        {currency ? (
-          <div className="ai-assistant-tool__currency">{currency}</div>
-        ) : null}
+        {currency ? <div className={styles.currency}>{currency}</div> : null}
       </div>
     );
   }
 
   if (Array.isArray(data.accounts)) {
     return (
-      <div className="ai-assistant-tool__preview">
+      <div className={styles.preview}>
         <table>
           <thead>
             <tr>
@@ -121,16 +119,14 @@ function ToolResultPreview({ toolName, output }: ToolResultPreviewProps) {
             ))}
           </tbody>
         </table>
-        {currency ? (
-          <div className="ai-assistant-tool__currency">{currency}</div>
-        ) : null}
+        {currency ? <div className={styles.currency}>{currency}</div> : null}
       </div>
     );
   }
 
   if (Array.isArray(data.matches)) {
     return (
-      <div className="ai-assistant-tool__preview">
+      <div className={styles.preview}>
         <table>
           <thead>
             <tr>
@@ -171,34 +167,32 @@ function ToolCall({ part }: { part: any }) {
 
   return (
     <div
-      className={`ai-assistant-tool ${
-        isError ? 'ai-assistant-tool--error' : ''
-      } ${isDone ? 'ai-assistant-tool--done' : ''}`}
+      className={classnames(styles.tool, {
+        [styles.toolError]: isError,
+      })}
     >
-      <div className="ai-assistant-tool__line">
+      <div className={styles.line}>
         <Icon
           icon={icon}
           iconSize={14}
-          className={!isDone && !isError ? 'ai-assistant-tool__spin' : ''}
+          className={!isDone && !isError ? styles.spin : ''}
         />
         <span>{displayLabel}</span>
       </div>
 
       {isError ? (
-        <div className="ai-assistant-tool__error">
+        <div className={styles.errorText}>
           {part.errorText || intl.get('ai_assistant.tool.failed')}
         </div>
       ) : null}
 
       {isDone && output && typeof output === 'object' ? (
         (output as any).error ? (
-          <div className="ai-assistant-tool__error">
-            {(output as any).error}
-          </div>
+          <div className={styles.errorText}>{(output as any).error}</div>
         ) : (
           <>
             <ToolResultPreview toolName={toolName} output={output} />
-            <details className="ai-assistant-tool__details">
+            <details className={styles.details}>
               <summary>{intl.get('ai_assistant.tool.view_data')}</summary>
               <pre>{JSON.stringify(output, null, 2)}</pre>
             </details>
@@ -287,17 +281,16 @@ export function AiAssistantMessage({
 
   return (
     <div
-      className={`ai-assistant-message ${
-        isUser
-          ? 'ai-assistant-message--user'
-          : 'ai-assistant-message--assistant'
-      }`}
+      className={classnames(styles.message, {
+        [styles.user]: isUser,
+        [styles.assistant]: !isUser,
+      })}
     >
-      <div className="ai-assistant-message__body">
+      <div className={styles.body}>
         {message.parts.map((part, index) => {
           if (part.type === 'text') {
             return isUser ? (
-              <div key={index} className="ai-assistant-message__text">
+              <div key={index} className={styles.text}>
                 {part.text}
               </div>
             ) : (
@@ -313,12 +306,12 @@ export function AiAssistantMessage({
         })}
 
         {showActions ? (
-          <div className="ai-assistant-message__actions">
+          <div className={styles.actions}>
             {copyText ? (
               <Button
                 minimal
                 small
-                className="ai-assistant-message__action"
+                className={styles.action}
                 aria-label={intl.get('ai_assistant.copy')}
                 title={intl.get('ai_assistant.copy')}
                 icon={<Icon icon="content-copy" iconSize={13} />}
@@ -326,24 +319,19 @@ export function AiAssistantMessage({
               />
             ) : null}
             {copied ? (
-              <span className="ai-assistant-message__copied">
+              <span className={styles.copied}>
                 {intl.get('ai_assistant.copied')}
               </span>
             ) : null}
             {copyText ? (
-              <span
-                className="ai-assistant-message__actions-divider"
-                aria-hidden="true"
-              />
+              <span className={styles.actionsDivider} aria-hidden="true" />
             ) : null}
             <Button
               minimal
               small
-              className={`ai-assistant-message__action ${
-                feedback === 'like'
-                  ? 'ai-assistant-message__action--like-active'
-                  : ''
-              }`}
+              className={classnames(styles.action, {
+                [styles.likeActive]: feedback === 'like',
+              })}
               aria-label={intl.get('ai_assistant.like')}
               aria-pressed={feedback === 'like'}
               title={intl.get('ai_assistant.like')}
@@ -354,11 +342,9 @@ export function AiAssistantMessage({
             <Button
               minimal
               small
-              className={`ai-assistant-message__action ${
-                feedback === 'dislike'
-                  ? 'ai-assistant-message__action--dislike-active'
-                  : ''
-              }`}
+              className={classnames(styles.action, {
+                [styles.dislikeActive]: feedback === 'dislike',
+              })}
               aria-label={intl.get('ai_assistant.dislike')}
               aria-pressed={feedback === 'dislike'}
               title={intl.get('ai_assistant.dislike')}

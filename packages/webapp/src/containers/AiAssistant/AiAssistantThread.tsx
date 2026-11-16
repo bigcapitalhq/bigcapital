@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { AiAssistantMessage } from './AiAssistantMessage';
+import styles from './AiAssistantThread.module.scss';
 import type { UIMessage } from 'ai';
 
 interface AiAssistantThreadProps {
@@ -38,12 +39,12 @@ export function AiAssistantThread({
 
   return (
     <div
-      className="ai-thread"
+      className={styles.thread}
       ref={threadRef}
       onScroll={handleScroll}
       role="log"
     >
-      <div className="ai-thread__inner">
+      <div className={styles.inner}>
         {messages.map((message, index) => (
           <AiAssistantMessage
             key={message.id}
@@ -54,7 +55,7 @@ export function AiAssistantThread({
         ))}
 
         {isStreaming ? (
-          <div className="ai-thread__typing" aria-hidden="true">
+          <div className={styles.typing} aria-hidden="true">
             <span />
             <span />
             <span />

@@ -1,6 +1,8 @@
 import { Button } from '@blueprintjs/core';
+import classnames from 'classnames';
 import React, { useEffect, useRef } from 'react';
 import intl from 'react-intl-universal';
+import styles from './AiAssistantComposer.module.scss';
 import { Icon } from '@/components';
 
 interface AiAssistantComposerProps {
@@ -43,11 +45,11 @@ export function AiAssistantComposer({
   const canSend = value.trim().length > 0 && !isStreaming && !disabled;
 
   return (
-    <div className="ai-composer">
-      <div className="ai-composer__box">
+    <div className={styles.composer}>
+      <div className={styles.box}>
         <textarea
           ref={textareaRef}
-          className="ai-composer__input"
+          className={styles.input}
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
@@ -60,7 +62,7 @@ export function AiAssistantComposer({
 
         {isStreaming ? (
           <Button
-            className="ai-composer__send ai-composer__send--stop"
+            className={classnames(styles.send, styles.sendStop)}
             onClick={onStop}
             aria-label={intl.get('ai_assistant.stop')}
             title={intl.get('ai_assistant.stop')}
@@ -69,7 +71,7 @@ export function AiAssistantComposer({
         ) : (
           <Button
             intent="primary"
-            className="ai-composer__send"
+            className={styles.send}
             disabled={!canSend}
             onClick={onSend}
             aria-label={intl.get('ai_assistant.send')}

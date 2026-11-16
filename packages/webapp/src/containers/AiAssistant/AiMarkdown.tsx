@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import styles from './AiMarkdown.module.scss';
 
 interface AiMarkdownProps {
   children: string;
@@ -11,7 +12,7 @@ interface AiMarkdownProps {
  */
 export function AiMarkdown({ children }: AiMarkdownProps) {
   return (
-    <div className="ai-assistant-markdown">
+    <div className={styles.markdown}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -21,7 +22,7 @@ export function AiMarkdown({ children }: AiMarkdownProps) {
             </a>
           ),
           table: ({ node: _node, ...props }) => (
-            <div className="ai-assistant-markdown__table">
+            <div className={styles.tableWrap}>
               <table {...props} />
             </div>
           ),
