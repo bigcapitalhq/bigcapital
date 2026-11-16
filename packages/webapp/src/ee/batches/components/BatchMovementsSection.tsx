@@ -1,12 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  getEntriesBatchMovements,
-  type BatchMovementDirection,
-  type BatchMovementEntry,
-  type BatchMovementRow,
-} from './utils';
+import { type BatchMovementDirection, type BatchMovementRow } from './utils';
 import {
   CommercialDocEntriesTable,
   FormatDate,
@@ -19,7 +14,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { formattedNumber } from '@/utils';
 
 interface BatchMovementsSectionProps {
-  entries: BatchMovementEntry[];
+  batches: BatchMovementRow[];
   direction: BatchMovementDirection;
 }
 
@@ -120,15 +115,12 @@ const useBatchMovementsColumns = (
  * invoice and bill detail drawers.
  */
 export function BatchMovementsSection({
-  entries,
+  batches,
   direction,
 }: BatchMovementsSectionProps) {
   const { featureCan } = useFeatureCan();
 
-  const rows = React.useMemo(
-    () => getEntriesBatchMovements(entries, direction),
-    [direction, entries],
-  );
+  const rows = batches;
   const columns = useBatchMovementsColumns(direction, rows);
 
   if (!featureCan(Features.BatchTracking) || rows.length === 0) {

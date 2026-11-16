@@ -4,6 +4,8 @@ import { ItemEntryTransformer } from '../../TransactionItemEntry/ItemEntry.trans
 import { AttachmentTransformer } from '../../Attachments/Attachment.transformer';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntry.transformer';
 import { DiscountType } from '@/common/types/Discount';
+import { transformEntriesToDocumentBatches } from '@/modules/TransactionItemEntry/utils';
+import type { IDocumentBatch } from '@/modules/TransactionItemEntry/ItemEntry.types';
 
 export class SaleInvoiceTransformer extends Transformer {
   /**
@@ -11,7 +13,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
+    const attributes = [
       'invoiceDateFormatted',
       'dueDateFormatted',
       'createdAtFormatted',
@@ -33,6 +35,10 @@ export class SaleInvoiceTransformer extends Transformer {
       'entries',
       'attachments',
     ];
+
+    return this.options?.includeBatches
+      ? [...attributes, 'batches']
+      : attributes;
   };
 
   /**
@@ -241,6 +247,15 @@ export class SaleInvoiceTransformer extends Transformer {
     return this.item(invoice.entries, new ItemEntryTransformer(), {
       currencyCode: invoice.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the batch movements of the sale invoice.
+   * @param {SaleInvoice} invoice
+   * @returns {IDocumentBatch[]}
+   */
+  protected batches = (invoice: SaleInvoice): IDocumentBatch[] => {
+    return transformEntriesToDocumentBatches(invoice.entries ?? [], 'out');
   };
 
   /**

@@ -19,7 +19,7 @@ export function InvoiceDetailTab() {
       <InvoiceDetailTable />
       <InvoiceDetailTableFooter />
       <BatchMovementsSection
-        entries={invoice?.entries ?? []}
+        batches={invoice?.batches ?? []}
         direction={'out'}
       />
       <InvoiceDetailFooter />

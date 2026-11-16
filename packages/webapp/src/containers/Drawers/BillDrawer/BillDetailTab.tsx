@@ -18,7 +18,7 @@ export function BillDetailTab() {
       <BillDetailHeader />
       <BillDetailTable />
       <BillDetailTableFooter />
-      <BatchMovementsSection entries={bill?.entries ?? []} direction={'in'} />
+      <BatchMovementsSection batches={bill?.batches ?? []} direction={'in'} />
       <BillDetailFooter />
     </CommercialDocBox>
   );
