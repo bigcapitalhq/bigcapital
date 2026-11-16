@@ -2668,6 +2668,7 @@
   "homepage.overview.compare_hint": "Compare every number with the same period in {year}",
   "homepage.overview.panels": "Panels",
   "homepage.overview.ready_to_lock": "{month} is ready to lock.",
+  "homepage.overview.little_recorded": "{month} has little recorded yet.",
   "homepage.overview.locked_through": "Locked through {month}.",
   "homepage.overview.reopened": "{months} reopened for changes.",
   "homepage.overview.net_income_this_year": "Net income <b>{amount}</b> this year.",

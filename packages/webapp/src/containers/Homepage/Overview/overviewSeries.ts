@@ -118,6 +118,28 @@ export function readyToLockMonth(
   return null;
 }
 
+// a month recording under this share of a typical earlier month looks unfinished.
+const THIN_MONTH_SHARE = 0.1;
+
+/**
+ * Whether a month records too little to look finished: under a tenth of the
+ * median of the earlier months that recorded anything. A month with nothing
+ * earlier to compare against is never thin, so a new organization can lock.
+ */
+export function isThinMonth(activity: number[], index: number): boolean {
+  const earlier = activity
+    .slice(0, index)
+    .filter((amount) => amount > 0)
+    .sort((a, b) => a - b);
+  if (earlier.length === 0) return false;
+  const middle = Math.floor(earlier.length / 2);
+  const median =
+    earlier.length % 2 === 1
+      ? earlier[middle]
+      : (earlier[middle - 1] + earlier[middle]) / 2;
+  return activity[index] < median * THIN_MONTH_SHARE;
+}
+
 /**
  * The most recent month the lock date covers. A reopened month still counts:
  * the lock date has not moved, only a window inside it is open.

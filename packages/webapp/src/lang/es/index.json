@@ -2428,6 +2428,7 @@
   "homepage.overview.compare_hint": "Compara cada cifra con el mismo período de {year}",
   "homepage.overview.panels": "Paneles",
   "homepage.overview.ready_to_lock": "{month} está listo para bloquear.",
+  "homepage.overview.little_recorded": "{month} tiene pocos registros todavía.",
   "homepage.overview.locked_through": "Bloqueado hasta {month}.",
   "homepage.overview.reopened": "{months}: reabierto para cambios.",
   "homepage.overview.net_income_this_year": "Ingreso neto de <b>{amount}</b> este año.",

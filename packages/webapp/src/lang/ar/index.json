@@ -2232,6 +2232,7 @@
   "homepage.overview.compare_hint": "قارن كل رقم بالفترة نفسها من {year}",
   "homepage.overview.panels": "اللوحات",
   "homepage.overview.ready_to_lock": "{month} جاهز للقفل.",
+  "homepage.overview.little_recorded": "لم يُسجَّل في {month} إلا القليل حتى الآن.",
   "homepage.overview.locked_through": "مقفل حتى {month}.",
   "homepage.overview.reopened": "{months} أُعيد فتحه للتعديل.",
   "homepage.overview.net_income_this_year": "صافي الدخل <b>{amount}</b> هذا العام.",

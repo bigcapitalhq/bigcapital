@@ -38,12 +38,17 @@ export function OverviewStatus({ data, compare }: OverviewStatusProps) {
     );
   }
   const readyMonth = lock.data?.readyMonth ?? null;
+  const thinMonth = lock.data?.thinMonth ?? null;
   const lastLocked = lock.data?.lastLocked ?? null;
 
   const neverLocked = !lock.data?.lockedThrough;
   const lockLine = neverLocked
     ? intl.get('homepage.overview.nothing_locked')
-    : readyMonth
+    : thinMonth
+      ? intl.get('homepage.overview.little_recorded', {
+          month: formatMonth(thinMonth.key, 'MMMM'),
+        })
+      : readyMonth
       ? intl.get('homepage.overview.ready_to_lock', {
           month: formatMonth(readyMonth.key, 'MMMM'),
         })

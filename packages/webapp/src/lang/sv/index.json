@@ -2396,6 +2396,7 @@
   "homepage.overview.compare_hint": "Jämför varje siffra med samma period {year}",
   "homepage.overview.panels": "Paneler",
   "homepage.overview.ready_to_lock": "{month} är redo att låsas.",
+  "homepage.overview.little_recorded": "{month} har knappt något bokfört ännu.",
   "homepage.overview.locked_through": "Låst till och med {month}.",
   "homepage.overview.reopened": "{months} återöppnad för ändringar.",
   "homepage.overview.net_income_this_year": "Nettoresultat <b>{amount}</b> i år.",

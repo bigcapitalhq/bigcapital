@@ -12,6 +12,7 @@ import {
   fiscalYearStartIndex,
   lastLockedMonth,
   readyToLockMonth,
+  isThinMonth,
 } from './overviewSeries';
 import type {
   AgingSplit,
@@ -99,6 +100,8 @@ export interface LockData {
   lockedThrough: string | null;
   states: MonthLockState[];
   readyMonth: OverviewMonth | null;
+  /** The latest ended month when it records too little to offer locking. */
+  thinMonth: OverviewMonth | null;
   /** Locked months a partial unlock has opened for changes. */
   reopened: OverviewMonth[];
   lastLocked: OverviewMonth | null;
@@ -310,22 +313,47 @@ export function useOverviewData(): OverviewData {
   const lock = React.useMemo(() => {
     const locking = lockingQuery.data as LockingSnapshot | undefined;
     if (!locking) return null;
+    // wait for the P&L so the lock offer does not appear and then vanish.
+    const isProfitLossPending =
+      canReadProfitLoss && profitLoss === null && !profitLossQuery.isError;
+    if (isProfitLossPending) return null;
+
     const lockedThrough = effectiveLockDate(locking);
     const unlock = partialUnlockWindow(locking);
     const states = deriveLockStates(months, lockedThrough, unlock);
     const anyModuleLocked = (locking.modules ?? []).some((m) => m.isEnabled);
 
+    // a month with almost nothing recorded is unfinished books, not a month to lock.
+    const latestEnded = readyToLockMonth(months, states);
+    const activity = profitLoss
+      ? profitLoss.income.current.map(
+          (amount, index) =>
+            Math.abs(amount) + Math.abs(profitLoss.spend.current[index] ?? 0),
+        )
+      : null;
+    const isThin =
+      latestEnded !== null &&
+      activity !== null &&
+      isThinMonth(activity, months.indexOf(latestEnded));
+
     return {
       lockedThrough,
       states,
-      readyMonth: readyToLockMonth(months, states),
+      readyMonth: isThin ? null : latestEnded,
+      thinMonth: isThin ? latestEnded : null,
       reopened: months.filter((_, index) => states[index] === 'reopened'),
       lastLocked: lastLockedMonth(months, states),
       // locking 'all' replaces per-module locks, so only offer it when the
       // organization is not deliberately locking module by module.
       canLockAll: locking.lockingType === 'all' || !anyModuleLocked,
     };
-  }, [lockingQuery.data, months]);
+  }, [
+    lockingQuery.data,
+    months,
+    canReadProfitLoss,
+    profitLoss,
+    profitLossQuery.isError,
+  ]);
 
   return {
     today,
