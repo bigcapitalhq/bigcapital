@@ -14,7 +14,7 @@ export class ValidateMatchingOnExpenseDeleteSubscriber {
    * Validates the expense transaction whether matched with bank transaction on deleting.
    * @param {IExpenseEventDeletePayload}
    */
-  @OnEvent(events.expenses.onDeleting)
+  @OnEvent(events.expenses.onDeleting, { suppressErrors: false })
   public async validateMatchingOnExpenseDeleting({
     oldExpense,
     trx,
