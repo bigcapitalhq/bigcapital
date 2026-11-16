@@ -9,6 +9,7 @@ export interface IItem {
   name: string;
   type: string;
   code: string;
+  sku: string | null;
 
   sellable: boolean;
   purchasable: boolean;
@@ -49,6 +50,9 @@ export class IItemDTO {
 
   @ApiProperty()
   code: string;
+
+  @ApiProperty({ required: false, nullable: true })
+  sku?: string | null;
 
   @ApiProperty()
   sellable: boolean;

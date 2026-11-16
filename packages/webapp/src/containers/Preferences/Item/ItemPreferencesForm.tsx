@@ -1,6 +1,6 @@
 import { Button, Divider, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
@@ -19,6 +19,8 @@ export interface ItemPreferencesFormValues {
   preferredSellAccount: string | number;
   preferredCostAccount: string | number;
   preferredInventoryAccount: string | number;
+  skuEnabled: boolean;
+  skuRequired: boolean;
   reorderPointNotifications: boolean;
   reorderPointNotificationEmail: string;
   preventStockFromGoingBelowZero: boolean;
@@ -28,8 +30,15 @@ export function ItemForm(): React.ReactElement {
   const history = useHistory();
   const { accounts, users } = useItemPreferencesFormContext();
 
-  const { isSubmitting, values } =
+  const { isSubmitting, values, setFieldValue } =
     useFormikContext<ItemPreferencesFormValues>();
+
+  // The requirement only applies when SKU itself is enabled.
+  useEffect(() => {
+    if (!values.skuEnabled && values.skuRequired) {
+      setFieldValue('skuRequired', false);
+    }
+  }, [values.skuEnabled, values.skuRequired, setFieldValue]);
 
   const userOptions = users
     .filter((user) => user.active && user.email)
@@ -134,6 +143,32 @@ export function ItemForm(): React.ReactElement {
       </ItemFormGroup>
 
       <Divider style={{ margin: '20px 0' }} />
+
+      {/* ----------- Enable SKU ----------- */}
+      <ItemFormGroup
+        name={'skuEnabled'}
+        helperText={<T id={'enable_item_sku_hint'} />}
+        inline={true}
+      >
+        <FSwitch
+          name={'skuEnabled'}
+          labelElement={<T id={'enable_item_sku'} />}
+          large={true}
+        />
+      </ItemFormGroup>
+
+      {/* ----------- Require SKU ----------- */}
+      <ItemFormGroup
+        name={'skuRequired'}
+        helperText={<T id={'require_item_sku_hint'} />}
+        inline={true}
+      >
+        <FSwitch
+          name={'skuRequired'}
+          labelElement={<T id={'require_item_sku'} />}
+          disabled={!values.skuEnabled}
+        />
+      </ItemFormGroup>
 
       {/* ----------- Reorder point notifications ----------- */}
       <ItemFormGroup

@@ -9,6 +9,8 @@ const Schema = Yup.object().shape({
   preferredSellAccount: Yup.number().nullable(),
   preferredCostAccount: Yup.number().nullable(),
   preferredInventoryAccount: Yup.number().nullable(),
+  skuEnabled: Yup.boolean(),
+  skuRequired: Yup.boolean(),
   reorderPointNotifications: Yup.boolean(),
   reorderPointNotificationEmail: reorderPointNotificationEmailSchema.when(
     'reorderPointNotifications',

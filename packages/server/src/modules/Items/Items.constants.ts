@@ -27,11 +27,42 @@ export const DEFAULT_ITEM_UNIT = 'piece';
 
 export type ItemUnit = (typeof ITEM_UNITS)[number];
 
+/**
+ * Item SKU settings keys within the `items` settings group.
+ */
+export const ITEM_SKU_ENABLED_SETTING = 'sku_enabled';
+export const ITEM_SKU_REQUIRED_SETTING = 'sku_required';
+
+/**
+ * Feature key used to hide SKU from resource meta (imports/exports) when the
+ * SKU feature is disabled.
+ */
+export const ITEM_SKU_FEATURE = 'item_sku';
+
+/**
+ * Normalizes an item SKU: trims surrounding whitespace and converts blank
+ * values to NULL so multiple items can omit the SKU without violating the
+ * uniqueness constraint.
+ * @param {string|null|undefined} sku - Raw SKU value.
+ * @returns {string|null} Normalized SKU.
+ */
+export function normalizeItemSku(sku?: string | null): string | null {
+  if (sku === null || sku === undefined) {
+    return null;
+  }
+  const trimmedSku = String(sku).trim();
+
+  return trimmedSku.length > 0 ? trimmedSku : null;
+}
+
 export const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
 
   ITEM_NAME_EXISTS: 'ITEM_NAME_EXISTS',
+  ITEM_SKU_EXISTS: 'ITEM_SKU_EXISTS',
+  ITEM_SKU_REQUIRED: 'ITEM_SKU_REQUIRED',
+  ITEM_SKU_FEATURE_NOT_ENABLED: 'ITEM_SKU_FEATURE_NOT_ENABLED',
   ITEM_CATEOGRY_NOT_FOUND: 'ITEM_CATEOGRY_NOT_FOUND',
   COST_ACCOUNT_NOT_COGS: 'COST_ACCOUNT_NOT_COGS',
   COST_ACCOUNT_NOT_FOUMD: 'COST_ACCOUNT_NOT_FOUMD',
@@ -103,6 +134,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'Hettinger, Schumm and Bartoletti',
     'Item Code': '1000',
+    SKU: 'SKU-1000',
     'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
@@ -121,6 +153,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'Schmitt Group',
     'Item Code': '1001',
+    SKU: 'SKU-1001',
     'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
@@ -139,6 +172,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'Marks - Carroll',
     'Item Code': '1002',
+    SKU: 'SKU-1002',
     'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
@@ -157,6 +191,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'VonRueden, Ruecker and Hettinger',
     'Item Code': '1003',
+    SKU: 'SKU-1003',
     'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',

@@ -8,6 +8,22 @@ const makeItemRequest = () => ({
   unit: 'kg',
 });
 
+const authHeaders = () => ({
+  'organization-id': orgainzationId,
+  Authorization: AuthorizationHeader,
+});
+
+const setItemSkuSettings = (enabled: boolean, required = false) =>
+  request(app.getHttpServer())
+    .put('/settings')
+    .set(authHeaders())
+    .send({
+      options: [
+        { group: 'items', key: 'sku_enabled', value: enabled },
+        { group: 'items', key: 'sku_required', value: required },
+      ],
+    });
+
 describe.only('Items (e2e)', () => {
   it('/items (POST)', () => {
     return request(app.getHttpServer())
@@ -213,6 +229,187 @@ describe.only('Items (e2e)', () => {
         ids: [itemId1, itemId2],
       })
       .expect(200);
+  });
+
+  it('/items (POST) rejects SKU when the feature is disabled', async () => {
+    await setItemSkuSettings(false);
+
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set(authHeaders())
+      .send({
+        ...makeItemRequest(),
+        sku: `SKU-${faker.string.alphanumeric(10).toUpperCase()}`,
+      })
+      .expect(400);
+
+    expect(
+      response.body.errors.some(
+        (error: { type: string }) =>
+          error.type === 'ITEM_SKU_FEATURE_NOT_ENABLED',
+      ),
+    ).toBeTruthy();
+  });
+
+  it('/items (POST) with SKU', async () => {
+    await setItemSkuSettings(true);
+    const sku = `SKU-${faker.string.alphanumeric(10).toUpperCase()}`;
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku })
+      .expect(201);
+
+    const itemResponse = await request(app.getHttpServer())
+      .get(`/items/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(itemResponse.body.sku).toEqual(sku);
+  });
+
+  it('/items (POST) rejects duplicate SKUs case-insensitively', async () => {
+    const sku = `SKU-${faker.string.alphanumeric(10).toUpperCase()}`;
+
+    await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku })
+      .expect(201);
+
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku: sku.toLowerCase() })
+      .expect(400);
+
+    expect(
+      response.body.errors.some(
+        (error: { type: string }) => error.type === 'ITEM_SKU_EXISTS',
+      ),
+    ).toBeTruthy();
+  });
+
+  it('/items (POST) allows multiple items without a SKU', async () => {
+    await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku: '' })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku: '  ' })
+      .expect(201);
+  });
+
+  it('/items/:id (PUT) keeps the item own SKU', async () => {
+    const sku = `SKU-${faker.string.alphanumeric(10).toUpperCase()}`;
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .put(`/items/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeItemRequest(), sku })
+      .expect(200);
+  });
+
+  it('/items (POST) requires SKU when the requirement is enabled', async () => {
+    await setItemSkuSettings(true, true);
+
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set(authHeaders())
+      .send({ ...makeItemRequest(), sku: '' })
+      .expect(400);
+
+    expect(
+      response.body.errors.some(
+        (error: { type: string }) => error.type === 'ITEM_SKU_REQUIRED',
+      ),
+    ).toBeTruthy();
+
+    await request(app.getHttpServer())
+      .post('/items')
+      .set(authHeaders())
+      .send({
+        ...makeItemRequest(),
+        sku: `SKU-${faker.string.alphanumeric(10).toUpperCase()}`,
+      })
+      .expect(201);
+  });
+
+  it('/items/:id (PUT) requires SKU when the requirement is enabled', async () => {
+    await setItemSkuSettings(true, true);
+
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set(authHeaders())
+      .send({
+        ...makeItemRequest(),
+        sku: `SKU-${faker.string.alphanumeric(10).toUpperCase()}`,
+      })
+      .expect(201);
+
+    const editResponse = await request(app.getHttpServer())
+      .put(`/items/${response.body.id}`)
+      .set(authHeaders())
+      .send({ ...makeItemRequest(), sku: '' })
+      .expect(400);
+
+    expect(
+      editResponse.body.errors.some(
+        (error: { type: string }) => error.type === 'ITEM_SKU_REQUIRED',
+      ),
+    ).toBeTruthy();
+  });
+
+  it('/items/:id (PUT) allows an unchanged SKU when the feature is disabled', async () => {
+    await setItemSkuSettings(true, false);
+
+    const sku = `SKU-${faker.string.alphanumeric(10).toUpperCase()}`;
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set(authHeaders())
+      .send({ ...makeItemRequest(), sku })
+      .expect(201);
+
+    await setItemSkuSettings(false, false);
+
+    await request(app.getHttpServer())
+      .put(`/items/${response.body.id}`)
+      .set(authHeaders())
+      .send({ ...makeItemRequest(), sku })
+      .expect(200);
+
+    const editResponse = await request(app.getHttpServer())
+      .put(`/items/${response.body.id}`)
+      .set(authHeaders())
+      .send({
+        ...makeItemRequest(),
+        sku: `SKU-${faker.string.alphanumeric(10).toUpperCase()}`,
+      })
+      .expect(400);
+
+    expect(
+      editResponse.body.errors.some(
+        (error: { type: string }) =>
+          error.type === 'ITEM_SKU_FEATURE_NOT_ENABLED',
+      ),
+    ).toBeTruthy();
   });
 
   it('/items/bulk-delete (POST)', async () => {

@@ -79,7 +79,11 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   const itemQuery = useItem(itemId || (duplicateId as number | undefined), {
     enabled: !!itemId || !!duplicateId,
   });
-  const { isLoading: isItemLoading, data: item } = itemQuery;
+  const { isLoading: isItemLoading, data: itemResponse } = itemQuery;
+
+  // When duplicating an item the SKU must not be copied since it is unique.
+  const item =
+    duplicateId && itemResponse ? { ...itemResponse, sku: null } : itemResponse;
 
   // Watches and handles item not found response error.
   useWatchItemError(itemQuery);

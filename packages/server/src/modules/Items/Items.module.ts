@@ -19,6 +19,7 @@ import { ItemsExportable } from './ItemsExportable.service';
 import { ItemsImportable } from './ItemsImportable.service';
 import { BulkDeleteItemsService } from './BulkDeleteItems.service';
 import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.service';
+import { ItemsSettingsService } from './ItemsSettings.service';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
   controllers: [ItemsController],
   providers: [
     ItemsValidators,
+    ItemsSettingsService,
     CreateItemService,
     EditItemService,
     InactivateItem,
@@ -45,6 +47,11 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
     BulkDeleteItemsService,
     ValidateBulkDeleteItemsService,
   ],
-  exports: [ItemsEntriesService, ItemsExportable, ItemsImportable],
+  exports: [
+    ItemsEntriesService,
+    ItemsExportable,
+    ItemsImportable,
+    ItemsSettingsService,
+  ],
 })
 export class ItemsModule {}

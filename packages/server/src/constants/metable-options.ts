@@ -176,6 +176,12 @@ export const SettingsOptions = {
     preferred_inventory_account: {
       type: 'number',
     },
+    sku_enabled: {
+      type: 'boolean',
+    },
+    sku_required: {
+      type: 'boolean',
+    },
     reorder_point_notifications: {
       type: 'boolean',
     },

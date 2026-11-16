@@ -30,4 +30,6 @@ export const universalSearchBinds = [
   universalSearchJournalBind,
   universalSearchCreditNoteBind,
   universalSearchVendorCreditBind,
-] as unknown as Array<() => UniversalSearchBind>;
+] as unknown as Array<
+  (options?: { itemSkuEnabled?: boolean }) => UniversalSearchBind
+>;

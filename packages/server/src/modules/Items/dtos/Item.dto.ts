@@ -45,6 +45,16 @@ export class CommandItemDto {
   code?: string;
 
   @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  @ApiProperty({
+    description: 'Item SKU (stock keeping unit)',
+    required: false,
+    example: 'CHAIR-X2000-BLK',
+  })
+  sku?: string | null;
+
+  @IsOptional()
   @ToNumber()
   @IsNumber({ maxDecimalPlaces: 3 })
   @Min(0)

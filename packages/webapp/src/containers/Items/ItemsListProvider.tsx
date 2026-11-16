@@ -77,6 +77,7 @@ function ItemsListProvider({
 
   // Fetch the items settings.
   const { data: itemsSettings } = useSettingsItems();
+  const isSkuEnabled = Boolean(itemsSettings?.skuEnabled);
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
@@ -88,7 +89,9 @@ function ItemsListProvider({
     pagination: itemsData?.pagination,
 
     fields: resourceMeta?.fields
-      ? getFieldsFromResourceMeta(resourceMeta.fields)
+      ? getFieldsFromResourceMeta(resourceMeta.fields).filter(
+          (field) => isSkuEnabled || field.key !== 'sku',
+        )
       : [],
 
     itemsSettings,

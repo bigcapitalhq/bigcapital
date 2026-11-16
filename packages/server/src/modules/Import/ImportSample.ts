@@ -19,7 +19,7 @@ export class ImportSampleService {
     const _resource = sanitizeResourceName(resource);
     const importable = await this.importableRegistry.getImportable(_resource);
 
-    const data = importable.sampleData();
+    const data = await importable.sampleData();
 
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(data);

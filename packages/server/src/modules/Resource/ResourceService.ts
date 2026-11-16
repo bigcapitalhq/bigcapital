@@ -2,7 +2,7 @@ import { ModuleRef } from '@nestjs/core';
 import { pickBy, mapValues } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import { WarehousesSettings } from '../Warehouses/WarehousesSettings';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { BranchesSettingsService } from '../Branches/BranchesSettings';
 import { ServiceError } from '../Items/ServiceError';
 import { IModelMetaColumn, IModelMetaField2 } from '@/interfaces/Model';
@@ -10,6 +10,13 @@ import { IModelMeta } from '@/interfaces/Model';
 import { IModelMetaField } from '@/interfaces/Model';
 import { Features } from '@/common/types/Features';
 import { resourceToModelName } from './_utils';
+import { SettingsStore } from '../Settings/SettingsStore';
+import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
+import {
+  ITEM_SKU_ENABLED_SETTING,
+  ITEM_SKU_FEATURE,
+  ITEM_SKU_REQUIRED_SETTING,
+} from '../Items/Items.constants';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -22,7 +29,39 @@ export class ResourceService {
     private readonly warehousesSettings: WarehousesSettings,
     private readonly moduleRef: ModuleRef,
     private readonly i18nService: I18nService,
+
+    @Inject(SETTINGS_PROVIDER)
+    private readonly settingsStore: () => SettingsStore,
   ) {}
+
+  /**
+   * Retrieves the item SKU feature accessibility.
+   * @returns {Promise<{ enabled: boolean; required: boolean }>}
+   */
+  private async getItemSkuSettings(): Promise<{
+    enabled: boolean;
+    required: boolean;
+  }> {
+    const settingsStore = await this.settingsStore();
+    const enabled = Boolean(
+      settingsStore.get(
+        { group: 'items', key: ITEM_SKU_ENABLED_SETTING },
+        false,
+      ),
+    );
+
+    return {
+      enabled,
+      required:
+        enabled &&
+        Boolean(
+          settingsStore.get(
+            { group: 'items', key: ITEM_SKU_REQUIRED_SETTING },
+            false,
+          ),
+        ),
+    };
+  }
 
   /**
    * Retrieve resource model object.
@@ -79,6 +118,7 @@ export class ResourceService {
       await this.branchesSettings.isMultiBranchesActive();
     const isMultiWarehousesEnabled =
       await this.warehousesSettings.isMultiWarehousesActive();
+    const itemSkuSettings = await this.getItemSkuSettings();
 
     return pickBy(fields, (field) => {
       if (
@@ -90,6 +130,12 @@ export class ResourceService {
       if (
         !isMultiFeaturesEnabled &&
         field.features?.includes(Features.BRANCHES)
+      ) {
+        return false;
+      }
+      if (
+        !itemSkuSettings.enabled &&
+        field.features?.includes(ITEM_SKU_FEATURE)
       ) {
         return false;
       }
@@ -206,10 +252,18 @@ export class ResourceService {
   }> {
     const meta = this.getResourceMeta(modelName);
     const filteredFields = await this.filterSupportFeatures(meta.fields2);
-
-    return this.localizeFields(
+    const localizedFields = this.localizeFields(
       filteredFields as Record<string, IModelMetaField2>,
     );
+
+    // Mark the item SKU as required when the preference is enabled.
+    if (modelName === 'Item') {
+      const itemSkuSettings = await this.getItemSkuSettings();
+      if (itemSkuSettings.required && localizedFields.sku) {
+        localizedFields.sku = { ...localizedFields.sku, required: true };
+      }
+    }
+    return localizedFields;
   }
 
   /**

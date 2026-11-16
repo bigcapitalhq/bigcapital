@@ -5,7 +5,7 @@ import {
   ACCOUNT_TYPE,
 } from '@/constants/accounts';
 import { ServiceError } from './ServiceError';
-import { ERRORS } from './Items.constants';
+import { ERRORS, normalizeItemSku } from './Items.constants';
 import { Item } from './models/Item';
 import { Account } from '../Accounts/models/Account.model';
 import { TaxRateModel } from '../TaxRates/models/TaxRate.model';
@@ -15,6 +15,7 @@ import { AccountTransaction } from '../Accounts/models/AccountTransaction.model'
 import { InventoryAdjustment } from '../InventoryAdjutments/models/InventoryAdjustment';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
+import { ItemsSettingsService } from './ItemsSettings.service';
 
 @Injectable()
 export class ItemsValidators {
@@ -51,6 +52,8 @@ export class ItemsValidators {
     private inventoryAdjustmentEntryModel: TenantModelProxy<
       typeof InventoryAdjustment
     >,
+
+    private readonly itemsSettings: ItemsSettingsService,
   ) {}
 
   /**
@@ -77,6 +80,78 @@ export class ItemsValidators {
         ERRORS.ITEM_NAME_EXISTS,
         'The item name is already exist.',
       );
+    }
+  }
+
+  /**
+   * Validate whether the given item SKU already exists on the storage.
+   * SKUs are compared case-insensitively and blank values are ignored.
+   * @param {string|null|undefined} sku - Item SKU.
+   * @param {number} notItemId - Item id to exclude from the check.
+   * @return {Promise<void>}
+   */
+  public async validateItemSkuUniquiness(
+    sku?: string | null,
+    notItemId?: number,
+  ): Promise<void> {
+    const normalizedSku = normalizeItemSku(sku);
+
+    if (!normalizedSku) {
+      return;
+    }
+    const foundItems = await this.itemModel()
+      .query()
+      .onBuild((builder: any) => {
+        builder.whereRaw('LOWER(sku) = ?', [normalizedSku.toLowerCase()]);
+        if (notItemId) {
+          builder.whereNot('id', notItemId);
+        }
+      });
+
+    if (foundItems.length > 0) {
+      throw new ServiceError(
+        ERRORS.ITEM_SKU_EXISTS,
+        'The item SKU is already exist.',
+      );
+    }
+  }
+
+  /**
+   * Validates the item SKU against the SKU preferences and uniqueness.
+   * When the SKU feature is disabled, only an unchanged legacy SKU is allowed.
+   * When the SKU is required, blank values are rejected.
+   * @param {string|null|undefined} sku - Submitted SKU.
+   * @param {object} options - Validation options.
+   * @param {string|null} [options.oldSku] - Existing item SKU.
+   * @param {number} [options.notItemId] - Item id to exclude from uniqueness.
+   * @return {Promise<void>}
+   */
+  public async validateItemSku(
+    sku?: string | null,
+    options: { oldSku?: string | null; notItemId?: number } = {},
+  ): Promise<void> {
+    const hasSku = sku !== undefined;
+    const normalizedOldSku = normalizeItemSku(options.oldSku);
+    const normalizedSku = normalizeItemSku(hasSku ? sku : options.oldSku);
+    const { enabled, required } = await this.itemsSettings.getSkuSettings();
+
+    if (!enabled) {
+      if (hasSku && normalizedSku && normalizedSku !== normalizedOldSku) {
+        throw new ServiceError(
+          ERRORS.ITEM_SKU_FEATURE_NOT_ENABLED,
+          'The item SKU feature is not enabled.',
+        );
+      }
+      return;
+    }
+    if (required && !normalizedSku) {
+      throw new ServiceError(
+        ERRORS.ITEM_SKU_REQUIRED,
+        'The item SKU is required.',
+      );
+    }
+    if (hasSku && normalizedSku) {
+      await this.validateItemSkuUniquiness(normalizedSku, options.notItemId);
     }
   }
 

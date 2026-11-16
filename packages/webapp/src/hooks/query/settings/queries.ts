@@ -247,6 +247,23 @@ export function useSettingsItems(props?: GroupQueryOptions) {
   });
 }
 
+/**
+ * Retrieves the item SKU preferences. The requirement only applies when the
+ * SKU feature itself is enabled.
+ */
+export function useItemSkuSettings(): {
+  enabled: boolean;
+  required: boolean;
+} {
+  const { data: itemsSettings } = useSettingsItems();
+  const enabled = Boolean(itemsSettings?.skuEnabled);
+
+  return {
+    enabled,
+    required: enabled && Boolean(itemsSettings?.skuRequired),
+  };
+}
+
 export function useSettingsItemCategories(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({

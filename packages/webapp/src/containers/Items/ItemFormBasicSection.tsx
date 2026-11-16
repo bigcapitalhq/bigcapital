@@ -15,9 +15,12 @@ import {
   FInputGroup,
   Box,
 } from '@/components';
+import { useItemSkuSettings } from '@/hooks/query';
 
 export function ItemFormBasicSection() {
   const { isNewMode, item, itemsCategories } = useItemFormContext();
+  const { enabled: isSkuEnabled, required: isSkuRequired } =
+    useItemSkuSettings();
   const nameFieldRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -100,6 +103,19 @@ export function ItemFormBasicSection() {
       </FFormGroup>
 
       {/*----------- SKU ----------*/}
+      {isSkuEnabled && (
+        <FFormGroup
+          name={'sku'}
+          label={<T id={'item_sku'} />}
+          labelInfo={isSkuRequired ? <FieldRequiredHint /> : null}
+          inline={true}
+          fastField
+        >
+          <FInputGroup name={'sku'} fastField fill />
+        </FFormGroup>
+      )}
+
+      {/*----------- Item code ----------*/}
       <FFormGroup
         name={'code'}
         label={<T id={'item_code'} />}

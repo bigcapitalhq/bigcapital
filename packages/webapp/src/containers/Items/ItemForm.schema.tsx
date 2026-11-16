@@ -6,78 +6,84 @@ import type { ItemFormValues } from './types';
 import type { Item } from '@bigcapital/sdk-ts';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
-const Schema = Yup.object().shape({
-  active: Yup.boolean(),
-  name: Yup.string()
-    .required()
-    .min(0)
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('item_name_')),
-  type: Yup.string()
-    .trim()
-    .required()
-    .min(0)
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('item_type_')),
-  code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
-  reorderPoint: Yup.number()
-    .transform((value, originalValue) =>
-      originalValue === '' ||
-      originalValue === null ||
-      originalValue === undefined
-        ? null
-        : value,
-    )
-    .nullable()
-    .min(0)
-    .max(DATATYPES_LENGTH.DECIMAL_13_3)
-    .label(intl.get('reorder_point')),
-  unit: Yup.string()
-    .oneOf([...ITEM_UNITS])
-    .required()
-    .label(intl.get('item_unit')),
-  costPrice: Yup.number()
-    .min(0)
-    .max(DATATYPES_LENGTH.DECIMAL_13_3)
-    .when(['purchasable'], {
-      is: true,
-      then: Yup.number().required().label(intl.get('cost_price_')),
-      otherwise: Yup.number().nullable(true),
-    }),
-  sellPrice: Yup.number()
-    .min(0)
-    .max(DATATYPES_LENGTH.DECIMAL_13_3)
-    .when(['sellable'], {
-      is: true,
-      then: Yup.number().required().label(intl.get('sell_price_')),
-      otherwise: Yup.number().nullable(true),
-    }),
-  costAccountId: Yup.number()
-    .when(['purchasable'], {
-      is: true,
-      then: Yup.number().required(),
-      otherwise: Yup.number().nullable(true),
-    })
-    .label(intl.get('cost_account_id')),
-  sellAccountId: Yup.number()
-    .when(['sellable'], {
-      is: true,
-      then: Yup.number().required(),
-      otherwise: Yup.number().nullable(),
-    })
-    .label(intl.get('sell_account_id')),
-  inventoryAccountId: Yup.number()
-    .when(['type'], {
-      is: (value: unknown) => value === 'inventory',
-      then: Yup.number().required(),
-      otherwise: Yup.number().nullable(),
-    })
-    .label(intl.get('inventory_account')),
-  categoryId: Yup.number().positive().nullable(),
-  stock: Yup.string() || Yup.boolean(),
-  sellable: Yup.boolean().required(),
-  purchasable: Yup.boolean().required(),
-});
+const baseSkuSchema = Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING);
+
+const buildSchema = (skuRequired: boolean) =>
+  Yup.object().shape({
+    active: Yup.boolean(),
+    name: Yup.string()
+      .required()
+      .min(0)
+      .max(DATATYPES_LENGTH.STRING)
+      .label(intl.get('item_name_')),
+    type: Yup.string()
+      .trim()
+      .required()
+      .min(0)
+      .max(DATATYPES_LENGTH.STRING)
+      .label(intl.get('item_type_')),
+    code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
+    sku: skuRequired
+      ? baseSkuSchema.required().label(intl.get('item_sku'))
+      : baseSkuSchema,
+    reorderPoint: Yup.number()
+      .transform((value, originalValue) =>
+        originalValue === '' ||
+        originalValue === null ||
+        originalValue === undefined
+          ? null
+          : value,
+      )
+      .nullable()
+      .min(0)
+      .max(DATATYPES_LENGTH.DECIMAL_13_3)
+      .label(intl.get('reorder_point')),
+    unit: Yup.string()
+      .oneOf([...ITEM_UNITS])
+      .required()
+      .label(intl.get('item_unit')),
+    costPrice: Yup.number()
+      .min(0)
+      .max(DATATYPES_LENGTH.DECIMAL_13_3)
+      .when(['purchasable'], {
+        is: true,
+        then: Yup.number().required().label(intl.get('cost_price_')),
+        otherwise: Yup.number().nullable(true),
+      }),
+    sellPrice: Yup.number()
+      .min(0)
+      .max(DATATYPES_LENGTH.DECIMAL_13_3)
+      .when(['sellable'], {
+        is: true,
+        then: Yup.number().required().label(intl.get('sell_price_')),
+        otherwise: Yup.number().nullable(true),
+      }),
+    costAccountId: Yup.number()
+      .when(['purchasable'], {
+        is: true,
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(true),
+      })
+      .label(intl.get('cost_account_id')),
+    sellAccountId: Yup.number()
+      .when(['sellable'], {
+        is: true,
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(),
+      })
+      .label(intl.get('sell_account_id')),
+    inventoryAccountId: Yup.number()
+      .when(['type'], {
+        is: (value: unknown) => value === 'inventory',
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(),
+      })
+      .label(intl.get('inventory_account')),
+    categoryId: Yup.number().positive().nullable(),
+    stock: Yup.string() || Yup.boolean(),
+    sellable: Yup.boolean().required(),
+    purchasable: Yup.boolean().required(),
+  });
 
 export const transformItemFormData = (
   item: Partial<Item> | undefined,
@@ -86,11 +92,12 @@ export const transformItemFormData = (
   return {
     ...defaultValue,
     ...item,
+    sku: defaultTo(item?.sku, ''),
     sellable: !!defaultTo(item?.sellable, defaultValue.sellable),
     purchasable: !!defaultTo(item?.purchasable, defaultValue.purchasable),
     active: !!defaultTo(item?.active, defaultValue.active),
   };
 };
 
-export const CreateItemFormSchema = Schema;
-export const EditItemFormSchema = Schema;
+export const getItemFormSchema = (skuRequired = false) =>
+  buildSchema(skuRequired);

@@ -9,6 +9,7 @@ import { FormattedMessage as T } from '@/components';
 import { FMultiSelect, MultiSelect } from '@/components/Forms';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useItemSkuSettings } from '@/hooks/query';
 
 type ItemItemRenderer = ItemRenderer<ItemMultiSelectModel>;
 type ItemItemPredicate = ItemPredicate<ItemMultiSelectModel>;
@@ -38,40 +39,48 @@ const createNewItemFromQuery = (
 });
 
 // Filters items.
-const filterItemsPredicater: ItemItemPredicate = (
-  query: string,
-  item: ItemMultiSelectModel,
-  _index?: number,
-  exactMatch?: boolean,
-): boolean => {
-  const normalizedTitle = (item.name ?? '').toLowerCase();
-  const normalizedQuery = query.toLowerCase();
+const createFilterItemsPredicater =
+  (isSkuEnabled: boolean): ItemItemPredicate =>
+  (
+    query: string,
+    item: ItemMultiSelectModel,
+    _index?: number,
+    exactMatch?: boolean,
+  ): boolean => {
+    const normalizedTitle = (item.name ?? '').toLowerCase();
+    const normalizedQuery = query.toLowerCase();
 
-  if (exactMatch) {
-    return normalizedTitle === normalizedQuery;
-  }
-  return `${normalizedTitle} ${item.code ?? ''}`.indexOf(normalizedQuery) >= 0;
-};
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    }
+    return (
+      `${normalizedTitle} ${isSkuEnabled ? (item.sku ?? '') : ''} ${
+        item.code ?? ''
+      }`.indexOf(normalizedQuery) >= 0
+    );
+  };
 
 // Item renderer.
-const itemRenderer: ItemItemRenderer = (
-  item: ItemMultiSelectModel,
-  { handleClick, modifiers },
-): React.ReactElement | null => {
-  if (!modifiers.matchesPredicate) {
-    return null;
-  }
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      label={item.code}
-      key={item.id}
-      text={item.name}
-      onClick={handleClick}
-    />
-  );
-};
+const createItemRenderer =
+  (isSkuEnabled: boolean): ItemItemRenderer =>
+  (
+    item: ItemMultiSelectModel,
+    { handleClick, modifiers },
+  ): React.ReactElement | null => {
+    if (!modifiers.matchesPredicate) {
+      return null;
+    }
+    return (
+      <MenuItem
+        active={modifiers.active}
+        disabled={modifiers.disabled}
+        label={isSkuEnabled ? item.sku || item.code : item.code}
+        key={item.id}
+        text={item.name}
+        onClick={handleClick}
+      />
+    );
+  };
 
 export interface ItemMultiSelectModel
   extends Partial<Item>,
@@ -120,6 +129,8 @@ function withItemsMultiSelectLogic<C extends ComponentType<any>>(
     ...rest
   }: ItemsMultiSelectOwnProps &
     Omit<ComponentProps<C>, ProvidedMultiSelectProps>) {
+    const { enabled: isSkuEnabled } = useItemSkuSettings();
+
     const filteredItems = useMemo(() => {
       return items.filter((item) => {
         if (sellable && !item.sellable) return false;
@@ -145,11 +156,20 @@ function withItemsMultiSelectLogic<C extends ComponentType<any>>(
       ? createNewItemFromQuery
       : undefined;
 
+    const itemRenderer = useMemo(
+      () => createItemRenderer(isSkuEnabled),
+      [isSkuEnabled],
+    );
+    const itemPredicate = useMemo(
+      () => createFilterItemsPredicater(isSkuEnabled),
+      [isSkuEnabled],
+    );
+
     const processedMultiSelectProps = {
       items: filteredItems,
       noResults: <MenuItem disabled={true} text={<T id={'no_results'} />} />,
       itemRenderer,
-      itemPredicate: filterItemsPredicater,
+      itemPredicate,
       onCreateItemSelect: handleCreateItemSelect,
       valueAccessor: 'id' as const,
       textAccessor: 'name' as const,

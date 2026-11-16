@@ -39,10 +39,15 @@ export const ItemUniversalSearchSelectAction = withDrawerActions(
 /**
  * Transformes items to search.
  */
-const transfromItemsToSearch = (item: ItemTableRow) => ({
+const transfromItemsToSearch = (
+  item: ItemTableRow,
+  { itemSkuEnabled = false }: { itemSkuEnabled?: boolean } = {},
+) => ({
   id: item.id,
   text: item.name,
-  subText: item.code,
+  subText: [itemSkuEnabled ? item.sku : null, item.code]
+    .filter(Boolean)
+    .join(' · '),
   label: item.typeFormatted,
   reference: item,
 });
@@ -50,11 +55,13 @@ const transfromItemsToSearch = (item: ItemTableRow) => ({
 /**
  * Binds universal search invoice configure.
  */
-export const universalSearchItemBind = () => ({
+export const universalSearchItemBind = (
+  options: { itemSkuEnabled?: boolean } = {},
+) => ({
   resourceType: RESOURCES_TYPES.ITEM,
   optionItemLabel: intl.get('items'),
   selectItemAction: ItemUniversalSearchSelectAction,
-  itemSelect: transfromItemsToSearch,
+  itemSelect: (item: ItemTableRow) => transfromItemsToSearch(item, options),
   permission: {
     ability: ItemAction.View,
     subject: AbilitySubject.Item,
