@@ -14,6 +14,29 @@ import { BillDefaultViews } from '../Bills.constants';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
 import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
 
+/**
+ * Bill total amount SQL expression that mirrors the `total` getter.
+ */
+const BILL_TOTAL_SQL = `(
+  COALESCE(AMOUNT, 0)
+  - CASE
+      WHEN DISCOUNT_TYPE = 'amount' THEN COALESCE(DISCOUNT, 0)
+      ELSE COALESCE(AMOUNT, 0) * (COALESCE(DISCOUNT, 0) / 100)
+    END
+  + COALESCE(ADJUSTMENT, 0)
+  + CASE WHEN IS_INCLUSIVE_TAX THEN 0 ELSE COALESCE(TAX_AMOUNT_WITHHELD, 0) END
+)`;
+
+/**
+ * Bill due amount SQL expression that mirrors the `dueAmount` getter.
+ */
+const BILL_DUE_AMOUNT_SQL = `GREATEST(
+  ${BILL_TOTAL_SQL}
+  - COALESCE(PAYMENT_AMOUNT, 0)
+  - COALESCE(CREDITED_AMOUNT, 0),
+  0
+)`;
+
 @InjectAttachable()
 @ExportableModel()
 @InjectModelMeta(BillMeta)
@@ -426,21 +449,26 @@ export class Bill extends TenantBaseModel {
           case 'draft':
             query.modify('draft');
             break;
+          case 'opened':
           case 'delivered':
-            query.modify('delivered');
+            query.modify('opened');
             break;
           case 'unpaid':
             query.modify('unpaid');
             break;
           case 'overdue':
           default:
+            query.modify('opened');
             query.modify('overdue');
+            query.whereRaw(`${BILL_DUE_AMOUNT_SQL} > 0`);
             break;
           case 'partially-paid':
-            query.modify('partiallyPaid');
+            query.whereRaw(`${BILL_DUE_AMOUNT_SQL} > 0`);
+            query.whereRaw(`${BILL_DUE_AMOUNT_SQL} < ${BILL_TOTAL_SQL}`);
             break;
           case 'paid':
-            query.modify('paid');
+            query.modify('opened');
+            query.whereRaw(`${BILL_DUE_AMOUNT_SQL} = 0`);
             break;
         }
       },

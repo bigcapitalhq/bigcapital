@@ -162,13 +162,9 @@ export class Customer extends TenantBaseModel {
        * Filters the customers that have overdue invoices.
        */
       overdue(query) {
-        query.select(
-          '*',
-          Customer.relatedQuery('overDueInvoices', query.knex())
-            .count()
-            .as('countOverdue'),
+        query.whereExists(
+          Customer.relatedQuery('overdueInvoices', query.knex()),
         );
-        query.having('countOverdue', '>', 0);
       },
 
       /**
@@ -183,32 +179,23 @@ export class Customer extends TenantBaseModel {
   /**
    * Relationship mapping.
    */
-  // static get relationMappings() {
-  //   const SaleInvoice = require('models/SaleInvoice');
+  static get relationMappings() {
+    const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
 
-  //   return {
-  //     salesInvoices: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: SaleInvoice.default,
-  //       join: {
-  //         from: 'contacts.id',
-  //         to: 'sales_invoices.customerId',
-  //       },
-  //     },
-
-  //     overDueInvoices: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: SaleInvoice.default,
-  //       join: {
-  //         from: 'contacts.id',
-  //         to: 'sales_invoices.customerId',
-  //       },
-  //       filter: (query) => {
-  //         query.modify('overdue');
-  //       },
-  //     },
-  //   };
-  // }
+    return {
+      overdueInvoices: {
+        relation: Model.HasManyRelation,
+        modelClass: SaleInvoice,
+        join: {
+          from: 'contacts.id',
+          to: 'sales_invoices.customerId',
+        },
+        filter: (query) => {
+          query.modify('overdue');
+        },
+      },
+    };
+  }
 
   /**
    * Model search attributes.
