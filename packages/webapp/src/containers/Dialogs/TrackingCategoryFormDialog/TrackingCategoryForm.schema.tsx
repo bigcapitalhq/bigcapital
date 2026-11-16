@@ -31,7 +31,11 @@ export const TrackingCategoryFormSchema = Yup.object().shape({
       intl.get('tracking_categories.error.option_name_exists'),
       (options) => {
         const names = (options ?? [])
-          .map((option) => option?.name?.trim().toLowerCase())
+          .map((option) =>
+            (option as { name?: string } | undefined)?.name
+              ?.trim()
+              .toLowerCase(),
+          )
           .filter(Boolean);
 
         return new Set(names).size === names.length;

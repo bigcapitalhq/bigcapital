@@ -5,9 +5,11 @@ import {
   type CallHandler,
   Optional,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { mapKeysDeep } from '@/utils/deepdash';
+import { SKIP_SERIALIZE } from '../decorators/SkipSerialize.decorator';
 
 export function camelToSnake<T = any>(value: T): T {
   if (value === null || value === undefined) {
@@ -56,12 +58,23 @@ export const DEFAULT_STRATEGY = {
 
 @Injectable()
 export class SerializeInterceptor implements NestInterceptor<any, any> {
-  constructor(@Optional() readonly strategy = DEFAULT_STRATEGY) {}
+  constructor(
+    private readonly reflector: Reflector,
+    @Optional() readonly strategy = DEFAULT_STRATEGY,
+  ) {}
 
   intercept(
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Observable<any> {
+    const skipSerialize = this.reflector.getAllAndOverride<boolean>(
+      SKIP_SERIALIZE,
+      [context.getHandler(), context.getClass()],
+    );
+    if (skipSerialize) {
+      return next.handle();
+    }
+
     const request = context.switchToHttp().getRequest();
 
     // Transform both body and query parameters
