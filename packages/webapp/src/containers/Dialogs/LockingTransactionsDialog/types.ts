@@ -8,6 +8,8 @@ export interface LockingTransactionsFormValues {
 export type LockingTransactionsDialogPayload = {
   module?: string;
   isEnabled?: boolean;
+  /** Prefills the lock date, e.g. the end of the month being locked. */
+  lockToDate?: string;
 };
 
 export type LockingTransactionsContextValue = {
@@ -15,6 +17,7 @@ export type LockingTransactionsContextValue = {
   moduleName: string;
   transactionLocking: unknown;
   isEnabled: boolean;
+  lockToDate?: string;
   createLockingTransactionMutate: (
     values: Record<string, unknown>,
   ) => Promise<unknown>;

@@ -1,4 +1,5 @@
 import {
+  fetchGeneralLedgerJson,
   fetchGeneralLedgerTable,
   fetchGeneralLedgerXlsx,
   fetchGeneralLedgerCsv,
@@ -15,6 +16,8 @@ import { useApiFetcher } from '../../useRequest';
 import { useFetcherPdf } from '../../useRequestPdf';
 import { financialReportsKeys } from './query-keys';
 import type {
+  GeneralLedgerJsonQuery,
+  GeneralLedgerJsonResponse,
   GeneralLedgerTableQuery,
   GeneralLedgerTableResponse,
   GeneralLedgerXlsxQuery,
@@ -34,6 +37,22 @@ export function useGeneralLedgerSheet(
     ...props,
     queryKey: financialReportsKeys.generalLedger(query),
     queryFn: () => fetchGeneralLedgerTable(fetcher, query),
+  });
+}
+
+export function useGeneralLedgerJson(
+  query: GeneralLedgerJsonQuery,
+  props?: Omit<
+    UseQueryOptions<GeneralLedgerJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    // distinct from the table key: same query, different response shape.
+    queryKey: [...financialReportsKeys.generalLedger(query), 'json'],
+    queryFn: () => fetchGeneralLedgerJson(fetcher, query),
   });
 }
 

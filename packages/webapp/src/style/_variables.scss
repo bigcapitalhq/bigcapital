@@ -40,11 +40,11 @@ $ns: bp4;
   --color-light-gray4: #edeff2;
   --color-light-gray5: #f6f7f9;
 
-  --color-gray1: #5F6B7C;
+  --color-gray1: #5f6b7c;
   --color-gray2: #738091;
-  --color-gray3: #8F99A8;
-  --color-gray4: #ABB3BF;
-  --color-gray5: #C5CBD3;
+  --color-gray3: #8f99a8;
+  --color-gray4: #abb3bf;
+  --color-gray5: #c5cbd3;
 
   --color-white: #fff;
   --color-black: #000;
@@ -76,9 +76,9 @@ $ns: bp4;
   // Input
   --color-ui-input-border: #ced4da;
   --color-ui-input-background: #fff;
-  
+
   --color-ui-input-group-prepend-background: #e9ecef;
-  --color-ui-input-group-prepend-color: #495057; 
+  --color-ui-input-group-prepend-color: #495057;
   --color-ui-input-group-prepend-border: #ced4da;
 
   --color-ui-html-select-background: #fff;
@@ -131,7 +131,8 @@ $ns: bp4;
   --color-datatable-no-results-text: #777;
   --color-datatable-caret: #b5b5b5;
   --color-datatable-caret-hover: #7d8593;
-  --color-datatable-checkbox-border: #C5CBD3;
+  --color-datatable-checkbox-border: #c5cbd3;
+  --color-datatable-sticky-background: rgba(255, 255, 255, 0.25);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: #2c3a5d;
@@ -145,8 +146,8 @@ $ns: bp4;
   --color-sidebar-background: #01115e;
   --color-sidebar-text: #fff;
   --color-sidebar-scrollbars-background: rgba(255, 255, 255, 0.25);
-  
-  // Sidebar - Items  
+
+  // Sidebar - Items
   --color-sidebar-menu-item-text: rgb(255, 255, 255);
   --color-sidebar-menu-item-hover-background: rgba(255, 255, 255, 0.2);
   --color-sidebar-menu-item-text-hover: rgb(255, 255, 255);
@@ -211,7 +212,7 @@ $ns: bp4;
   --color-sidebar-preferences-background: #eaeef6;
   --color-sidebar-preferences-border: #c6d0d9;
 
-  // Preferences - Sidebar. 
+  // Preferences - Sidebar.
   --color-sidebar-preferences-item-background: transparent;
   --color-sidebar-preferences-item-text: #333;
 
@@ -283,14 +284,14 @@ $ns: bp4;
   // Aside
   --color-aside-background: #fff;
   --color-aside-title-background: #fff;
-  --color-aside-divider: #E1E2E9;
+  --color-aside-divider: #e1e2e9;
 
   // App shell
   --color-app-shell-divider: rgba(17, 20, 24, 0.15);
 
   // Select
   --color-select-button-background: #fff;
-  --color-select-button-border: #fff; 
+  --color-select-button-border: #fff;
 
   // Stepper
   --color-stepper-step-title-text: #738091;
@@ -300,7 +301,7 @@ $ns: bp4;
   --color-stepper-step-background: #9e9e9e;
   --color-stepper-step-active-background: rgb(0, 82, 204);
   --color-stepper-separator: #c5cbd3;
-  --color-stepper-step-text: #fff;  
+  --color-stepper-step-text: #fff;
 
   // Drawer
   --color-drawer-border-left: var(--color-primary);
@@ -316,14 +317,47 @@ $ns: bp4;
   --color-skeleton-border-start: rgba(206, 217, 224, 0.3);
   --color-skeleton-border-end: rgba(92, 112, 128, 0.3);
   --color-skeleton-border-radius: 2px;
+
+  // Appearance switch (avatar menu)
+  --color-appearance-switch-text: var(--color-gray1);
+  --color-appearance-switch-hover-background: rgba(143, 153, 168, 0.15);
+  --color-appearance-switch-active-background: var(--color-light-gray3);
+  --color-appearance-switch-active-text: #1c2127;
+
+  // Homepage overview surfaces and chart marks.
+  --color-overview-panel-background: #fff;
+  --color-overview-raised-background: #eef0f4;
+  --color-overview-hairline: #e2e5ec;
+  --color-overview-hairline-strong: #c3c9d6;
+  --color-overview-highlight: transparent;
+  --color-overview-text: #14181f;
+  --color-overview-text-secondary: #3a4254;
+  --color-overview-text-muted: #5a6478;
+  --color-overview-text-faint: #6b7487;
+  --color-overview-accent: #3f4fc4;
+  --color-overview-on-accent: #fff;
+  --color-overview-history: #7293ca; // oklch(0.66 0.09 260)
+  --color-overview-companion: #34507f; // darker history, the second bar of a pair: 8:1 on white (a lighter blue cannot reach 3:1)
+  --color-overview-prior: #7a849a; // 3.75:1 on white, a primary signal
+  --color-overview-baseline: #c3c9d6;
+
+  // Severity ladder: one meaning per color, used pure on text, dots, bars and
+  // outlines, never mixed into a grey background.
+  --color-severity-task: var(--color-overview-accent); // an action you can take
+  --color-severity-risk: #d16e00; // oklch(0.64 0.16 58), money at risk
+  // amber dark enough for text on white turns brown, so risk text stays ink.
+  --color-severity-risk-text: var(--color-overview-text);
+  --color-severity-plan: var(--color-overview-text-muted); // plan ahead
+  --color-severity-done: #0b764d; // oklch(0.50 0.11 160)
+  --color-severity-critical: #be2323; // oklch(0.52 0.19 27), reserved
 }
 
 $pt-popover-box-shadow:
   0 0 0 1px rgba(16, 22, 26, 0.02),
   0 2px 4px rgba(16, 22, 26, 0.1),
   0 8px 24px rgba(16, 22, 26, 0.1);
-  
-body.bp4-dark  {
+
+body.bp4-dark {
   --color-primary: #8abbff;
   --color-danger: rgb(213, 103, 103);
 
@@ -390,16 +424,16 @@ body.bp4-dark  {
   // Input
   --color-ui-input-border: rgba(255, 255, 255, 0.15);
   --color-ui-input-background: rgba(17, 20, 24, 0.3);
-  
+
   --color-ui-input-group-prepend-background: var(--color-dark-gray3);
-  --color-ui-input-group-prepend-color: rgba(255, 255, 255, 0.6); 
+  --color-ui-input-group-prepend-color: rgba(255, 255, 255, 0.6);
   --color-ui-input-group-prepend-border: rgba(255, 255, 255, 0.15);
 
   --color-ui-html-select-background: #fff;
   --color-ui-html-select-border: #ced4da;
 
   --color-ui-menu-select-item-hover-background: #edeff2;
-  --color-ui-menu-select-item-hover-background: rgba(143, 153, 168, .15);
+  --color-ui-menu-select-item-hover-background: rgba(143, 153, 168, 0.15);
   --color-ui-menu-select-item-active-background: var(--color-primary);
 
   // App
@@ -452,6 +486,8 @@ body.bp4-dark  {
   --color-datatable-caret: rgba(255, 255, 255, 0.25);
   --color-datatable-caret-hover: rgba(255, 255, 255, 0.25);
   --color-datatable-checkbox-border: rgba(255, 255, 255, 0.3);
+  // Sticky header and cells: translucent under a blur.
+  --color-datatable-sticky-background: rgba(28, 33, 39, 0.6);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: var(--color-light-gray4);
@@ -466,7 +502,7 @@ body.bp4-dark  {
   --color-sidebar-text: var(--color-white);
   --color-sidebar-scrollbars-background: rgba(255, 255, 255, 0.25);
 
-  // Sidebar - Items  
+  // Sidebar - Items
   --color-sidebar-menu-item-text: #ffff;
   --color-sidebar-menu-item-hover-background: var(--color-dark-gray4);
   --color-sidebar-menu-item-text-hover: #fff;
@@ -538,7 +574,7 @@ body.bp4-dark  {
   --color-sidebar-preferences-background: var(--color-dark-gray1);
   --color-sidebar-preferences-border: rgba(255, 255, 255, 0.15);
 
-  // Preferences - Sidebar. 
+  // Preferences - Sidebar.
   --color-sidebar-preferences-item-background: transparent;
   --color-sidebar-preferences-item-text: #fff;
 
@@ -618,7 +654,7 @@ body.bp4-dark  {
   --color-aside-title-background: #fff;
   --color-aside-title-background: var(--color-dark-gray1);
 
-  --color-aside-divider: #E1E2E9;
+  --color-aside-divider: #e1e2e9;
   --color-aside-divider: var(--color-dark-gray5);
 
   // App shell
@@ -626,7 +662,7 @@ body.bp4-dark  {
 
   // Select
   --color-select-button-background: #fff;
-  --color-select-button-border: #fff; 
+  --color-select-button-border: #fff;
 
   // Stepper
   --color-stepper-step-title-text: var(--color-light-gray1);
@@ -636,7 +672,7 @@ body.bp4-dark  {
   --color-stepper-step-background: var(--color-dark-gray4);
   --color-stepper-step-active-background: var(--color-dark-gray5);
   --color-stepper-separator: var(--color-dark-gray4);
-  --color-stepper-step-text: #fff;  
+  --color-stepper-step-text: #fff;
 
   // Drawer
   --color-drawer-border-left: transparent;
@@ -652,6 +688,37 @@ body.bp4-dark  {
   --color-skeleton-border-start: rgba(255, 255, 255, 0.1);
   --color-skeleton-border-end: rgba(255, 255, 255, 0.2);
   --color-skeleton-border-radius: 2px;
+
+  // Appearance switch (avatar menu)
+  --color-appearance-switch-text: var(--color-muted-text);
+  --color-appearance-switch-hover-background: rgba(255, 255, 255, 0.06);
+  --color-appearance-switch-active-background: rgba(255, 255, 255, 0.14);
+  --color-appearance-switch-active-text: var(--color-light-gray5);
+
+  // Homepage overview surfaces and chart marks, from the existing dark palette.
+  --color-overview-panel-background: var(--color-dark-gray3);
+  --color-overview-raised-background: var(--color-dark-gray4);
+  --color-overview-hairline: var(--color-dark-gray5);
+  --color-overview-hairline-strong: rgba(255, 255, 255, 0.18);
+  --color-overview-highlight: transparent;
+  --color-overview-text: var(--color-light-gray5);
+  --color-overview-text-secondary: var(--color-light-gray2);
+  --color-overview-text-muted: var(--color-gray4);
+  --color-overview-text-faint: #a0a9b6; // 5.27:1 on panel; it carries text
+  --color-overview-accent: var(--color-primary);
+  --color-overview-on-accent: var(--color-dark-gray1);
+  --color-overview-history: #4c90f0; // Blueprint blue4, >= 3:1 on dark-gray3
+  --color-overview-companion: #a8bde8; // lighter history: the second bar of a pair
+  --color-overview-prior: var(--color-gray3);
+  --color-overview-baseline: var(--color-dark-gray5);
+
+  // Severity ladder (see the light theme block).
+  --color-severity-task: var(--color-overview-accent);
+  --color-severity-risk: #f8b65d; // apricot: money at risk, never mixed into grey
+  --color-severity-risk-text: var(--color-severity-risk);
+  --color-severity-plan: var(--color-overview-text-muted);
+  --color-severity-done: var(--color-green-100);
+  --color-severity-critical: var(--color-red-200);
 }
 
 $pt-popover-box-shadow:
@@ -726,4 +793,3 @@ $control-box-shadow: inset 0 0 0 1px #666 !default;
 // Drawer
 $drawer-background-color: $white !default;
 $dark-drawer-background-color: $dark-gray2 !default;
-

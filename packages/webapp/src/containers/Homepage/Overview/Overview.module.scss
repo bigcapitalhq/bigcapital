@@ -1,0 +1,1036 @@
+// Homepage overview. Colors come only from the overview and severity tokens
+// in `style/_variables.scss`, so light and dark are handled there.
+
+.root {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+  padding: 18px 24px 32px;
+  color: var(--color-overview-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.card {
+  background: var(--color-overview-panel-background);
+  border: 1px solid var(--color-overview-hairline);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 var(--color-overview-highlight),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+// ---- status sentence ----
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.sentence {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin: 0;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  color: var(--color-overview-text-secondary);
+
+  b {
+    color: var(--color-overview-text);
+    font-weight: 600;
+  }
+}
+
+.sentenceDot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translateY(-2px);
+  background: var(--color-severity-done);
+
+  &.isTask {
+    background: var(--color-severity-task);
+  }
+}
+
+.heroSkeleton {
+  width: 520px;
+  max-width: 100%;
+  height: 30px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-inline-start: 6px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--color-overview-raised-background);
+  color: var(--color-overview-text);
+  font-size: 11px;
+  line-height: 1;
+}
+
+// ---- month strip ----
+.stripHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--color-overview-text-muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+
+  > span {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+}
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.month {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 10px 9px;
+  border: 1px solid var(--color-overview-hairline);
+  border-radius: 8px;
+  background: var(--color-overview-panel-background);
+  color: var(--color-overview-text-muted);
+  font-size: 12px;
+  outline: none;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--color-overview-hairline-strong);
+    color: var(--color-overview-text);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-overview-accent);
+  }
+
+  &.isEnded {
+    border-color: var(--color-severity-task);
+    box-shadow: inset 0 0 0 0.5px var(--color-severity-task);
+    color: var(--color-overview-text);
+    font-weight: 600;
+  }
+
+  &.isInProgress {
+    border-style: dashed;
+  }
+}
+
+.monthRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.glyph {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.glyphLocked {
+  color: var(--color-severity-done);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 9px;
+}
+
+.glyphEnded {
+  // half filled: the month is over but not locked yet.
+  background: conic-gradient(var(--color-severity-task) 0 50%, transparent 0);
+  box-shadow: inset 0 0 0 1.5px var(--color-severity-task);
+}
+
+.glyphInProgress {
+  box-shadow: inset 0 0 0 1.5px var(--color-overview-text-faint);
+}
+
+.netBar {
+  position: relative;
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-overview-hairline);
+
+  i {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-radius: 2px;
+    background: var(--color-overview-history);
+  }
+
+  i.isLoss {
+    background: var(--color-overview-prior);
+  }
+}
+
+.month.isInProgress .netBar i {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-overview-history) 0 2px,
+    transparent 2px 4px
+  );
+}
+
+.monthTip {
+  bottom: calc(100% + 6px);
+  inset-inline-start: 50%;
+}
+
+// ---- tiles ----
+// tiles are links; the doubled selector outranks Blueprint's `.bp4-dark a`.
+.tiles .tile {
+  &,
+  &:hover {
+    color: var(--color-overview-text);
+    text-decoration: none;
+  }
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  // a hidden panel (no tax rates, no permission) leaves no hole.
+  grid-auto-flow: row dense;
+  gap: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 700px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tile {
+  composes: card;
+  container-type: inline-size;
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  padding: 16px 16px 14px;
+
+  &:hover {
+    border-color: var(--color-overview-hairline-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-overview-accent);
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: scale(0.996);
+  }
+}
+
+.tileHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 13px;
+  color: var(--color-overview-text-muted);
+}
+
+.tileTitle {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.period {
+  font-size: 12px;
+  color: var(--color-overview-text-faint);
+}
+
+.flag {
+  // the chip wraps under the title rather than colliding with it.
+  white-space: nowrap;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.flagRisk {
+  color: var(--color-severity-risk-text);
+  font-weight: 600;
+
+  .dot {
+    background: var(--color-severity-risk);
+  }
+}
+
+.dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.value {
+  margin-top: 6px;
+  // steps down in narrow tiles so long values (JPY, 10+ digits) fit.
+  font-size: clamp(22px, 8cqi, 30px);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-feature-settings: 'tnum', 'lnum';
+}
+
+// narrow three-column tiles near the 1100px breakpoint: long values step down.
+
+.currencyCode {
+  // an ISO code is three glyphs to a symbol's one: smaller and bolder so it
+  // reads as a label, with its cap height level with the digit tops.
+  margin-inline-end: 3px;
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  vertical-align: 0.73em;
+  color: var(--color-overview-text-muted);
+}
+
+.currency {
+  margin-right: 2px;
+  font-size: 0.55em;
+  font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: 0.7em;
+  color: var(--color-overview-text-muted);
+}
+
+.meta {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--color-overview-text-muted);
+
+  b {
+    color: var(--color-overview-text-secondary);
+    font-weight: 600;
+  }
+}
+
+.tileError {
+  composes: card;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 16px;
+  color: var(--color-overview-text-muted);
+}
+
+.skeletonLine {
+  height: 14px;
+  margin-top: 10px;
+}
+
+.skeletonValue {
+  width: 60%;
+  height: 34px;
+  margin-top: 10px;
+}
+
+.skeletonChart {
+  height: 64px;
+  margin-top: 14px;
+}
+
+// ---- charts ----
+.chart {
+  position: relative;
+
+  // time flows in reading direction, like the app's report columns in RTL.
+  :global([dir='rtl']) & svg {
+    transform: scaleX(-1);
+  }
+
+  min-height: 64px;
+  margin-top: 14px;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 64px;
+    overflow: visible;
+  }
+}
+
+.bar {
+  fill: var(--color-overview-history);
+}
+
+.barCompanion {
+  fill: var(--color-overview-companion);
+}
+
+.hatchHistory {
+  stroke: var(--color-overview-history);
+  stroke-width: 1.5;
+}
+
+.hatchCompanion {
+  stroke: var(--color-overview-companion);
+  stroke-width: 1.5;
+}
+
+// month names under a paired chart, one per pair, in reading order.
+.monthLabels {
+  display: flex;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--color-overview-text-faint);
+
+  span {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+  }
+}
+
+.swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-inline-end: 5px;
+  border-radius: 2px;
+  background: var(--color-overview-history);
+}
+
+.swatchCompanion {
+  background: var(--color-overview-companion);
+}
+
+// two lead numbers side by side, wrapping in a narrow tile.
+.lead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 32px;
+}
+
+.leadItem {
+  min-width: 0;
+}
+
+.barLatest {
+  fill: var(--color-overview-accent);
+}
+
+.hatch {
+  stroke: var(--color-overview-accent);
+  stroke-width: 1.5;
+}
+
+.priorGhost {
+  fill: var(--color-overview-prior);
+  fill-opacity: 0.2;
+}
+
+.priorLine {
+  fill: none;
+  stroke: var(--color-overview-prior);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.baseline {
+  stroke: var(--color-overview-baseline);
+}
+
+.line {
+  fill: none;
+  stroke: var(--color-overview-accent);
+  stroke-width: 2;
+}
+
+.areaStart {
+  stop-color: var(--color-overview-accent);
+  stop-opacity: 0.16;
+}
+
+.areaEnd {
+  stop-color: var(--color-overview-accent);
+  stop-opacity: 0;
+}
+
+.lineEnd {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin-inline-start: -4px;
+  border-radius: 50%;
+  background: var(--color-overview-accent);
+  box-shadow: 0 0 0 2px var(--color-overview-panel-background);
+}
+
+.hit {
+  // a transparent target only; the visible hover is .hoverBand behind marks.
+  fill: transparent;
+}
+
+.hitLink {
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    stroke: var(--color-overview-accent);
+    stroke-width: 2px;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.hoverBand {
+  fill: var(--color-overview-text);
+  fill-opacity: 0.06;
+}
+
+.tip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  z-index: 2;
+  padding: 6px 9px;
+  border: 1px solid var(--color-overview-hairline-strong);
+  border-radius: 7px;
+  background: var(--color-overview-raised-background);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  color: var(--color-overview-text);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+
+  :global([dir='rtl']) & {
+    transform: translateX(50%);
+  }
+
+  b {
+    font-weight: 600;
+  }
+
+  span {
+    color: var(--color-overview-text-muted);
+  }
+}
+
+.tipBody {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 14px;
+}
+
+// higher specificity than `.tip span`, which mutes every span by default.
+.tip .tipStrong {
+  color: var(--color-overview-text);
+  font-weight: 600;
+}
+
+.tip .tipMuted {
+  color: var(--color-overview-text-muted);
+}
+
+.tipValue {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.tip .tipNote {
+  grid-column: 1 / -1;
+  color: var(--color-overview-text-muted);
+}
+
+.age {
+  display: flex;
+  gap: 3px;
+  height: 12px;
+  margin-top: 12px;
+}
+
+.ageSegment {
+  border-radius: 3px;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+}
+
+.tone-history {
+  background: var(--color-overview-history);
+}
+
+.tone-risk {
+  background: var(--color-severity-risk);
+}
+
+.tone-risk-hatched {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-severity-risk) 0 2px,
+    transparent 2px 5px
+  );
+}
+
+.ageLabels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--color-overview-text-muted);
+
+  span {
+    min-width: 0;
+  }
+
+  b {
+    display: block;
+    color: var(--color-overview-text);
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+}
+
+.ageZero,
+.ageZero b {
+  color: var(--color-overview-text-faint);
+  font-weight: 400;
+}
+
+.ageRisk b {
+  color: var(--color-severity-risk-text);
+}
+
+.rank {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.rankRow {
+  display: grid;
+  // the name keeps its room; a long amount shrinks the bar instead.
+  grid-template-columns: minmax(96px, 40%) minmax(24px, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-overview-text-muted);
+}
+
+.rankLabel {
+  // with dir="auto", an English name in an RTL page truncates at its end.
+  unicode-bidi: plaintext;
+  text-align: start;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rankTrack {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-overview-raised-background);
+
+  i {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-radius: 3px;
+    background: var(--color-overview-history);
+  }
+}
+
+.rankMore {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-overview-text-faint);
+}
+
+.rankValue {
+  text-align: end;
+  color: var(--color-overview-text-secondary);
+}
+
+// ---- P&L summary ----
+.statement {
+  composes: card;
+  padding: 0 16px 6px;
+  overflow-x: auto;
+}
+
+.statementHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 44px;
+  border-bottom: 1px solid var(--color-overview-hairline);
+  font-weight: 500;
+}
+
+.table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  // stable columns across locales; long headers wrap instead of widening.
+  table-layout: fixed;
+
+  th:first-child {
+    width: 26%;
+    padding-inline-start: 0;
+  }
+
+  th {
+    padding: 9px 0 5px;
+    padding-inline-start: 8px;
+    vertical-align: bottom;
+    color: var(--color-overview-text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    text-align: end;
+  }
+
+  td {
+    height: 32px;
+    border-bottom: 1px solid var(--color-overview-hairline);
+    text-align: end;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: start;
+  }
+
+  tbody tr:hover td {
+    background: var(--color-overview-highlight);
+  }
+}
+
+.colToDate {
+  // the month in progress is shaded so it is never read as a full month.
+  background: var(--color-overview-highlight);
+  color: var(--color-overview-text-muted);
+}
+
+.colYear {
+  padding-inline-start: 16px;
+  color: var(--color-overview-text);
+  font-weight: 600;
+}
+
+.colVs {
+  padding-inline-start: 20px;
+  color: var(--color-overview-text-muted);
+  font-size: 12px;
+}
+
+.rowGroup td {
+  height: 30px;
+  padding-top: 10px;
+  border-bottom: 0;
+  color: var(--color-overview-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rowGross td {
+  border-top: 1px solid var(--color-overview-hairline-strong);
+  font-weight: 600;
+}
+
+.rowNet td {
+  height: 38px;
+  border-top: 1px solid var(--color-overview-hairline-strong);
+  border-bottom: 3px double var(--color-overview-hairline-strong);
+  font-weight: 700;
+}
+
+// ---- empty state ----
+.empty {
+  composes: card;
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding: 28px;
+
+  h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  p {
+    max-width: 560px;
+    margin: 0;
+    color: var(--color-overview-text-muted);
+  }
+}
+
+// ---- panels drawer ----
+// narrow or wide, under the panel's name in the drawer.
+.sizeToggle {
+  margin-top: 6px;
+}
+
+.panelRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-overview-hairline);
+
+  small {
+    display: block;
+    color: var(--color-overview-text-muted);
+    font-size: 12px;
+  }
+
+  :global(.bp4-control) {
+    margin: 0 0 0 6px;
+  }
+}
+
+.drawerFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.drawerBody {
+  padding: 8px 18px;
+  overflow: auto;
+}
+
+// ---- tasks and wide tiles ----
+.tileWide {
+  grid-column: span 2;
+
+  @media (max-width: 700px) {
+    grid-column: auto;
+  }
+}
+
+.tile {
+  position: relative;
+}
+
+.footnote {
+  margin-top: 10px;
+  justify-self: end;
+  font-size: 10.5px;
+  color: var(--color-overview-text-faint);
+}
+
+.tasks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 26px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-overview-text-secondary);
+  font-size: 13px;
+}
+
+.taskLabel {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.dotTask {
+  background: var(--color-severity-task);
+  transform: translateY(-1px);
+}
+
+.dotRisk {
+  background: var(--color-severity-risk);
+  transform: translateY(-1px);
+}
+
+.tasksNarrow.tasksNarrow {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.tasksMore {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--color-overview-text-muted);
+}
+
+.tasksEmpty {
+  color: var(--color-overview-text-muted);
+}
+
+.tileCompact.tileCompact {
+  // first in place, as one full-width line: beside Cash it would leave the
+  // rest of its row empty under a short tile.
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  padding-block: 12px;
+}
+
+.goTo {
+  // U+203A is bidi-mirrored, so it already points the other way in RTL.
+  &::after {
+    content: ' \203a';
+  }
+}
+
+// ---- motion: one short pass on first paint; numbers never animate ----
+@media (prefers-reduced-motion: no-preference) {
+  .tile {
+    transition:
+      border-color 0.14s ease-out,
+      transform 0.1s ease-out;
+    animation: rise 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+    animation-delay: calc(var(--t, 0) * 30ms);
+  }
+
+  .line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 0.7s 0.1s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  }
+
+  .area,
+  .lineEnd {
+    animation: fade 0.4s 0.5s both;
+  }
+
+  .bar {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: grow 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+    animation-delay: calc(0.1s + var(--i, 0) * 15ms);
+  }
+
+  .priorGhost,
+  .priorLine {
+    animation: fade 0.35s ease-out both;
+  }
+
+  .tip {
+    animation: fade 0.12s ease-out;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+// ---- action bar segmented controls ----
+// Blueprint's default and active button fills read inverted on these
+// surfaces, so only the chosen segment is filled, as in the appearance switch.
+// The repeated class outranks Blueprint's `.bp4-dark .bp4-button` rules.
+.segmented.segmented.segmented {
+  padding: 2px;
+  border: 1px solid var(--color-overview-hairline-strong);
+  border-radius: 7px;
+
+  :global(.bp4-button) {
+    margin: 0;
+    border: 0;
+    border-radius: 5px;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    color: var(--color-appearance-switch-text);
+    font-weight: 400;
+
+    &:hover {
+      background: var(--color-appearance-switch-hover-background);
+    }
+
+    &:global(.bp4-active),
+    &:global(.bp4-active):hover {
+      background: var(--color-appearance-switch-active-background);
+      color: var(--color-appearance-switch-active-text);
+      font-weight: 500;
+    }
+  }
+}

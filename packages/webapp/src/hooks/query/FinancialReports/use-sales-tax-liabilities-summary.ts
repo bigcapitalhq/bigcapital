@@ -1,5 +1,6 @@
 import {
   fetchSalesTaxLiabilityTable,
+  fetchSalesTaxLiabilityJson,
   fetchSalesTaxLiabilityXlsx,
   fetchSalesTaxLiabilityCsv,
   fetchSalesTaxLiabilityPdf,
@@ -17,6 +18,8 @@ import { financialReportsKeys } from './query-keys';
 import type {
   SalesTaxLiabilityTableQuery,
   SalesTaxLiabilityTableResponse,
+  SalesTaxLiabilityJsonQuery,
+  SalesTaxLiabilityJsonResponse,
   SalesTaxLiabilityXlsxQuery,
   SalesTaxLiabilityCsvQuery,
   SalesTaxLiabilityPdfQuery,
@@ -34,6 +37,26 @@ export function useSalesTaxLiabilitySummary(
     ...props,
     queryKey: financialReportsKeys.salesTaxLiability(query),
     queryFn: () => fetchSalesTaxLiabilityTable(fetcher, query),
+  });
+}
+
+/**
+ * Retrieves the sales tax liability summary as JSON nodes rather than table
+ * rows, for consumers that compute from the numbers (the homepage overview).
+ */
+export function useSalesTaxLiabilitySummaryJson(
+  query: SalesTaxLiabilityJsonQuery,
+  props?: Omit<
+    UseQueryOptions<SalesTaxLiabilityJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    // distinct from the table key: same query, different response shape.
+    queryKey: [...financialReportsKeys.salesTaxLiability(query), 'json'],
+    queryFn: () => fetchSalesTaxLiabilityJson(fetcher, query),
   });
 }
 

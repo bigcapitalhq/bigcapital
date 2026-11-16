@@ -1,0 +1,61 @@
+// Bank accounts page additions. Colors come from the shared overview and
+// severity tokens in `style/_variables.scss`.
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 0 0 18px;
+  color: var(--color-overview-text-muted);
+  font-size: 12.5px;
+
+  b {
+    display: block;
+    color: var(--color-bank-account-card-text);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.line {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--color-overview-text-muted);
+
+  & + & {
+    margin-top: 4px;
+  }
+}
+
+.dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translateY(-1px);
+}
+
+.matches .dot {
+  background: var(--color-severity-done);
+}
+
+.differs {
+  color: var(--color-severity-risk-text);
+  font-weight: 500;
+
+  .dot {
+    background: var(--color-severity-risk);
+  }
+}
+
+.noFeed .dot {
+  box-shadow: inset 0 0 0 1.5px var(--color-overview-text-faint);
+}
+
+.balance {
+  font-variant-numeric: tabular-nums;
+}
