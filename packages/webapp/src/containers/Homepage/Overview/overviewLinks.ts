@@ -24,6 +24,30 @@ export function profitLossLink({
   return `/financial-reports/profit-loss-sheet?${query.toString()}`;
 }
 
+interface ProfitLossMonth {
+  /** First calendar day of the month. */
+  start: string;
+  /** Last day counted: the month end, or today for the month in progress. */
+  toDate: string;
+}
+
+/**
+ * Profit & Loss for exactly one month, as a single total column. The basis
+ * is left out on purpose so the report opens on the organization's
+ * accounting basis, like every other way into it.
+ */
+export function profitLossMonthLink({
+  start,
+  toDate,
+}: ProfitLossMonth): string {
+  const query = new URLSearchParams({
+    fromDate: start,
+    toDate,
+    displayColumnsType: 'total',
+  });
+  return `/financial-reports/profit-loss-sheet?${query.toString()}`;
+}
+
 export const RECEIVABLE_AGING_LINK =
   '/financial-reports/receivable-aging-summary';
 export const PAYABLE_AGING_LINK = '/financial-reports/payable-aging-summary';

@@ -2556,6 +2556,7 @@
   "homepage.overview.cash_out": "Salidas",
   "homepage.overview.cash_flow_source": "Del libro mayor de las cuentas bancarias y de efectivo",
   "homepage.overview.none_in_month": "nada en {month}",
+  "homepage.overview.open_profit_loss_month": "Abrir el informe de Ganancias/Pérdidas de {month}",
   "homepage.overview.panel_revenue_spend_desc": "Ambos por mes, lado a lado",
   "homepage.overview.panel_cash_flow_desc": "Dinero que entra y sale de las cuentas bancarias y de efectivo",
   "homepage.overview.size_narrow": "Estrecho · 6 meses",

@@ -1,5 +1,6 @@
 import clsx from 'classnames';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import styles from './Overview.module.scss';
 import { barHeight, priorGhostSpan, positiveShares } from './overviewSeries';
 
@@ -66,7 +67,7 @@ function useHoverIndex() {
     onMouseEnter: () => setIndex(i),
     onMouseLeave: () => setIndex(null),
   });
-  return { index, bind };
+  return { index, setIndex, bind };
 }
 
 interface BarChartProps {
@@ -186,6 +187,12 @@ export function BarChart({ values, prior, showPrior, tips }: BarChartProps) {
   );
 }
 
+/** Where a month's bars lead, and what to call that for assistive tech. */
+export interface MonthTarget {
+  to: string;
+  label: string;
+}
+
 interface PairedBarChartProps {
   /** The first series of each pair (revenue, money in). */
   first: number[];
@@ -194,6 +201,8 @@ interface PairedBarChartProps {
   /** Short month names under the pairs, in time order. */
   labels: string[];
   tips: React.ReactNode[];
+  /** Makes each month a link of its own, over the tile's link. */
+  targets?: MonthTarget[];
 }
 
 /**
@@ -206,14 +215,36 @@ export function PairedBarChart({
   second,
   labels,
   tips,
+  targets,
 }: PairedBarChartProps) {
   const id = React.useId().replace(/:/g, '');
-  const { index: hovered, bind } = useHoverIndex();
+  const history = useHistory();
+  const { index: hovered, setIndex: setHovered, bind } = useHoverIndex();
   const count = first.length;
   const slot = WIDTH / count;
   const barWidth = Math.max(2, (slot - BAR_GAP) / 2 - 0.5);
   const peak = Math.max(1, ...first, ...second) * 1.06;
   const heightOf = (value: number) => barHeight(value, peak, HEIGHT - 1);
+
+  // the tile around the chart is a link too, so the month's own click must
+  // not also trigger it: that would open the 12-month report instead.
+  const open = (event: React.SyntheticEvent, to: string) => {
+    event.preventDefault();
+    event.stopPropagation();
+    history.push(to);
+  };
+  const monthLinkProps = (i: number, { to, label }: MonthTarget) => ({
+    role: 'link',
+    tabIndex: 0,
+    'aria-label': label,
+    onClick: (event: React.MouseEvent) => open(event, to),
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') open(event, to);
+    },
+    // keyboard focus shows the same tooltip the pointer does.
+    onFocus: () => setHovered(i),
+    onBlur: () => setHovered(null),
+  });
 
   const bar = (value: number, x: number, i: number, isSecond: boolean) => {
     const height = heightOf(value);
@@ -244,7 +275,8 @@ export function PairedBarChart({
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="none"
-        aria-hidden="true"
+        // focusable month targets must stay in the accessibility tree.
+        aria-hidden={targets ? undefined : 'true'}
       >
         <defs>
           {(['a', 'b'] as const).map((key) => (
@@ -284,12 +316,15 @@ export function PairedBarChart({
               {bar(value, x, i, false)}
               {bar(second[i] ?? 0, x + barWidth + 1, i, true)}
               <rect
-                className={styles.hit}
+                className={clsx(styles.hit, {
+                  [styles.hitLink]: targets?.[i],
+                })}
                 x={i * slot}
                 y={0}
                 width={slot}
                 height={HEIGHT}
                 {...bind(i)}
+                {...(targets?.[i] ? monthLinkProps(i, targets[i]) : {})}
               />
             </g>
           );

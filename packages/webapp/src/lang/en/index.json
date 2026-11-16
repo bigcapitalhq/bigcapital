@@ -2796,6 +2796,7 @@
   "homepage.overview.cash_out": "Money out",
   "homepage.overview.cash_flow_source": "From the general ledger of bank and cash accounts",
   "homepage.overview.none_in_month": "nothing in {month}",
+  "homepage.overview.open_profit_loss_month": "Open Profit & Loss for {month}",
   "homepage.overview.panel_revenue_spend_desc": "Both by month, side by side",
   "homepage.overview.panel_cash_flow_desc": "Money into and out of bank and cash accounts",
   "homepage.overview.size_narrow": "Narrow · 6 months",

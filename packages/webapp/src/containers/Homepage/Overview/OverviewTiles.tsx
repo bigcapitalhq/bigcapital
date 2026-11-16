@@ -29,6 +29,7 @@ import {
   RECEIVABLE_AGING_LINK,
   generalLedgerLink,
   profitLossLink,
+  profitLossMonthLink,
   salesTaxLink,
 } from './overviewLinks';
 import {
@@ -414,6 +415,12 @@ function revenueSpendTile(context: TileContext): TileContent | null {
         first={revenue}
         second={spend}
         labels={shown.map((month) => formatMonth(month.key, 'MMM'))}
+        targets={shown.map((month) => ({
+          to: profitLossMonthLink(month),
+          label: intl.get('homepage.overview.open_profit_loss_month', {
+            month: formatMonthYear(month.key, 'long'),
+          }),
+        }))}
         tips={shown.map((month, i) =>
           pairTip(
             month.key,

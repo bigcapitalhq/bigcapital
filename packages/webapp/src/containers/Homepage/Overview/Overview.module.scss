@@ -512,6 +512,20 @@
   fill: transparent;
 }
 
+.hitLink {
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    stroke: var(--color-overview-accent);
+    stroke-width: 2px;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
 .hoverBand {
   fill: var(--color-overview-text);
   fill-opacity: 0.06;

@@ -182,9 +182,12 @@ export function formatDay(day: string): string {
 }
 
 /** A `YYYY-MM` key with its year, e.g. `Feb 2026`, in the user's locale. */
-export function formatMonthYear(key: string): string {
+export function formatMonthYear(
+  key: string,
+  style: 'short' | 'long' = 'short',
+): string {
   return new Intl.DateTimeFormat(dateLocale(), {
-    month: 'short',
+    month: style,
     year: 'numeric',
     timeZone: 'UTC',
   }).format(toUtcDate(`${key}-01`));

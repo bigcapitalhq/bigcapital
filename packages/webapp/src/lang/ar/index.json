@@ -2360,6 +2360,7 @@
   "homepage.overview.cash_out": "الأموال الخارجة",
   "homepage.overview.cash_flow_source": "من دفتر الأستاذ العام للحسابات البنكية والنقدية",
   "homepage.overview.none_in_month": "لا شيء في {month}",
+  "homepage.overview.open_profit_loss_month": "فتح الأرباح والخسائر لشهر {month}",
   "homepage.overview.panel_revenue_spend_desc": "كلاهما شهريًا، جنبًا إلى جنب",
   "homepage.overview.panel_cash_flow_desc": "الأموال الداخلة إلى الحسابات البنكية والنقدية والخارجة منها",
   "homepage.overview.size_narrow": "ضيق · 6 أشهر",

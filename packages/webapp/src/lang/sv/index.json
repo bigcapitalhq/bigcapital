@@ -2524,6 +2524,7 @@
   "homepage.overview.cash_out": "Pengar ut",
   "homepage.overview.cash_flow_source": "Från huvudboken för bank- och kassakonton",
   "homepage.overview.none_in_month": "inget i {month}",
+  "homepage.overview.open_profit_loss_month": "Öppna Resultaträkning för {month}",
   "homepage.overview.panel_revenue_spend_desc": "Båda per månad, sida vid sida",
   "homepage.overview.panel_cash_flow_desc": "Pengar in till och ut från bank- och kassakonton",
   "homepage.overview.size_narrow": "Smal · 6 månader",
