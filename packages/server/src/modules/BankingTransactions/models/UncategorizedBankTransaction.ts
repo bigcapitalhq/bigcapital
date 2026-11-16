@@ -3,6 +3,7 @@ import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { UncategorizedBankTransactionMeta } from './UncategorizedBankTransaction.meta';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import type { MatchedBankTransaction } from '../../BankingMatching/models/MatchedBankTransaction';
 
 @InjectModelMeta(UncategorizedBankTransactionMeta)
 export class UncategorizedBankTransaction extends TenantBaseModel {
@@ -17,9 +18,11 @@ export class UncategorizedBankTransaction extends TenantBaseModel {
   readonly recognizedTransactionId!: number;
   readonly excludedAt: Date;
   readonly pending: boolean;
+  readonly pendingPlaidTransactionId: string;
   readonly categorizeRefId!: number;
   readonly categorizeRefType!: string;
   readonly currencyCode!: string;
+  readonly matchedBankTransactions?: MatchedBankTransaction[];
 
   /**
    * Table name.

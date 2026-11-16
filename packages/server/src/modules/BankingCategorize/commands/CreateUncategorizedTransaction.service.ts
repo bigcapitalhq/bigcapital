@@ -52,24 +52,23 @@ export class CreateUncategorizedTransactionService {
       } catch (error) {
         // A duplicated Plaid transaction id means the transaction was already
         // synced (e.g. by a concurrent sync run), so treat it as a no-op and
-        // return the existing row to keep the sync idempotent.
+        // return the existing row to keep the sync idempotent. It is not
+        // announced as created again, which would count it twice.
         if (
           this.isDuplicatePlaidTransactionError(
             error,
             createUncategorizedTransactionDTO,
           )
         ) {
-          uncategorizedTransaction = await this.uncategorizedBankTransaction()
+          return this.uncategorizedBankTransaction()
             .query(trx)
             .findOne({
               plaidTransactionId:
                 createUncategorizedTransactionDTO.plaidTransactionId,
-              accountId: createUncategorizedTransactionDTO.accountId,
             })
             .throwIfNotFound();
-        } else {
-          throw error;
         }
+        throw error;
       }
 
       await this.eventPublisher.emitAsync(
@@ -95,10 +94,14 @@ export class CreateUncategorizedTransactionService {
     error: any,
     createDTO: UncategorizedBankTransactionDto,
   ): boolean {
+    // Objection wraps the driver error (UniqueViolationError), the MySQL code
+    // is on its native error.
+    const nativeError = error?.nativeError ?? error;
+
     return (
       !!createDTO.plaidTransactionId &&
-      error?.code === 'ER_DUP_ENTRY' &&
-      error?.errno === 1062
+      nativeError?.code === 'ER_DUP_ENTRY' &&
+      nativeError?.errno === 1062
     );
   }
 }

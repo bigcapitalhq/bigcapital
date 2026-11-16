@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import * as bluebird from 'bluebird';
 import * as uniqid from 'uniqid';
-import { entries, groupBy } from 'lodash';
+import { entries, groupBy, isEmpty, keyBy, values } from 'lodash';
 import {
   AccountBase as PlaidAccountBase,
   Item as PlaidItem,
@@ -21,6 +21,7 @@ import { events } from '@/common/events/events';
 import { PlaidItem as PlaidItemModel } from '../models/PlaidItem';
 import { IAccountCreateDTO } from '@/interfaces/Account';
 import { IPlaidTransactionsSyncedEventPayload } from '../types/BankingPlaid.types';
+import { CreateUncategorizedTransactionDTO } from '../../BankingCategorize/types/BankingCategorize.types';
 import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUncategorizedTransactionService } from '@/modules/BankingCategorize/commands/CreateUncategorizedTransaction.service';
@@ -115,12 +116,42 @@ export class PlaidSyncDb {
     const transformTransaction = R.curry(transformPlaidTrxsToCashflowCreate)(
       cashflowAccount.id,
     );
-    const uncategorizedTransDTOs =
-      R.map(transformTransaction)(plaidTranasctions);
+    // One DTO per Plaid transaction id. The last one wins, since modified
+    // transactions come after the added ones.
+    const uncategorizedTransDTOs: CreateUncategorizedTransactionDTO[] = values(
+      keyBy(
+        R.map(transformTransaction)(plaidTranasctions),
+        'plaidTransactionId',
+      ),
+    );
+    // Plaid delivers a transaction again when it is modified, and also when
+    // its cursor did not move yet, so the stored ones are updated in place.
+    const storedTransactions = await this.uncategorizedBankTransactionModel()
+      .query(trx)
+      .whereIn(
+        'plaidTransactionId',
+        uncategorizedTransDTOs.map((dto) => dto.plaidTransactionId),
+      )
+      .withGraphFetched('matchedBankTransactions');
+    const storedByPlaidId = keyBy(storedTransactions, 'plaidTransactionId');
 
+    await bluebird.map(
+      uncategorizedTransDTOs.filter(
+        (dto) => storedByPlaidId[dto.plaidTransactionId],
+      ),
+      (uncategoriedDTO) =>
+        this.updateSyncedTransaction(
+          storedByPlaidId[uncategoriedDTO.plaidTransactionId],
+          uncategoriedDTO,
+          trx,
+        ),
+      { concurrency: 1 },
+    );
     // Creating account transaction queue.
     await bluebird.map(
-      uncategorizedTransDTOs,
+      uncategorizedTransDTOs.filter(
+        (dto) => !storedByPlaidId[dto.plaidTransactionId],
+      ),
       (uncategoriedDTO) =>
         this.createUncategorizedTransaction.create(
           { ...uncategoriedDTO, batch },
@@ -134,6 +165,51 @@ export class PlaidSyncDb {
       batch,
       trx,
     } as IPlaidTransactionsSyncedEventPayload);
+  }
+
+  /**
+   * Updates the stored uncategorized transaction of a Plaid transaction that
+   * was delivered again. Categorized, matched and excluded transactions are
+   * left as they are.
+   * @param {UncategorizedBankTransaction} storedTransaction - Stored transaction.
+   * @param {CreateUncategorizedTransactionDTO} uncategorizedDTO - Synced values.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<void>}
+   */
+  private async updateSyncedTransaction(
+    storedTransaction: UncategorizedBankTransaction,
+    uncategorizedDTO: CreateUncategorizedTransactionDTO,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    if (
+      storedTransaction.categorized ||
+      storedTransaction.categorizeRefId ||
+      storedTransaction.excludedAt ||
+      !isEmpty(storedTransaction.matchedBankTransactions)
+    ) {
+      return;
+    }
+    const pending = !!uncategorizedDTO.pending;
+
+    await this.uncategorizedBankTransactionModel()
+      .query(trx)
+      .findById(storedTransaction.id)
+      .patch({
+        date: uncategorizedDTO.date,
+        amount: uncategorizedDTO.amount,
+        description: uncategorizedDTO.description,
+        payee: uncategorizedDTO.payee,
+        pending,
+        pendingPlaidTransactionId: uncategorizedDTO.pendingPlaidTransactionId,
+      });
+    // Pending transactions are not counted in the account's uncategorized
+    // transactions, so a change of the pending flag changes the count.
+    if (pending !== !!storedTransaction.pending) {
+      await this.accountModel()
+        .query(trx)
+        .findById(storedTransaction.accountId)
+        .increment('uncategorizedTransactions', pending ? -1 : 1);
+    }
   }
 
   /**
