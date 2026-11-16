@@ -8,6 +8,7 @@ export const DATE_FORMATS = [
   'DD MMM YYYY',
   'DD MMMM YYYY',
   'MMMM DD, YYYY',
+  'MMM DD, YYYY',
 ];
 export const MONTHS = [
   'january',
