@@ -25,6 +25,7 @@ import queue from './queue';
 import bullBoard from './bull-board';
 import clickhouse from './clickhouse';
 import twoFactor from './two-factor';
+import ai from './ai';
 
 export const config = [
   app,
@@ -54,4 +55,5 @@ export const config = [
   bullBoard,
   clickhouse,
   twoFactor,
+  ai,
 ];

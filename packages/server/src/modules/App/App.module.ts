@@ -111,6 +111,7 @@ import { SocketModule } from '../Socket/Socket.module';
 import { NotificationsModule } from '../Notifications/Notifications.module';
 import { EEModule } from '../EE/EE.module';
 import { AnalyticsModule } from '../Analytics/Analytics.module';
+import { AiAssistantModule } from '../AiAssistant/AiAssistant.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
 
@@ -272,6 +273,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     NotificationsModule,
     EEModule,
     AnalyticsModule,
+    AiAssistantModule,
     ExchangeRatesModule,
     WebhooksModule,
   ],

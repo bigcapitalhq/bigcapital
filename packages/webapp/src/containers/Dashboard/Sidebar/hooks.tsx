@@ -13,7 +13,7 @@ import {
 import type { SidebarMenuItem } from '@/constants/sidebarMenu';
 import { SidebarMenu } from '@/constants/sidebarMenu';
 import { useAbilityContext } from '@/hooks';
-import { useSubscription } from '@/hooks/query';
+import { useAiAssistantStatus, useSubscription } from '@/hooks/query';
 import {
   useSidebarSubmnuActions,
   useDialogActions,
@@ -150,6 +150,26 @@ function useFilterSidebarItemSubscriptionPredicater() {
 }
 
 /**
+ * Predicates whether the sidebar item is available to the current user.
+ * AI items require the assistant to be configured and authorized.
+ */
+function useFilterSidebarItemAiPredicater() {
+  const { data: assistantStatus } = useAiAssistantStatus();
+
+  return {
+    predicate: (item: ISidebarMenuItem) => {
+      if (!item.aiAssistant) {
+        return true;
+      }
+      return (
+        assistantStatus?.enabled === true &&
+        assistantStatus?.authorized === true
+      );
+    },
+  };
+}
+
+/**
  * Filters sidebar menu items based on ability of the item permission.
  * @param   {} menu
  * @returns {}
@@ -159,12 +179,17 @@ function useFilterSidebarMenuAbility(
 ): ISidebarMenuItem[] {
   const { predicate: predFeature } = useFilterSidebarItemFeaturePredicater();
   const { predicate: predAbility } = useFilterSidebarItemAbilityPredicater();
+  const { predicate: predAiAssistant } = useFilterSidebarItemAiPredicater();
   const { predicate: predSubscription } =
     useFilterSidebarItemSubscriptionPredicater();
 
   return deepdash.filterDeep(
     menu,
-    (item: ISidebarMenuItem) => predFeature(item) && predAbility(item),
+    (item: ISidebarMenuItem) =>
+      predFeature(item) &&
+      predAbility(item) &&
+      predAiAssistant(item) &&
+      predSubscription(item),
     deepDashConfig,
   );
 }
