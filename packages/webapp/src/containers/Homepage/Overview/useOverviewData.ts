@@ -53,7 +53,7 @@ import { useAbilityContext } from '@/hooks';
 import {
   useAPAgingSummaryJson,
   useARAgingSummaryJson,
-  useBills,
+  useDueBills,
   useInvoices,
   useSalesTaxLiabilitySummaryJson,
   useTaxRates,
@@ -190,9 +190,6 @@ function ledgerLinesOf(
     ...ledgerLinesOf(node.children, accountIds),
   ]);
 }
-
-// open bills are few for a small business; past this the count reads "N+".
-const OPEN_BILLS_PAGE_SIZE = 200;
 
 const statusFilter = (status: string) =>
   JSON.stringify([
@@ -413,14 +410,9 @@ export function useOverviewData({
     { page: 1, pageSize: 1, stringifiedFilterRoles: statusFilter('overdue') },
     { enabled: canViewInvoices } as never,
   );
-  const openBillsQuery = useBills(
-    {
-      page: 1,
-      pageSize: OPEN_BILLS_PAGE_SIZE,
-      stringifiedFilterRoles: statusFilter('unpaid'),
-    },
-    { enabled: canViewBills },
-  );
+  // every bill with a balance left, partly paid ones included: the list's 'unpaid' status means
+  // nothing paid yet, so it missed partly paid bills that the payables aging still counts.
+  const openBillsQuery = useDueBills(null, { enabled: canViewBills });
   const taxRatesQuery = useTaxRates({ enabled: canReadSalesTax });
   const chargesTax = chargesSalesTax(
     (taxRatesQuery.data as unknown as Array<{ rate?: number }>) ?? [],
@@ -439,10 +431,8 @@ export function useOverviewData({
   }, [overdueInvoicesQuery.data]);
 
   const billsDue = React.useMemo(() => {
-    const response = openBillsQuery.data as unknown as
-      | { data?: OpenBill[] }
-      | undefined;
-    return response ? billsDueSoon(response.data ?? [], today) : null;
+    const bills = openBillsQuery.data as OpenBill[] | undefined;
+    return bills ? billsDueSoon(bills, today) : null;
   }, [openBillsQuery.data, today]);
 
   const salesTax = React.useMemo(() => {

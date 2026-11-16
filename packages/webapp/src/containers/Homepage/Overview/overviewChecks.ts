@@ -48,6 +48,8 @@ export function accountsDifferingFromBank<T extends FeedAccount>(
 export interface OpenBill {
   dueDate?: string | null;
   dueAmount?: number | null;
+  /** False for a draft, which is not yet owed. */
+  isOpen?: boolean | null;
 }
 
 /**
@@ -65,7 +67,7 @@ export function billsDueSoon(
   for (const bill of bills) {
     const due = bill.dueDate?.slice(0, 10);
     const owed = bill.dueAmount ?? 0;
-    if (!due || owed <= 0 || due > horizon) continue;
+    if (bill.isOpen === false || !due || owed <= 0 || due > horizon) continue;
     count += 1;
     amount += owed;
   }
