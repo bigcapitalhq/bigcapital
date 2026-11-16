@@ -10,6 +10,10 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/general',
   },
   {
+    text: <T id={'appearance.title'} />,
+    href: '/preferences/appearance',
+  },
+  {
     text: 'Branding',
     disabled: false,
     href: '/preferences/branding',

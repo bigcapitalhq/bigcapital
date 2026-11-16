@@ -2654,5 +2654,15 @@
   "batch.error.BATCH_INVALID_EXPIRY_DATE": "Expiry date must be on or after the manufactured date.",
   "batch.error.BATCH_ALLOCATION_QUANTITY_MISMATCH": "The batch quantities must add up to the line quantity (required: {entryQuantity}, allocated: {allocatedQuantity}).",
   "batch.error.BATCH_ALLOCATION_INVALID_QUANTITY": "Each batch allocation must have a positive quantity.",
-  "batch.error.BATCH_ALLOCATION_DUPLICATE": "The same batch cannot be added twice to the same line."
+  "batch.error.BATCH_ALLOCATION_DUPLICATE": "The same batch cannot be added twice to the same line.",
+  "appearance.title": "Appearance",
+  "appearance.system": "System",
+  "appearance.light": "Light",
+  "appearance.dark": "Dark",
+  "appearance.mode": "Mode",
+  "appearance.mode_description": "Choose how Bigcapital looks in this browser.",
+  "appearance.dark_style.title": "Dark style",
+  "appearance.dark_style.description": "Used whenever Bigcapital is dark.",
+  "appearance.dark_style.protanopia": "Dark Protanopia",
+  "appearance.dark_style.soft": "Soft Dark"
 }

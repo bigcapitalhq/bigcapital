@@ -2382,5 +2382,15 @@
   "tracking_categories.error.delete_failed": "Unable to delete the tracking category.",
   "tracking_categories.error.save_failed": "Unable to save the tracking category.",
   "tracking_categories.alert.delete_message": "Are you sure you want to delete the tracking category \"{name}\"? This can't be undone.",
-  "tracking_categories.no_options": "No options available"
+  "tracking_categories.no_options": "No options available",
+  "appearance.title": "Utseende",
+  "appearance.system": "System",
+  "appearance.light": "Ljust",
+  "appearance.dark": "Mörkt",
+  "appearance.mode": "Läge",
+  "appearance.mode_description": "Välj hur Bigcapital ser ut i den här webbläsaren.",
+  "appearance.dark_style.title": "Mörk stil",
+  "appearance.dark_style.description": "Används när Bigcapital är mörkt.",
+  "appearance.dark_style.protanopia": "Mörkt protanopi",
+  "appearance.dark_style.soft": "Mjukt mörkt"
 }
