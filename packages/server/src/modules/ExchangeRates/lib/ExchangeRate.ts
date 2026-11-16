@@ -1,4 +1,5 @@
 import { OpenExchangeRate } from './OpenExchangeRate';
+import { FXMacroDataExchangeRate } from './FXMacroDataExchangeRate';
 import { ExchangeRateServiceType, IExchangeRateService } from './types';
 
 export class ExchangeRate {
@@ -22,6 +23,10 @@ export class ExchangeRate {
       this.exchangeRateServiceType === ExchangeRateServiceType.OpenExchangeRate
     ) {
       this.setExchangeRateService(new OpenExchangeRate());
+    } else if (
+      this.exchangeRateServiceType === ExchangeRateServiceType.FXMacroData
+    ) {
+      this.setExchangeRateService(new FXMacroDataExchangeRate());
     }
   }
 
