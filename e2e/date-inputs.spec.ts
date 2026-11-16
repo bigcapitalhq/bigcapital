@@ -105,6 +105,9 @@ test.describe('date inputs', () => {
     await selectCustomer(page, customer.displayName);
     await selectEntryItem(page, ITEM_NAME);
 
+    // Computed in the browser on purpose: this spec pins the browser to
+    // America/Los_Angeles while the test runner keeps the machine time zone,
+    // so a Node-side helper would compare against the wrong "today".
     const today = await page.evaluate(() => {
       const now = new Date();
       const pad = (value: number) => String(value).padStart(2, '0');

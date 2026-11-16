@@ -1,16 +1,29 @@
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 
-interface EntryWithBatchAllocations {
+interface EntryBatchAllocationsSummarySource {
   batches?: ItemEntryBatchAllocation[];
   batchId?: number | null;
-  batch?: { batchNumber?: string } | null;
+  batch?: { batchNumber?: string | null } | null;
+}
+
+export type BatchMovementDirection = 'in' | 'out';
+
+export interface BatchMovementRow {
+  batchId: number;
+  batchNumber: string;
+  batchRef?: string | null;
+  expiryDate?: string | null;
+  quantity: number;
+  itemId: number;
+  itemName: string;
+  direction: BatchMovementDirection;
 }
 
 /**
  * Returns a short human readable summary of the entry batch allocations.
  */
 export const getEntryBatchAllocationsSummary = (
-  entry: EntryWithBatchAllocations,
+  entry: EntryBatchAllocationsSummarySource,
 ): string => {
   if (entry.batches?.length) {
     return entry.batches

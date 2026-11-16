@@ -40,6 +40,8 @@ import { TrackingCategory } from '@/modules/TrackingCategories/models/TrackingCa
 import { TrackingCategoryOption } from '@/modules/TrackingCategories/models/TrackingCategoryOption';
 import { ManualJournalEntryTrackingCategory } from '@/modules/TrackingCategories/models/ManualJournalEntryTrackingCategory';
 import { AccountTransactionTrackingCategory } from '@/modules/TrackingCategories/models/AccountTransactionTrackingCategory';
+import { AiConversation } from '@/modules/AiAssistant/models/AiConversation.model';
+import { AiMessage } from '@/modules/AiAssistant/models/AiMessage.model';
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
@@ -86,6 +88,8 @@ const models = [
   TrackingCategoryOption,
   ManualJournalEntryTrackingCategory,
   AccountTransactionTrackingCategory,
+  AiConversation,
+  AiMessage,
 ];
 
 /**

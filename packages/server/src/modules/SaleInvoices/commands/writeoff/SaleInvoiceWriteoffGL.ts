@@ -32,7 +32,10 @@ export class SaleInvoiceWriteoffGL {
    */
   private get invoiceWriteoffGLCommonEntry() {
     return {
-      date: this.saleInvoiceModel.invoiceDate,
+      // The write-off entries are dated on the write-off date, not the invoice
+      // date, so they land in the period the bad debt was recognized.
+      date:
+        this.saleInvoiceModel.writtenoffAt ?? this.saleInvoiceModel.invoiceDate,
 
       currencyCode: this.saleInvoiceModel.currencyCode,
       exchangeRate: this.saleInvoiceModel.exchangeRate,

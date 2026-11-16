@@ -1,5 +1,6 @@
 import request = require('supertest');
 import { faker } from '@faker-js/faker';
+import * as moment from 'moment';
 import { app } from './init-app-test';
 import {
   authHeaders,
@@ -635,7 +636,7 @@ describe('GL entries — Sales transactions (e2e)', () => {
         .set(authHeaders())
         .send({
           expenseAccountId: 1024,
-          date: '2023-01-01',
+          date: '2023-01-15',
           reason: 'Write off reason',
         })
         .expect(200);
@@ -643,6 +644,12 @@ describe('GL entries — Sales transactions (e2e)', () => {
       const legs = await fetchLegs('InvoiceWriteOff', invoiceRes.body.id);
 
       expectBalanced(legs);
+      // The write-off entries are dated on the write-off date, not the invoice date.
+      expect(
+        legs.every(
+          (leg) => moment(leg.date).format('YYYY-MM-DD') === '2023-01-15',
+        ),
+      ).toBe(true);
       expectLegs(
         legs,
         [

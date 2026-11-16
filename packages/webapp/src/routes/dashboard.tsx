@@ -1329,6 +1329,17 @@ export const getDashboardRoutes = () => [
     pageTitle: 'Bank Rules',
     breadcrumb: 'Bank Rules',
   },
+  // AI Assistant
+  {
+    path: '/ai',
+    component: lazy(() =>
+      import('@/containers/AiAssistant/AiAssistantPage').then((m) => ({
+        default: m.AiAssistantPage,
+      })),
+    ),
+    breadcrumb: intl.get('ai_assistant.title'),
+    pageTitle: intl.get('ai_assistant.title'),
+  },
   // Homepage
   {
     path: `/`,

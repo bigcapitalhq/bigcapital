@@ -6,6 +6,7 @@ import { BranchResponseDto } from '@/modules/Branches/dtos/BranchResponse.dto';
 import { SaleInvoiceTaxEntryDto } from '@/modules/SaleInvoices/dtos/SaleInvoiceTaxEntry.dto';
 import { VendorResponseDto } from '@/modules/Vendors/dtos/VendorResponse.dto';
 import { DiscountType } from '@/common/types/Discount';
+import { DocumentBatchDto } from '@/modules/TransactionItemEntry/dto/DocumentBatch.dto';
 
 export class BillResponseDto {
   @ApiProperty({
@@ -85,6 +86,13 @@ export class BillResponseDto {
     required: false,
   })
   taxes?: SaleInvoiceTaxEntryDto[];
+
+  @ApiProperty({
+    description: 'The batch movements of the bill',
+    type: [DocumentBatchDto],
+    required: false,
+  })
+  batches?: DocumentBatchDto[];
 
   @ApiProperty({
     description: 'The ID of the warehouse',

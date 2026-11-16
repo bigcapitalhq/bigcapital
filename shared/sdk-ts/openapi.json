@@ -4194,6 +4194,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaleInvoiceWriteoffDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The sale invoice has been successfully written off."
@@ -32029,6 +32039,65 @@
           "taxRateAmountFormatted"
         ]
       },
+      "DocumentBatchDto": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "number",
+            "description": "The ID of the batch",
+            "example": 1
+          },
+          "batchNumber": {
+            "type": "string",
+            "description": "The batch number",
+            "example": "BATCH-001"
+          },
+          "batchRef": {
+            "type": "string",
+            "description": "The batch reference",
+            "example": "MFG-2026-01",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "The batch expiry date",
+            "example": "2027-01-01",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity moved from or to the batch",
+            "example": 5
+          },
+          "itemId": {
+            "type": "number",
+            "description": "The ID of the item",
+            "example": 1
+          },
+          "itemName": {
+            "type": "string",
+            "description": "The name of the item",
+            "example": "Item 1"
+          },
+          "direction": {
+            "type": "string",
+            "description": "The direction of the batch movement",
+            "enum": [
+              "in",
+              "out"
+            ],
+            "example": "out"
+          }
+        },
+        "required": [
+          "batchId",
+          "batchNumber",
+          "quantity",
+          "itemId",
+          "itemName",
+          "direction"
+        ]
+      },
       "BranchLinkDto": {
         "type": "object",
         "properties": {
@@ -32313,6 +32382,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SaleInvoiceTaxEntryDto"
+            }
+          },
+          "batches": {
+            "description": "The batch movements of the invoice",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentBatchDto"
             }
           },
           "deliveredAt": {
@@ -32872,6 +32948,31 @@
           "dueDate",
           "entries",
           "attachments"
+        ]
+      },
+      "SaleInvoiceWriteoffDto": {
+        "type": "object",
+        "properties": {
+          "expenseAccountId": {
+            "type": "number",
+            "description": "The id of the bad debt expense account",
+            "example": 1024
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date of the write-off. Defaults to the current date when omitted.",
+            "example": "2023-01-01"
+          },
+          "reason": {
+            "type": "string",
+            "description": "The reason of writing off the invoice",
+            "example": "Customer is bankrupt"
+          }
+        },
+        "required": [
+          "expenseAccountId",
+          "reason"
         ]
       },
       "NotifySaleInvoiceBySmsDto": {
@@ -39126,6 +39227,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SaleInvoiceTaxEntryDto"
+            }
+          },
+          "batches": {
+            "description": "The batch movements of the bill",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentBatchDto"
             }
           },
           "warehouseId": {

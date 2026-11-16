@@ -63,3 +63,4 @@ export * from './UniversalSearch/universal-search';
 export * from './FinancialReports';
 export * from './notifications';
 export * from './audit-logs';
+export * from './ai-assistant';

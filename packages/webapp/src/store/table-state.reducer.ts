@@ -14,7 +14,16 @@ export const createTableStateReducers = (
     action: { payload: { queries: Partial<TableQuery> } },
   ) => {
     const { queries } = action.payload;
-    state.tableState = { ...state.tableState, ...queries };
+
+    state.tableState = {
+      ...state.tableState,
+      ...queries,
+      // Reset the pagination once the filter roles change, otherwise the list
+      // may request a page that no longer exists.
+      ...(queries.filterRoles !== undefined && queries.pageIndex === undefined
+        ? { pageIndex: 0 }
+        : {}),
+    };
   },
 
   [`${RESOURCE_NAME}/${TYPES.TABLE_STATE_RESET}`]: (state: {

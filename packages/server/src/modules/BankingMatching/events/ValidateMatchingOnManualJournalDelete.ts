@@ -14,7 +14,7 @@ export class ValidateMatchingOnManualJournalDeleteSubscriber {
    * Validates the manual journal transaction whether matched with bank transaction on deleting.
    * @param {IManualJournalDeletingPayload}
    */
-  @OnEvent(events.manualJournals.onDeleting)
+  @OnEvent(events.manualJournals.onDeleting, { suppressErrors: false })
   public async validateMatchingOnManualJournalDeleting({
     oldManualJournal,
     trx,

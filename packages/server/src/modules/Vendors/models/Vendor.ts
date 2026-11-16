@@ -148,16 +148,10 @@ export class Vendor extends TenantBaseModel {
         query.where('active', 0);
       },
       /**
-       * Filters the vendors that have overdue invoices.
+       * Filters the vendors that have overdue bills.
        */
       overdue(query) {
-        query.select(
-          '*',
-          Vendor.relatedQuery('overdueBills', query.knex())
-            .count()
-            .as('countOverdue'),
-        );
-        query.having('countOverdue', '>', 0);
+        query.whereExists(Vendor.relatedQuery('overdueBills', query.knex()));
       },
       /**
        * Filters the unpaid customers.

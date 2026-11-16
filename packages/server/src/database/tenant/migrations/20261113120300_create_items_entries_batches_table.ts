@@ -10,7 +10,6 @@
 exports.up = function (knex) {
   return knex.schema.createTable('items_entries_batches', (table) => {
     table.increments();
-
     table
       .integer('entry_id')
       .unsigned()
@@ -18,7 +17,6 @@ exports.up = function (knex) {
       .references('id')
       .inTable('items_entries')
       .onDelete('CASCADE');
-
     table
       .integer('batch_id')
       .unsigned()

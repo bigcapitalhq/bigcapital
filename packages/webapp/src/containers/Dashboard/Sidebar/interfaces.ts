@@ -13,6 +13,7 @@ export interface ISidebarMenuItemCommon {
   ability?: ISidebarMenuItemPermission | ISidebarMenuItemPermission[];
   permission?: ISidebarMenuItemPermission;
   feature?: string;
+  aiAssistant?: boolean;
   disabled?: boolean;
   children?: ISidebarMenuItem[];
   onlySubscriptionExpired?: boolean;

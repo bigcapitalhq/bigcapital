@@ -45,6 +45,7 @@ export interface SidebarMenuItem {
   divider?: boolean;
   feature?: string;
   permission?: SidebarMenuItemPermission;
+  aiAssistant?: boolean;
   children?: SidebarMenuItem[];
 }
 
@@ -58,6 +59,14 @@ export const SidebarMenu: SidebarMenuItem[] = [
     disabled: false,
     href: '/',
     matchExact: true,
+  },
+  {
+    text: <T id={'sidebar.ai_assistant'} />,
+    type: ISidebarMenuItemType.Link,
+    disabled: false,
+    href: '/ai',
+    matchExact: true,
+    aiAssistant: true,
   },
   // ---------------
   // # Sales & Inventory
