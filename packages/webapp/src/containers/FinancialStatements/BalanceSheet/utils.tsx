@@ -4,6 +4,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { FALLBACK_REPORT_BASIS, ReportBasis } from '../reportBasis';
+import { useDefaultReportBasis } from '../withReportBasis';
 import type { FormikContextType } from 'formik';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
@@ -22,12 +24,14 @@ type BalanceSheetFormQuery = BalanceSheetTableQuery & {
 
 /**
  * Retrieves the default balance sheet query.
- * @returns {}
+ * @param {ReportBasis} basis - The organization default accounting basis.
  */
-export const getDefaultBalanceSheetQuery = (): BalanceSheetFormQuery => ({
+export const getDefaultBalanceSheetQuery = (
+  basis: ReportBasis = FALLBACK_REPORT_BASIS,
+): BalanceSheetFormQuery => ({
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  basis: 'cash',
+  basis,
   displayColumnsType: 'total',
   displayColumnsBy: 'month',
   filterByOption: 'without-zero-balance',
@@ -56,8 +60,9 @@ export const getDefaultBalanceSheetQuery = (): BalanceSheetFormQuery => ({
 
 const parseBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
+  basis: ReportBasis,
 ): BalanceSheetFormQuery => {
-  const defaultQuery = getDefaultBalanceSheetQuery();
+  const defaultQuery = getDefaultBalanceSheetQuery(basis);
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
@@ -75,11 +80,12 @@ const parseBalanceSheetQuery = (
 export const useBalanceSheetQuery = () => {
   // Retrieves location query.
   const [locationQuery, setLocationQuery] = useAppQueryString();
+  const { basis } = useDefaultReportBasis();
 
   // Merges the default filter query with location URL query.
   const query = React.useMemo(
-    () => parseBalanceSheetQuery(locationQuery),
-    [locationQuery],
+    () => parseBalanceSheetQuery(locationQuery, basis),
+    [locationQuery, basis],
   );
 
   return {

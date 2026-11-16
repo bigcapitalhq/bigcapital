@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
+import { withReportBasis } from '../withReportBasis';
 import {
   TrialBalanceSheetAlerts,
   TrialBalanceSheetLoadingBar,
@@ -85,4 +86,5 @@ function TrialBalanceSheetInner({
 export const TrialBalanceSheet = FF.pipe(
   TrialBalanceSheetInner,
   withTrialBalanceActions,
+  withReportBasis,
 );

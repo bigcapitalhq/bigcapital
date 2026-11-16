@@ -68,7 +68,7 @@ function TrialBalanceSheetHeaderInner({
   const defaultValues: TrialBalanceFormValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
-    // Must match the report default basis in `getDefaultTrialBalanceQuery`.
+    // Overridden by `pageFilter.basis`, which carries the organization basis.
     basis: 'accrual',
     branchesIds: [],
     filterByOption: 'with-transactions',

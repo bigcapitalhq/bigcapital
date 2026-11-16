@@ -3,6 +3,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { FALLBACK_REPORT_BASIS, ReportBasis } from '../reportBasis';
+import { useDefaultReportBasis } from '../withReportBasis';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -25,10 +27,12 @@ export const filterAccountsOptions = [
 /**
  * Retrieves the default general ledger query.
  */
-export const getDefaultGeneralLedgerQuery = () => ({
+export const getDefaultGeneralLedgerQuery = (
+  basis: ReportBasis = FALLBACK_REPORT_BASIS,
+) => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  basis: 'accrual',
+  basis,
   filterByOption: 'with-transactions',
   branchesIds: [] as string[],
   accountsIds: [] as string[],
@@ -50,8 +54,11 @@ export const getGeneralLedgerQuerySchema = () => {
 /**
  * Parses general ledger query of browser location.
  */
-const parseGeneralLedgerQuery = (locationQuery: Record<string, unknown>) => {
-  const defaultQuery = getDefaultGeneralLedgerQuery();
+const parseGeneralLedgerQuery = (
+  locationQuery: Record<string, unknown>,
+  basis: ReportBasis,
+) => {
+  const defaultQuery = getDefaultGeneralLedgerQuery(basis);
 
   const transformed = {
     ...defaultQuery,
@@ -72,11 +79,12 @@ const parseGeneralLedgerQuery = (locationQuery: Record<string, unknown>) => {
 export const useGeneralLedgerQuery = () => {
   // Retrieves location query.
   const [locationQuery, setLocationQuery] = useAppQueryString();
+  const { basis } = useDefaultReportBasis();
 
   // Merges the default filter query with location URL query.
   const query = React.useMemo(
-    () => parseGeneralLedgerQuery(locationQuery),
-    [locationQuery],
+    () => parseGeneralLedgerQuery(locationQuery, basis),
+    [locationQuery, basis],
   );
   return { query, locationQuery, setLocationQuery };
 };

@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { withReportBasis } from '../withReportBasis';
 import { CashflowSheetDialogs } from './CashflowSheetDialogs';
 import { CashFlowStatementActionsBar } from './CashFlowStatementActionsBar';
 import { CashFlowStatementBody } from './CashFlowStatementBody';
@@ -77,4 +78,5 @@ function CashFlowStatementInner({
 export const CashFlowStatement = FF.pipe(
   CashFlowStatementInner,
   withCashFlowStatementActions,
+  withReportBasis,
 );

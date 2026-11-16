@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
+import { withReportBasis } from '../withReportBasis';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
 import { JournalActionsBar } from './JournalActionsBar';
 import { JournalBody } from './JournalBody';
@@ -83,4 +84,5 @@ export const Journal = FF.pipe(
   JournalInner,
   withJournalActions,
   withDashboardActions,
+  withReportBasis,
 );

@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
+import { withReportBasis } from '../withReportBasis';
 import { useGeneralLedgerQuery } from './common';
 import {
   GeneralLedgerSheetAlerts,
@@ -94,4 +95,5 @@ function GeneralLedgerInner({
 export const GeneralLedger = FF.pipe(
   GeneralLedgerInner,
   withGeneralLedgerActions,
+  withReportBasis,
 );
