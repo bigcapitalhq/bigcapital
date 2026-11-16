@@ -1,5 +1,6 @@
 import {
   fetchProfitLossTable,
+  fetchProfitLossJson,
   fetchProfitLossXlsx,
   fetchProfitLossCsv,
   fetchProfitLossPdf,
@@ -17,6 +18,8 @@ import { financialReportsKeys } from './query-keys';
 import type {
   ProfitLossTableQuery,
   ProfitLossTableResponse,
+  ProfitLossJsonQuery,
+  ProfitLossJsonResponse,
   ProfitLossXlsxQuery,
   ProfitLossCsvQuery,
   ProfitLossPdfQuery,
@@ -34,6 +37,26 @@ export function useProfitLossSheet(
     ...props,
     queryKey: financialReportsKeys.profitLoss(query),
     queryFn: () => fetchProfitLossTable(fetcher, query),
+  });
+}
+
+/**
+ * Retrieves the profit/loss sheet as JSON nodes rather than table rows, for
+ * consumers that compute from the numbers (the homepage overview).
+ */
+export function useProfitLossSheetJson(
+  query: ProfitLossJsonQuery,
+  props?: Omit<
+    UseQueryOptions<ProfitLossJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    // distinct from the table key: same query, different response shape.
+    queryKey: [...financialReportsKeys.profitLoss(query), 'json'],
+    queryFn: () => fetchProfitLossJson(fetcher, query),
   });
 }
 

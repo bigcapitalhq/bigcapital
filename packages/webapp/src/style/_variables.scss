@@ -132,6 +132,7 @@ $ns: bp4;
   --color-datatable-caret: #b5b5b5;
   --color-datatable-caret-hover: #7d8593;
   --color-datatable-checkbox-border: #C5CBD3;
+  --color-datatable-sticky-background: rgba(255, 255, 255, 0.25);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: #2c3a5d;
@@ -316,6 +317,38 @@ $ns: bp4;
   --color-skeleton-border-start: rgba(206, 217, 224, 0.3);
   --color-skeleton-border-end: rgba(92, 112, 128, 0.3);
   --color-skeleton-border-radius: 2px;
+
+  // Appearance switch (avatar menu)
+  --color-appearance-switch-text: var(--color-gray1);
+  --color-appearance-switch-hover-background: rgba(143, 153, 168, 0.15);
+  --color-appearance-switch-active-background: var(--color-light-gray3);
+  --color-appearance-switch-active-text: #1c2127;
+
+  // Homepage overview surfaces and chart marks.
+  --color-overview-panel-background: #fff;
+  --color-overview-raised-background: #eef0f4;
+  --color-overview-hairline: #e2e5ec;
+  --color-overview-hairline-strong: #c3c9d6;
+  --color-overview-highlight: transparent;
+  --color-overview-text: #14181f;
+  --color-overview-text-secondary: #3a4254;
+  --color-overview-text-muted: #5a6478;
+  --color-overview-text-faint: #6b7487;
+  --color-overview-accent: #3f4fc4;
+  --color-overview-on-accent: #fff;
+  --color-overview-history: #7293ca; // oklch(0.66 0.09 260)
+  --color-overview-prior: #7a849a; // 3.75:1 on white, a primary signal
+  --color-overview-baseline: #c3c9d6;
+
+  // Severity ladder: one meaning per color, used pure on text, dots, bars and
+  // outlines, never mixed into a grey background.
+  --color-severity-task: var(--color-overview-accent); // an action you can take
+  --color-severity-risk: #d16e00; // oklch(0.64 0.16 58), money at risk
+  // amber dark enough for text on white turns brown, so risk text stays ink.
+  --color-severity-risk-text: var(--color-overview-text);
+  --color-severity-plan: var(--color-overview-text-muted); // plan ahead
+  --color-severity-done: #0b764d; // oklch(0.50 0.11 160)
+  --color-severity-critical: #be2323; // oklch(0.52 0.19 27), reserved
 }
 
 $pt-popover-box-shadow:
@@ -452,6 +485,8 @@ body.bp4-dark  {
   --color-datatable-caret: rgba(255, 255, 255, 0.25);
   --color-datatable-caret-hover: rgba(255, 255, 255, 0.25);
   --color-datatable-checkbox-border: rgba(255, 255, 255, 0.3);
+  // Sticky header and cells: translucent under a blur.
+  --color-datatable-sticky-background: rgba(28, 33, 39, 0.6);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: var(--color-light-gray4);
@@ -652,6 +687,36 @@ body.bp4-dark  {
   --color-skeleton-border-start: rgba(255, 255, 255, 0.1);
   --color-skeleton-border-end: rgba(255, 255, 255, 0.2);
   --color-skeleton-border-radius: 2px;
+
+  // Appearance switch (avatar menu)
+  --color-appearance-switch-text: var(--color-muted-text);
+  --color-appearance-switch-hover-background: rgba(255, 255, 255, 0.06);
+  --color-appearance-switch-active-background: rgba(255, 255, 255, 0.14);
+  --color-appearance-switch-active-text: var(--color-light-gray5);
+
+  // Homepage overview surfaces and chart marks, from the existing dark palette.
+  --color-overview-panel-background: var(--color-dark-gray3);
+  --color-overview-raised-background: var(--color-dark-gray4);
+  --color-overview-hairline: var(--color-dark-gray5);
+  --color-overview-hairline-strong: rgba(255, 255, 255, 0.18);
+  --color-overview-highlight: transparent;
+  --color-overview-text: var(--color-light-gray5);
+  --color-overview-text-secondary: var(--color-light-gray2);
+  --color-overview-text-muted: var(--color-gray4);
+  --color-overview-text-faint: #a0a9b6; // 5.27:1 on panel; it carries text
+  --color-overview-accent: var(--color-primary);
+  --color-overview-on-accent: var(--color-dark-gray1);
+  --color-overview-history: #4c90f0; // Blueprint blue4, >= 3:1 on dark-gray3
+  --color-overview-prior: var(--color-gray3);
+  --color-overview-baseline: var(--color-dark-gray5);
+
+  // Severity ladder (see the light theme block).
+  --color-severity-task: var(--color-overview-accent);
+  --color-severity-risk: #f8b65d; // apricot: money at risk, never mixed into grey
+  --color-severity-risk-text: var(--color-severity-risk);
+  --color-severity-plan: var(--color-overview-text-muted);
+  --color-severity-done: var(--color-green-100);
+  --color-severity-critical: var(--color-red-200);
 }
 
 $pt-popover-box-shadow:

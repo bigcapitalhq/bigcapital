@@ -8,23 +8,13 @@ import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSear
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { useThemePreference } from '@/hooks/useThemePreference';
 import { getDashboardRoutes } from '@/routes/dashboard';
 
 interface GlobalHotkeyRoute {
   path: string;
   hotkey?: string;
 }
-
-// Toggle dark/light mode by toggling 'bp4-dark' class on body
-const handleToggleDarkMode = () => {
-  const body = document.body;
-
-  if (body.classList.contains('bp4-dark')) {
-    body.classList.remove('bp4-dark');
-  } else {
-    body.classList.add('bp4-dark');
-  }
-};
 
 type GlobalHotkeysProps = Pick<
   WithDashboardActionsProps,
@@ -44,6 +34,7 @@ function GlobalHotkeys({
   openDialog,
 }: GlobalHotkeysProps) {
   const history = useHistory();
+  const { toggleTheme } = useThemePreference();
   const routes = getDashboardRoutes() as GlobalHotkeyRoute[];
 
   const globalHotkeys = routes
@@ -80,7 +71,7 @@ function GlobalHotkeys({
     }, 0);
   });
   useHotkeys('shift+h', () => {
-    handleToggleDarkMode();
+    toggleTheme();
   });
 
   return <div></div>;

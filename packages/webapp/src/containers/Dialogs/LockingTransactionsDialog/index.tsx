@@ -21,7 +21,7 @@ interface LockingTransactionsDialogProps {
  */
 function LockingTransactionsDialog({
   dialogName,
-  payload: { module, isEnabled } = {},
+  payload: { module, isEnabled, lockToDate } = {},
   isOpen,
 }: LockingTransactionsDialogProps): React.ReactElement {
   return (
@@ -38,6 +38,7 @@ function LockingTransactionsDialog({
           moduleName={module ?? ''}
           dialogName={dialogName}
           isEnabled={!!isEnabled}
+          lockToDate={lockToDate}
         />
       </DialogSuspense>
     </Dialog>
