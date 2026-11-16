@@ -1,4 +1,14 @@
 # This is a production version of the Bigcapital docker-compose.yml file.
+#
+# Environment strategy:
+# - `.env` (next to this file) is the single source of truth. Services that
+#   consume application settings load it via `env_file`, so adding a new
+#   variable only requires documenting it in `.env.example` — no changes here.
+# - `environment` only contains values that must differ inside the compose
+#   network (service hostnames/ports), required-secret guards, and defaults
+#   that cannot be expressed in the application config.
+# - Infra-only values (DB_ROOT_PASSWORD, PUBLIC_PROXY_*, GARAGE_*, etc.) are
+#   read by their own services through `${...}` interpolation.
 
 version: '3.3'
 
@@ -44,143 +54,40 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
+    env_file:
+      - .env
     environment:
-      # Mail
-      - MAIL_HOST=${MAIL_HOST}
-      - MAIL_USERNAME=${MAIL_USERNAME}
-      - MAIL_PASSWORD=${MAIL_PASSWORD}
-      - MAIL_PORT=${MAIL_PORT}
-      - MAIL_SECURE=${MAIL_SECURE}
-      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
-      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
-
-      # Database
+      # Service discovery: always override `.env` so the server talks to the
+      # compose network instead of localhost.
       - DB_HOST=mysql
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_CHARSET=${DB_CHARSET}
-
-      # System database
-      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
-
-      # Redis
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - QUEUE_HOST=redis
       - QUEUE_PORT=6379
-
-      # Tenants databases
-      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
-
-      # ClickHouse analytics store
-      - CLICKHOUSE_ENABLED=${CLICKHOUSE_ENABLED:-false}
       - CLICKHOUSE_HOST=clickhouse
       - CLICKHOUSE_PORT=8123
-      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required in .env - generate one with openssl rand -base64 32}
-      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
 
-      # Authentication
+      # Required secrets: fail fast instead of booting with a broken config.
       - 'APP_JWT_SECRET=${APP_JWT_SECRET:?APP_JWT_SECRET is required in .env - generate one with openssl rand -base64 48}'
-      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY}
-      - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-Bigcapital}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required in .env - generate one with openssl rand -base64 32}
 
-      # Application
-      - BASE_URL=${BASE_URL}
-
-      # AI assistant (OpenAI)
-      - AI_ASSISTANT_ENABLED=${AI_ASSISTANT_ENABLED:-true}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-6-luna}
-      - AI_MAX_STEPS=${AI_MAX_STEPS:-6}
-      - AI_MAX_OUTPUT_TOKENS=${AI_MAX_OUTPUT_TOKENS:-1500}
-      - AI_REQUEST_TIMEOUT_MS=${AI_REQUEST_TIMEOUT_MS:-60000}
-      - AI_REASONING_EFFORT=${AI_REASONING_EFFORT:-low}
-      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
-
-      # Sign-up restrictions
-      - SIGNUP_DISABLED=${SIGNUP_DISABLED}
-      - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
-      - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
-
-      # Sign-up email confirmation
-      - SIGNUP_EMAIL_CONFIRMATION=${SIGNUP_EMAIL_CONFIRMATION}
-
-      # Gotenberg (Pdf generator)
-      - GOTENBERG_URL=${GOTENBERG_URL}
-      - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
-
-      # Exchange Rate
-      - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
-      - OPEN_EXCHANGE_RATE_APP_ID=${OPEN_EXCHANGE_RATE_APP_ID}
-
-      # Bank Sync
-      - BANK_FEED_ENABLED=${BANK_FEED_ENABLED}
-
-      # Plaid
-      - PLAID_ENV=${PLAID_ENV}
-      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
-      - PLAID_SECRET=${PLAID_SECRET}
-      - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
-      - PLAID_CLIENT_NAME=${PLAID_CLIENT_NAME}
-      - PLAID_COUNTRY_CODES=${PLAID_COUNTRY_CODES}
-
-      # Stripe Billing (Bigcapital Cloud)
-      - FREE_TRIAL_DAYS=${FREE_TRIAL_DAYS:-15}
-      - STRIPE_BILLING_SECRET_KEY=${STRIPE_BILLING_SECRET_KEY}
-      - STRIPE_BILLING_WEBHOOK_SECRET=${STRIPE_BILLING_WEBHOOK_SECRET}
-      - STRIPE_BILLING_PORTAL_CONFIGURATION_ID=${STRIPE_BILLING_PORTAL_CONFIGURATION_ID}
-      - STRIPE_BILLING_SUCCESS_URL=${STRIPE_BILLING_SUCCESS_URL}
-      - STRIPE_BILLING_CANCEL_URL=${STRIPE_BILLING_CANCEL_URL}
-
-      # New Relic matrics tracking.
-      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=${NEW_RELIC_DISTRIBUTED_TRACING_ENABLED}
-      - NEW_RELIC_LOG=${NEW_RELIC_LOG}
-      - NEW_RELIC_AI_MONITORING_ENABLED=${NEW_RELIC_AI_MONITORING_ENABLED}
-      - NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED}
-      - NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME}
-
-      # S3
-      - S3_REGION=${S3_REGION}
-      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
-      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
-      - S3_ENDPOINT=${S3_ENDPOINT}
-      - S3_BUCKET=${S3_BUCKET}
-      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}
-
-      # Stripe
-      - STRIPE_PAYMENT_SECRET_KEY=${STRIPE_PAYMENT_SECRET_KEY}
-      - STRIPE_PAYMENT_PUBLISHABLE_KEY=${STRIPE_PAYMENT_PUBLISHABLE_KEY}
-      - STRIPE_PAYMENT_CLIENT_ID=${STRIPE_PAYMENT_CLIENT_ID}
-      - STRIPE_PAYMENT_WEBHOOKS_SECRET=${STRIPE_PAYMENT_WEBHOOKS_SECRET}
-      - STRIPE_PAYMENT_REDIRECT_URL=${STRIPE_PAYMENT_REDIRECT_URL}
-
-      # API rate limiting (see .env.example)
-      - THROTTLE_GLOBAL_TTL=${THROTTLE_GLOBAL_TTL}
-      - THROTTLE_GLOBAL_LIMIT=${THROTTLE_GLOBAL_LIMIT}
-      - THROTTLE_AUTH_TTL=${THROTTLE_AUTH_TTL}
-      - THROTTLE_AUTH_LIMIT=${THROTTLE_AUTH_LIMIT}
+      # Defaults for vars parsed with `??` in the server config, where an empty
+      # string would break parsing (see common/config/throttle.ts).
+      - THROTTLE_GLOBAL_TTL=${THROTTLE_GLOBAL_TTL:-60000}
+      - THROTTLE_GLOBAL_LIMIT=${THROTTLE_GLOBAL_LIMIT:-300}
+      - THROTTLE_AUTH_TTL=${THROTTLE_AUTH_TTL:-60000}
+      - THROTTLE_AUTH_LIMIT=${THROTTLE_AUTH_LIMIT:-30}
 
   database_migration:
     container_name: bigcapital-database-migration
     build:
       context: ./
       dockerfile: docker/migration/Dockerfile
+    env_file:
+      - .env
     environment:
-      # Database
+      # Migrations run inside the compose network, not on the host.
       - DB_HOST=mysql
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_CHARSET=${DB_CHARSET}
-      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
-      # Tenants databases
-      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
-      # Cloud trial backfill (system migration)
-      - STRIPE_BILLING_SECRET_KEY=${STRIPE_BILLING_SECRET_KEY}
-      - STRIPE_BILLING_WEBHOOK_SECRET=${STRIPE_BILLING_WEBHOOK_SECRET}
-      - FREE_TRIAL_DAYS=${FREE_TRIAL_DAYS:-15}
     depends_on:
       - mysql
     networks:
