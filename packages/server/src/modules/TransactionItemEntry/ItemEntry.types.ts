@@ -5,6 +5,22 @@ export type IItemEntryTransactionType =
   | 'CreditNote'
   | 'VendorCredit';
 
+export type DocumentBatchDirection = 'in' | 'out';
+
+/**
+ * The batch movement of a document item entry.
+ */
+export interface IDocumentBatch {
+  batchId: number;
+  batchNumber: string;
+  batchRef?: string | null;
+  expiryDate?: string | null;
+  quantity: number;
+  itemId: number;
+  itemName: string;
+  direction: DocumentBatchDirection;
+}
+
 export interface IItemEntryDTO {
   id?: number;
   index?: number;

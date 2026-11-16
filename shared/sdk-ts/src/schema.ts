@@ -8211,6 +8211,49 @@ export interface components {
              */
             taxRateAmountFormatted: string;
         };
+        DocumentBatchDto: {
+            /**
+             * @description The ID of the batch
+             * @example 1
+             */
+            batchId: number;
+            /**
+             * @description The batch number
+             * @example BATCH-001
+             */
+            batchNumber: string;
+            /**
+             * @description The batch reference
+             * @example MFG-2026-01
+             */
+            batchRef?: string | null;
+            /**
+             * @description The batch expiry date
+             * @example 2027-01-01
+             */
+            expiryDate?: string | null;
+            /**
+             * @description The quantity moved from or to the batch
+             * @example 5
+             */
+            quantity: number;
+            /**
+             * @description The ID of the item
+             * @example 1
+             */
+            itemId: number;
+            /**
+             * @description The name of the item
+             * @example Item 1
+             */
+            itemName: string;
+            /**
+             * @description The direction of the batch movement
+             * @example out
+             * @enum {string}
+             */
+            direction: "in" | "out";
+        };
         BranchLinkDto: {
             /**
              * @description The name of the branch
@@ -8383,6 +8426,8 @@ export interface components {
             entries: components["schemas"]["ItemEntryDto"][];
             /** @description The tax entries of the invoice */
             taxes?: components["schemas"]["SaleInvoiceTaxEntryDto"][];
+            /** @description The batch movements of the invoice */
+            batches?: components["schemas"]["DocumentBatchDto"][];
             /**
              * Format: date-time
              * @description The date when the invoice was delivered
@@ -12791,6 +12836,8 @@ export interface components {
             entries: components["schemas"]["ItemEntryDto"][];
             /** @description The tax entries of the bill */
             taxes?: components["schemas"]["SaleInvoiceTaxEntryDto"][];
+            /** @description The batch movements of the bill */
+            batches?: components["schemas"]["DocumentBatchDto"][];
             /**
              * @description The ID of the warehouse
              * @example 101

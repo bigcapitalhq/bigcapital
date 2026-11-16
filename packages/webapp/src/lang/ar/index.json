@@ -2200,6 +2200,8 @@
   "batch.column.quantity_out": "الكمية الخارجة",
   "batch.column.quantity_on_hand": "الكمية المتاحة",
   "batch.column.status": "الحالة",
+  "batch.movements.in": "الدفعات الواردة",
+  "batch.movements.out": "الدفعات الصادرة",
   "batch.action.confirm_delete": "حذف الدفعة",
   "batch.status.all": "كل الحالات",
   "batch.status.active": "نشطة",

@@ -3,6 +3,8 @@ import { Bill } from '../models/Bill';
 import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
 import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
 import { SaleInvoiceTaxEntryTransformer } from '@/modules/SaleInvoices/queries/SaleInvoiceTaxEntry.transformer';
+import { transformEntriesToDocumentBatches } from '@/modules/TransactionItemEntry/utils';
+import type { IDocumentBatch } from '@/modules/TransactionItemEntry/ItemEntry.types';
 
 export class BillTransformer extends Transformer {
   /**
@@ -10,7 +12,7 @@ export class BillTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
+    const attributes = [
       'formattedBillDate',
       'formattedDueDate',
       'formattedCreatedAt',
@@ -33,6 +35,10 @@ export class BillTransformer extends Transformer {
       'attachments',
       'branch',
     ];
+
+    return this.options?.includeBatches
+      ? [...attributes, 'batches']
+      : attributes;
   };
 
   /**
@@ -240,6 +246,15 @@ export class BillTransformer extends Transformer {
     return this.item(bill.entries, new ItemEntryTransformer(), {
       currencyCode: bill.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the batch movements of the bill.
+   * @param {Bill} bill
+   * @returns {IDocumentBatch[]}
+   */
+  protected batches = (bill: Bill): IDocumentBatch[] => {
+    return transformEntriesToDocumentBatches(bill.entries ?? [], 'in');
   };
 
   /**

@@ -2636,6 +2636,8 @@
   "batch.column.quantity_out": "Quantity Out",
   "batch.column.quantity_on_hand": "Quantity On Hand",
   "batch.column.status": "Status",
+  "batch.movements.in": "Batches In",
+  "batch.movements.out": "Batches Out",
   "batch.action.confirm_delete": "Delete batch",
   "batch.status.all": "All statuses",
   "batch.status.active": "Active",
