@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   ForbiddenException,
@@ -6,6 +7,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +17,7 @@ import { SkipSerialize } from '@/common/decorators/SkipSerialize.decorator';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AiAccessGuard } from './AiAccess.guard';
 import { AiConversationService } from './AiConversation.service';
+import { SetMessageFeedbackDto } from './dtos/set-message-feedback.dto';
 
 @Controller('ai/conversations')
 @ApiExcludeController()
@@ -58,6 +61,23 @@ export class AiConversationsController {
   @Get(':id')
   public async get(@Param('id', ParseIntPipe) id: number) {
     return this.conversationService.getWithMessages(this.getUserId(), id);
+  }
+
+  /**
+   * Stores the current user's rating of an assistant message.
+   */
+  @Patch(':id/messages/:messageId/feedback')
+  public async setMessageFeedback(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('messageId') messageId: string,
+    @Body() dto: SetMessageFeedbackDto,
+  ) {
+    return this.conversationService.setMessageFeedback(
+      this.getUserId(),
+      id,
+      messageId,
+      dto.feedback,
+    );
   }
 
   /**

@@ -5,6 +5,7 @@ import type { UIMessage } from 'ai';
 interface AiAssistantThreadProps {
   messages: UIMessage[];
   isStreaming: boolean;
+  conversationId?: number | null;
 }
 
 /**
@@ -14,6 +15,7 @@ interface AiAssistantThreadProps {
 export function AiAssistantThread({
   messages,
   isStreaming,
+  conversationId,
 }: AiAssistantThreadProps) {
   const threadRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
@@ -42,8 +44,13 @@ export function AiAssistantThread({
       role="log"
     >
       <div className="ai-thread__inner">
-        {messages.map((message) => (
-          <AiAssistantMessage key={message.id} message={message} />
+        {messages.map((message, index) => (
+          <AiAssistantMessage
+            key={message.id}
+            message={message}
+            conversationId={conversationId}
+            isStreaming={isStreaming && index === messages.length - 1}
+          />
         ))}
 
         {isStreaming ? (

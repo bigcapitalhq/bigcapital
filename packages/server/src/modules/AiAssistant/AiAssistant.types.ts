@@ -3,6 +3,8 @@ import type { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export type AiMessageStatus = 'completed' | 'aborted' | 'failed';
 
+export type AiMessageFeedback = 'like' | 'dislike';
+
 export interface IAiToolContext {
   organizationName: string;
   baseCurrency: string;

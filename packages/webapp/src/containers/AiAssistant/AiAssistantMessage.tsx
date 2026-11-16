@@ -4,8 +4,10 @@ import React, { useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 import { AiMarkdown } from './AiMarkdown';
 import { formatToolNumber } from './utils';
+import type { AiMessageFeedback } from '@/hooks/query/ai-assistant';
 import type { UIMessage } from 'ai';
 import { Icon } from '@/components';
+import { useSetAiMessageFeedback } from '@/hooks/query/ai-assistant';
 
 const TOOL_LABEL_KEYS: Record<string, string> = {
   search_business_records: 'ai_assistant.tool.searching',
@@ -209,11 +211,27 @@ function ToolCall({ part }: { part: any }) {
 
 interface AiAssistantMessageProps {
   message: UIMessage;
+  conversationId?: number | null;
+  isStreaming?: boolean;
 }
 
-export function AiAssistantMessage({ message }: AiAssistantMessageProps) {
+const getInitialFeedback = (message: UIMessage): AiMessageFeedback | null => {
+  const feedback = (message.metadata as Record<string, unknown> | undefined)
+    ?.feedback;
+  return feedback === 'like' || feedback === 'dislike' ? feedback : null;
+};
+
+export function AiAssistantMessage({
+  message,
+  conversationId,
+  isStreaming = false,
+}: AiAssistantMessageProps) {
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
+  const [feedback, setFeedback] = useState<AiMessageFeedback | null>(() =>
+    getInitialFeedback(message),
+  );
+  const setFeedbackMutation = useSetAiMessageFeedback();
 
   const copyText = useMemo(() => {
     return message.parts
@@ -222,6 +240,19 @@ export function AiAssistantMessage({ message }: AiAssistantMessageProps) {
       .join('\n\n')
       .trim();
   }, [message.parts]);
+
+  /**
+   * Hide the actions row while tokens are still arriving. Doing so avoids
+   * rating a response that is about to be replaced.
+   */
+  const hasStreamingPart = useMemo(
+    () =>
+      message.parts.some((part) => {
+        const state = (part as { state?: string }).state;
+        return state === 'streaming' || state === 'input-streaming';
+      }),
+    [message.parts],
+  );
 
   const handleCopy = async () => {
     if (!copyText) {
@@ -236,6 +267,24 @@ export function AiAssistantMessage({ message }: AiAssistantMessageProps) {
     }
   };
 
+  const handleFeedback = (next: AiMessageFeedback) => {
+    if (!conversationId || setFeedbackMutation.isPending) {
+      return;
+    }
+    const previous = feedback;
+    const value = previous === next ? null : next;
+
+    // Optimistically reflect the selection; revert if the request fails.
+    setFeedback(value);
+    setFeedbackMutation.mutate(
+      { conversationId, messageId: message.id, feedback: value },
+      { onError: () => setFeedback(previous) },
+    );
+  };
+
+  const showActions =
+    !isUser && !isStreaming && !hasStreamingPart && message.parts.length > 0;
+
   return (
     <div
       className={`ai-assistant-message ${
@@ -244,12 +293,6 @@ export function AiAssistantMessage({ message }: AiAssistantMessageProps) {
           : 'ai-assistant-message--assistant'
       }`}
     >
-      {!isUser ? (
-        <div className="ai-assistant-message__avatar">
-          <Icon icon="star-18dp" iconSize={16} />
-        </div>
-      ) : null}
-
       <div className="ai-assistant-message__body">
         {message.parts.map((part, index) => {
           if (part.type === 'text') {
@@ -269,22 +312,60 @@ export function AiAssistantMessage({ message }: AiAssistantMessageProps) {
           return null;
         })}
 
-        {!isUser && copyText ? (
+        {showActions ? (
           <div className="ai-assistant-message__actions">
-            <Button
-              minimal
-              small
-              className="ai-assistant-message__action"
-              aria-label={intl.get('ai_assistant.copy')}
-              title={intl.get('ai_assistant.copy')}
-              icon={<Icon icon="content-copy" iconSize={13} />}
-              onClick={handleCopy}
-            />
+            {copyText ? (
+              <Button
+                minimal
+                small
+                className="ai-assistant-message__action"
+                aria-label={intl.get('ai_assistant.copy')}
+                title={intl.get('ai_assistant.copy')}
+                icon={<Icon icon="content-copy" iconSize={13} />}
+                onClick={handleCopy}
+              />
+            ) : null}
             {copied ? (
               <span className="ai-assistant-message__copied">
                 {intl.get('ai_assistant.copied')}
               </span>
             ) : null}
+            {copyText ? (
+              <span
+                className="ai-assistant-message__actions-divider"
+                aria-hidden="true"
+              />
+            ) : null}
+            <Button
+              minimal
+              small
+              className={`ai-assistant-message__action ${
+                feedback === 'like'
+                  ? 'ai-assistant-message__action--like-active'
+                  : ''
+              }`}
+              aria-label={intl.get('ai_assistant.like')}
+              aria-pressed={feedback === 'like'}
+              title={intl.get('ai_assistant.like')}
+              disabled={!conversationId || setFeedbackMutation.isPending}
+              icon={<Icon icon="thumbs-up" iconSize={13} />}
+              onClick={() => handleFeedback('like')}
+            />
+            <Button
+              minimal
+              small
+              className={`ai-assistant-message__action ${
+                feedback === 'dislike'
+                  ? 'ai-assistant-message__action--dislike-active'
+                  : ''
+              }`}
+              aria-label={intl.get('ai_assistant.dislike')}
+              aria-pressed={feedback === 'dislike'}
+              title={intl.get('ai_assistant.dislike')}
+              disabled={!conversationId || setFeedbackMutation.isPending}
+              icon={<Icon icon="thumbs-down" iconSize={13} />}
+              onClick={() => handleFeedback('dislike')}
+            />
           </div>
         ) : null}
       </div>

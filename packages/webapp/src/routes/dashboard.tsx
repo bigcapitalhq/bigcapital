@@ -1339,7 +1339,6 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('ai_assistant.title'),
     pageTitle: intl.get('ai_assistant.title'),
-    sidebarExpand: false,
   },
   // Homepage
   {

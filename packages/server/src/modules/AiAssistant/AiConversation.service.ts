@@ -7,6 +7,7 @@ import {
   IAiChatMessage,
   IAiConversationSummary,
   IAiConversationWithMessages,
+  AiMessageFeedback,
 } from './AiAssistant.types';
 
 const MAX_TITLE_LENGTH = 80;
@@ -217,6 +218,36 @@ export class AiConversationService {
   }
 
   /**
+   * Stores the current user's rating of an assistant message. Passing `null`
+   * clears a previous rating.
+   */
+  public async setMessageFeedback(
+    systemUserId: number,
+    conversationId: number,
+    messageId: string,
+    feedback: AiMessageFeedback | null,
+  ): Promise<{ messageId: string; feedback: AiMessageFeedback | null }> {
+    await this.findOwnedConversation(systemUserId, conversationId);
+
+    const message = await this.messageModel().query().findOne({
+      conversationId,
+      messageId,
+      role: 'assistant',
+    });
+
+    if (!message) {
+      throw new NotFoundException('Assistant message not found.');
+    }
+
+    await this.messageModel()
+      .query()
+      .patch({ feedback })
+      .where('id', message.id);
+
+    return { messageId, feedback };
+  }
+
+  /**
    * Removes assistant messages after the latest user message so a regenerated
    * response replaces the previous one instead of duplicating it.
    */
@@ -240,11 +271,17 @@ export class AiConversationService {
   }
 
   private toChatMessage(message: AiMessage): IAiChatMessage {
+    const metadata =
+      parseJson<Record<string, any> | null>(message.metadata, null) ?? {};
+
     return {
       id: message.messageId,
       role: message.role,
       parts: parseJson<any[]>(message.parts, []),
-      metadata: parseJson<Record<string, any> | null>(message.metadata, null),
+      metadata:
+        message.role === 'assistant'
+          ? { ...metadata, feedback: message.feedback ?? null }
+          : metadata,
     };
   }
 }

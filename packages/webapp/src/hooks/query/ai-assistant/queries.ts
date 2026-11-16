@@ -21,6 +21,14 @@ export interface AiConversation extends AiConversationSummary {
   messages: UIMessage[];
 }
 
+export type AiMessageFeedback = 'like' | 'dislike';
+
+export interface SetAiMessageFeedbackArgs {
+  conversationId: number;
+  messageId: string;
+  feedback: AiMessageFeedback | null;
+}
+
 export const fetchAiAssistantStatus = (
   fetcher: ReturnType<typeof useApiFetcher>,
 ): Promise<AiAssistantStatus> =>
@@ -82,6 +90,30 @@ export function useAiConversation(id: number | null) {
     queryFn: () => fetchAiConversation(fetcher, id as number),
     enabled: id != null,
     staleTime: 0,
+  });
+}
+
+/**
+ * Stores the current user's rating of an assistant message. Passing `null`
+ * clears a previous rating.
+ */
+export function useSetAiMessageFeedback() {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    mutationFn: ({
+      conversationId,
+      messageId,
+      feedback,
+    }: SetAiMessageFeedbackArgs) =>
+      rawRequest<{ messageId: string; feedback: AiMessageFeedback | null }>(
+        fetcher,
+        'PATCH',
+        `/api/ai/conversations/${conversationId}/messages/${encodeURIComponent(
+          messageId,
+        )}/feedback`,
+        { feedback },
+      ),
   });
 }
 

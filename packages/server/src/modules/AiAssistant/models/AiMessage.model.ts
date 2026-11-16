@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import type { AiMessageFeedback } from '../AiAssistant.types';
 import type { AiConversation } from './AiConversation.model';
 
 export type AiMessageRole = 'user' | 'assistant' | 'system';
@@ -12,6 +13,7 @@ export class AiMessage extends TenantBaseModel {
   public parts!: any[];
   public content!: string | null;
   public metadata!: Record<string, any> | null;
+  public feedback!: AiMessageFeedback | null;
   public createdAt!: Date;
   public updatedAt!: Date;
 
