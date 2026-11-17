@@ -9,6 +9,7 @@ import {
 } from '../Analytics.constants';
 import { LedgerAnalyticsSyncService } from '../services/LedgerAnalyticsSync.service';
 import { LedgerAnalyticsDirtySet } from '../services/LedgerAnalyticsDirtySet.service';
+import { ClickHouseSchemaService } from '../services/ClickHouseSchema.service';
 import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
 
 @Processor({ name: LedgerAnalyticsReconcileQueue })
@@ -19,6 +20,7 @@ export class LedgerReconcileProcessor extends WorkerHost {
     private readonly syncService: LedgerAnalyticsSyncService,
     private readonly configService: ConfigService,
     private readonly dirtySet: LedgerAnalyticsDirtySet,
+    private readonly schemaService: ClickHouseSchemaService,
   ) {
     super();
   }
@@ -29,6 +31,9 @@ export class LedgerReconcileProcessor extends WorkerHost {
    * @param {Job<ILedgerAnalyticsReconcileJobPayload>} job
    */
   async process(job: Job<ILedgerAnalyticsReconcileJobPayload>): Promise<void> {
+    // Skip the jobs scheduled before the ClickHouse integration was disabled.
+    if (!this.schemaService.isEnabled()) return;
+
     const { organizationId, all } = job.data;
 
     if (all) {

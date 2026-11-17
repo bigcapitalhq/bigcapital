@@ -3,13 +3,19 @@ import { Ledger } from '@/modules/Ledger/Ledger';
 import { ILedgerAnalyticsSyncJobPayload } from '../Analytics.constants';
 
 describe('LedgerClickHouseSink', () => {
-  const makeSink = (organizationId?: string) => {
+  const makeSink = (organizationId?: string, enabled = true) => {
     const syncQueue = { add: jest.fn(() => Promise.resolve()) } as any;
     const dirtySet = { mark: jest.fn() } as any;
     const cls = { get: jest.fn(() => organizationId) } as any;
+    const schemaService = { isEnabled: jest.fn(() => enabled) } as any;
 
-    const sink = new LedgerClickHouseSink(syncQueue, dirtySet, cls);
-    return { sink, syncQueue, dirtySet };
+    const sink = new LedgerClickHouseSink(
+      syncQueue,
+      dirtySet,
+      cls,
+      schemaService,
+    );
+    return { sink, syncQueue, dirtySet, schemaService };
   };
 
   const enqueuedPayload = (syncQueue: any): ILedgerAnalyticsSyncJobPayload =>
@@ -59,6 +65,17 @@ describe('LedgerClickHouseSink', () => {
 
   it('does nothing without a tenant organization context', () => {
     const { sink, syncQueue } = makeSink(undefined);
+
+    sink.onLedgerCommitted(
+      new Ledger([{ credit: 0, debit: 100, accountId: 11 } as any]),
+    );
+    sink.onLedgerDeleted([{ accountId: 11, credit: 0, debit: 100 }]);
+
+    expect(syncQueue.add).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when the ClickHouse integration is disabled', () => {
+    const { sink, syncQueue } = makeSink('org-1', false);
 
     sink.onLedgerCommitted(
       new Ledger([{ credit: 0, debit: 100, accountId: 11 } as any]),
