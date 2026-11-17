@@ -10,8 +10,6 @@ import {
   FInputGroup,
   FormattedMessage as T,
   Box,
-  Row,
-  Col,
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 
@@ -23,47 +21,41 @@ export function ItemFormInventorySection() {
     <Box data-section-id="inventory">
       <ItemFormSectionTitle>Inventory details</ItemFormSectionTitle>
 
-      <Row>
-        <Col xs={6}>
-          {/*------------- Inventory Account ------------- */}
-          <FFormGroup
-            label={intl.get('inventory_account')}
-            name={'inventoryAccountId'}
-            fastField={true}
-            inline={true}
-          >
-            <AccountsSelect
-              name={'inventoryAccountId'}
-              items={accounts}
-              placeholder={<T id={'select_account'} />}
-              filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
-              fastField={true}
-              shouldUpdate={accountsFieldShouldUpdate}
-              accounts={accounts}
-            />
-          </FFormGroup>
-        </Col>
+      {/*------------- Inventory Account ------------- */}
+      <FFormGroup
+        label={intl.get('inventory_account')}
+        name={'inventoryAccountId'}
+        fastField={true}
+        inline={true}
+      >
+        <AccountsSelect
+          name={'inventoryAccountId'}
+          items={accounts}
+          placeholder={<T id={'select_account'} />}
+          filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
+          fastField={true}
+          shouldUpdate={accountsFieldShouldUpdate}
+          accounts={accounts}
+        />
+      </FFormGroup>
 
-        {values.type === 'inventory' && (
-          <Col xs={6}>
-            {/*------------- Reorder point ------------- */}
-            <FFormGroup
-              label={intl.get('reorder_point')}
-              name={'reorderPoint'}
-              helperText={intl.get('reorder_point_hint')}
-              inline={true}
-            >
-              <FInputGroup
-                name={'reorderPoint'}
-                type={'number'}
-                min={0}
-                step={0.001}
-                fill={true}
-              />
-            </FFormGroup>
-          </Col>
-        )}
-      </Row>
+      {/*------------- Reorder point ------------- */}
+      {values.type === 'inventory' && (
+        <FFormGroup
+          label={intl.get('reorder_point')}
+          name={'reorderPoint'}
+          helperText={intl.get('reorder_point_hint')}
+          inline={true}
+        >
+          <FInputGroup
+            name={'reorderPoint'}
+            type={'number'}
+            min={0}
+            step={0.001}
+            fill={true}
+          />
+        </FFormGroup>
+      )}
     </Box>
   );
 }
