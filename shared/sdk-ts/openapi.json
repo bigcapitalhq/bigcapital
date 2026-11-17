@@ -44803,6 +44803,12 @@
           "formattedAccountAmount": {
             "type": "string"
           },
+          "beginningBalance": {
+            "type": "number"
+          },
+          "formattedBeginningBalance": {
+            "type": "string"
+          },
           "bankBalance": {
             "type": "number",
             "nullable": true
@@ -44848,6 +44854,8 @@
           "currencyCode",
           "accountAmount",
           "formattedAccountAmount",
+          "beginningBalance",
+          "formattedBeginningBalance",
           "bankBalance",
           "formattedBankBalance",
           "isSupported",

@@ -1,18 +1,16 @@
-import { Alert, Button, Callout, Intent, Spinner } from '@blueprintjs/core';
+import { Button, Callout, Intent, Spinner } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
+import { ReconciliationDetailPanel } from './ReconciliationDetailPanel';
 import { ReconciliationHistoryTable } from './ReconciliationHistoryTable';
 import { ReconciliationStartPanel } from './ReconciliationStartPanel';
-import { ReconciliationWorkspace } from './ReconciliationWorkspace';
-import type { BankReconciliationResponse } from '@bigcapital/sdk-ts';
+import { ReconciliationTheme } from './styles';
 import { AppToaster } from '@/components';
 import {
   useBankReconciliation,
   useBankReconciliations,
   useCreateBankReconciliation,
-  useDeleteBankReconciliation,
-  useUndoBankReconciliation,
 } from '@/hooks/query/banking';
 
 export function ReconciliationTab() {
@@ -21,10 +19,6 @@ export function ReconciliationTab() {
 
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
   const [isStartingNew, setIsStartingNew] = React.useState(false);
-  const [undoTarget, setUndoTarget] =
-    React.useState<BankReconciliationResponse | null>(null);
-  const [deleteTarget, setDeleteTarget] =
-    React.useState<BankReconciliationResponse | null>(null);
 
   const {
     data: listResponse,
@@ -49,10 +43,6 @@ export function ReconciliationTab() {
 
   const { mutateAsync: createReconciliation, isPending: isCreating } =
     useCreateBankReconciliation();
-  const { mutateAsync: undoReconciliation, isPending: isUndoing } =
-    useUndoBankReconciliation();
-  const { mutateAsync: deleteReconciliation, isPending: isDeleting } =
-    useDeleteBankReconciliation();
 
   React.useEffect(() => {
     if (selectedId || isStartingNew) return;
@@ -100,61 +90,17 @@ export function ReconciliationTab() {
       });
   };
 
-  const handleUndoClick = (reconciliation: BankReconciliationResponse) => {
-    setUndoTarget(reconciliation);
-  };
+  const handleDeleted = (deletedId: number) => {
+    const remaining = reconciliations.filter(
+      (reconciliation) => reconciliation.id !== deletedId,
+    );
+    const nextReconciliation =
+      remaining.find((reconciliation) => reconciliation.isInProgress) ??
+      remaining[0];
 
-  const handleConfirmUndo = () => {
-    if (!undoTarget) return;
-
-    undoReconciliation({
-      id: undoTarget.id,
-      body: { cascade: !detail?.meta.isLatest },
-    })
-      .then((response) => {
-        setSelectedId(response.reconciliation.id);
-        setUndoTarget(null);
-        AppToaster.show({
-          message: 'Reconciliation reopened.',
-          intent: Intent.SUCCESS,
-        });
-      })
-      .catch((error: Error) => {
-        setUndoTarget(null);
-        AppToaster.show({
-          message: error.message || 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
-  };
-
-  const handleConfirmDelete = () => {
-    if (!deleteTarget) return;
-
-    deleteReconciliation(deleteTarget.id)
-      .then(() => {
-        const remaining = reconciliations.filter(
-          (reconciliation) => reconciliation.id !== deleteTarget.id,
-        );
-        const nextReconciliation =
-          remaining.find((reconciliation) => reconciliation.isInProgress) ??
-          remaining[0];
-
-        setDeleteTarget(null);
-        setIsStartingNew(!nextReconciliation);
-        setSelectedId(nextReconciliation?.id ?? null);
-        AppToaster.show({
-          message: 'Reconciliation deleted.',
-          intent: Intent.SUCCESS,
-        });
-      })
-      .catch((error: Error) => {
-        setDeleteTarget(null);
-        AppToaster.show({
-          message: error.message || 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
+    setIsStartingNew(!nextReconciliation);
+    setSelectedId(nextReconciliation?.id ?? null);
+    refetchList();
   };
 
   if (isListLoading) {
@@ -271,93 +217,23 @@ export function ReconciliationTab() {
       )}
 
       {selectedId && detail && !detailError && (
-        <ReconciliationWorkspace
-          key={`${detail.reconciliation.id}:${detail.reconciliation.updatedAt}`}
+        <ReconciliationDetailPanel
           detail={detail}
           accountId={accountId}
           accountName={currentAccount?.name}
           currencyCode={currentAccount?.currencyCode ?? meta.currencyCode}
-          onUndo={() => handleUndoClick(detail.reconciliation)}
-          onDelete={() => setDeleteTarget(detail.reconciliation)}
           onRefresh={() => {
             refetchList();
             refetchDetail();
           }}
+          onDeleted={handleDeleted}
         />
       )}
-
-      <Alert
-        isOpen={Boolean(undoTarget)}
-        intent={Intent.WARNING}
-        icon="undo"
-        confirmButtonText="Undo reconciliation"
-        cancelButtonText="Cancel"
-        loading={isUndoing}
-        onConfirm={handleConfirmUndo}
-        onCancel={() => setUndoTarget(null)}
-      >
-        <p>
-          Undo the reconciliation for{' '}
-          <strong>
-            {undoTarget?.formattedStartDate} – {undoTarget?.formattedEndDate}
-          </strong>
-          ?
-        </p>
-        {!detail?.meta.isLatest && (
-          <p>
-            This is not the latest reconciliation. Later reconciliations will
-            also be voided so the account can be reconciled again.
-          </p>
-        )}
-      </Alert>
-
-      <Alert
-        isOpen={Boolean(deleteTarget)}
-        intent={Intent.DANGER}
-        icon="trash"
-        confirmButtonText="Delete"
-        cancelButtonText="Cancel"
-        loading={isDeleting}
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setDeleteTarget(null)}
-      >
-        <p>
-          Delete the reconciliation for{' '}
-          <strong>
-            {deleteTarget?.formattedStartDate} –{' '}
-            {deleteTarget?.formattedEndDate}
-          </strong>
-          ? This cannot be undone.
-        </p>
-      </Alert>
     </TabWrap>
   );
 }
 
-const TabWrap = styled.div`
-  --x-recon-surface: var(--color-card-background);
-  --x-recon-border: #e1e8ed;
-  --x-recon-border-light: #eef1f4;
-  --x-recon-text: #1c2127;
-  --x-recon-text-muted: #738091;
-  --x-recon-table-header-background: #f6f7f9;
-  --x-recon-table-row-hover: #f6f8fa;
-  --x-recon-table-row-selected: #f1f8ff;
-  --x-recon-success: #3dcc91;
-  --x-recon-warning: #ffb366;
-
-  .bp4-dark & {
-    --x-recon-border: var(--color-dark-gray4);
-    --x-recon-border-light: var(--color-dark-gray4);
-    --x-recon-text: var(--color-light-gray5);
-    --x-recon-text-muted: rgba(255, 255, 255, 0.6);
-    --x-recon-table-header-background: var(--color-dark-gray3);
-    --x-recon-table-row-hover: var(--color-dark-gray3);
-    --x-recon-table-row-selected: rgba(138, 187, 255, 0.15);
-    --x-recon-success: var(--color-green-400);
-    --x-recon-warning: var(--color-orange-400);
-  }
-
+const TabWrap = styled(ReconciliationTheme)`
   padding-bottom: 30px;
 `;
 

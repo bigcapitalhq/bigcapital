@@ -85,12 +85,23 @@ export class GetBankReconciliationsService {
         ? moment(firstTransactionDate).format(DATE_FORMAT)
         : moment().format(DATE_FORMAT);
 
+    const beginningBalance = latestReconciled
+      ? Number(latestReconciled.endingBalance ?? 0)
+      : await this.repository.getLedgerBalanceBefore(
+          account.id,
+          suggestedStartDate,
+        );
+
     const meta = {
       accountId: account.id,
       accountName: account.name,
       currencyCode: account.currencyCode,
       accountAmount: Number(account.amount ?? 0),
       formattedAccountAmount: formatNumber(account.amount ?? 0, {
+        currencyCode: account.currencyCode,
+      }),
+      beginningBalance,
+      formattedBeginningBalance: formatNumber(beginningBalance, {
         currencyCode: account.currencyCode,
       }),
       bankBalance:

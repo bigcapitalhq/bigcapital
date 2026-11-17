@@ -16453,6 +16453,8 @@ export interface components {
             currencyCode: string;
             accountAmount: number;
             formattedAccountAmount: string;
+            beginningBalance: number;
+            formattedBeginningBalance: string;
             bankBalance: number | null;
             formattedBankBalance: string;
             isSupported: boolean;

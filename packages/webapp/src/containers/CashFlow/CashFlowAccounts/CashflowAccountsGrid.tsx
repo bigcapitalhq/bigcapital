@@ -129,9 +129,7 @@ function CashflowBankAccount({
   // Handle reconcile account action.
   const history = useHistory();
   const handleReconcileClick = () => {
-    history.push(
-      `/cashflow-accounts/${account.id}/transactions?filter=reconciliation`,
-    );
+    history.push(`/reconcile?accountId=${account.id}`);
   };
 
   return (

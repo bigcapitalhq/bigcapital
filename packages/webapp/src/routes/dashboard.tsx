@@ -1256,6 +1256,16 @@ export const getDashboardRoutes = () => [
   },
   // Cash flow
   {
+    path: '/reconcile',
+    component: lazy(() =>
+      import('@/containers/Banking/Reconciliation/ReconcilePage').then((m) => ({
+        default: m.ReconcilePage,
+      })),
+    ),
+    breadcrumb: intl.get('banking.reconciliation.page_title'),
+    pageTitle: intl.get('banking.reconciliation.page_title'),
+  },
+  {
     path: `/cashflow-accounts/:id/transactions`,
     component: lazy(() =>
       import(

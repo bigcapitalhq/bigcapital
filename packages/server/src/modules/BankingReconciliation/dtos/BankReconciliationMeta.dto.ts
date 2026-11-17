@@ -47,6 +47,12 @@ export class BankReconciliationListMetaDto {
   @ApiProperty()
   formattedAccountAmount: string;
 
+  @ApiProperty()
+  beginningBalance: number;
+
+  @ApiProperty()
+  formattedBeginningBalance: string;
+
   @ApiProperty({ nullable: true })
   bankBalance: number | null;
 

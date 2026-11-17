@@ -137,9 +137,7 @@ function AccountTransactionsActionsBarInner({
   };
   // Handle reconciliation click.
   const handleReconcileClick = () => {
-    history.push(
-      `/cashflow-accounts/${accountId}/transactions?filter=reconciliation`,
-    );
+    history.push(`/reconcile?accountId=${accountId}`);
   };
 
   // Handles the bank account disconnect click.
