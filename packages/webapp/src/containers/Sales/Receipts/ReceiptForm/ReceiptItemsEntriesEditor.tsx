@@ -32,6 +32,7 @@ export function ReceiptItemsEntriesEditor() {
             linesNumber={4}
             currencyCode={values.currencyCode}
             enableTaxRates={false}
+            accountField={'sellAccountId'}
           />
         )}
       </FastField>

@@ -1,7 +1,10 @@
 import { sumBy } from 'lodash';
 import moment from 'moment';
 import type { CreateRecurringInvoiceBody } from '@bigcapital/sdk-ts';
-import { assignEntriesTaxAmount } from '@/containers/Entries/utils';
+import {
+  assignEntriesTaxAmount,
+  isItemOrDescriptionEntry,
+} from '@/containers/Entries/utils';
 import { TaxType } from '@/interfaces/TaxRates';
 import { repeatValue, toSafeNumber } from '@/utils';
 
@@ -15,6 +18,7 @@ export type RecurringInvoiceEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
   taxRateId: string | number;
   taxRate: string | number;
   taxAmount: string | number;
@@ -66,6 +70,7 @@ export const defaultRecurringInvoiceEntry: RecurringInvoiceEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
@@ -151,6 +156,7 @@ export function transformRecurringInvoiceToForm(
         quantity: entry.quantity ?? '',
         description: entry.description ?? '',
         amount: entry.amount ?? '',
+        sellAccountId: entry.sellAccountId ?? '',
         taxRateId: entry.taxRateId ?? '',
         taxRate: entry.taxRate ?? '',
         taxAmount: entry.taxAmount ?? '',
@@ -201,14 +207,17 @@ export function transformRecurringInvoiceToRequest(
     discountType: values.discountType,
     adjustment: toSafeNumber(values.adjustment),
     entries: values.entries
-      .filter((entry) => entry.itemId && entry.quantity)
+      .filter((entry) => isItemOrDescriptionEntry(entry) && entry.quantity)
       .map((entry, index) => ({
         index,
-        itemId: Number(entry.itemId),
+        itemId: entry.itemId ? Number(entry.itemId) : undefined,
         description: entry.description,
         quantity: Number(entry.quantity),
         rate: Number(entry.rate),
         discount: toSafeNumber(entry.discount),
+        sellAccountId: entry.sellAccountId
+          ? Number(entry.sellAccountId)
+          : undefined,
         taxRateId: entry.taxRateId ? Number(entry.taxRateId) : undefined,
       })),
   } as unknown as CreateRecurringInvoiceBody;

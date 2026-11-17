@@ -8,6 +8,7 @@ import { useItem } from '@/hooks/query';
 import {
   toSafeNumber,
   saveInvoke,
+  isBlank,
   updateTableCell,
   updateAutoAddNewLine,
   updateMinEntriesLines,
@@ -20,6 +21,21 @@ import {
 export const ITEM_TYPE = {
   SELLABLE: 'SELLABLE',
   PURCHASABLE: 'PURCHASABLE',
+};
+
+/**
+ * Determines whether the given entry has an item or a description.
+ */
+export const isItemOrDescriptionEntry = (entry: {
+  itemId?: unknown;
+  description?: unknown;
+}) => {
+  const description =
+    typeof entry.description === 'string'
+      ? entry.description.trim()
+      : entry.description;
+
+  return !isBlank(entry.itemId) || !isBlank(description);
 };
 
 /**
@@ -105,7 +121,7 @@ export const ensureEntriesHaveEmptyLine =
  */
 export const isLandedCostDisabled = (item: unknown) =>
   ['service', 'non-inventory'].indexOf(
-    (item as { type?: string }).type as string,
+    (item as { type?: string } | undefined)?.type as string,
   ) === -1;
 
 interface FetchedItemRow {
@@ -347,7 +363,7 @@ export const useComposeRowsOnEditTableCell = () => {
         localValue,
         updateTableCell(rowIndex, columnId, value),
         updateItemsEntriesTotal,
-        updateAutoAddNewLine(defaultEntry, ['itemId']),
+        updateAutoAddNewLine(defaultEntry, ['itemId', 'description']),
         orderingLinesIndexes,
         assignEntriesTaxRate(taxRates),
         assignEntriesTaxAmount(isInclusiveTax),
@@ -371,7 +387,7 @@ export const useComposeRowsOnUpdateTableRow = () => {
         localValue,
         updateTableRow(rowIndex, patch),
         updateItemsEntriesTotal,
-        updateAutoAddNewLine(defaultEntry, ['itemId']),
+        updateAutoAddNewLine(defaultEntry, ['itemId', 'description']),
         orderingLinesIndexes,
         assignEntriesTaxRate(taxRates),
         assignEntriesTaxAmount(isInclusiveTax),

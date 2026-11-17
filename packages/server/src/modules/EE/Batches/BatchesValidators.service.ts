@@ -13,7 +13,7 @@ export interface IEntryBatchAllocation {
 }
 
 export interface IEntryBatchReference {
-  itemId: number;
+  itemId?: number;
   batchId?: number | null;
   quantity?: number;
   batches?: IEntryBatchAllocation[];

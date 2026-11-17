@@ -90,6 +90,30 @@ describe('Recurring Invoices (e2e)', () => {
     expect(response.body.entries).toHaveLength(1);
   });
 
+  it('/recurring-invoices (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/recurring-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestRecurringInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Recurring consulting services',
+              quantity: 1,
+              rate: 1000,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      );
+
+    expect(response.status).toBe(201);
+    expect(response.body.entries[0].item_id).toBeNull();
+    expect(response.body.entries[0].sell_account_id).toBe(1026);
+  });
+
   it('exposes recurring invoice resource meta and default views', async () => {
     const meta = await request(app.getHttpServer())
       .get('/resources/recurring_invoices/meta')
@@ -177,6 +201,43 @@ describe('Recurring Invoices (e2e)', () => {
 
     expect(invoices.body.data).toHaveLength(1);
     expect(invoices.body.data[0].id).toBe(generated.body.id);
+  });
+
+  it('generates an invoice from a description-only recurring line', async () => {
+    const recurring = await request(app.getHttpServer())
+      .post('/recurring-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestRecurringInvoiceBody({
+          startDate: futureDate(30),
+          entries: [
+            {
+              index: 1,
+              description: 'Recurring consulting services',
+              quantity: 1,
+              rate: 1000,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      )
+      .expect(201);
+
+    const generated = await request(app.getHttpServer())
+      .post(`/recurring-invoices/${recurring.body.id}/generate`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    const invoice = await request(app.getHttpServer())
+      .get(`/sale-invoices/${generated.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(invoice.body.entries[0].item_id).toBeNull();
+    expect(invoice.body.entries[0].sell_account_id).toBe(1026);
   });
 
   it('generates a due invoice in the background', async () => {

@@ -19,6 +19,7 @@ import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplate
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import {
   aggregateItemEntriesTaxRates,
@@ -45,6 +46,7 @@ export type InvoiceEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
   taxRateId: string | number;
   taxRate: string | number;
   taxAmount: string | number;
@@ -97,6 +99,7 @@ export const defaultInvoiceEntry: InvoiceEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
@@ -139,6 +142,7 @@ export const defaultReqInvoiceEntry = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
   taxRateId: '',
   batchId: null,
   batches: [],
@@ -301,7 +305,9 @@ const transformEntriesToRequest = (entries: InvoiceEntry[]) => {
  * Filters the givne non-zero entries.
  */
 const filterNonZeroEntries = (entries: InvoiceEntry[]) => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

@@ -72,6 +72,11 @@ export class EditSaleReceipt {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       saleReceiptDTO.entries,
     );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      saleReceiptDTO.entries,
+      'sellAccountId',
+    );
     // Validate sale receipt number uniuqiness.
     if (saleReceiptDTO.receiptNumber) {
       await this.validators.validateReceiptNumberUnique(

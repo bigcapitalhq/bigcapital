@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { sumBy, difference, map } from 'lodash';
+import { sumBy, difference, map, uniq, keyBy } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { Item } from './models/Item';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
@@ -7,13 +7,21 @@ import { ServiceError } from './ServiceError';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { entriesAmountDiff } from '@/utils/entries-amount-diff';
 import { ItemEntryDto } from '../TransactionItemEntry/dto/ItemEntry.dto';
+import { Account } from '../Accounts/models/Account.model';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from '@/constants/accounts';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
   ENTRIES_IDS_NOT_FOUND: 'ENTRIES_IDS_NOT_FOUND',
   NOT_PURCHASE_ABLE_ITEMS: 'NOT_PURCHASE_ABLE_ITEMS',
   NOT_SELL_ABLE_ITEMS: 'NOT_SELL_ABLE_ITEMS',
+  ENTRIES_ITEM_OR_DESCRIPTION_REQUIRED: 'ENTRIES_ITEM_OR_DESCRIPTION_REQUIRED',
+  ENTRIES_ACCOUNT_REQUIRED: 'ENTRIES_ACCOUNT_REQUIRED',
+  ENTRIES_ACCOUNT_NOT_FOUND: 'ENTRIES_ACCOUNT_NOT_FOUND',
+  ENTRIES_ACCOUNT_TYPE_INVALID: 'ENTRIES_ACCOUNT_TYPE_INVALID',
 };
+
+export type ItemEntryAccountField = 'sellAccountId' | 'costAccountId';
 
 @Injectable()
 export class ItemsEntriesService {
@@ -27,6 +35,9 @@ export class ItemsEntriesService {
 
     @Inject(ItemEntry.name)
     private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+
+    @Inject(Account.name)
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -44,10 +55,13 @@ export class ItemsEntriesService {
       .where('reference_type', referenceType)
       .where('reference_id', referenceId);
 
-    const inventoryItems = await this.itemModel()
-      .query()
-      .whereIn('id', map(itemsEntries, 'itemId'))
-      .where('type', 'inventory');
+    const itemsIds = map(itemsEntries, 'itemId').filter(Boolean);
+    const inventoryItems = itemsIds.length
+      ? await this.itemModel()
+          .query()
+          .whereIn('id', itemsIds)
+          .where('type', 'inventory')
+      : [];
 
     const inventoryItemsIds = map(inventoryItems, 'id');
 
@@ -66,12 +80,14 @@ export class ItemsEntriesService {
     entries: ItemEntry[],
     trx?: Knex.Transaction,
   ): Promise<ItemEntry[]> {
-    const entriesItemsIds = entries.map((e) => e.itemId);
+    const entriesItemsIds = entries.map((e) => e.itemId).filter(Boolean);
 
-    const inventoryItems = await this.itemModel()
-      .query(trx)
-      .whereIn('id', entriesItemsIds)
-      .where('type', 'inventory');
+    const inventoryItems = entriesItemsIds.length
+      ? await this.itemModel()
+          .query(trx)
+          .whereIn('id', entriesItemsIds)
+          .where('type', 'inventory')
+      : [];
 
     return entries.filter((entry) =>
       inventoryItems.some((item) => item.id === entry.itemId),
@@ -84,11 +100,13 @@ export class ItemsEntriesService {
    * @returns {Promise<Item[]>}
    */
   public async validateItemsIdsExistance(
-    itemEntries: Array<{ itemId: number }>,
+    itemEntries: Array<{ itemId?: number }>,
   ) {
-    const itemsIds = itemEntries.map((e) => e.itemId);
+    const itemsIds = uniq(itemEntries.map((e) => e.itemId).filter(Boolean));
 
-    const foundItems = await this.itemModel().query().whereIn('id', itemsIds);
+    const foundItems = itemsIds.length
+      ? await this.itemModel().query().whereIn('id', itemsIds)
+      : [];
 
     const foundItemsIds = foundItems.map((item: Item) => item.id);
     const notFoundItemsIds = difference(itemsIds, foundItemsIds);
@@ -132,7 +150,12 @@ export class ItemsEntriesService {
    * @param {IItemEntryDTO[]} itemEntries -
    */
   public async validateNonPurchasableEntriesItems(itemEntries: ItemEntryDto[]) {
-    const itemsIds = itemEntries.map((e: ItemEntryDto) => e.itemId);
+    const itemsIds = uniq(
+      itemEntries.map((e: ItemEntryDto) => e.itemId).filter(Boolean),
+    );
+    if (!itemsIds.length) {
+      return;
+    }
     const purchasbleItems = await this.itemModel()
       .query()
       .where('purchasable', true)
@@ -151,8 +174,12 @@ export class ItemsEntriesService {
    * @param {IItemEntryDTO[]} itemEntries -
    */
   public async validateNonSellableEntriesItems(itemEntries: ItemEntryDto[]) {
-    const itemsIds = itemEntries.map((e: ItemEntryDto) => e.itemId);
-
+    const itemsIds = uniq(
+      itemEntries.map((e: ItemEntryDto) => e.itemId).filter(Boolean),
+    );
+    if (!itemsIds.length) {
+      return;
+    }
     const sellableItems = await this.itemModel()
       .query()
       .where('sellable', true)
@@ -216,23 +243,127 @@ export class ItemsEntriesService {
   }
 
   /**
+   * Validates the entries have an item or a description with the account
+   * required to post the entry to the ledger.
+   * @param {ItemEntryDto[]} entries - Items entries.
+   * @param {ItemEntryAccountField} accountField - The account field name.
+   */
+  public async validateEntriesItemOrAccount(
+    entries: ItemEntryDto[],
+    accountField: ItemEntryAccountField,
+  ) {
+    const accountRequiredEntries = entries.filter((entry) => !entry.itemId);
+
+    accountRequiredEntries.forEach((entry) => {
+      if (!entry.description || !String(entry.description).trim()) {
+        throw new ServiceError(
+          ERRORS.ENTRIES_ITEM_OR_DESCRIPTION_REQUIRED,
+          'Each line item must have an item or a description.',
+        );
+      }
+      if (!entry[accountField]) {
+        throw new ServiceError(
+          ERRORS.ENTRIES_ACCOUNT_REQUIRED,
+          'A sell or cost account is required for line items without an item.',
+        );
+      }
+    });
+
+    const accountIds = uniq(
+      entries.map((entry) => entry[accountField]).filter(Boolean),
+    );
+    if (!accountIds.length) {
+      return;
+    }
+    const accounts = await this.accountModel()
+      .query()
+      .whereIn('id', accountIds);
+    const accountsById = keyBy(accounts, 'id');
+
+    entries.forEach((entry) => {
+      const accountId = entry[accountField];
+      if (!accountId) {
+        return;
+      }
+      const account = accountsById[accountId];
+
+      if (!account) {
+        throw new ServiceError(
+          ERRORS.ENTRIES_ACCOUNT_NOT_FOUND,
+          'The selected account was not found.',
+        );
+      }
+      if (
+        accountField === 'sellAccountId' &&
+        !account.isRootType(ACCOUNT_ROOT_TYPE.INCOME)
+      ) {
+        throw new ServiceError(
+          ERRORS.ENTRIES_ACCOUNT_TYPE_INVALID,
+          'The sell account must be an income account.',
+        );
+      }
+      if (
+        accountField === 'costAccountId' &&
+        !account.isParentType(ACCOUNT_PARENT_TYPE.EXPENSE)
+      ) {
+        throw new ServiceError(
+          ERRORS.ENTRIES_ACCOUNT_TYPE_INVALID,
+          'The cost account must be an expense account.',
+        );
+      }
+    });
+  }
+
+  /**
    * Sets the cost/sell accounts to the invoice entries.
    */
   public setItemsEntriesDefaultAccounts = async (entries: ItemEntryDto[]) => {
-    const entriesItemsIds = entries.map((e) => e.itemId);
-    const items = await this.itemModel().query().whereIn('id', entriesItemsIds);
+    const entriesItemsIds = uniq(entries.map((e) => e.itemId).filter(Boolean));
+    const items = entriesItemsIds.length
+      ? await this.itemModel().query().whereIn('id', entriesItemsIds)
+      : [];
 
     return entries.map((entry) => {
-      const item = items.find((i) => i.id === entry.itemId);
+      const item = entry.itemId
+        ? items.find((i) => i.id === entry.itemId)
+        : undefined;
 
       if (!item) {
-        throw new Error(`Item with id ${entry.itemId} not found`);
+        return entry;
       }
 
       return {
         ...entry,
         sellAccountId: entry.sellAccountId || item.sellAccountId,
         ...(item.type === 'inventory' && {
+          costAccountId: entry.costAccountId || item.costAccountId,
+        }),
+      };
+    });
+  };
+
+  /**
+   * Sets the default cost accounts to the purchase entries.
+   */
+  public setPurchaseEntriesDefaultAccounts = async (
+    entries: ItemEntryDto[],
+  ) => {
+    const entriesItemsIds = uniq(entries.map((e) => e.itemId).filter(Boolean));
+    const items = entriesItemsIds.length
+      ? await this.itemModel().query().whereIn('id', entriesItemsIds)
+      : [];
+
+    return entries.map((entry) => {
+      const item = entry.itemId
+        ? items.find((i) => i.id === entry.itemId)
+        : undefined;
+
+      if (!item) {
+        return entry;
+      }
+      return {
+        ...entry,
+        ...(item.type !== 'inventory' && {
           costAccountId: entry.costAccountId || item.costAccountId,
         }),
       };

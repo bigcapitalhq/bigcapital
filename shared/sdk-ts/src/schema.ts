@@ -8068,7 +8068,7 @@ export interface components {
              * @description The id of the item
              * @example 1
              */
-            itemId: number;
+            itemId?: number;
             /** @description The nested item summary */
             item?: components["schemas"]["ItemLinkDto"];
             /**
@@ -8095,7 +8095,7 @@ export interface components {
              * @description The description of the item entry
              * @example This is a description
              */
-            description: string;
+            description?: string;
             /**
              * @description The tax code of the item entry
              * @example 123456
@@ -8142,12 +8142,12 @@ export interface components {
              * @description The sell account id of the item entry
              * @example 1020
              */
-            sellAccountId: number;
+            sellAccountId?: number;
             /**
              * @description The cost account id of the item entry
              * @example 1021
              */
-            costAccountId: number;
+            costAccountId?: number;
             /**
              * @description The computed amount of the item entry (quantity * rate)
              * @example 100
@@ -13053,7 +13053,7 @@ export interface components {
              * @description The id of the item
              * @example 1
              */
-            itemId: number;
+            itemId?: number;
             /** @description The nested item summary */
             item?: components["schemas"]["ItemLinkDto"];
             /**
@@ -13080,7 +13080,7 @@ export interface components {
              * @description The description of the item entry
              * @example This is a description
              */
-            description: string;
+            description?: string;
             /**
              * @description The tax code of the item entry
              * @example 123456
@@ -13127,12 +13127,12 @@ export interface components {
              * @description The sell account id of the item entry
              * @example 1020
              */
-            sellAccountId: number;
+            sellAccountId?: number;
             /**
              * @description The cost account id of the item entry
              * @example 1021
              */
-            costAccountId: number;
+            costAccountId?: number;
             /**
              * @description The computed amount of the item entry (quantity * rate)
              * @example 100

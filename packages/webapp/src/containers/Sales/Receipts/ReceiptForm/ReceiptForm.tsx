@@ -31,6 +31,7 @@ import type { ReceiptFormValues } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { isItemOrDescriptionEntry } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { orderingLinesIndexes, transactionNumber } from '@/utils';
 
@@ -96,7 +97,7 @@ function ReceiptFormRoot({}: ReceiptFormRootProps) {
     { setErrors, setSubmitting, resetForm }: FormikHelpers<ReceiptFormValues>,
   ) => {
     const entries = values.entries.filter(
-      (item) => item.itemId && item.quantity,
+      (item) => isItemOrDescriptionEntry(item) && item.quantity,
     );
     const totalQuantity = sumBy(entries, (entry) =>
       parseInt(String(entry.quantity)),

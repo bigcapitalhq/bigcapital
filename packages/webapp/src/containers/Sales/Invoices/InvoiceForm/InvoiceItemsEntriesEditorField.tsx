@@ -38,6 +38,7 @@ export function InvoiceItemsEntriesEditorField() {
           items={items}
           taxRates={taxRates}
           itemType={ITEM_TYPE.SELLABLE}
+          accountField={'sellAccountId'}
           errors={error}
           linesNumber={4}
           currencyCode={values.currencyCode}

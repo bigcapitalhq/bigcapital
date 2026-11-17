@@ -29,6 +29,7 @@ import {
 } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
+import { isItemOrDescriptionEntry } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { orderingLinesIndexes, transactionNumber, safeSumBy } from '@/utils';
 
@@ -93,7 +94,8 @@ function CreditNoteFormInner({}: CreditNoteFormInnerProps) {
     { setSubmitting, resetForm }: FormikHelpers<CreditNoteFormValues>,
   ) => {
     const entries = values.entries.filter(
-      (item: CreditNoteEntry) => item.itemId && item.quantity,
+      (item: CreditNoteEntry) =>
+        isItemOrDescriptionEntry(item) && item.quantity,
     );
     const totalQuantity = safeSumBy(entries, 'quantity');
 

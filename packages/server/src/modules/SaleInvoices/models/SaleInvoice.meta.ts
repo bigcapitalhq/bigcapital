@@ -258,8 +258,15 @@ export const SaleInvoiceMeta = {
           fieldType: 'relation',
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
-          required: true,
+          required: false,
           importHint: 'invoice.field.item_hint',
+        },
+        sellAccountId: {
+          name: 'item.field.sell_account',
+          fieldType: 'relation',
+          relationModel: 'Account',
+          relationImportMatch: ['name', 'code'],
+          importHint: 'account.field.account_hint',
         },
         rate: {
           name: 'invoice.field.rate',

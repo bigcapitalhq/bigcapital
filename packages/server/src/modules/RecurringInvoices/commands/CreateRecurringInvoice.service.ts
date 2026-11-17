@@ -64,6 +64,10 @@ export class CreateRecurringInvoice {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       recurringInvoiceDTO.entries,
     );
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      recurringInvoiceDTO.entries,
+      'sellAccountId',
+    );
 
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
     const today = getTodayDate(tenantMetadata?.timezone);

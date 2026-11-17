@@ -66,6 +66,88 @@ describe('Bills (e2e)', () => {
       .expect(201);
   });
 
+  it('/bills (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/bills')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...createBillRequest(),
+        entries: [
+          {
+            index: 1,
+            description: 'Office supplies',
+            quantity: 1,
+            rate: 100,
+            costAccountId: 1019,
+            taxRateId: '',
+          },
+        ],
+      })
+      .expect(201);
+
+    const bill = await request(app.getHttpServer())
+      .get(`/bills/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(bill.body.entries[0].item_id).toBeNull();
+    expect(bill.body.entries[0].cost_account_id).toBe(1019);
+    expect(bill.body.entries[0].description).toBe('Office supplies');
+  });
+
+  it('/bills (POST) rejects a line without an item, description or account', async () => {
+    await request(app.getHttpServer())
+      .post('/bills')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...createBillRequest(),
+        entries: [{ index: 1, quantity: 1, rate: 100 }],
+      })
+      .expect(400);
+  });
+
+  it('/bills (POST) rejects a line without a cost account when no item is selected', async () => {
+    await request(app.getHttpServer())
+      .post('/bills')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...createBillRequest(),
+        entries: [
+          {
+            index: 1,
+            description: 'Office supplies',
+            quantity: 1,
+            rate: 100,
+          },
+        ],
+      })
+      .expect(400);
+  });
+
+  it('/bills (POST) rejects an invalid cost account type', async () => {
+    await request(app.getHttpServer())
+      .post('/bills')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...createBillRequest(),
+        entries: [
+          {
+            index: 1,
+            description: 'Office supplies',
+            quantity: 1,
+            rate: 100,
+            costAccountId: 1026,
+          },
+        ],
+      })
+      .expect(400);
+  });
+
   it('/bills (GET)', () => {
     return request(app.getHttpServer())
       .get('/bills')

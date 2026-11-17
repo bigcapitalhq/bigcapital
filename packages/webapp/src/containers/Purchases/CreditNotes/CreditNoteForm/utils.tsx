@@ -13,6 +13,7 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
@@ -35,6 +36,7 @@ export type VendorCreditEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  costAccountId: string | number;
 };
 
 export type VendorCreditFormValues = {
@@ -65,6 +67,7 @@ export const defaultVendorCreditEntry: VendorCreditEntry = {
   quantity: '',
   description: '',
   amount: '',
+  costAccountId: '',
 };
 
 // Default vendor credit note.
@@ -131,6 +134,7 @@ const defaultReqVendorCreditEntry = {
   discount: '',
   quantity: '',
   description: '',
+  costAccountId: '',
 };
 
 /**
@@ -146,7 +150,9 @@ const transformEntriesToSubmit = (entries: VendorCreditEntry[]) => {
  * Filters the given non-zero entries.
  */
 export const filterNonZeroEntries = (entries: VendorCreditEntry[]) => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

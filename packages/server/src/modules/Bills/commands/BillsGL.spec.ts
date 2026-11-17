@@ -89,6 +89,28 @@ describe('BillGL', () => {
     expect(entries.some((entry) => entry.accountId === 300)).toBe(false);
   });
 
+  it('debits the selected cost account for a line without an item', () => {
+    const ledger = buildLedger(
+      buildBill({
+        entries: [
+          {
+            id: 3,
+            itemId: null,
+            totalExcludingTax: 400,
+            costAccountId: 250,
+            item: undefined,
+          },
+        ],
+      }),
+    );
+
+    const entries = ledger.getEntries();
+    const itemEntry = entries.find((entry) => entry.itemId === null);
+
+    expect(itemEntry.debit).toBe(400);
+    expect(itemEntry.accountId).toBe(250);
+  });
+
   it('applies the exchange rate to the item entries but keeps the allocated costs as is', () => {
     const ledger = buildLedger(
       buildBill({ exchangeRate: 2 }),

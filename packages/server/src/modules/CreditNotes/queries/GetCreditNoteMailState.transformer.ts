@@ -168,7 +168,7 @@ class GetCreditNoteMailStateEntryTransformer extends ItemEntryTransformer {
    * @returns
    */
   public name = (entry) => {
-    return entry.item.name;
+    return entry.item?.name ?? entry.description ?? '';
   };
 
   public includeAttributes = (): string[] => {
