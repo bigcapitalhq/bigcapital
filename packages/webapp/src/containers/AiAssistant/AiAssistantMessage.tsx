@@ -21,6 +21,7 @@ const TOOL_LABEL_KEYS: Record<string, string> = {
   get_outstanding_receivables: 'ai_assistant.tool.receivables',
   get_cash_position: 'ai_assistant.tool.cash_position',
   get_inventory_levels: 'ai_assistant.tool.inventory',
+  get_balance_sheet: 'ai_assistant.tool.balance_sheet',
 };
 
 const getToolLabel = (toolName: string): string => {
@@ -116,6 +117,45 @@ function ToolResultPreview({ toolName, output }: ToolResultPreviewProps) {
                 <td>{row.name}</td>
                 <td>{formatToolNumber(row.balance)}</td>
               </tr>
+            ))}
+          </tbody>
+        </table>
+        {currency ? <div className={styles.currency}>{currency}</div> : null}
+      </div>
+    );
+  }
+
+  if (Array.isArray(data.sections)) {
+    const sections = data.sections.slice(0, 3);
+
+    if (sections.length === 0) {
+      return null;
+    }
+    return (
+      <div className={styles.preview}>
+        <table>
+          <thead>
+            <tr>
+              <th>{intl.get('ai_assistant.table.account')}</th>
+              <th>{intl.get('ai_assistant.table.balance')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sections.map((section: any) => (
+              <React.Fragment key={section.id}>
+                <tr>
+                  <td>
+                    <strong>{section.name}</strong>
+                  </td>
+                  <td>{formatToolNumber(section.total)}</td>
+                </tr>
+                {(section.groups ?? []).slice(0, 4).map((group: any) => (
+                  <tr key={`${section.id}-${group.id}`}>
+                    <td className={styles.previewIndent}>{group.name}</td>
+                    <td>{formatToolNumber(group.total)}</td>
+                  </tr>
+                ))}
+              </React.Fragment>
             ))}
           </tbody>
         </table>

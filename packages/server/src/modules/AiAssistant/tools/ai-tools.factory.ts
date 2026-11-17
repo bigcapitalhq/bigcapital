@@ -15,12 +15,19 @@ import { AccountAction } from '@/interfaces/Account';
 import { AiAnalyticsRepository } from './AiAnalytics.repository';
 import { IRecordMatch } from './AiAnalytics.types';
 import { resolveDateRange } from '../utils/date-range';
+import { AiBalanceSheetRepository } from './AiBalanceSheet.repository';
+import {
+  balanceSheetInputSchema,
+  balanceSheetOutputSchema,
+  type BalanceSheetToolOutput,
+} from './AiBalanceSheet.schema';
 
 export interface IAiToolsContext {
   knex: Knex;
   ability: Ability;
   baseCurrency: string;
   accountingBasis: AccountingBasis;
+  fiscalYear: string | null;
 }
 
 interface IResolvedRecord {
@@ -76,8 +83,16 @@ export class AiToolsFactory {
     return new AiAnalyticsRepository(this.context.knex);
   }
 
+  private get balanceSheetRepository(): AiBalanceSheetRepository {
+    return new AiBalanceSheetRepository(this.context.knex);
+  }
+
   private can(action: string, subject: AbilitySubject): boolean {
     return this.context.ability.can(action, subject);
+  }
+
+  private get canReadBalanceSheet(): boolean {
+    return this.can(ReportsAction.READ_BALANCE_SHEET, AbilitySubject.Report);
   }
 
   private get canReadProfitLoss(): boolean {
@@ -432,6 +447,23 @@ export class AiToolsFactory {
         execute: async ({ limit }) =>
           this.safeExecute('get_inventory_levels', async () => {
             return repository.getInventoryLevels(baseCurrency, limit);
+          }),
+      });
+    }
+
+    if (this.canReadBalanceSheet) {
+      tools.get_balance_sheet = tool({
+        description:
+          'Get the balance sheet as of a date: total assets, liabilities, equity, and the account groups behind them. Use for point-in-time financial-position questions such as "what are my total assets", "how much cash, receivables, or inventory do I have", "is the balance sheet balanced", or an individual balance-sheet account balance. For the whole balance sheet, call the tool with no filters and omit accountQuery. Only set accountQuery when the user explicitly names a specific account. Supports section and group filters, account name/ID focus, zero balances, and comparison to an earlier date (explicit or previous year/month/quarter/period). Amounts are in the organization base currency. Group and section totals are authoritative and include all accounts; account rows are limited to the largest few per group. Do not use this for revenue or expenses over a period; use the profit and loss tools for those.',
+        inputSchema: balanceSheetInputSchema,
+        outputSchema: balanceSheetOutputSchema,
+        execute: async (input): Promise<BalanceSheetToolOutput> =>
+          this.safeExecute('get_balance_sheet', async () => {
+            return this.balanceSheetRepository.getBalanceSheet(input, {
+              baseCurrency,
+              accountingBasis,
+              fiscalYear: this.context.fiscalYear,
+            });
           }),
       });
     }

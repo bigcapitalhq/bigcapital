@@ -134,6 +134,10 @@
       color: $muted;
       font-weight: 600;
     }
+
+    td.previewIndent {
+      padding-inline-start: 16px;
+    }
   }
 }
 

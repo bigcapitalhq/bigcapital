@@ -7,6 +7,7 @@ const SUGGESTIONS = [
   'ai_assistant.suggestion.item_turnover',
   'ai_assistant.suggestion.receivables',
   'ai_assistant.suggestion.profit',
+  'ai_assistant.suggestion.balance_sheet',
 ];
 
 interface AiAssistantEmptyProps {
