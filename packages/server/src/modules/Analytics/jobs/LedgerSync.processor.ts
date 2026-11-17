@@ -8,6 +8,7 @@ import {
 import { LedgerAnalyticsSyncService } from '../services/LedgerAnalyticsSync.service';
 import { TenantConnectionFactory } from '../services/TenantConnectionFactory';
 import { LedgerAnalyticsDirtySet } from '../services/LedgerAnalyticsDirtySet.service';
+import { ClickHouseSchemaService } from '../services/ClickHouseSchema.service';
 
 @Processor({ name: LedgerAnalyticsSyncQueue })
 export class LedgerSyncProcessor extends WorkerHost {
@@ -17,6 +18,7 @@ export class LedgerSyncProcessor extends WorkerHost {
     private readonly syncService: LedgerAnalyticsSyncService,
     private readonly tenantConnectionFactory: TenantConnectionFactory,
     private readonly dirtySet: LedgerAnalyticsDirtySet,
+    private readonly schemaService: ClickHouseSchemaService,
   ) {
     super();
   }
@@ -27,6 +29,9 @@ export class LedgerSyncProcessor extends WorkerHost {
    * @param {Job<ILedgerAnalyticsSyncJobPayload>} job
    */
   async process(job: Job<ILedgerAnalyticsSyncJobPayload>): Promise<void> {
+    // Skip the jobs queued before the ClickHouse integration was disabled.
+    if (!this.schemaService.isEnabled()) return;
+
     const { organizationId, deltas, accountIds } = job.data;
 
     try {
