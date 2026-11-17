@@ -172,7 +172,7 @@ describe('AiBalanceSheetRepository', () => {
     expect(unresolved.message).toContain('Ask the user');
   });
 
-  it('returns not found for unknown accounts', async () => {
+  it('returns not found for unknown accounts with a recovery instruction', async () => {
     const repository = createRepository();
     const result = await repository.getBalanceSheet(
       { accountQuery: 'nonexistent' },
@@ -182,6 +182,22 @@ describe('AiBalanceSheetRepository', () => {
     const unresolved = expectUnresolved(result);
     expect(unresolved.reason).toBe('not_found');
     expect(unresolved.matches).toEqual([]);
+    expect(unresolved.message).toContain('retry with accountQuery omitted');
+  });
+
+  it('ignores generic full-report account phrases', async () => {
+    const repository = createRepository();
+    const result = await repository.getBalanceSheet(
+      { accountQuery: 'whole balance' },
+      context,
+    );
+
+    const success = expectSuccess(result);
+    expect(success.appliedFilters.accountQuery).toBeNull();
+    expect(success.appliedFilters.ignoredAccountQuery).toBe('whole balance');
+    expect(success.notes).toContain(
+      'Ignored the account filter "whole balance" because it describes the whole balance sheet. No account focus was applied.',
+    );
   });
 
   it('redirects profit-and-loss accounts to the P&L tools', async () => {

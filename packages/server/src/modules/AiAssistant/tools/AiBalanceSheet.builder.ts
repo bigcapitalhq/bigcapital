@@ -60,6 +60,7 @@ export interface IBalanceSheetResolvedFilters {
   groupIds: BalanceSheetGroupFilterId[] | null;
   accountIds: number[] | null;
   accountQuery: string | null;
+  ignoredAccountQuery: string | null;
   focusAccountIds: number[] | null;
   includeAccounts: boolean;
   includeZeroBalances: boolean;
@@ -524,6 +525,12 @@ const buildNotes = (
     );
   }
 
+  if (filters.ignoredAccountQuery) {
+    notes.push(
+      `Ignored the account filter "${filters.ignoredAccountQuery}" because it describes the whole balance sheet. No account focus was applied.`,
+    );
+  }
+
   if (hasTruncatedAccounts) {
     notes.push(
       `Account rows are limited to the largest ${filters.maxAccountsPerGroup} per group; group totals include all accounts.`,
@@ -716,6 +723,7 @@ export const buildBalanceSheet = (
       groupIds: input.filters.groupIds,
       accountIds: input.filters.accountIds,
       accountQuery: input.filters.accountQuery,
+      ignoredAccountQuery: input.filters.ignoredAccountQuery,
       resolvedAccountIds: input.filters.focusAccountIds,
       includeAccounts: effectiveIncludeAccounts,
       includeZeroBalances: input.filters.includeZeroBalances,

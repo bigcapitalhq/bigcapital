@@ -22,6 +22,13 @@ const QUERY_TIMEOUT_MS = 5000;
 const DATE_FORMAT = 'YYYY-MM-DD';
 const MAX_ACCOUNT_MATCHES = 10;
 
+/**
+ * Common phrases models use when they mean the full report rather than a
+ * specific account. These are ignored instead of failing the tool call.
+ */
+const GENERIC_BALANCE_SHEET_QUERY_PATTERN =
+  /^(?:(?:the|my|our|a)\s+)?(?:(?:whole|full|entire|complete)\s+)?(?:balance(?:\s+sheet)?|sheet|report|overview|summary|totals?|all|everything|(?:total\s+)?assets?|(?:total\s+)?liabilit(?:y|ies)|(?:total\s+)?equity)$/i;
+
 const FISCAL_YEAR_MONTHS = [
   'january',
   'february',
@@ -57,8 +64,8 @@ interface IAccountMatch {
 }
 
 type AccountFocusResolution =
-  | { kind: 'none' }
-  | { kind: 'resolved'; accountIds: number[] }
+  | { kind: 'none'; ignoredAccountQuery: string | null }
+  | { kind: 'resolved'; accountIds: number[]; ignoredAccountQuery: null }
   | { kind: 'unresolved'; output: BalanceSheetUnresolvedOutput };
 
 /**
@@ -195,7 +202,10 @@ export class AiBalanceSheetRepository {
       groupIds:
         (input.groupIds as BalanceSheetGroupFilterId[] | undefined) ?? null,
       accountIds: input.accountIds ?? null,
-      accountQuery: input.accountQuery ?? null,
+      accountQuery:
+        focus.kind === 'resolved' ? (input.accountQuery ?? null) : null,
+      ignoredAccountQuery:
+        focus.kind === 'resolved' ? null : focus.ignoredAccountQuery,
       focusAccountIds: focus.kind === 'resolved' ? focus.accountIds : null,
       includeAccounts: input.includeAccounts ?? true,
       includeZeroBalances: input.includeZeroBalances ?? false,
@@ -281,7 +291,7 @@ export class AiBalanceSheetRepository {
     input: BalanceSheetToolInput,
   ): AccountFocusResolution {
     if (!input.accountIds?.length && !input.accountQuery) {
-      return { kind: 'none' };
+      return { kind: 'none', ignoredAccountQuery: null };
     }
 
     if (input.accountIds?.length) {
@@ -309,6 +319,7 @@ export class AiBalanceSheetRepository {
         return {
           kind: 'resolved',
           accountIds: accounts.map((account) => account.id),
+          ignoredAccountQuery: null,
         };
       }
 
@@ -322,7 +333,11 @@ export class AiBalanceSheetRepository {
     }
 
     if (!input.accountQuery) {
-      return { kind: 'none' };
+      return { kind: 'none', ignoredAccountQuery: null };
+    }
+
+    if (this.isGenericBalanceSheetQuery(input.accountQuery)) {
+      return { kind: 'none', ignoredAccountQuery: input.accountQuery };
     }
 
     const query = input.accountQuery.trim().toLowerCase();
@@ -347,7 +362,7 @@ export class AiBalanceSheetRepository {
       return this.unresolved(
         'not_found',
         [],
-        `No account matches "${input.accountQuery}".`,
+        `No account matches "${input.accountQuery}". If the user asked for the whole balance sheet or a section/group, retry with accountQuery omitted. Otherwise, ask the user for the exact account name or code.`,
       );
     }
 
@@ -372,7 +387,20 @@ export class AiBalanceSheetRepository {
       );
     }
 
-    return { kind: 'resolved', accountIds: [account.id] };
+    return {
+      kind: 'resolved',
+      accountIds: [account.id],
+      ignoredAccountQuery: null,
+    };
+  }
+
+  private isGenericBalanceSheetQuery(query: string): boolean {
+    const normalized = query
+      .trim()
+      .replace(/[.!?,;:]+$/g, '')
+      .replace(/\s+/g, ' ');
+
+    return GENERIC_BALANCE_SHEET_QUERY_PATTERN.test(normalized);
   }
 
   private isBalanceSheetAccountType(accountType: string): boolean {

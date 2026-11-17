@@ -353,7 +353,7 @@ export const balanceSheetInputSchema = z
         'Focus on specific balance-sheet account IDs and their descendants. Takes precedence over accountQuery when both are provided.',
       ),
     accountQuery: optionalStringField(
-      'Account name or code (full or partial) to focus on. If multiple accounts match, the tool returns matches so you can ask the user which one to use. Ignored when accountIds is provided.',
+      'Account name or code (full or partial) to focus on. Only use this when the user explicitly names a specific account. Do not use it for the whole balance sheet, a section, or a group; generic full-report phrases are ignored. If multiple accounts match, the tool returns matches so you can ask the user which one to use. Ignored when accountIds is provided.',
     ),
     includeAccounts: optionalBooleanField(
       'Whether to include account rows. Defaults to true. Group totals always include all accounts even when account rows are limited.',
@@ -625,7 +625,13 @@ export const balanceSheetSuccessSchema = z.object({
       .string()
       .nullable()
       .describe(
-        'Account name/code focus supplied by the caller; null when absent.',
+        'Account name/code focus supplied by the caller; null when absent or ignored.',
+      ),
+    ignoredAccountQuery: z
+      .string()
+      .nullable()
+      .describe(
+        'An accountQuery that was ignored because it describes the whole balance sheet rather than a specific account.',
       ),
     resolvedAccountIds: z
       .array(z.number().int())

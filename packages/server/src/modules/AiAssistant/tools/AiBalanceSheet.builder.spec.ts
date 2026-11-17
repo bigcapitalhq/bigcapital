@@ -127,6 +127,7 @@ const defaultFilters = (
   groupIds: null,
   accountIds: null,
   accountQuery: null,
+  ignoredAccountQuery: null,
   focusAccountIds: null,
   includeAccounts: true,
   includeZeroBalances: false,
@@ -262,6 +263,16 @@ describe('buildBalanceSheet', () => {
     const otherGroup = findGroup(result, 'accounts-receivable');
     expect(otherGroup?.accounts).toEqual([]);
     expect(otherGroup?.total).toBe(600);
+  });
+
+  it('notes a generic account filter that was ignored', () => {
+    const result = build({ ignoredAccountQuery: 'whole balance' });
+
+    expect(result.appliedFilters.accountQuery).toBeNull();
+    expect(result.appliedFilters.ignoredAccountQuery).toBe('whole balance');
+    expect(result.notes).toContain(
+      'Ignored the account filter "whole balance" because it describes the whole balance sheet. No account focus was applied.',
+    );
   });
 
   it('keeps the largest accounts and reports truncation', () => {
