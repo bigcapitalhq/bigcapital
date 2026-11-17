@@ -22,9 +22,9 @@
 
 .title {
   margin: 0 0 40px;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--color-light-gray1, #d3d8de);
   font-size: 28px;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.25;
 }
 
@@ -43,9 +43,9 @@
 
 .suggestionsTitle {
   margin: 0 0 12px;
-  color: $muted;
+  color: var(--color-gray3, #8f99a8);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 400;
   text-align: center;
 }
 

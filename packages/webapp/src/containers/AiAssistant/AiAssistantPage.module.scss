@@ -61,9 +61,11 @@
   margin-bottom: 10px;
 }
 
-.retry {
+.retry:global(.bp4-button.bp4-small.bp4-minimal),
+.retry:global(.bp4-button.bp4-small.bp4-minimal):hover,
+.retry:global(.bp4-button.bp4-small.bp4-minimal):active {
   margin-inline-start: auto;
-  color: $danger !important;
+  color: $danger;
 }
 
 .loading {
