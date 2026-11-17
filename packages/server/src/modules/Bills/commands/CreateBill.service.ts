@@ -10,7 +10,9 @@ import { Bill } from '../models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateBillDto } from '../dtos/Bill.dto';
+import { BatchAllocationsBridge } from '@/modules/TransactionItemEntry/integrations/BatchAllocationsBridge';
 
 @Injectable()
 export class CreateBill {
@@ -20,6 +22,8 @@ export class CreateBill {
     private validators: BillsValidators,
     private itemsEntriesService: ItemsEntriesService,
     private transformerDTO: BillDTOTransformer,
+    private subscriptionAccess: SubscriptionAccessService,
+    private batchAllocationsBridge: BatchAllocationsBridge,
 
     @Inject(Bill.name)
     private billModel: TenantModelProxy<typeof Bill>,
@@ -46,6 +50,9 @@ export class CreateBill {
     billDTO: CreateBillDto,
     trx?: Knex.Transaction,
   ): Promise<Bill> {
+    // Validate the organization can still write data (Cloud trial/access).
+    await this.subscriptionAccess.assertCanWrite();
+
     // Retrieves the given bill vendor or throw not found error.
     const vendor = await this.vendorModel()
       .query()
@@ -81,6 +88,14 @@ export class CreateBill {
       const bill = await this.billModel()
         .query(trx)
         .upsertGraphAndFetch(billObj);
+
+      // Replaces the batch allocations of the bill entries.
+      await this.batchAllocationsBridge.syncEntriesAllocations(
+        'Bill',
+        bill.id,
+        billDTO.entries,
+        trx,
+      );
 
       // Triggers `onBillCreated` event.
       await this.eventPublisher.emitAsync(events.bill.onCreated, {

@@ -14,6 +14,7 @@ import {
   findCustomerIdByName,
   findItemIdByName,
   findVendorIdByName,
+  formatLocalDate,
   readApiAuth,
 } from '../_api';
 import { selectCustomer, selectEntryItem } from '../_invoices';
@@ -113,15 +114,9 @@ const EXPENSES = [
 ];
 
 function daysAgo(days: number): string {
-  return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
-}
-
-function isoDate(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${date.getFullYear()}-${month}-${day}`;
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return formatLocalDate(date);
 }
 
 /**
@@ -131,7 +126,7 @@ function previousMonthRange(): { fromDate: string; toDate: string } {
   const now = new Date();
   const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const to = new Date(now.getFullYear(), now.getMonth(), 0);
-  return { fromDate: isoDate(from), toDate: isoDate(to) };
+  return { fromDate: formatLocalDate(from), toDate: formatLocalDate(to) };
 }
 
 async function seedDemoData() {

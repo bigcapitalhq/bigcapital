@@ -7,6 +7,7 @@ import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.d
 import { PaymentMethodDto } from '../dtos/SaleInvoice.dto';
 import { SaleInvoiceTaxEntryDto } from './SaleInvoiceTaxEntry.dto';
 import { DiscountType } from '@/common/types/Discount';
+import { DocumentBatchDto } from '@/modules/TransactionItemEntry/dto/DocumentBatch.dto';
 
 export class SaleInvoiceResponseDto {
   @ApiProperty({
@@ -93,6 +94,13 @@ export class SaleInvoiceResponseDto {
     required: false,
   })
   taxes?: SaleInvoiceTaxEntryDto[];
+
+  @ApiProperty({
+    description: 'The batch movements of the invoice',
+    type: [DocumentBatchDto],
+    required: false,
+  })
+  batches?: DocumentBatchDto[];
 
   @ApiProperty({
     description: 'The date when the invoice was delivered',

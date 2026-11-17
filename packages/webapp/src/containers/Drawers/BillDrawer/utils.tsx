@@ -19,6 +19,9 @@ import {
   Choose,
   Icon,
 } from '@/components';
+import { Features } from '@/constants/features';
+import { getEntryBatchAllocationsSummary } from '@/ee/batches/components';
+import { useFeatureCan } from '@/hooks/state';
 import { getColumnWidth } from '@/utils';
 
 interface BillDetailsStatusProps {
@@ -41,6 +44,8 @@ interface BillMenuItemProps {
 export const useBillReadonlyEntriesTableColumns = () => {
   const { bill } = useBillDrawerContext();
   const entries = bill?.entries ?? [];
+  const { featureCan } = useFeatureCan();
+  const isBatchTrackingEnabled = featureCan(Features.BatchTracking);
 
   return React.useMemo(
     () => [
@@ -53,6 +58,18 @@ export const useBillReadonlyEntriesTableColumns = () => {
         disableSortBy: true,
         textOverview: true,
       },
+      ...(isBatchTrackingEnabled
+        ? [
+            {
+              Header: intl.get('batch.column.batch_number'),
+              id: 'batch',
+              accessor: (entry: any) => getEntryBatchAllocationsSummary(entry),
+              width: 110,
+              disableSortBy: true,
+              textOverview: true,
+            },
+          ]
+        : []),
       {
         Header: intl.get('description'),
         accessor: 'description',
@@ -107,7 +124,7 @@ export const useBillReadonlyEntriesTableColumns = () => {
         textOverview: true,
       },
     ],
-    [entries],
+    [entries, isBatchTrackingEnabled],
   );
 };
 

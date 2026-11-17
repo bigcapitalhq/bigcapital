@@ -25,6 +25,7 @@
     "system:seed:latest": "lerna run cli:system:seed:latest --scope \"@bigcapital/server\"",
     "tenants:seed:latest": "lerna run cli:tenants:seed:latest --scope \"@bigcapital/server\"",
     "generate:sdk-types": "lerna run openapi:export --scope \"@bigcapital/server\" && lerna run generate --scope \"@bigcapital/sdk-ts\" && lerna run build --scope \"@bigcapital/sdk-ts\"",
+    "stripe:sync-plans": "lerna run cli:stripe:sync-plans --scope \"@bigcapital/server\"",
     "format": "lerna run format",
     "format:check": "lerna run format:check",
     "lint": "lerna run lint",

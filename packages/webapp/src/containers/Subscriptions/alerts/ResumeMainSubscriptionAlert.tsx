@@ -27,7 +27,6 @@ function ResumeMainSubscriptionAlertInner({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { module },
 
   // #withAlertActions
   closeAlert,
@@ -41,9 +40,6 @@ function ResumeMainSubscriptionAlertInner({
   };
   // Handle confirm.
   const handleConfirm = () => {
-    const values = {
-      module: module,
-    };
     resumeSubscription()
       .then(() => {
         AppToaster.show({

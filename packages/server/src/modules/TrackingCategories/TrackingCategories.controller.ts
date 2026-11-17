@@ -24,9 +24,12 @@ import {
 } from './dtos/TrackingCategory.dto';
 import { TrackingCategoryResponseDto } from './dtos/TrackingCategoryResponse.dto';
 import { TrackingCategoriesFeatureGuard } from './TrackingCategoriesFeatureGuard';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('tracking-categories')
 @ApiTags('Tracking Categories')
+@RequireSubscriptionFeature(SubscriptionFeature.TrackingCategories)
 @ApiExtraModels(TrackingCategoryResponseDto)
 @ApiCommonHeaders()
 @UseGuards(TrackingCategoriesFeatureGuard)

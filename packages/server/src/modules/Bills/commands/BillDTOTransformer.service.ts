@@ -63,7 +63,7 @@ export class BillDTOTransformer {
     const initialEntries = billDTO.entries.map((entry) => ({
       referenceType: 'Bill',
       isInclusiveTax: billDTO.isInclusiveTax,
-      ...omit(entry, ['amount']),
+      ...omit(entry, ['amount', 'batches']),
     }));
     const asyncEntries = await composeAsync(
       // Associate tax rate from tax id to entries.

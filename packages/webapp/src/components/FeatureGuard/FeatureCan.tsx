@@ -1,6 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getDashboardFeaturesSelector } from '@/store/dashboard/dashboard.selectors';
+import { useFeatureCan } from '@/hooks/state';
 
 interface FeatureCanProps {
   feature: string;
@@ -8,12 +7,7 @@ interface FeatureCanProps {
 }
 
 export function FeatureCan({ feature, children }: FeatureCanProps) {
-  const features = useSelector(getDashboardFeaturesSelector()) as Record<
-    string,
-    unknown
-  >;
+  const { featureCan } = useFeatureCan();
 
-  const isFeatureCan = !!(feature && features[feature]);
-
-  return isFeatureCan ? <>{children}</> : null;
+  return featureCan(feature) ? <>{children}</> : null;
 }

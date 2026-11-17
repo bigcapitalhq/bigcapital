@@ -32,16 +32,20 @@ import { BillsImportable } from './commands/BillsImportable';
 import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
 import { BulkDeleteBillsService } from './BulkDeleteBills.service';
 import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.service';
+import { SubscriptionModule } from '../Subscription/Subscription.module';
+import { BatchAllocationsIntegrationModule } from '../TransactionItemEntry/integrations/BatchAllocationsIntegration.module';
 
 @Module({
   imports: [
     TenancyModule,
     FeaturesModule,
+    SubscriptionModule,
     BillLandedCostsIntegrationModule,
     LedgerModule,
     AccountsModule,
     DynamicListModule,
     InventoryCostModule,
+    BatchAllocationsIntegrationModule,
   ],
   providers: [
     BillsApplication,

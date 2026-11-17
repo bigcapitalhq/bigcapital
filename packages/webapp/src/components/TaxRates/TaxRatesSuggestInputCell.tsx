@@ -4,6 +4,16 @@ import { Suggest } from '@blueprintjs-formik/select';
 import React, { useCallback } from 'react';
 import { CellType } from '@/constants';
 
+const taxRatePredicate = (query, taxRate, _index, exactMatch) => {
+  const normalizedQuery = query.toLowerCase();
+  const name = taxRate.nameFormatted?.toLowerCase() ?? '';
+  const code = taxRate.code?.toLowerCase() ?? '';
+
+  return exactMatch
+    ? name === normalizedQuery || code === normalizedQuery
+    : `${name} ${code}`.includes(normalizedQuery);
+};
+
 export function TaxRatesSuggestInputCell({
   column: { id, suggestProps, formGroupProps },
   row: { index },
@@ -25,6 +35,7 @@ export function TaxRatesSuggestInputCell({
       <Suggest<any>
         selectedValue={cellValue}
         items={taxRates}
+        itemPredicate={taxRatePredicate}
         valueAccessor={'id'}
         labelAccessor={'code'}
         textAccessor={'nameFormatted'}

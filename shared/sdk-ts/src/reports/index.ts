@@ -14,6 +14,7 @@ export * from './transactions-vendors';
 export * from './sales-by-items';
 export * from './purchases-by-items';
 export * from './inventory-valuation';
+export * from './inventory-summary';
 export * from './inventory-details';
 export * from './sales-tax-liability';
 export * from './transactions-reference';

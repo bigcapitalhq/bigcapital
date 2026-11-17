@@ -45,12 +45,23 @@ function JournalInner({
     [toggleJournalSheetFilter],
   );
 
+  // Handle number format submit.
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
+    setLocationQuery({
+      ...query,
+      numberFormat: values,
+    });
+  };
+
   return (
     <JournalSheetProvider query={query}>
-      <JournalActionsBar />
+      <JournalActionsBar
+        numberFormat={query.numberFormat ?? {}}
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <JournalHeader
             onSubmitFilter={handleFilterSubmit}
             pageFilter={query}

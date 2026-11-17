@@ -30,7 +30,7 @@ export class BillInventoryTransactions {
     const bill = await this.bill()
       .query(trx)
       .findById(billId)
-      .withGraphFetched('entries');
+      .withGraphFetched('entries.batches');
 
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =

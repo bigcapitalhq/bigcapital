@@ -12,7 +12,6 @@ import {
   OPEN_DRAWER,
   REMOVE_AUTOFILL_REF,
   RESET_AUTOFILL_REF,
-  SET_FEATURE_DASHBOARD_META,
   SIDEBAR_EXPEND_TOGGLE,
   SIDEBAR_SUBMENU_CLOSE,
   SIDEBAR_SUBMENU_OPEN,
@@ -59,12 +58,6 @@ export function splashStartLoading() {
 export function splashStopLoading() {
   return { type: SPLASH_STOP_LOADING };
 }
-export const setFeatureDashboardMeta = ({
-  features,
-}: {
-  features: Array<{ name: string; isAccessible: boolean }>;
-}) => ({ type: SET_FEATURE_DASHBOARD_META, payload: { features } });
-
 export function openSidebarSubmenu({ submenuId }: { submenuId: unknown }) {
   return { type: SIDEBAR_SUBMENU_OPEN, payload: { submenuId } };
 }

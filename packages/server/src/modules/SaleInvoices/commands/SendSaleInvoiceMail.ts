@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bullmq';
+import { JobsOptions, Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
 import { SaleInvoicePdf } from '../queries/SaleInvoicePdf.service';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon.service';
@@ -43,6 +43,7 @@ export class SendSaleInvoiceMail {
   public async triggerMail(
     saleInvoiceId: number,
     messageOptions: SendInvoiceMailDTO,
+    jobOptions?: JobsOptions,
   ) {
     const tenant = await this.tenancyContect.getTenant();
     const user = await this.tenancyContect.getSystemUser();
@@ -57,7 +58,11 @@ export class SendSaleInvoiceMail {
       organizationId,
     } as SendSaleInvoiceMailJobPayload;
 
-    await this.sendInvoiceQueue.add(SendSaleInvoiceMailJob, payload);
+    await this.sendInvoiceQueue.add(
+      SendSaleInvoiceMailJob,
+      payload,
+      jobOptions,
+    );
 
     // Triggers the event `onSaleInvoicePreMailSend`.
     await this.eventEmitter.emitAsync(events.saleInvoice.onPreMailSend, {

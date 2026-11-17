@@ -3,11 +3,22 @@ import { Model, mixin } from 'objection';
 
 export class Plan extends mixin(SystemModel) {
   public readonly slug: string;
+  public readonly name: string;
+  public readonly desc: string;
+  public readonly description: string;
   public readonly price: number;
-  public readonly invoiceInternal: 'month' | 'year';
+  public readonly currency: string;
+  public readonly active: boolean;
+  public readonly index: number;
+  public readonly invoiceInterval: 'month' | 'year';
   public readonly invoicePeriod: number;
   public readonly trialPeriod: string;
   public readonly trialInterval: number;
+  public readonly familySlug: string;
+  public readonly features: unknown;
+  public readonly isFeatured: boolean;
+  public readonly stripeProductId: string;
+  public readonly stripePriceId: string;
 
   /**
    * Table name.

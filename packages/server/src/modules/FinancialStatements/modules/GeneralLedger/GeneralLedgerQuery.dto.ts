@@ -62,6 +62,8 @@ export class GeneralLedgerQueryDto extends FinancialSheetBranchesQueryDto {
     required: false,
     type: [Number],
   })
+  // query strings deliver ids as strings; the report matches them against numeric account ids
+  @Type(() => Number)
   @IsArray()
   @IsOptional()
   accountsIds: number[];

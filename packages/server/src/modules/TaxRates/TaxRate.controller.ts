@@ -25,9 +25,12 @@ import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { TaxRateAction } from './TaxRates.types';
 import { SalesTaxFeatureGuard } from './SalesTaxFeatureGuard';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('tax-rates')
 @ApiTags('Tax Rates')
+@RequireSubscriptionFeature(SubscriptionFeature.SalesTax)
 @ApiExtraModels(TaxRateResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard, SalesTaxFeatureGuard)

@@ -6,6 +6,10 @@ import { SubscriptionPaymentStatus } from '@/interfaces/SubscriptionPlan';
 
 export class PlanSubscription extends mixin(SystemModel) {
   public readonly lemonSubscriptionId!: string;
+  public readonly stripeSubscriptionId!: string;
+  public readonly stripeStatus!: string;
+  public readonly stripePriceId!: string;
+  public readonly cancelAtPeriodEnd!: boolean;
   public readonly slug: string;
   public readonly endsAt!: Date;
   public readonly startsAt!: Date;
@@ -141,6 +145,21 @@ export class PlanSubscription extends mixin(SystemModel) {
    * @return {Boolean}
    */
   public active() {
+    // Stripe is the source of truth for Cloud subscriptions. `past_due` is
+    // intentionally treated as active to allow Stripe's dunning retries.
+    if (this.stripeStatus) {
+      return ['active', 'trialing', 'past_due'].includes(this.stripeStatus);
+    }
+
+    const hasBillingProvider = !!(
+      this.stripeSubscriptionId || this.lemonSubscriptionId
+    );
+
+    // A local (provider-less) trial ends when `trialEndsAt` passes, even if a
+    // future paid period was stored on the subscription.
+    if (this.trialEndsAt && !hasBillingProvider) {
+      return this.onTrial() && !this.canceled();
+    }
     return this.onTrial() ? !this.canceled() : !this.ended();
   }
 
@@ -177,10 +196,24 @@ export class PlanSubscription extends mixin(SystemModel) {
   }
 
   /**
+   * Check if a provider-less trial has already expired.
+   * @returns {boolean}
+   */
+  public trialExpired() {
+    const hasBillingProvider = !!(
+      this.stripeSubscriptionId || this.lemonSubscriptionId
+    );
+    return !!this.trialEndsAt && !hasBillingProvider && !this.onTrial();
+  }
+
+  /**
    * Check if the subscription is canceled.
    * @returns {boolean}
    */
   public canceled() {
+    if (this.stripeStatus) {
+      return this.stripeStatus === 'canceled';
+    }
     return !!this.canceledAt;
   }
 
@@ -189,6 +222,15 @@ export class PlanSubscription extends mixin(SystemModel) {
    * @returns {string}
    */
   public status() {
+    if (this.stripeStatus) {
+      if (this.stripeStatus === 'trialing') return 'on_trial';
+      if (this.stripeStatus === 'active') return 'active';
+      if (this.stripeStatus === 'past_due' || this.stripeStatus === 'unpaid') {
+        return 'past_due';
+      }
+      if (this.stripeStatus === 'canceled') return 'canceled';
+      return 'inactive';
+    }
     return this.canceled()
       ? 'canceled'
       : this.onTrial()

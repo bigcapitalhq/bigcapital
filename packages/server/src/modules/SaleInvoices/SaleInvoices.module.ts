@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
+import { BatchAllocationsIntegrationModule } from '../TransactionItemEntry/integrations/BatchAllocationsIntegration.module';
 import { CreateSaleInvoice } from './commands/CreateSaleInvoice.service';
 import { DeleteSaleInvoice } from './commands/DeleteSaleInvoice.service';
 import { DeliverSaleInvoice } from './commands/DeliverSaleInvoice.service';
@@ -68,11 +69,13 @@ import { SaleInvoicesImportable } from './commands/SaleInvoicesImportable';
 import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
 import { BulkDeleteSaleInvoicesService } from './BulkDeleteSaleInvoices.service';
 import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleInvoices.service';
+import { SubscriptionModule } from '../Subscription/Subscription.module';
 
 @Module({
   imports: [
     TenancyModule,
     TenancyDatabaseModule,
+    SubscriptionModule,
     PdfTemplatesModule,
     AutoIncrementOrdersModule,
     ChromiumlyTenancyModule,
@@ -88,6 +91,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     MailNotificationModule,
     BullModule.registerQueue({ name: SMS_QUEUE }),
     forwardRef(() => InventoryCostModule),
+    BatchAllocationsIntegrationModule,
     forwardRef(() => PaymentLinksModule),
     DynamicListModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
@@ -147,6 +151,8 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
   ],
   exports: [
     GetSaleInvoice,
+    CreateSaleInvoice,
+    SendSaleInvoiceMail,
     SaleInvoicesCost,
     SaleInvoicePdf,
     SaleInvoicesExportable,

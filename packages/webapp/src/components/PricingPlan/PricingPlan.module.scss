@@ -1,18 +1,38 @@
-.root{
+.root {
+  --pricing-plan-border: #d8dee4;
+  --pricing-plan-featured-background: #f5f6f8;
+  --pricing-plan-ribbon-background: #a3acba;
+  --pricing-plan-title-text: #2f343c;
+  --pricing-plan-description-text: #687385;
+  --pricing-plan-price-text: #252a31;
+  --pricing-plan-muted-text: #738091;
+  --pricing-plan-feature-text: #1c2127;
+
+  :global(.bp4-dark) & {
+    --pricing-plan-border: var(--color-dark-gray4);
+    --pricing-plan-featured-background: var(--color-dark-gray3);
+    --pricing-plan-ribbon-background: var(--color-dark-gray5);
+    --pricing-plan-title-text: var(--color-light-gray1);
+    --pricing-plan-description-text: var(--color-light-gray2);
+    --pricing-plan-price-text: var(--color-light-gray1);
+    --pricing-plan-muted-text: var(--color-muted-text);
+    --pricing-plan-feature-text: var(--color-light-gray2);
+  }
+
   border-radius: 5px;
   padding: 40px 15px;
   position: relative;
-  border: 1px solid #D8DEE4;
+  border: 1px solid var(--pricing-plan-border);
   padding-top: 45px;
   flex: 1;
 
   &.isFeatured {
-    background-color: #F5F6F8;
+    background-color: var(--pricing-plan-featured-background);
     border: 0;
   }
 }
 .featuredBox {
-  background-color: #A3ACBA;
+  background-color: var(--pricing-plan-ribbon-background);
   height: 30px;
   line-height: 30px;
   position: absolute;
@@ -28,12 +48,11 @@
 .label {
   font-size: 16px;
   font-weight: 600;
-  color: #2F343C;
-  
+  color: var(--pricing-plan-title-text);
 }
-.description{
+.description {
   font-size: 14px;
-  color: #687385;
+  color: var(--pricing-plan-description-text);
   line-height: 1.5;
 }
 .buttonCTA {
@@ -43,32 +62,32 @@
 .features {
   margin-top: 1rem;
 }
-.priceRoot{
+.priceRoot {
   padding-bottom: 10px;
 }
 .price {
   font-size: 18px;
   line-height: 1;
   font-weight: 500;
-  color: #252A31;
+  color: var(--pricing-plan-price-text);
 }
 
-.pricePer{ 
-  color: #738091;
+.pricePer {
+  color: var(--pricing-plan-muted-text);
   font-size: 12px;
   line-height: 1;
 }
 
-.featureItem{ 
+.featureItem {
   flex: 1;
-  color: #1C2127;
+  color: var(--pricing-plan-feature-text);
 }
 
-.featurePopover :global .bp4-popover-content{
+.featurePopover :global .bp4-popover-content {
   border-radius: 0;
 }
-.featurePopoverContent{
-  font-size: 12px
+.featurePopoverContent {
+  font-size: 12px;
 }
 .featurePopoverLabel {
   text-transform: uppercase;

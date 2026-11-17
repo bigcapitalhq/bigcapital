@@ -67,7 +67,7 @@ export default function NotificationsDrawerContent() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <div className={styles.toolbar}>
         <Tabs
           selectedTabId={activeTab}
           onChange={(tabId) => setActiveTab(tabId)}

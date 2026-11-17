@@ -105,9 +105,10 @@ export class SalesTransactionLockingGuardSubscriber {
   @OnEvent(events.saleInvoice.onWriteoff, { suppressErrors: false })
   public async transactionLockinGuardOnInvoiceWritingoff({
     saleInvoice,
+    writeoffDTO,
   }: ISaleInvoiceWriteoffCreatePayload) {
     await this.salesLockingGuard.transactionLockingGuard(
-      saleInvoice.invoiceDate,
+      writeoffDTO.date || saleInvoice.invoiceDate,
     );
   }
 
@@ -120,7 +121,7 @@ export class SalesTransactionLockingGuardSubscriber {
     saleInvoice,
   }: ISaleInvoiceWrittenOffCancelPayload) {
     await this.salesLockingGuard.transactionLockingGuard(
-      saleInvoice.invoiceDate,
+      saleInvoice.writtenoffAt ?? saleInvoice.invoiceDate,
     );
   }
 

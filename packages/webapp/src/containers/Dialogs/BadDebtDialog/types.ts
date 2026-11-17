@@ -13,6 +13,7 @@ export interface BadDebtFormValues {
   expenseAccountId: number | string;
   reason: string;
   amount: number | string;
+  date: string;
   currencyCode?: string;
   [key: string]: unknown;
 }

@@ -9,6 +9,7 @@ import {
   GENERAL_LEDGER,
   INVENTORY_ITEM_DETAILS,
   INVENTORY_VALUATION,
+  INVENTORY_SUMMARY,
   JOURNAL,
   PROFIT_LOSS,
   PURCHASES_BY_ITEMS,
@@ -78,6 +79,12 @@ export function toggleSalesByItemsFilterDrawer(toggle?: boolean) {
 export function toggleInventoryValuationFilterDrawer(toggle?: boolean) {
   return {
     type: `${INVENTORY_VALUATION}/${DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: { toggle },
+  };
+}
+export function toggleInventorySummaryFilterDrawer(toggle?: boolean) {
+  return {
+    type: `${INVENTORY_SUMMARY}/${DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: { toggle },
   };
 }

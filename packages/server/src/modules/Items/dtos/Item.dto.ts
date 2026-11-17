@@ -57,6 +57,7 @@ export class CommandItemDto {
   })
   reorderPoint?: number;
 
+  @IsOptional()
   @IsString()
   @IsIn([...ITEM_UNITS])
   @MaxLength(20)

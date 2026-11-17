@@ -5,6 +5,8 @@ const Schema = Yup.object().shape({
     landedCost: Yup.boolean().nullable(),
     smsNotifications: Yup.boolean().nullable(),
     salesTax: Yup.boolean().nullable(),
+    recurringJournals: Yup.boolean().nullable(),
+    batchTracking: Yup.boolean().nullable(),
   }),
 });
 

@@ -1,8 +1,10 @@
 import { IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GetUncategorizedTransactionsQueryDto {
   @IsOptional()
+  @Type(() => Number)
   @ApiProperty({
     description: 'Page number for pagination',
     required: false,
@@ -12,6 +14,7 @@ export class GetUncategorizedTransactionsQueryDto {
   page?: number;
 
   @IsOptional()
+  @Type(() => Number)
   @ApiProperty({
     description: 'Number of items per page',
     required: false,

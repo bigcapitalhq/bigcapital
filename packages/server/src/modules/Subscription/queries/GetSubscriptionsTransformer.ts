@@ -9,11 +9,15 @@ export class GetSubscriptionsTransformer extends Transformer {
     return [
       'canceledAtFormatted',
       'endsAtFormatted',
+      'startsAtFormatted',
       'trialStartsAtFormatted',
       'trialEndsAtFormatted',
       'statusFormatted',
+      'stripeStatus',
+      'cancelAtPeriodEnd',
       'planName',
       'planSlug',
+      'planDescription',
       'planPrice',
       'planPriceCurrency',
       'planPriceFormatted',
@@ -26,7 +30,13 @@ export class GetSubscriptionsTransformer extends Transformer {
    * @returns {string[]}
    */
   public excludeAttributes = (): string[] => {
-    return ['id', 'plan', 'lemonSubscriptionId'];
+    return [
+      'id',
+      'plan',
+      'lemonSubscriptionId',
+      'stripeSubscriptionId',
+      'stripePriceId',
+    ];
   };
 
   /**
@@ -46,7 +56,18 @@ export class GetSubscriptionsTransformer extends Transformer {
    * @returns {string}
    */
   public endsAtFormatted = (subscription) => {
-    return subscription.cancelsAt ? this.formatDate(subscription.endsAt) : null;
+    return subscription.endsAt ? this.formatDate(subscription.endsAt) : null;
+  };
+
+  /**
+   * Retrieves the starts at date formatted.
+   * @param subscription
+   * @returns {string}
+   */
+  public startsAtFormatted = (subscription) => {
+    return subscription.startsAt
+      ? this.formatDate(subscription.startsAt)
+      : null;
   };
 
   /**
@@ -81,6 +102,7 @@ export class GetSubscriptionsTransformer extends Transformer {
       inactive: 'subscription.status.inactive',
       expired: 'subscription.status.expired',
       on_trial: 'subscription.status.on_trial',
+      past_due: 'subscription.status.past_due',
     };
     const translationKey = pairs[subscription.status];
 
@@ -103,6 +125,15 @@ export class GetSubscriptionsTransformer extends Transformer {
    */
   public planSlug(subscription) {
     return subscription.plan?.slug;
+  }
+
+  /**
+   * Retrieves the subscription plan description.
+   * @param subscription
+   * @returns {string}
+   */
+  public planDescription(subscription) {
+    return subscription.plan?.desc || null;
   }
 
   /**
@@ -141,6 +172,6 @@ export class GetSubscriptionsTransformer extends Transformer {
    * @returns {string}
    */
   public planPeriod(subscription) {
-    return subscription?.plan?.period;
+    return subscription?.plan?.invoiceInterval;
   }
 }

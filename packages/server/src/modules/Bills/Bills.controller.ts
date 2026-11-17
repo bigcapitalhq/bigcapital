@@ -36,9 +36,12 @@ import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { BillAction } from './Bills.types';
 import { BillPaymentTransactionDto } from './dtos/BillPaymentTransactionResponse.dto';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('bills')
 @ApiTags('Bills')
+@RequireSubscriptionFeature(SubscriptionFeature.Bills)
 @ApiExtraModels(BillResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiCommonHeaders()

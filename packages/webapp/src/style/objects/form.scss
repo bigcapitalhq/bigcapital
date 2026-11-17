@@ -93,6 +93,15 @@ label.bp4-label {
   .#{$ns}-label {
     margin-bottom: 6px;
   }
+
+  // Blueprint's dark theme overrides the helper text but not the sub-label,
+  // which keeps the light theme muted color that's unreadable on dark surfaces.
+  .bp4-dark & {
+    .#{$ns}-form-group-sub-label,
+    .#{$ns}-form-helper-text {
+      color: var(--color-muted-text);
+    }
+  }
 }
 
 .#{$ns}-button:not([class*='.#{$ns}-intent-']) {

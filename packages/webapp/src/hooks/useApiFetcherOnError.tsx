@@ -1,7 +1,8 @@
 import { Intent } from '@blueprintjs/core';
 import { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import { useAuthActions, useSetGlobalErrors } from './state';
+import { useAuthActions } from './state/authentication';
+import { useSetGlobalErrors } from './state/globalErrors';
 import type { ApiError } from 'openapi-typescript-fetch';
 import { AppToaster } from '@/components/AppToaster';
 import { ERROR } from '@/constants/errors';
@@ -87,9 +88,42 @@ export function useApiFetcherOnError() {
         ) {
           setGlobalErrors({ subscriptionInactive: true });
         }
+        if (
+          errors.find(
+            (e) => e.type === 'ORGANIZATION.SUBSCRIPTION.TRIAL_EXPIRED',
+          )
+        ) {
+          setGlobalErrors({ trialExpired: true });
+        }
         if (errors.find((e) => e.type === 'USER_INACTIVE')) {
           setGlobalErrors({ userInactive: true });
           setLogout();
+        }
+        const batchError = errors.find((e) =>
+          [
+            'BATCH_NOT_FOUND',
+            'BATCH_NUMBER_EXISTS',
+            'BATCH_ITEM_NOT_FOUND',
+            'BATCH_ITEM_NOT_INVENTORY',
+            'BATCH_ITEM_MISMATCH',
+            'BATCH_INSUFFICIENT_QUANTITY',
+            'BATCH_HAS_ASSOCIATED_TRANSACTIONS',
+            'BATCH_INVALID_EXPIRY_DATE',
+            'BATCH_ALLOCATION_QUANTITY_MISMATCH',
+            'BATCH_ALLOCATION_INVALID_QUANTITY',
+            'BATCH_ALLOCATION_DUPLICATE',
+          ].includes(e.type as string),
+        );
+        if (batchError) {
+          const payload = batchError.payload ?? {};
+          const message = intl.get(`batch.error.${batchError.type}`, payload);
+          AppToaster.show({
+            message:
+              message === `batch.error.${batchError.type}`
+                ? intl.get('something_went_wrong')
+                : message,
+            intent: Intent.DANGER,
+          });
         }
       }
     },

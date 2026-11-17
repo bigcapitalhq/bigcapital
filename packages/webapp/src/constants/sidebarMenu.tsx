@@ -8,6 +8,7 @@ import {
   InventoryAdjustmentAction,
   SaleEstimateAction,
   SaleInvoiceAction,
+  RecurringInvoiceAction,
   SaleReceiptAction,
   PaymentReceiveAction,
   BillAction,
@@ -16,6 +17,7 @@ import {
   VendorAction,
   AccountAction,
   ManualJournalAction,
+  RecurringJournalAction,
   ExpenseAction,
   CashflowAction,
   PreferencesAbility,
@@ -43,6 +45,7 @@ export interface SidebarMenuItem {
   divider?: boolean;
   feature?: string;
   permission?: SidebarMenuItemPermission;
+  aiAssistant?: boolean;
   children?: SidebarMenuItem[];
 }
 
@@ -56,6 +59,14 @@ export const SidebarMenu: SidebarMenuItem[] = [
     disabled: false,
     href: '/',
     matchExact: true,
+  },
+  {
+    text: <T id={'sidebar.ai_assistant'} />,
+    type: ISidebarMenuItemType.Link,
+    disabled: false,
+    href: '/ai',
+    matchExact: true,
+    aiAssistant: true,
   },
   // ---------------
   // # Sales & Inventory
@@ -180,6 +191,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
             permission: {
               subject: AbilitySubject.Invoice,
               ability: SaleInvoiceAction.View,
+            },
+          },
+          {
+            text: <T id={'sidebar.recurring_invoices'} />,
+            href: '/recurring-invoices',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.RecurringInvoice,
+              ability: RecurringInvoiceAction.View,
             },
           },
           {
@@ -418,6 +438,16 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 permission: {
                   subject: AbilitySubject.ManualJournal,
                   ability: ManualJournalAction.View,
+                },
+              },
+              {
+                text: <T id={'sidebar.recurring_journals'} />,
+                href: '/recurring-journals',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.RecurringJournals,
+                permission: {
+                  subject: AbilitySubject.RecurringJournal,
+                  ability: RecurringJournalAction.View,
                 },
               },
               {
@@ -762,12 +792,31 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 },
               },
               {
+                text: <T id={'sidebar.batch_details'} />,
+                href: '/financial-reports/batch-details',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.BatchTracking,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_BATCH_DETAILS,
+                },
+              },
+              {
                 text: <T id={'sidebar.inventory_valuation'} />,
                 href: '/financial-reports/inventory-valuation',
                 type: ISidebarMenuItemType.Link,
                 permission: {
                   subject: AbilitySubject.Report,
                   ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+                },
+              },
+              {
+                text: <T id={'sidebar.inventory_summary'} />,
+                href: '/financial-reports/inventory-summary',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_INVENTORY_SUMMARY,
                 },
               },
             ],

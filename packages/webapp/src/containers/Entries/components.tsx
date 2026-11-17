@@ -3,6 +3,8 @@ import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { Tooltip2Props } from '@blueprintjs/popover2';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
 import {
@@ -15,6 +17,10 @@ import {
 } from '@/components/DataTableCells';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
 import { Align, CellType } from '@/constants';
+import {
+  PurchaseBatchAllocationsPopover,
+  SaleBatchAllocationsPopover,
+} from '@/ee/batches/components';
 import { formattedAmount } from '@/utils';
 
 /**
@@ -106,11 +112,102 @@ const LandedCostHeaderCell = () => {
   );
 };
 
+interface BatchEntryCellProps {
+  row: {
+    index: number;
+    original: {
+      itemId?: number | string;
+      batchId?: number | null;
+      batch?: Batch | null;
+      batches?: ItemEntryBatchAllocation[];
+      quantity?: number | string;
+    };
+  };
+  payload: {
+    items?: Array<{ id: number; type?: string; name?: string }>;
+    batchMode?: 'purchase' | 'sale';
+    updateRow: (rowIndex: number, patch: Record<string, unknown>) => void;
+  };
+}
+
+/**
+ * Batch entry button used by purchase/sale transaction lines.
+ */
+export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
+  const { index, original } = row;
+  const item = payload.items?.find(
+    (item) => Number(item.id) === Number(original.itemId),
+  );
+
+  if (!item || item.type !== 'inventory') {
+    return null;
+  }
+  const allocations: ItemEntryBatchAllocation[] =
+    (original.batches?.length ?? 0) > 0
+      ? (original.batches as ItemEntryBatchAllocation[])
+      : original.batchId
+        ? [
+            {
+              batchId: original.batchId,
+              quantity: Number(original.quantity) || 0,
+              batch: original.batch,
+            },
+          ]
+        : [];
+
+  if (payload.batchMode === 'sale') {
+    return (
+      <SaleBatchAllocationsPopover
+        itemId={Number(original.itemId)}
+        entryQuantity={original.quantity ?? 0}
+        allocations={allocations}
+        onApply={(nextAllocations) => {
+          payload.updateRow(index, { batches: nextAllocations });
+        }}
+      />
+    );
+  }
+  return (
+    <PurchaseBatchAllocationsPopover
+      itemId={Number(original.itemId)}
+      entryQuantity={original.quantity ?? 0}
+      allocations={allocations}
+      onApply={(nextAllocations) => {
+        payload.updateRow(index, { batches: nextAllocations });
+      }}
+    />
+  );
+}
+
+/**
+ * Quantity cell with the batch allocation trigger inside the input's left
+ * element.
+ */
+function BatchQuantityCell(props: any) {
+  const { row, payload } = props;
+  const item = payload.items?.find(
+    (item: { id: number }) => Number(item.id) === Number(row.original.itemId),
+  );
+
+  return (
+    <NumericInputCell
+      {...props}
+      leftElement={
+        item?.type === 'inventory' ? (
+          <BatchEntryCell row={row} payload={payload} />
+        ) : undefined
+      }
+    />
+  );
+}
+BatchQuantityCell.cellType = NumericInputCell.cellType;
+
 /**
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  const { landedCost, enableTaxRates } = useItemEntriesTableContext();
+  const { landedCost, enableTaxRates, batchMode } =
+    useItemEntriesTableContext();
 
   return React.useMemo(
     () => [
@@ -135,9 +232,9 @@ export function useEditableItemsEntriesColumns() {
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
-        Cell: NumericInputCell,
+        Cell: batchMode ? BatchQuantityCell : NumericInputCell,
         disableSortBy: true,
-        width: 70,
+        width: batchMode ? 120 : 70,
         align: Align.Right,
       },
       {
@@ -199,6 +296,6 @@ export function useEditableItemsEntriesColumns() {
         align: Align.Center,
       },
     ],
-    [],
+    [batchMode, enableTaxRates, landedCost],
   );
 }

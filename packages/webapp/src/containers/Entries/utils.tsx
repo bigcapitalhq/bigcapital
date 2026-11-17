@@ -115,6 +115,9 @@ interface FetchedItemRow {
   taxRateId: number | undefined;
   landedCost?: boolean;
   landedCostDisabled?: boolean;
+  batches?: [];
+  batchId?: null;
+  batch?: null;
 }
 
 interface ItemRowMeta {
@@ -191,6 +194,9 @@ export function useFetchItemRow({
         rate: price,
         description,
         quantity: 1,
+        batches: [],
+        batchId: null,
+        batch: null,
         ...(landedCost
           ? {
               landedCost: false,
@@ -340,6 +346,30 @@ export const useComposeRowsOnEditTableCell = () => {
       return FF.pipe(
         localValue,
         updateTableCell(rowIndex, columnId, value),
+        updateItemsEntriesTotal,
+        updateAutoAddNewLine(defaultEntry, ['itemId']),
+        orderingLinesIndexes,
+        assignEntriesTaxRate(taxRates),
+        assignEntriesTaxAmount(isInclusiveTax),
+      ) as ItemEntry[];
+    },
+    [taxRates, isInclusiveTax, localValue, defaultEntry],
+  );
+};
+
+/**
+ * Compose rows when updating a full table row.
+ * @returns {Function}
+ */
+export const useComposeRowsOnUpdateTableRow = () => {
+  const { taxRates, isInclusiveTax, localValue, defaultEntry } =
+    useItemEntriesTableContext();
+
+  return useCallback(
+    (rowIndex: number, patch: Partial<ItemEntry>): ItemEntry[] => {
+      return FF.pipe(
+        localValue,
+        updateTableRow(rowIndex, patch),
         updateItemsEntriesTotal,
         updateAutoAddNewLine(defaultEntry, ['itemId']),
         orderingLinesIndexes,

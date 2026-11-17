@@ -24,6 +24,7 @@ import { BillPayment } from '@/modules/BillPayments/models/BillPayment';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { RecurringInvoice } from '@/modules/RecurringInvoices/models/RecurringInvoice';
 import { PaymentIntegration } from '@/modules/StripePayment/models/PaymentIntegration.model';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
@@ -39,6 +40,8 @@ import { TrackingCategory } from '@/modules/TrackingCategories/models/TrackingCa
 import { TrackingCategoryOption } from '@/modules/TrackingCategories/models/TrackingCategoryOption';
 import { ManualJournalEntryTrackingCategory } from '@/modules/TrackingCategories/models/ManualJournalEntryTrackingCategory';
 import { AccountTransactionTrackingCategory } from '@/modules/TrackingCategories/models/AccountTransactionTrackingCategory';
+import { AiConversation } from '@/modules/AiAssistant/models/AiConversation.model';
+import { AiMessage } from '@/modules/AiAssistant/models/AiMessage.model';
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
@@ -67,6 +70,7 @@ const models = [
   BillPaymentEntry,
   VendorCreditAppliedBill,
   SaleInvoice,
+  RecurringInvoice,
   CreditNoteAppliedInvoice,
   CreditNote,
   RefundCreditNote,
@@ -84,6 +88,8 @@ const models = [
   TrackingCategoryOption,
   ManualJournalEntryTrackingCategory,
   AccountTransactionTrackingCategory,
+  AiConversation,
+  AiMessage,
 ];
 
 /**

@@ -3,6 +3,7 @@ import { InventoryAdjustmentEntry } from './InventoryAdjustmentEntry';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { InventoryAdjustmentMeta } from './InventoryAdjustment.meta';
+import { TInventoryTransactionDirection } from '@/modules/InventoryCost/types/InventoryCost.types';
 
 @InjectModelMeta(InventoryAdjustmentMeta)
 export class InventoryAdjustment extends TenantBaseModel {
@@ -52,7 +53,7 @@ export class InventoryAdjustment extends TenantBaseModel {
   /**
    * Retrieve formatted reference type.
    */
-  get inventoryDirection(): string {
+  get inventoryDirection(): TInventoryTransactionDirection {
     return InventoryAdjustment.getInventoryDirection(this.type);
   }
 
@@ -64,12 +65,12 @@ export class InventoryAdjustment extends TenantBaseModel {
     return !!this.publishedAt;
   }
 
-  static getInventoryDirection(type) {
+  static getInventoryDirection(type): TInventoryTransactionDirection {
     const directions = {
       increment: 'IN',
       decrement: 'OUT',
     };
-    return directions[type] || '';
+    return directions[type] || ('' as TInventoryTransactionDirection);
   }
 
   /**

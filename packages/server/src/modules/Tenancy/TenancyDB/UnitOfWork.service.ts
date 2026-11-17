@@ -38,8 +38,8 @@ export class UnitOfWork {
       if (!trx) {
         try {
           await _trx.rollback();
-        } catch {
-          // Preserve the original error when the transaction cannot be rolled back.
+        } catch (_rollbackError) {
+          // Preserve the original error.
         }
       }
       throw error;

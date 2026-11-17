@@ -42,6 +42,14 @@ export class FeaturesConfigure {
         name: Features.TRACKING_CATEGORIES,
         defaultValue: false,
       },
+      {
+        name: Features.RECURRING_JOURNALS,
+        defaultValue: false,
+      },
+      {
+        name: Features.BATCH_TRACKING,
+        defaultValue: false,
+      },
     ];
   }
 }

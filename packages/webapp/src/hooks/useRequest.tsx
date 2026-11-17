@@ -2,7 +2,7 @@ import { createApiFetcher } from '@bigcapital/sdk-ts';
 import axios from 'axios';
 import React from 'react';
 import { getCookie, normalizeApiPath } from '../utils';
-import { useAuthOrganizationId, useAuthToken } from './state';
+import { useAuthOrganizationId, useAuthToken } from './state/authentication';
 import { useApiFetcherOnError } from './useApiFetcherOnError';
 import type { AxiosRequestConfig } from 'axios';
 

@@ -52,6 +52,11 @@ import { ValidateBulkDeleteManualJournalsService } from './ValidateBulkDeleteMan
     BulkDeleteManualJournalsService,
     ValidateBulkDeleteManualJournalsService,
   ],
-  exports: [ManualJournalsExportable, ManualJournalImportable],
+  exports: [
+    ManualJournalsExportable,
+    ManualJournalImportable,
+    CreateManualJournalService,
+    CommandManualJournalValidators,
+  ],
 })
 export class ManualJournalsModule {}

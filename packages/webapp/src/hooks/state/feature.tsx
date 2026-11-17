@@ -1,34 +1,26 @@
-import React from 'react';
-import { createSelector } from 'reselect';
-import type { RootState } from '@/store/reducers';
-import { setFeatureDashboardMeta } from '@/store/dashboard/dashboard.actions';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-
-const featuresSelector = createSelector(
-  (state: RootState) => state.dashboard.features,
-  (features) => features,
-);
-
-export const useFeatureCan = () => {
-  const features = useAppSelector(featuresSelector);
-
-  return {
-    featureCan: (feature: string) => {
-      return !!features[feature];
-    },
-  };
-};
+import { useCallback, useMemo } from 'react';
+import { useDashboardMeta } from '../query/users/queries';
 
 /**
- * Sets features.
+ * Retrieves the dashboard features accessibility.
  */
-export const useSetFeatureDashboardMeta = () => {
-  const dispatch = useAppDispatch();
+export const useFeatureCan = () => {
+  const { data: dashboardMeta } = useDashboardMeta();
 
-  return React.useCallback(
-    (meta: { features: Array<{ name: string; isAccessible: boolean }> }) => {
-      dispatch(setFeatureDashboardMeta({ features: meta.features }));
-    },
-    [dispatch],
+  const features = useMemo(() => {
+    return (dashboardMeta?.features ?? []).reduce<Record<string, boolean>>(
+      (featuresMap, feature) => {
+        featuresMap[feature.name] = feature.isAccessible;
+        return featuresMap;
+      },
+      {},
+    );
+  }, [dashboardMeta?.features]);
+
+  const featureCan = useCallback(
+    (feature: string) => !!features[feature],
+    [features],
   );
+
+  return { featureCan };
 };

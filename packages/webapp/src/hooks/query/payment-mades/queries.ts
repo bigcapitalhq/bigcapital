@@ -48,7 +48,7 @@ export function usePaymentMades(
   return useQuery({
     ...props,
     queryKey: paymentMadesKeys.list(query),
-    queryFn: () => fetchBillPayments(fetcher),
+    queryFn: () => fetchBillPayments(fetcher, query),
   });
 }
 

@@ -1,6 +1,9 @@
 import {
   fetchSubscriptions,
-  fetchLemonSubscriptions,
+  fetchSubscriptionPlans,
+  createStripeCheckoutSession,
+  createStripePortalSession,
+  syncStripeCheckoutSession,
   cancelSubscription,
   resumeSubscription,
   changeSubscriptionPlan,
@@ -18,8 +21,12 @@ import { useApiFetcher } from '../../useRequest';
 import { subscriptionKeys } from './query-keys';
 import type {
   SubscriptionsListResponse,
-  LemonSubscriptionsListResponse,
+  SubscriptionPlansResponse,
   ChangeSubscriptionPlanBody,
+  CreateStripeCheckoutSessionBody,
+  CreateSubscriptionCheckoutSessionResponse,
+  CreateStripePortalSessionResponse,
+  SyncStripeCheckoutSessionBody,
 } from '@bigcapital/sdk-ts';
 
 export function useCancelMainSubscription(
@@ -85,36 +92,87 @@ export function useGetSubscriptions(
  * Backed by the `useGetSubscriptions` query cache (single shared fetch).
  */
 export function useSubscription(slug = 'main') {
-  const { data } = useGetSubscriptions();
+  const { data, isLoading, isFetched } = useGetSubscriptions();
   const subscription = data?.subscriptions?.find((s) => s.slug === slug);
   return {
+    subscription,
+    isLoading,
+    isFetched,
     isSubscriptionActive: !!subscription?.active,
     isSubscriptionInactive: !!subscription?.inactive,
     isSubscriptionOnTrial: !!subscription?.onTrial,
+    isTrialExpired:
+      !!subscription?.trialEndsAt &&
+      !subscription?.onTrial &&
+      !subscription?.stripeStatus,
   };
 }
 
 /**
- * Lemon Squeezy subscription details (urls) for the current organization's
- * subscriptions. Fetched from the dedicated `/api/subscription/lemon` endpoint
- * so the system-subscriptions list stays lemon-free.
+ * The Bigcapital Cloud plan catalog.
  */
-export function useGetLemonSubscriptions(
-  options?: UseQueryOptions<LemonSubscriptionsListResponse, Error>,
-): UseQueryResult<LemonSubscriptionsListResponse, Error> {
+export function useGetSubscriptionPlans(
+  options?: UseQueryOptions<SubscriptionPlansResponse, Error>,
+): UseQueryResult<SubscriptionPlansResponse, Error> {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
-    queryKey: subscriptionKeys.lemon(),
-    queryFn: () => fetchLemonSubscriptions(fetcher),
+    queryKey: subscriptionKeys.plans(),
+    queryFn: () => fetchSubscriptionPlans(fetcher),
     ...options,
   });
 }
 
 /**
- * The Lemon Squeezy subscription entry for the given slug (default `'main'`).
+ * Creates a hosted Stripe Checkout session for the given plan.
  */
-export function useLemonSubscription(slug = 'main') {
-  const { data } = useGetLemonSubscriptions();
-  return data?.lemonSubscriptions?.find((s) => s.slug === slug);
+export function useCreateSubscriptionCheckoutSession(
+  options?: UseMutationOptions<
+    CreateSubscriptionCheckoutSessionResponse,
+    Error,
+    CreateStripeCheckoutSessionBody
+  >,
+): UseMutationResult<
+  CreateSubscriptionCheckoutSessionResponse,
+  Error,
+  CreateStripeCheckoutSessionBody
+> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    mutationFn: (values) => createStripeCheckoutSession(fetcher, values),
+    ...options,
+  });
+}
+
+/**
+ * Creates a Stripe Customer Portal session.
+ */
+export function useCreateStripePortalSession(
+  options?: UseMutationOptions<CreateStripePortalSessionResponse, Error, void>,
+): UseMutationResult<CreateStripePortalSessionResponse, Error, void> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    mutationFn: () => createStripePortalSession(fetcher),
+    ...options,
+  });
+}
+
+/**
+ * Synchronizes a completed Checkout Session after the Stripe redirect.
+ */
+export function useSyncStripeCheckoutSession(
+  options?: UseMutationOptions<void, Error, SyncStripeCheckoutSessionBody>,
+): UseMutationResult<void, Error, SyncStripeCheckoutSessionBody> {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    mutationFn: (values) => syncStripeCheckoutSession(fetcher, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: subscriptionKeys.all() });
+    },
+    ...options,
+  });
 }

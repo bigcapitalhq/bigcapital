@@ -40,7 +40,7 @@ export class DashboardService {
     return {
       abilities,
       features,
-      isBigcapitalCloud: this.configService.get('hostedOnBigcapitalCloud'),
+      isBigcapitalCloud: !!this.configService.get('cloud.hostedOnCloud'),
     };
   };
 

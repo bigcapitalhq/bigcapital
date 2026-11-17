@@ -44,6 +44,9 @@ export type PurchasesByItemsColumnKey =
 export type InventoryValuationColumnKey =
   components['schemas']['InventoryValuationTableColumnDto']['key'];
 
+export type InventorySummaryColumnKey =
+  components['schemas']['InventorySummaryTableColumnDto']['key'];
+
 export type InventoryItemDetailsColumnKey =
   components['schemas']['InventoryItemDetailsTableColumnDto']['key'];
 

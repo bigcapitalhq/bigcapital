@@ -14,6 +14,7 @@ export class TenantModel extends BaseModel {
   public readonly databaseBatch: string;
   public readonly isDeleting: boolean;
   public readonly isInactive: boolean;
+  public readonly stripeCustomerId: string;
   public readonly subscriptions: Array<PlanSubscription>;
 
   /**

@@ -2,6 +2,7 @@ import { ToNumber } from '@/common/decorators/Validators';
 import { DiscountType } from '@/common/types/Discount';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEnum,
   IsIn,
   IsInt,
@@ -9,8 +10,32 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ItemLinkDto } from '@/modules/Items/dtos/ItemLink.dto';
+
+export class ItemEntryBatchDto {
+  @IsNotEmpty()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'The id of the batch',
+    example: 1,
+  })
+  batchId: number;
+
+  @IsNotEmpty()
+  @ToNumber()
+  @IsNumber()
+  @Min(0)
+  @ApiProperty({
+    description: 'The quantity allocated from the batch',
+    example: 5,
+  })
+  quantity: number;
+}
 
 export class ItemEntryDto {
   @IsInt()
@@ -106,6 +131,27 @@ export class ItemEntryDto {
     example: 1,
   })
   warehouseId?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'The batch id of the item entry',
+    example: 1,
+    required: false,
+  })
+  batchId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ItemEntryBatchDto)
+  @ApiProperty({
+    description: 'The batch allocations of the item entry',
+    type: [ItemEntryBatchDto],
+    required: false,
+  })
+  batches?: ItemEntryBatchDto[];
 
   @IsOptional()
   @IsNotEmpty()

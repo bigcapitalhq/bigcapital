@@ -6,6 +6,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { SaleInvoice, CreateSaleInvoiceBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { ERROR } from '@/constants/errors';
@@ -46,6 +48,9 @@ export type InvoiceEntry = {
   taxRateId: string | number;
   taxRate: string | number;
   taxAmount: string | number;
+  batchId?: number | null;
+  batch?: Batch | null;
+  batches?: ItemEntryBatchAllocation[];
 };
 
 export type PaymentMethodFormValue = { enable: boolean };
@@ -95,6 +100,9 @@ export const defaultInvoiceEntry: InvoiceEntry = {
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
+  batchId: null,
+  batch: null,
+  batches: [],
 };
 
 // Default invoice object.
@@ -132,6 +140,8 @@ export const defaultReqInvoiceEntry = {
   quantity: '',
   description: '',
   taxRateId: '',
+  batchId: null,
+  batches: [],
 };
 
 /**
@@ -268,9 +278,23 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
  * Transformes bill entries to submit request.
  */
 const transformEntriesToRequest = (entries: InvoiceEntry[]) => {
-  return filterNonZeroEntries(entries).map((entry) =>
-    transformToForm(entry, defaultReqInvoiceEntry),
-  );
+  return filterNonZeroEntries(entries).map((entry) => {
+    const { batchId, batch, batches, ...rest } = transformToForm(
+      entry,
+      defaultReqInvoiceEntry,
+    );
+    const normalizedBatches = ((batches ?? []) as ItemEntryBatchAllocation[])
+      .filter((allocation) => allocation.batchId && allocation.quantity > 0)
+      .map((allocation) => ({
+        batchId: allocation.batchId,
+        quantity: allocation.quantity,
+      }));
+
+    return {
+      ...rest,
+      ...(normalizedBatches.length > 0 ? { batches: normalizedBatches } : {}),
+    };
+  });
 };
 
 /**

@@ -24,10 +24,28 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/billing`,
+    component: lazy(() =>
+      import('../containers/Subscriptions/BillingPage').then((m) => ({
+        default: m.BillingPage,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/users`,
     component: lazy(() =>
       import('../containers/Preferences/Users/Users').then((m) => ({
         default: m.Users,
+      })),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/security`,
+    component: lazy(() =>
+      import('@/containers/Preferences/Security/Security').then((m) => ({
+        default: m.Security,
       })),
     ),
     exact: true,

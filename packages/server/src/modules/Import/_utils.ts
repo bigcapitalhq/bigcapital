@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import * as moment from 'moment';
 import * as R from 'ramda';
+import * as XLSX from 'xlsx';
 import { Knex } from 'knex';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -219,6 +220,22 @@ export const parseBoolean = (value: string): boolean | null => {
   return null;
 };
 
+/**
+ * Parses the given Excel date serial number to the `YYYY-MM-DD` format.
+ * Non-numeric values (e.g. CSV/text dates) are returned as is.
+ * @param {any} value
+ * @param {boolean} date1904 - Whether the workbook uses the 1904 date system.
+ * @returns {any}
+ */
+export const parseDate = (value: any, date1904 = false): any => {
+  if (typeof value !== 'number') {
+    return value;
+  }
+  // SSF returns an empty string for invalid serial numbers, in that case the
+  // original value is kept so the validation can reject it.
+  return XLSX.SSF.format('yyyy-mm-dd', value, { date1904 }) || value;
+};
+
 export const transformInputToGroupedFields = (input) => {
   const output = [];
 
@@ -292,6 +309,7 @@ export const valueParser =
     fields: ResourceMetaFieldsMap,
     modelResolver: ModelResolver,
     trx?: Knex.Transaction,
+    date1904 = false,
   ) =>
   async (value: any, key: string, group = '') => {
     let _value = value;
@@ -312,6 +330,9 @@ export const valueParser =
       // Parses the numeric value.
     } else if (field.fieldType === 'number') {
       _value = multiNumberParse(value);
+      // Parses the date value (Excel date cells are serial numbers).
+    } else if (field.fieldType === 'date') {
+      _value = parseDate(value, date1904);
       // Parses the relation value.
     } else if (field.fieldType === 'relation') {
       const RelationModel = modelResolver(field.relationModel);
@@ -331,7 +352,7 @@ export const valueParser =
       _value = get(result, 'id');
     } else if (field.fieldType === 'collection') {
       const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
-      const _valueParser = valueParser(fields, modelResolver);
+      const _valueParser = valueParser(fields, modelResolver, trx, date1904);
       _value = await _valueParser(value, ObjectFieldKey, fieldKey);
     }
     return _value;

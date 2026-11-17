@@ -36,9 +36,12 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('warehouse-transfers')
 @ApiTags('Warehouse Transfers')
+@RequireSubscriptionFeature(SubscriptionFeature.Warehouses)
 @ApiExtraModels(WarehouseTransferResponseDto, PaginatedResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
