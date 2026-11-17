@@ -7,6 +7,8 @@ export class PlaidItem extends BaseModel {
   tenantId: number;
   plaidItemId: string;
   plaidInstitutionId: string;
+  plaidInstitutionName: string | null;
+  plaidInstitutionLogo: string | null;
 
   /**
    * Table name.

@@ -42764,6 +42764,18 @@
             "description": "The Plaid account ID",
             "example": "plaid-account-456"
           },
+          "plaidInstitutionName": {
+            "type": "string",
+            "description": "The Plaid institution name",
+            "example": "Bank of America",
+            "nullable": true
+          },
+          "plaidInstitutionLogo": {
+            "type": "string",
+            "description": "The Plaid institution logo as an image data URL",
+            "example": "data:image/png;base64,...",
+            "nullable": true
+          },
           "isFeedsActive": {
             "type": "boolean",
             "description": "Whether the feeds are active",

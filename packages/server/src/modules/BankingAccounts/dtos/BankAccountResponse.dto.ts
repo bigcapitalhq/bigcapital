@@ -117,6 +117,22 @@ export class BankAccountResponseDto {
   plaidAccountId: string | null;
 
   @ApiProperty({
+    description: 'The Plaid institution name',
+    example: 'Bank of America',
+    required: false,
+    nullable: true,
+  })
+  plaidInstitutionName?: string | null;
+
+  @ApiProperty({
+    description: 'The Plaid institution logo as an image data URL',
+    example: 'data:image/png;base64,...',
+    required: false,
+    nullable: true,
+  })
+  plaidInstitutionLogo?: string | null;
+
+  @ApiProperty({
     description: 'Whether the feeds are active',
     example: true,
   })

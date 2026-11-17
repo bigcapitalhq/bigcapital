@@ -44,6 +44,7 @@ export class GetBankAccountsService {
     // Retrieve accounts model based on the given query.
     const accounts = await this.accountModel()
       .query()
+      .withGraphFetched('plaidItem')
       .onBuild((builder) => {
         dynamicList.buildQuery()(builder);
 
