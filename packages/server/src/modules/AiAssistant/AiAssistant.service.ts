@@ -169,6 +169,7 @@ export class AiAssistantService {
       ability: ability as Ability,
       baseCurrency: toolContext.baseCurrency,
       accountingBasis,
+      fiscalYear: toolContext.fiscalYear,
     }).build();
 
     let modelMessages: ModelMessage[];
