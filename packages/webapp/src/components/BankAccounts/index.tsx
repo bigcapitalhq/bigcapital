@@ -55,11 +55,20 @@ function BankAccountTypeIcon({ type }) {
   );
 }
 
+function BankAccountLogo({ src }) {
+  return (
+    <BankAccountLogoWrap>
+      <BankAccountLogoImage src={src} alt="" />
+    </BankAccountLogoWrap>
+  );
+}
+
 export function BankAccount({
   title,
   code,
   type,
   balance,
+  logoUrl = null as string | null,
   loading = false,
   updatedBeforeText,
   uncategorizedTransactionsCount,
@@ -74,7 +83,12 @@ export function BankAccount({
         <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
           {code}
         </BnakAccountCode>
-        {!loading && <BankAccountTypeIcon type={type} />}
+        {!loading &&
+          (logoUrl ? (
+            <BankAccountLogo src={logoUrl} />
+          ) : (
+            <BankAccountTypeIcon type={type} />
+          ))}
       </BankAccountHeader>
 
       <BankAccountMeta>
@@ -132,7 +146,7 @@ const BankAccountTitle = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0px;
-  padding-right: 24px;
+  padding-right: 52px;
 `;
 
 const BnakAccountCode = styled.div`
@@ -210,4 +224,23 @@ const AccountIconWrap = styled.div`
   top: 14px;
   color: #abb3bb;
   right: 12px;
+`;
+
+const BankAccountLogoWrap = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--color-bank-account-card-border);
+`;
+
+const BankAccountLogoImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 `;

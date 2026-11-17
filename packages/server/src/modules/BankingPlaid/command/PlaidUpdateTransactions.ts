@@ -98,7 +98,10 @@ export class PlaidUpdateTransactions {
       institution_id: item.institution_id,
       country_codes:
         this.configService.get<CountryCode[]>('plaid.countryCodes'),
+      options: { include_optional_metadata: true },
     });
+    // Cache the institution name/logo and refresh it when it changed.
+    await this.plaidSync.syncPlaidItemInstitution(plaidItem, institution, trx);
     // Sync bank accounts.
     await this.plaidSync.syncBankAccounts(accounts, institution, item, trx);
     // Sync removed transactions.

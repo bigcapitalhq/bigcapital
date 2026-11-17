@@ -15298,6 +15298,16 @@ export interface components {
              */
             plaidAccountId: string;
             /**
+             * @description The Plaid institution name
+             * @example Bank of America
+             */
+            plaidInstitutionName?: string | null;
+            /**
+             * @description The Plaid institution logo as an image data URL
+             * @example data:image/png;base64,...
+             */
+            plaidInstitutionLogo?: string | null;
+            /**
              * @description Whether the feeds are active
              * @example true
              */
