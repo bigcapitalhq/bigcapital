@@ -46,8 +46,9 @@ table td.cell--previous_period,
 table td.cell--previous_period_change,
 table td.cell--previous_period_percentage,
 
-table td.cell--percentage_of_row,
-table td.cell--percentage_of_column,
+table td.cell--percentage_row,
+table td.cell--percentage_column,
+table td[class*="cell--percentage_"],
 table td[class*="cell--date-range"] {
   text-align: right;
 }
@@ -61,8 +62,8 @@ table .column--previous_period,
 table .column--previous_period_change,
 table .column--previous_period_percentage,
 
-table .column--percentage_of_row,
-table .column--percentage_of_column,
+table .column--percentage_row,
+table .column--percentage_column,
 table [class*="column--date-range"] {
   text-align: right;
 }
