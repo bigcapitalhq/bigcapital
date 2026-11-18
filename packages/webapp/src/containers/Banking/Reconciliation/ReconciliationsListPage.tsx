@@ -88,7 +88,7 @@ export function ReconciliationsListPage() {
         <NavbarGroup align={Alignment.RIGHT}>
           {meta?.hasInProgress && meta.inProgressId ? (
             <Button
-              intent={Intent.PRIMARY}
+              minimal
               icon={<Icon icon="play-16" iconSize={16} />}
               text={'Resume reconciliation'}
               onClick={handleResumeClick}

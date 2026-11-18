@@ -421,12 +421,17 @@ function AccountTransactionsActionsBarInner({
           content={
             <Menu>
               <If condition={isSyncingOwner && isFeedsActive}>
-                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+                <MenuItem
+                  icon={<Icon icon="refresh-16" iconSize={16} />}
+                  onClick={handleBankUpdateClick}
+                  text={'Update'}
+                />
                 <MenuDivider />
               </If>
 
               <If condition={isSyncingOwner && isFeedsActive && !isFeedsPaused}>
                 <MenuItem
+                  icon={<Icon icon="pause-16" iconSize={16} />}
                   onClick={handlePauseFeedsSyncing}
                   text={'Pause bank feeds'}
                 />
@@ -435,6 +440,7 @@ function AccountTransactionsActionsBarInner({
 
               <If condition={isSyncingOwner && isFeedsActive && isFeedsPaused}>
                 <MenuItem
+                  icon={<Icon icon="play-16" iconSize={16} />}
                   onClick={handleResumeFeedsSyncing}
                   text={'Resume bank feeds'}
                 />
@@ -444,25 +450,33 @@ function AccountTransactionsActionsBarInner({
               {currentAccount?.accountType === 'bank' && (
                 <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
                   <MenuItem
+                    icon={<Icon icon="form" iconSize={16} />}
                     onClick={handleReconcileClick}
                     text={'Reconcile account'}
                   />
                   <MenuItem
+                    icon={<Icon icon="time-24" iconSize={16} />}
                     onClick={handleReconciliationsClick}
                     text={'Reconciliation history'}
                   />
                 </Can>
               )}
-              <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
+              <MenuItem
+                icon={<Icon icon="flow-branch" iconSize={16} />}
+                onClick={handleBankRulesClick}
+                text={'Bank rules'}
+              />
               <MenuDivider />
               <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem
+                  icon={<Icon icon="unlink" iconSize={16} />}
                   intent={Intent.DANGER}
                   onClick={handleDisconnectClick}
                   text={'Disconnect'}
                 />
               </If>
               <MenuItem
+                icon={<Icon icon="trash-16" iconSize={16} />}
                 intent={Intent.DANGER}
                 onClick={handleDeleteAccountClick}
                 text={'Delete'}
