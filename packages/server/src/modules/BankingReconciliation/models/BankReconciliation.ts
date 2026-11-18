@@ -92,10 +92,7 @@ export class BankReconciliation extends BaseModel {
           to: 'bank_reconciliation_transactions.reconciliationId',
         },
         filter(query) {
-          query.orderBy([
-            { column: 'date', order: 'asc' },
-            { column: 'id', order: 'asc' },
-          ]);
+          query.orderBy('id', 'asc');
         },
       },
     };

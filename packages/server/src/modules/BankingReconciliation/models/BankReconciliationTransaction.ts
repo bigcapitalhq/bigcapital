@@ -1,45 +1,33 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
-import type { BankReconciliationTransactionStatus } from '../types/BankingReconciliation.types';
 import type { BankReconciliation } from './BankReconciliation';
 import type { Account } from '@/modules/Accounts/models/Account.model';
+import type { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 
+/**
+ * Links a reconciliation to the journal-entry line (`accounts_transactions`)
+ * it cleared. The journal entry remains the single source of truth for the
+ * transaction data; this row only records the reconciled relation.
+ */
 export class BankReconciliationTransaction extends BaseModel {
   public reconciliationId!: number;
   public accountId!: number;
+  public accountTransactionId!: number;
   public referenceType!: string;
   public referenceId!: number;
   public transactionIndex!: number;
-  public date!: Date | string;
-  public transactionType!: string | null;
-  public transactionNumber!: string | null;
-  public referenceNumber!: string | null;
-  public note!: string | null;
-  public credit!: number;
-  public debit!: number;
-  public currencyCode!: string | null;
-  public exchangeRate!: number | null;
-  public transactionStatus!: BankReconciliationTransactionStatus | null;
-  public isBankFeed!: boolean;
-  public uncategorizedTransactionIds!: number[] | null;
   public createdAt!: Date;
   public updatedAt!: Date;
 
   public reconciliation?: BankReconciliation;
   public account?: Account;
+  public accountTransaction?: AccountTransaction;
 
   /**
    * Table name.
    */
   static get tableName() {
     return 'bank_reconciliation_transactions';
-  }
-
-  /**
-   * JSON columns.
-   */
-  static get jsonAttributes() {
-    return ['uncategorizedTransactionIds'];
   }
 
   /**
@@ -55,6 +43,9 @@ export class BankReconciliationTransaction extends BaseModel {
   static get relationMappings() {
     const { BankReconciliation } = require('./BankReconciliation');
     const { Account } = require('../../Accounts/models/Account.model');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
 
     return {
       reconciliation: {
@@ -71,6 +62,14 @@ export class BankReconciliationTransaction extends BaseModel {
         join: {
           from: 'bank_reconciliation_transactions.accountId',
           to: 'accounts.id',
+        },
+      },
+      accountTransaction: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: AccountTransaction,
+        join: {
+          from: 'bank_reconciliation_transactions.accountTransactionId',
+          to: 'accounts_transactions.id',
         },
       },
     };

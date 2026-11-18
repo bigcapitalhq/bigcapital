@@ -10,13 +10,12 @@ import { BankReconciliationTransaction } from '../models/BankReconciliationTrans
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
-import { ERRORS, RECONCILIATION_TOLERANCE } from '../constants';
+import { ERRORS } from '../constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import {
   BankReconciliationStatus,
   IBankReconciliationTransactionKey,
   IBankReconciliationTransactionRow,
-  IChangedReconciledTransaction,
 } from '../types/BankingReconciliation.types';
 import { isEmpty } from 'lodash';
 
@@ -136,7 +135,7 @@ export class BankingReconciliationRepository {
       .query(trx)
       .findById(reconciliationId)
       .withGraphFetched('account')
-      .withGraphFetched('transactions');
+      .withGraphFetched('transactions.accountTransaction');
 
     if (!reconciliation) {
       throw new ServiceError(
@@ -367,10 +366,7 @@ export class BankingReconciliationRepository {
     endDate: Date | string;
     firstStartDate?: Date | string;
     selectedKeys?: IBankReconciliationTransactionKey[];
-  }): Promise<{
-    rows: IBankReconciliationTransactionRow[];
-    changedTransactions: IChangedReconciledTransaction[];
-  }> => {
+  }): Promise<{ rows: IBankReconciliationTransactionRow[] }> => {
     const {
       accountId,
       startDate,
@@ -386,21 +382,19 @@ export class BankingReconciliationRepository {
       ),
     );
 
-    const [transactions, completedKeys, changedTransactions] =
-      await Promise.all([
-        this.accountTransactionModel()
-          .query()
-          .where('accountId', accountId)
-          .where('date', '>=', moment(lowerBound).format(DATE_FORMAT))
-          .where('date', '<=', moment(endDate).format(DATE_FORMAT))
-          .where(isCashBasis)
-          .orderBy([
-            { column: 'date', order: 'asc' },
-            { column: 'id', order: 'asc' },
-          ]),
-        this.getCompletedTransactionKeys(accountId),
-        this.getChangedReconciledTransactions(accountId, startDate),
-      ]);
+    const [transactions, completedKeys] = await Promise.all([
+      this.accountTransactionModel()
+        .query()
+        .where('accountId', accountId)
+        .where('date', '>=', moment(lowerBound).format(DATE_FORMAT))
+        .where('date', '<=', moment(endDate).format(DATE_FORMAT))
+        .where(isCashBasis)
+        .orderBy([
+          { column: 'date', order: 'asc' },
+          { column: 'id', order: 'asc' },
+        ]),
+      this.getCompletedTransactionKeys(accountId),
+    ]);
 
     const filteredTransactions = transactions.filter(
       (transaction) =>
@@ -443,80 +437,69 @@ export class BankingReconciliationRepository {
       );
     });
 
-    return { rows, changedTransactions };
+    return { rows };
   };
 
   /**
-   * Compares the latest prior reconciled snapshots with the current ledger.
+   * Builds the display rows of a reconciled reconciliation from the current
+   * journal entries linked to it. The journal entry is always the source of
+   * truth; nothing is read from a reconciliation snapshot.
    */
-  public getChangedReconciledTransactions = async (
-    accountId: number,
-    beforeDate: Date | string,
-  ): Promise<IChangedReconciledTransaction[]> => {
-    const previous = await this.reconciliationModel()
-      .query()
-      .where('accountId', accountId)
-      .where('status', BankReconciliationStatus.Reconciled)
-      .where('endDate', '<', moment(beforeDate).format(DATE_FORMAT))
-      .orderBy('endDate', 'desc')
-      .orderBy('id', 'desc')
-      .first();
+  public getReconciledRows = async (
+    reconciliation: BankReconciliation,
+  ): Promise<IBankReconciliationTransactionRow[]> => {
+    const links = reconciliation.transactions ?? [];
+    const transactions = links
+      .map((link) => link.accountTransaction)
+      .filter(Boolean) as AccountTransaction[];
 
-    if (!previous) return [];
+    const bankFeedMaps = await this.getBankFeedMaps(transactions);
+    const noSelectedKeys = new Set<string>();
 
-    const previousRows = await this.reconciliationTransactionModel()
-      .query()
-      .where('reconciliationId', previous.id);
+    const rows = links
+      .map((link) => {
+        const transaction = link.accountTransaction;
 
-    if (isEmpty(previousRows)) return [];
-
-    const currentRows = await this.accountTransactionModel()
-      .query()
-      .where('accountId', accountId)
-      .whereIn(
-        ['referenceType', 'referenceId'],
-        previousRows.map((row) => [row.referenceType, row.referenceId]) as any,
-      );
-
-    const currentMap = new Map(
-      currentRows.map((row) => [
-        this.buildTransactionKey(row.referenceType, row.referenceId, row.index),
-        row,
-      ]),
-    );
-
-    return previousRows
-      .map((row) => {
-        const key = this.buildTransactionKey(
-          row.referenceType,
-          row.referenceId,
-          row.transactionIndex,
-        );
-        const current = currentMap.get(key);
-        const currentCredit = current ? Number(current.credit ?? 0) : null;
-        const currentDebit = current ? Number(current.debit ?? 0) : null;
-        const difference = current
-          ? currentDebit -
-            currentCredit -
-            (Number(row.debit) - Number(row.credit))
-          : -(Number(row.debit) - Number(row.credit));
-
-        if (current && Math.abs(difference) <= RECONCILIATION_TOLERANCE) {
+        if (!transaction) {
           return null;
         }
+        const ref = `${transaction.referenceType}:${transaction.referenceId}`;
+        const categorized = bankFeedMaps.categorized.get(ref) ?? [];
+        const matched = bankFeedMaps.matched.get(ref) ?? [];
+        const status: IBankReconciliationTransactionRow['status'] =
+          categorized.length > 0
+            ? 'categorized'
+            : matched.length > 0
+              ? 'matched'
+              : 'manual';
+
+        const uncategorizedTransactionIds = [
+          ...categorized.map((row) => row.id),
+          ...matched.map((row) => row.uncategorizedTransactionId),
+        ].filter((id): id is number => Boolean(id));
+
+        const row = this.transformRow(
+          transaction,
+          status,
+          categorized.length > 0 || matched.length > 0,
+          Array.from(new Set(uncategorizedTransactionIds)),
+          noSelectedKeys,
+          reconciliation.startDate,
+        );
+
         return {
-          key,
-          referenceType: row.referenceType,
-          referenceId: row.referenceId,
-          index: row.transactionIndex,
-          snapshotCredit: Number(row.credit),
-          snapshotDebit: Number(row.debit),
-          currentCredit,
-          currentDebit,
-          difference,
+          ...row,
+          isChecked: true,
+          isReconciled: true,
         };
       })
-      .filter(Boolean) as IChangedReconciledTransaction[];
+      .filter(Boolean) as IBankReconciliationTransactionRow[];
+
+    return rows.sort((a, b) => {
+      const dateDifference =
+        moment(a.date).valueOf() - moment(b.date).valueOf();
+      return dateDifference !== 0 ? dateDifference : a.index - b.index;
+    });
   };
 
   /**

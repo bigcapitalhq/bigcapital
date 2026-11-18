@@ -52,7 +52,6 @@ export interface IChangedReconciledTransaction {
 
 export interface IBankReconciliationTransactionsResult {
   rows: IBankReconciliationTransactionRow[];
-  changedTransactions: IChangedReconciledTransaction[];
 }
 
 export interface IBankReconciliationMeta {

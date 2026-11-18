@@ -8,7 +8,6 @@ import { BankReconciliationTransactionTransformer } from './BankReconciliationTr
 import {
   BankReconciliationStatus,
   IBankReconciliationTransactionRow,
-  IChangedReconciledTransaction,
 } from '../types/BankingReconciliation.types';
 
 @Injectable()
@@ -33,7 +32,6 @@ export class GetBankReconciliationService {
     const accountId = reconciliation.accountId;
 
     let rows: IBankReconciliationTransactionRow[] = [];
-    let changedTransactions: IChangedReconciledTransaction[] = [];
     let transactionsCount = 0;
 
     if (reconciliation.isInProgress) {
@@ -51,7 +49,6 @@ export class GetBankReconciliationService {
       });
 
       rows = result.rows;
-      changedTransactions = result.changedTransactions;
 
       const clearedBalance =
         Number(reconciliation.beginningBalance) +
@@ -64,35 +61,7 @@ export class GetBankReconciliationService {
         Number(reconciliation.endingBalance ?? 0) - clearedBalance;
       transactionsCount = rows.filter((row) => row.isChecked).length;
     } else if (reconciliation.isReconciled) {
-      rows = (reconciliation.transactions ?? []).map((transaction) => ({
-        key: this.repository.buildTransactionKey(
-          transaction.referenceType,
-          transaction.referenceId,
-          transaction.transactionIndex,
-        ),
-        accountTransactionId: null,
-        referenceType: transaction.referenceType,
-        referenceId: transaction.referenceId,
-        index: transaction.transactionIndex,
-        date: transaction.date,
-        transactionType: transaction.transactionType,
-        transactionNumber: transaction.transactionNumber,
-        referenceNumber: transaction.referenceNumber,
-        note: transaction.note,
-        credit: Number(transaction.credit ?? 0),
-        debit: Number(transaction.debit ?? 0),
-        currencyCode: transaction.currencyCode,
-        exchangeRate: transaction.exchangeRate,
-        status: transaction.transactionStatus ?? 'manual',
-        isBankFeed: Boolean(transaction.isBankFeed),
-        isPreviousOutstanding:
-          new Date(transaction.date).getTime() <
-          new Date(reconciliation.startDate).getTime(),
-        isChecked: true,
-        isReconciled: true,
-        uncategorizedTransactionIds:
-          transaction.uncategorizedTransactionIds ?? [],
-      }));
+      rows = await this.repository.getReconciledRows(reconciliation);
       transactionsCount = rows.length;
     }
 
@@ -123,7 +92,7 @@ export class GetBankReconciliationService {
       uncategorizedTransactionsCount: reconciliation.isInProgress
         ? await this.repository.getUncategorizedTransactionsCount(accountId)
         : 0,
-      changedTransactions,
+      changedTransactions: [],
     };
 
     return {

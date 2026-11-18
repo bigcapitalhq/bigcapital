@@ -20,12 +20,10 @@ export class UndoBankReconciliationService {
     private readonly reconciliationModel: TenantModelProxy<
       typeof BankReconciliation
     >,
-
     @Inject(BankReconciliationTransaction.name)
     private readonly reconciliationTransactionModel: TenantModelProxy<
       typeof BankReconciliationTransaction
     >,
-
     private readonly repository: BankingReconciliationRepository,
     private readonly uow: UnitOfWork,
     private readonly eventEmitter: EventEmitter2,
@@ -90,7 +88,6 @@ export class UndoBankReconciliationService {
             draftTransactions: null,
           });
       }
-
       const transactionKeys = (reconciliation.transactions ?? []).map(
         (transaction) => ({
           referenceType: transaction.referenceType,
@@ -112,14 +109,12 @@ export class UndoBankReconciliationService {
           reconciledAt: null,
           reconciledBy: null,
         });
-
       await this.eventEmitter.emitAsync(events.bankReconciliation.onUndone, {
         reconciliation: reopened,
         oldReconciliation: reconciliation,
         voidedReconciliationIds: laterReconciliations.map((item) => item.id),
         trx,
       });
-
       return reopened;
     });
   }

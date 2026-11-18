@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClsService } from 'nestjs-cls';
 import { Knex } from 'knex';
+import { uniqBy } from 'lodash';
 import { BankReconciliation } from '../models/BankReconciliation';
 import { BankReconciliationTransaction } from '../models/BankReconciliationTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -15,10 +16,15 @@ import { BankReconciliationValidator } from './BankReconciliationValidator.servi
 import {
   BankReconciliationStatus,
   IBankReconciliationTransactionKey,
+  IBankReconciliationTransactionRow,
 } from '../types/BankingReconciliation.types';
 import { events } from '@/common/events/events';
 
-const DATE_FORMAT = 'YYYY-MM-DD';
+/**
+ * Detects MySQL/MariaDB duplicate-key errors.
+ */
+const isDuplicateEntryError = (error: any): boolean =>
+  error?.code === 'ER_DUP_ENTRY' || error?.errno === 1062;
 
 @Injectable()
 export class FinishBankReconciliationService {
@@ -27,12 +33,10 @@ export class FinishBankReconciliationService {
     private readonly reconciliationModel: TenantModelProxy<
       typeof BankReconciliation
     >,
-
     @Inject(BankReconciliationTransaction.name)
     private readonly reconciliationTransactionModel: TenantModelProxy<
       typeof BankReconciliationTransaction
     >,
-
     private readonly repository: BankingReconciliationRepository,
     private readonly validator: BankReconciliationValidator,
     private readonly uow: UnitOfWork,
@@ -52,7 +56,6 @@ export class FinishBankReconciliationService {
         reconciliationId,
         trx,
       );
-
       if (!reconciliation.isInProgress) {
         throw new ServiceError(
           ERRORS.BANK_RECONCILIATION_NOT_IN_PROGRESS,
@@ -147,28 +150,40 @@ export class FinishBankReconciliationService {
         .where('reconciliationId', reconciliationId)
         .delete();
 
-      const snapshots = selectedRows.filter(Boolean).map((row) => ({
+      const uniqueRows = uniqBy(
+        selectedRows.filter(
+          (
+            row,
+          ): row is IBankReconciliationTransactionRow & {
+            accountTransactionId: number;
+          } => Boolean(row?.accountTransactionId),
+        ),
+        'accountTransactionId',
+      );
+
+      const transactionLinks = uniqueRows.map((row) => ({
         reconciliationId,
         accountId: reconciliation.accountId,
+        accountTransactionId: row.accountTransactionId,
         referenceType: row.referenceType,
         referenceId: row.referenceId,
         transactionIndex: row.index,
-        date: moment(row.date).format(DATE_FORMAT),
-        transactionType: row.transactionType,
-        transactionNumber: row.transactionNumber,
-        referenceNumber: row.referenceNumber,
-        note: row.note,
-        credit: row.credit,
-        debit: row.debit,
-        currencyCode: row.currencyCode,
-        exchangeRate: row.exchangeRate,
-        transactionStatus: row.status,
-        isBankFeed: row.isBankFeed,
-        uncategorizedTransactionIds: row.uncategorizedTransactionIds,
       }));
 
-      for (const snapshot of snapshots) {
-        await this.reconciliationTransactionModel().query(trx).insert(snapshot);
+      if (transactionLinks.length > 0) {
+        try {
+          await this.reconciliationTransactionModel()
+            .query(trx)
+            .insert(transactionLinks);
+        } catch (error) {
+          if (isDuplicateEntryError(error)) {
+            throw new ServiceError(
+              ERRORS.BANK_RECONCILIATION_TRANSACTIONS_CHANGED,
+              'One or more selected transactions have already been reconciled.',
+            );
+          }
+          throw error;
+        }
       }
 
       const finishedReconciliation = await this.reconciliationModel()

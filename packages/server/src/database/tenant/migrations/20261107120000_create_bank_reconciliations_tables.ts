@@ -2,10 +2,10 @@
  * Creates the bank reconciliation tables.
  *
  * A reconciliation header stores the period and statement balances, while the
- * transaction rows store a snapshot of every reconciled ledger line. The rows
- * are keyed by the ledger reference (not by `accounts_transactions.id`) because
- * ledger rows are deleted and re-inserted whenever the source transaction is
- * edited.
+ * transaction rows only link the reconciliation to the journal-entry lines
+ * (`accounts_transactions`) it cleared. The journal entry stays the single
+ * source of truth for every ledger attribute; the link is the "reconciled"
+ * marker itself.
  *
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -44,23 +44,16 @@ exports.up = async function (knex) {
     table.increments();
     table.integer('reconciliation_id').unsigned().notNullable();
     table.integer('account_id').unsigned().notNullable();
+    table.integer('account_transaction_id').unsigned().notNullable();
     table.string('reference_type', 255).notNullable();
     table.integer('reference_id').unsigned().notNullable();
     table.integer('transaction_index').unsigned().notNullable().defaultTo(0);
-    table.date('date').notNullable();
-    table.string('transaction_type', 255).nullable();
-    table.string('transaction_number', 255).nullable();
-    table.string('reference_number', 255).nullable();
-    table.string('note', 255).nullable();
-    table.decimal('credit', 15, 5).notNullable().defaultTo(0);
-    table.decimal('debit', 15, 5).notNullable().defaultTo(0);
-    table.string('currency_code', 3).nullable();
-    table.decimal('exchange_rate', 13, 9).nullable();
-    table.string('transaction_status', 20).nullable();
-    table.boolean('is_bank_feed').notNullable().defaultTo(false);
-    table.json('uncategorized_transaction_ids').nullable();
     table.timestamps();
 
+    table.unique(
+      'account_transaction_id',
+      'bank_recon_tx_account_transaction_unique',
+    );
     table.unique(
       ['account_id', 'reference_type', 'reference_id', 'transaction_index'],
       'bank_recon_tx_reference_unique',
@@ -69,6 +62,7 @@ exports.up = async function (knex) {
       ['account_id', 'reconciliation_id'],
       'bank_recon_tx_account_reconciliation',
     );
+    table.index('reconciliation_id', 'bank_recon_tx_reconciliation');
     table
       .foreign('reconciliation_id', 'fk_bank_recon_tx_reconciliation')
       .references('bank_reconciliations.id')
@@ -76,6 +70,10 @@ exports.up = async function (knex) {
     table
       .foreign('account_id', 'fk_bank_recon_tx_account')
       .references('accounts.id')
+      .onDelete('RESTRICT');
+    table
+      .foreign('account_transaction_id', 'fk_bank_recon_tx_account_transaction')
+      .references('accounts_transactions.id')
       .onDelete('RESTRICT');
   });
 };
