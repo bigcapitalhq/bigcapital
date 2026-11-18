@@ -36,6 +36,10 @@ export type CreateBankReconciliationBody = OpRequestBody<
   OpForPath<typeof BANK_RECONCILIATION_ROUTES.LIST, "post">
 >;
 
+export type CreateBankReconciliationResponse = OpResponseBody<
+  OpForPath<typeof BANK_RECONCILIATION_ROUTES.LIST, "post">
+>;
+
 export type UpdateBankReconciliationBody = OpRequestBody<
   OpForPath<typeof BANK_RECONCILIATION_ROUTES.BY_ID, "put">
 >;
@@ -75,7 +79,7 @@ export async function fetchBankReconciliation(
 export async function createBankReconciliation(
   fetcher: ApiFetcher,
   body: CreateBankReconciliationBody,
-): Promise<BankReconciliationDetailResponse> {
+): Promise<CreateBankReconciliationResponse> {
   const post = fetcher
     .path(BANK_RECONCILIATION_ROUTES.LIST)
     .method("post")

@@ -13,6 +13,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { BankingReconciliationApplication } from './BankingReconciliationApplication.service';
 import { GetBankReconciliationsQueryDto } from './dtos/GetBankReconciliationsQuery.dto';
 import { CreateBankReconciliationDto } from './dtos/CreateBankReconciliation.dto';
+import { CreateBankReconciliationResponseDto } from './dtos/CreateBankReconciliationResponse.dto';
 import { UpdateBankReconciliationDto } from './dtos/UpdateBankReconciliation.dto';
 import { FinishBankReconciliationDto } from './dtos/FinishBankReconciliation.dto';
 import { UndoBankReconciliationDto } from './dtos/UndoBankReconciliation.dto';
@@ -45,12 +46,15 @@ export class BankingReconciliationController {
   @ApiResponse({
     status: 201,
     description: 'Reconciliation created successfully.',
-    type: BankReconciliationDetailResponseDto,
+    type: CreateBankReconciliationResponseDto,
   })
-  public createBankReconciliation(
+  public async createBankReconciliation(
     @Body() reconciliationDTO: CreateBankReconciliationDto,
-  ) {
-    return this.application.createBankReconciliation(reconciliationDTO);
+  ): Promise<CreateBankReconciliationResponseDto> {
+    const reconciliationId =
+      await this.application.createBankReconciliation(reconciliationDTO);
+
+    return { id: reconciliationId };
   }
 
   @Get(':id')

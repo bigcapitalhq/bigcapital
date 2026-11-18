@@ -6,6 +6,7 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { formatNumber } from '@/utils/format-number';
 import { GetBankReconciliationsQueryDto } from '../dtos/GetBankReconciliationsQuery.dto';
+import { BankReconciliationBeginningBalanceService } from '../commands/BankReconciliationBeginningBalance.service';
 import { BankingReconciliationRepository } from './BankingReconciliationRepository';
 import { BankReconciliationTransformer } from './BankReconciliation.transformer';
 
@@ -25,6 +26,7 @@ export class GetBankReconciliationsService {
     >,
 
     private readonly repository: BankingReconciliationRepository,
+    private readonly beginningBalanceService: BankReconciliationBeginningBalanceService,
     private readonly transformer: TransformerInjectable,
   ) {}
 
@@ -85,12 +87,10 @@ export class GetBankReconciliationsService {
         ? moment(firstTransactionDate).format(DATE_FORMAT)
         : moment().format(DATE_FORMAT);
 
-    const beginningBalance = latestReconciled
-      ? Number(latestReconciled.endingBalance ?? 0)
-      : await this.repository.getLedgerBalanceBefore(
-          account.id,
-          suggestedStartDate,
-        );
+    const beginningBalance = await this.beginningBalanceService.resolve({
+      accountId: account.id,
+      startDate: suggestedStartDate,
+    });
 
     const meta = {
       accountId: account.id,

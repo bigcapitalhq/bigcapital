@@ -8,6 +8,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { UpdateBankReconciliationDto } from '../dtos/UpdateBankReconciliation.dto';
 import { BankingReconciliationRepository } from '../queries/BankingReconciliationRepository';
+import { BankReconciliationBeginningBalanceService } from './BankReconciliationBeginningBalance.service';
 import { BankReconciliationValidator } from './BankReconciliationValidator.service';
 import { events } from '@/common/events/events';
 
@@ -21,6 +22,7 @@ export class UpdateBankReconciliationService {
 
     private readonly repository: BankingReconciliationRepository,
     private readonly validator: BankReconciliationValidator,
+    private readonly beginningBalanceService: BankReconciliationBeginningBalanceService,
     private readonly uow: UnitOfWork,
     private readonly eventEmitter: EventEmitter2,
   ) {}
@@ -57,23 +59,15 @@ export class UpdateBankReconciliationService {
         trx,
       });
 
-      const latestReconciled = await this.validator.getLatestReconciledBefore(
-        oldReconciliation.accountId,
+      const beginningBalance = await this.beginningBalanceService.resolve({
+        accountId: oldReconciliation.accountId,
         startDate,
         trx,
-      );
-
-      const beginningBalance =
-        latestReconciled &&
-        new Date(startDate).getTime() ===
-          new Date(oldReconciliation.startDate).getTime()
-          ? Number(oldReconciliation.beginningBalance)
-          : latestReconciled
-            ? Number(latestReconciled.endingBalance ?? 0)
-            : await this.repository.getLedgerBalanceBefore(
-                oldReconciliation.accountId,
-                startDate,
-              );
+        current: {
+          startDate: oldReconciliation.startDate,
+          beginningBalance: oldReconciliation.beginningBalance,
+        },
+      });
 
       const draftTransactions =
         reconciliationDTO.transactions !== undefined

@@ -13,6 +13,7 @@ import { UpdateBankReconciliationService } from './commands/UpdateBankReconcilia
 import { FinishBankReconciliationService } from './commands/FinishBankReconciliation.service';
 import { UndoBankReconciliationService } from './commands/UndoBankReconciliation.service';
 import { DeleteBankReconciliationService } from './commands/DeleteBankReconciliation.service';
+import { BankReconciliationBeginningBalanceService } from './commands/BankReconciliationBeginningBalance.service';
 import { BankReconciliationValidator } from './commands/BankReconciliationValidator.service';
 
 const models = [
@@ -26,6 +27,7 @@ const models = [
   providers: [
     BankingReconciliationRepository,
     BankReconciliationValidator,
+    BankReconciliationBeginningBalanceService,
     GetBankReconciliationsService,
     GetBankReconciliationService,
     CreateBankReconciliationService,

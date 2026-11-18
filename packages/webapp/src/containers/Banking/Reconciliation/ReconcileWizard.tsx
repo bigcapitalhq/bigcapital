@@ -127,7 +127,7 @@ export function ReconcileWizard() {
       endingBalance: parsedEndingBalance,
     })
       .then((response) => {
-        setReconciliationId(response.reconciliation.id);
+        setReconciliationId(response.id);
         setStep(1);
         AppToaster.show({
           message: 'Reconciliation started.',

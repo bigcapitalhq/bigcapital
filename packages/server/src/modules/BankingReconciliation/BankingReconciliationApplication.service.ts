@@ -45,15 +45,13 @@ export class BankingReconciliationApplication {
    */
   public async createBankReconciliation(
     reconciliationDTO: CreateBankReconciliationDto,
-  ) {
+  ): Promise<number> {
     const reconciliation =
       await this.createBankReconciliationService.createBankReconciliation(
         reconciliationDTO,
       );
 
-    return this.getBankReconciliationService.getBankReconciliation(
-      reconciliation.id,
-    );
+    return reconciliation.id;
   }
 
   /**

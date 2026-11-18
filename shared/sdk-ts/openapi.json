@@ -17043,7 +17043,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BankReconciliationDetailResponseDto"
+                  "$ref": "#/components/schemas/CreateBankReconciliationResponseDto"
                 }
               }
             }
@@ -44921,6 +44921,19 @@
           "startDate",
           "endDate",
           "endingBalance"
+        ]
+      },
+      "CreateBankReconciliationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Created reconciliation id",
+            "example": 1
+          }
+        },
+        "required": [
+          "id"
         ]
       },
       "BankReconciliationTransactionResponseDto": {

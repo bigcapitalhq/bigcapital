@@ -16498,6 +16498,13 @@ export interface components {
              */
             notes?: string;
         };
+        CreateBankReconciliationResponseDto: {
+            /**
+             * @description Created reconciliation id
+             * @example 1
+             */
+            id: number;
+        };
         BankReconciliationTransactionResponseDto: {
             /** @description Stable transaction key */
             key: string;
@@ -30333,7 +30340,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BankReconciliationDetailResponseDto"];
+                    "application/json": components["schemas"]["CreateBankReconciliationResponseDto"];
                 };
             };
         };

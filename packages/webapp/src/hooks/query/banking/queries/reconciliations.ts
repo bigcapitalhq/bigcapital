@@ -22,6 +22,7 @@ import type {
   BankReconciliationDetailResponse,
   BankReconciliationsListResponse,
   CreateBankReconciliationBody,
+  CreateBankReconciliationResponse,
   FinishBankReconciliationBody,
   UndoBankReconciliationBody,
   UpdateBankReconciliationBody,
@@ -75,12 +76,12 @@ export function useBankReconciliation(
 
 export function useCreateBankReconciliation(
   options?: UseMutationOptions<
-    BankReconciliationDetailResponse,
+    CreateBankReconciliationResponse,
     Error,
     CreateBankReconciliationBody
   >,
 ): UseMutationResult<
-  BankReconciliationDetailResponse,
+  CreateBankReconciliationResponse,
   Error,
   CreateBankReconciliationBody
 > {
@@ -91,11 +92,7 @@ export function useCreateBankReconciliation(
     ...options,
     mutationFn: (body) => createBankReconciliation(fetcher, body),
     onSuccess: (data, variables, context, mutation) => {
-      invalidateReconciliation(
-        queryClient,
-        data.reconciliation.accountId,
-        data.reconciliation.id,
-      );
+      invalidateReconciliation(queryClient, variables.accountId, data.id);
       options?.onSuccess?.(data, variables, context, mutation);
     },
   });

@@ -6,6 +6,7 @@ import { BankReconciliation } from '../models/BankReconciliation';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { BankingReconciliationRepository } from '../queries/BankingReconciliationRepository';
+import { BankReconciliationBeginningBalanceService } from './BankReconciliationBeginningBalance.service';
 import { BankReconciliationValidator } from './BankReconciliationValidator.service';
 import { CreateBankReconciliationDto } from '../dtos/CreateBankReconciliation.dto';
 import { BankReconciliationStatus } from '../types/BankingReconciliation.types';
@@ -21,6 +22,7 @@ export class CreateBankReconciliationService {
 
     private readonly repository: BankingReconciliationRepository,
     private readonly validator: BankReconciliationValidator,
+    private readonly beginningBalanceService: BankReconciliationBeginningBalanceService,
     private readonly uow: UnitOfWork,
     private readonly eventEmitter: EventEmitter2,
     private readonly cls: ClsService,
@@ -44,20 +46,11 @@ export class CreateBankReconciliationService {
         endDate: reconciliationDTO.endDate,
         trx,
       });
-
-      const latestReconciled = await this.validator.getLatestReconciledBefore(
-        account.id,
-        reconciliationDTO.startDate,
+      const beginningBalance = await this.beginningBalanceService.resolve({
+        accountId: account.id,
+        startDate: reconciliationDTO.startDate,
         trx,
-      );
-
-      const beginningBalance = latestReconciled
-        ? Number(latestReconciled.endingBalance ?? 0)
-        : await this.repository.getLedgerBalanceBefore(
-            account.id,
-            reconciliationDTO.startDate,
-          );
-
+      });
       const firstStartDate = await this.repository.getFirstStartDate(
         account.id,
         reconciliationDTO.startDate,

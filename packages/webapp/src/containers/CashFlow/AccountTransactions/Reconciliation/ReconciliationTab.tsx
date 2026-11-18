@@ -76,7 +76,7 @@ export function ReconciliationTab() {
     })
       .then((response) => {
         setIsStartingNew(false);
-        setSelectedId(response.reconciliation.id);
+        setSelectedId(response.id);
         AppToaster.show({
           message: 'Reconciliation started.',
           intent: Intent.SUCCESS,
