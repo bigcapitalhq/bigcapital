@@ -1,14 +1,13 @@
 import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
-import '@/style/pages/CashFlow/CashFlowAccounts/List.scss';
 import { CashFlowAccountsActionsBar } from './CashFlowAccountsActionsBar';
-import { CashflowAccountsGrid } from './CashflowAccountsGrid';
+import { CashFlowAccountsDataTable } from './CashFlowAccountsDataTable';
 import { CashflowAccountsLoadingBar } from './CashFlowAccountsLoadingBar';
 import { CashflowAccountsPlaidLink } from './CashflowAccountsPlaidLink';
 import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
 import type { WithCashflowAccountsProps } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import type { WithCashflowAccountsTableActionsProps } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
-import { DashboardPageContent } from '@/components';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
 import { withCashflowAccounts } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import { withCashflowAccountsTableActions } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
 import { CashFlowDrawers } from '@/containers/CashFlow/CashFlowDrawers';
@@ -45,7 +44,9 @@ function CashFlowAccountsListInner({
       <CashflowAccountsLoadingBar />
 
       <DashboardPageContent>
-        <CashflowAccountsGrid />
+        <DashboardContentTable>
+          <CashFlowAccountsDataTable />
+        </DashboardContentTable>
       </DashboardPageContent>
 
       <CashflowAccountsPlaidLink />

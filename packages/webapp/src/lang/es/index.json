@@ -2478,5 +2478,13 @@
   "ai_assistant.disabled_description": "Set OPENAI_API_KEY and AI_ASSISTANT_ENABLED on the server, then restart the application.",
   "ai_assistant.no_access_title": "AI assistant access required",
   "ai_assistant.no_access_description": "You need at least one financial report permission to use the AI assistant. Contact your administrator if you think this is a mistake.",
-  "ai_assistant.model_fallback": "OpenAI"
+  "ai_assistant.model_fallback": "OpenAI",
+  "banking.label.account_actions": "Acciones de la cuenta",
+  "banking.status.synced": "Sincronizado",
+  "banking.status.paused": "Pausado",
+  "banking.status.not_connected": "No conectado",
+  "banking.synced_via": "Sincronizado mediante {institution}",
+  "banking.manual_account": "Cuenta manual",
+  "banking.last_synced": "Última sincronización hace {fromNow}",
+  "bank": "Banco"
 }
