@@ -15,13 +15,14 @@ import type { ItemFormValues, ItemFormSubmitPayload } from './types';
 import type { CreateItemBody, EditItemBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
+import { useSyncItemImages } from '@/hooks/query';
 import { safeInvoke } from '@/utils';
 
 type SubmitSuccessHandler = (
   values: ItemFormValues,
   form: FormikHelpers<ItemFormValues>,
   submitPayload: ItemFormSubmitPayload,
-  response: void,
+  response?: void,
 ) => void;
 
 type SubmitErrorHandler = (
@@ -55,23 +56,58 @@ export function ItemFormFormik({
     editItemMutate,
     submitPayload,
     isNewMode,
+    itemImagesEnabled,
   } = useItemFormContext();
+
+  // Syncs the pending image uploads/deletions after the item is saved.
+  const { mutateAsync: syncItemImagesMutate } = useSyncItemImages();
 
   // Initial values in create and edit mode.
   const initialValues = useItemFormInitialValues(item, initialValuesComponent);
 
   // Handles the form submit.
-  const handleFormSubmit = (
+  const handleFormSubmit = async (
     values: ItemFormValues,
     form: FormikHelpers<ItemFormValues>,
   ) => {
     const { setSubmitting, resetForm, setErrors } = form;
-    const formValues = { ...values };
+    const { imageFiles, removedImageIds, ...formValues } = values;
 
     setSubmitting(true);
 
+    // Syncs the pending item image changes.
+    const syncItemImages = async (savedItemId: number) => {
+      if (!itemImagesEnabled) {
+        return;
+      }
+      const hasNewImages =
+        Boolean(imageFiles.front) ||
+        Boolean(imageFiles.rear) ||
+        imageFiles.other.length > 0;
+
+      if (!hasNewImages && removedImageIds.length === 0) {
+        return;
+      }
+      try {
+        await syncItemImagesMutate({
+          itemId: savedItemId,
+          front: imageFiles.front,
+          rear: imageFiles.rear,
+          other: imageFiles.other,
+          removedImageIds,
+        });
+      } catch (error) {
+        // The item itself was saved; surface the image failure without
+        // discarding the item save.
+        AppToaster.show({
+          message: intl.get('item_images_upload_failed'),
+          intent: Intent.WARNING,
+        });
+      }
+    };
+
     // Handle response succes.
-    const onSuccess = (response: void) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -86,7 +122,7 @@ export function ItemFormFormik({
       resetForm();
       setSubmitting(false);
 
-      safeInvoke(onSubmitSuccess, values, form, submitPayload, response);
+      safeInvoke(onSubmitSuccess, values, form, submitPayload, undefined);
     };
     // Handle response error.
     const onError = (errors: unknown) => {
@@ -100,14 +136,25 @@ export function ItemFormFormik({
       }
       safeInvoke(onSubmitError, errors, values, form, submitPayload);
     };
-    if (isNewMode) {
-      createItemMutate(formValues as unknown as CreateItemBody)
-        .then(onSuccess)
-        .catch(onError);
-    } else {
-      editItemMutate([itemId!, formValues as unknown as EditItemBody])
-        .then(onSuccess)
-        .catch(onError);
+
+    try {
+      let savedItemId: number | undefined;
+
+      if (isNewMode) {
+        const response = await createItemMutate(
+          formValues as unknown as CreateItemBody,
+        );
+        savedItemId = response?.id;
+      } else {
+        await editItemMutate([itemId!, formValues as unknown as EditItemBody]);
+        savedItemId = itemId;
+      }
+      if (savedItemId) {
+        await syncItemImages(savedItemId);
+      }
+      onSuccess();
+    } catch (error) {
+      onError(error);
     }
   };
 

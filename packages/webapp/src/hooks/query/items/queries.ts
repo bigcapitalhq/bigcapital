@@ -14,6 +14,8 @@ import {
   activateItem,
   validateBulkDeleteItems,
   bulkDeleteItems,
+  uploadItemImages,
+  deleteItemImage,
 } from '@bigcapital/sdk-ts';
 import {
   useMutation,
@@ -28,6 +30,7 @@ import { itemsKeys } from './query-keys';
 import type {
   Item,
   CreateItemBody,
+  CreateItemResponse,
   EditItemBody,
   BulkDeleteItemsBody,
   ValidateBulkDeleteItemsResponse,
@@ -37,6 +40,7 @@ import type {
   ItemAssociatedEstimatesResponse,
   ItemAssociatedReceiptsResponse,
   ItemWarehousesResponse,
+  ItemImageRole,
 } from '@bigcapital/sdk-ts';
 import type {
   GetInventoryItemsCostQuery,
@@ -51,7 +55,7 @@ const commonInvalidateQueries = (
 };
 
 export function useCreateItem(
-  props?: UseMutationOptions<void, Error, CreateItemBody>,
+  props?: UseMutationOptions<CreateItemResponse, Error, CreateItemBody>,
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
@@ -296,5 +300,61 @@ export function useItemInventoryCost(
         fetcher,
         query as GetInventoryItemsCostQuery,
       ).then((res: GetInventoryItemsCostResponse) => res.costs ?? []),
+  });
+}
+
+export interface SyncItemImagesValues {
+  itemId: number;
+  front: File | null;
+  rear: File | null;
+  other: File[];
+  removedImageIds: number[];
+}
+
+/**
+ * Syncs the pending item image changes (deletions and uploads) on form save.
+ */
+export function useSyncItemImages(
+  props?: UseMutationOptions<void, Error, SyncItemImagesValues>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: async ({
+      itemId,
+      front,
+      rear,
+      other,
+      removedImageIds,
+    }: SyncItemImagesValues) => {
+      // Delete first to free the total image slots before uploading.
+      for (const imageId of removedImageIds) {
+        await deleteItemImage(fetcher, itemId, imageId);
+      }
+      if (front) {
+        await uploadItemImages(fetcher, itemId, 'front' as ItemImageRole, [
+          front,
+        ]);
+      }
+      if (rear) {
+        await uploadItemImages(fetcher, itemId, 'rear' as ItemImageRole, [
+          rear,
+        ]);
+      }
+      if (other.length > 0) {
+        await uploadItemImages(
+          fetcher,
+          itemId,
+          'other' as ItemImageRole,
+          other,
+        );
+      }
+    },
+    onSuccess: (_data, { itemId }) => {
+      queryClient.invalidateQueries({ queryKey: itemsKeys.detail(itemId) });
+      commonInvalidateQueries(queryClient);
+    },
   });
 }

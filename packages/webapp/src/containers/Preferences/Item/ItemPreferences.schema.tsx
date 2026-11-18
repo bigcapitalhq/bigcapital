@@ -19,6 +19,7 @@ const Schema = Yup.object().shape({
     },
   ),
   preventStockFromGoingBelowZero: Yup.boolean(),
+  itemImagesEnabled: Yup.boolean(),
 });
 
 export const ItemPreferencesSchema = Schema;

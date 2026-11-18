@@ -1,12 +1,15 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { useState } from 'react';
+import intl from 'react-intl-universal';
 import { ItemFormSections } from './ItemFormFields';
 import { ItemFormFloatingActions } from './ItemFormFloatingActions';
+import { useItemFormContext } from './ItemFormProvider';
 import { Card, Group } from '@/components';
 
 export function ItemFormContent() {
   const [selectedTabId, setSelectedTabId] = useState<string>('primary');
+  const { itemImagesEnabled } = useItemFormContext();
 
   const handleTabChange = (tabId: string) => {
     const sectionId = String(tabId);
@@ -42,6 +45,12 @@ export function ItemFormContent() {
           <Tab id={'selling'} title={'Selling'} />
           <Tab id={'purchasing'} title={'Purchasing'} />
           <Tab id={'inventory'} title={'Inventory'} />
+          {itemImagesEnabled ? (
+            <Tab
+              id={'images'}
+              title={intl.get('item_images', { fallback: 'Images' })}
+            />
+          ) : null}
         </Tabs>
 
         <ItemFormSections />

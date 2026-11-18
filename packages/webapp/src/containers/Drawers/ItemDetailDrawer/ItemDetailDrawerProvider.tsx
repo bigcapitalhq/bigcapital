@@ -3,12 +3,13 @@ import { inactiveStatus } from './utils';
 import type { Item } from '@bigcapital/sdk-ts';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { useItem } from '@/hooks/query';
+import { useItem, useSettingsItems } from '@/hooks/query';
 
 export interface ItemDetailDrawerContextValue {
   item: Item | undefined;
   itemId: number | undefined;
   isItemLoading: boolean;
+  itemImagesEnabled: boolean;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -37,11 +38,16 @@ function ItemDetailDrawerProvider({
     enabled: !!itemId,
   });
 
+  // Item images feature flag.
+  const { data: itemsSettings } = useSettingsItems();
+  const itemImagesEnabled = Boolean(itemsSettings?.itemImagesEnabled);
+
   //provider.
   const provider: ItemDetailDrawerContextValue = {
     item,
     itemId,
     isItemLoading,
+    itemImagesEnabled,
     value,
     setValue,
   };

@@ -27,6 +27,20 @@ export const DEFAULT_ITEM_UNIT = 'piece';
 
 export type ItemUnit = (typeof ITEM_UNITS)[number];
 
+/**
+ * Item image constraints.
+ */
+export const MAX_ITEM_IMAGES = 15;
+export const MAX_ITEM_IMAGE_SIZE = 5 * 1024 * 1024;
+export const ITEM_IMAGE_TYPES = ['front', 'rear', 'other'] as const;
+
+export type ItemImageRole = (typeof ITEM_IMAGE_TYPES)[number];
+
+/** Thumbnail size generated for item images (longest edge). */
+export const ITEM_IMAGE_THUMBNAIL_SIZE = 512;
+/** JPEG quality of the generated item image thumbnail. */
+export const ITEM_IMAGE_THUMBNAIL_QUALITY = 82;
+
 export const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -60,6 +74,12 @@ export const ERRORS = {
     'INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM',
   COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM:
     'COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM',
+
+  ITEM_IMAGE_NOT_FOUND: 'ITEM_IMAGE_NOT_FOUND',
+  ITEM_IMAGES_LIMIT_EXCEEDED: 'ITEM_IMAGES_LIMIT_EXCEEDED',
+  ITEM_IMAGE_INVALID_FORMAT: 'ITEM_IMAGE_INVALID_FORMAT',
+  ITEM_IMAGE_INVALID_TYPE: 'ITEM_IMAGE_INVALID_TYPE',
+  ITEM_IMAGE_UPLOAD_FAILED: 'ITEM_IMAGE_UPLOAD_FAILED',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];

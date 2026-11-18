@@ -13,6 +13,11 @@ const makeSettingsRequest = () => ({
       key: 'terms_conditions',
       value: 'Terms & Conditions...',
     },
+    {
+      group: 'items',
+      key: 'item_images_enabled',
+      value: true,
+    },
   ],
 });
 

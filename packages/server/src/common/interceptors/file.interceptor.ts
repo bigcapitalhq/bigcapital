@@ -67,3 +67,60 @@ export function FileInterceptor(
 
   return Interceptor;
 }
+
+/**
+ * Multer interceptor for uploading multiple files under the same field.
+ *
+ * @param {string} fieldName - The multipart field name.
+ * @param {number} maxCount - Maximum number of files to accept.
+ * @param {Function|MulterOptions} localOptions - Function that receives the controller instance or MulterOptions object.
+ */
+export function FilesInterceptor(
+  fieldName: string,
+  maxCount = 10,
+  localOptions?: ((instance: any) => MulterOptions) | MulterOptions,
+): Type<NestInterceptor> {
+  class MixinInterceptor implements NestInterceptor {
+    protected multer: MulterInstance;
+
+    constructor(
+      @Optional()
+      @Inject(MULTER_MODULE_OPTIONS)
+      options: () => MulterModuleOptions | MulterModuleOptions = () => ({}),
+    ) {
+      const resolvedOptions =
+        typeof localOptions === 'function' ? localOptions(this) : localOptions;
+
+      this.multer = (multer as any)({
+        ...(typeof options === 'function' ? options() : options),
+        ...resolvedOptions,
+      });
+    }
+
+    async intercept(
+      context: ExecutionContext,
+      next: CallHandler,
+    ): Promise<Observable<any>> {
+      const ctx = context.switchToHttp();
+
+      await new Promise<void>((resolve, reject) =>
+        this.multer.array(fieldName, maxCount)(
+          ctx.getRequest(),
+          ctx.getResponse(),
+          (err: any) => {
+            if (err) {
+              const error = transformException(err);
+              return reject(error);
+            }
+            resolve();
+          },
+        ),
+      );
+      return next.handle();
+    }
+  }
+
+  const Interceptor = mixin(MixinInterceptor);
+
+  return Interceptor;
+}

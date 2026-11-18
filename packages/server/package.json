@@ -131,6 +131,7 @@
     "rxjs": "^7.8.1",
     "sanitize-html": "2.17.5",
     "serialize-interceptor": "^1.1.7",
+    "sharp": "^0.32.6",
     "socket.io": "^4.8.1",
     "strategy": "^1.1.1",
     "stripe": "^16.10.0",

@@ -64,6 +64,21 @@ export enum ItemErrorType {
 
   /** Items not found */
   ItemsNotFound = 'ITEMS_NOT_FOUND',
+
+  /** Item image was not found */
+  ItemImageNotFound = 'ITEM_IMAGE_NOT_FOUND',
+
+  /** The item exceeded the maximum number of images */
+  ItemImagesLimitExceeded = 'ITEM_IMAGES_LIMIT_EXCEEDED',
+
+  /** The uploaded item image format is not supported */
+  ItemImageInvalidFormat = 'ITEM_IMAGE_INVALID_FORMAT',
+
+  /** The item image role is invalid */
+  ItemImageInvalidType = 'ITEM_IMAGE_INVALID_TYPE',
+
+  /** The item image upload failed */
+  ItemImageUploadFailed = 'ITEM_IMAGE_UPLOAD_FAILED',
 }
 
 /**

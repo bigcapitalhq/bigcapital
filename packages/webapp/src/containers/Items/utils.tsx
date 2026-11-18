@@ -51,6 +51,12 @@ const defaultInitialValues: ItemFormValues = {
   sellDescription: '',
   purchaseDescription: '',
   purchaseTaxRateId: '',
+  imageFiles: {
+    front: null,
+    rear: null,
+    other: [],
+  },
+  removedImageIds: [],
 };
 
 type ItemsSettings = {

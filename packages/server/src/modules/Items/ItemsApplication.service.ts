@@ -12,6 +12,10 @@ import { EditItemDto, CreateItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 import { BulkDeleteItemsService } from './BulkDeleteItems.service';
 import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.service';
+import { AddItemImagesService } from './AddItemImages.service';
+import { DeleteItemImageService } from './DeleteItemImage.service';
+import { toItemImageResponse } from './ItemImages.utils';
+import type { ItemImageResponseDto } from './dtos/ItemImage.dto';
 
 @Injectable()
 export class ItemsApplicationService {
@@ -26,6 +30,8 @@ export class ItemsApplicationService {
     private readonly itemTransactionsService: ItemTransactionsService,
     private readonly bulkDeleteItemsService: BulkDeleteItemsService,
     private readonly validateBulkDeleteItemsService: ValidateBulkDeleteItemsService,
+    private readonly addItemImagesService: AddItemImagesService,
+    private readonly deleteItemImageService: DeleteItemImageService,
   ) {}
 
   /**
@@ -160,5 +166,38 @@ export class ItemsApplicationService {
     options?: { skipUndeletable?: boolean },
   ): Promise<void> {
     return this.bulkDeleteItemsService.bulkDeleteItems(itemIds, options);
+  }
+
+  /**
+   * Uploads item images for the given item.
+   * @param {number} itemId - The item id.
+   * @param {Express.Multer.File[]} files - The uploaded files.
+   * @param {string} type - The image role.
+   * @returns {Promise<{ images: ItemImageResponseDto[] }>}
+   */
+  async addItemImages(
+    itemId: number,
+    files: Express.Multer.File[],
+    type: string,
+  ): Promise<{ images: ItemImageResponseDto[] }> {
+    const images = await this.addItemImagesService.addItemImages(
+      itemId,
+      files,
+      type,
+    );
+    const imagesWithUrls =
+      await this.addItemImagesService.withPresignedUrls(images);
+
+    return { images: imagesWithUrls.map(toItemImageResponse) };
+  }
+
+  /**
+   * Deletes the given item image.
+   * @param {number} itemId - The item id.
+   * @param {number} imageId - The item image id.
+   * @returns {Promise<void>}
+   */
+  async deleteItemImage(itemId: number, imageId: number): Promise<void> {
+    return this.deleteItemImageService.deleteItemImage(itemId, imageId);
   }
 }

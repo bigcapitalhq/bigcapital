@@ -19,6 +19,10 @@ import { ItemsExportable } from './ItemsExportable.service';
 import { ItemsImportable } from './ItemsImportable.service';
 import { BulkDeleteItemsService } from './BulkDeleteItems.service';
 import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.service';
+import { S3Module } from '../S3/S3.module';
+import { ItemImageProcessor } from './ItemImageProcessor';
+import { AddItemImagesService } from './AddItemImages.service';
+import { DeleteItemImageService } from './DeleteItemImage.service';
 
 @Module({
   imports: [
@@ -26,6 +30,7 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
     TenancyDatabaseModule,
     DynamicListModule,
     InventoryAdjustmentsModule,
+    S3Module,
   ],
   controllers: [ItemsController],
   providers: [
@@ -44,6 +49,9 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
     ItemsImportable,
     BulkDeleteItemsService,
     ValidateBulkDeleteItemsService,
+    ItemImageProcessor,
+    AddItemImagesService,
+    DeleteItemImageService,
   ],
   exports: [ItemsEntriesService, ItemsExportable, ItemsImportable],
 })

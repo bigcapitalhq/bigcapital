@@ -8,6 +8,7 @@ import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { ItemDefaultViews } from '../Items.constants';
+import type { ItemImage } from './ItemImage';
 
 @ExportableModel()
 @ImportableModel()
@@ -42,6 +43,7 @@ export class Item extends TenantBaseModel {
   public readonly purchaseTaxRateId: number;
 
   public readonly warehouse!: Warehouse;
+  public readonly images?: ItemImage[];
 
   static get tableName() {
     return 'items';
@@ -111,6 +113,7 @@ export class Item extends TenantBaseModel {
     } = require('../../InventoryAdjutments/models/InventoryAdjustmentEntry');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
     const { Batch } = require('../../EE/Batches/models/Batch');
+    const { ItemImage } = require('./ItemImage');
 
     return {
       /**
@@ -236,6 +239,18 @@ export class Item extends TenantBaseModel {
       //     to: 'media.id',
       //   },
       // },
+
+      /**
+       * Item may has many images.
+       */
+      images: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemImage,
+        join: {
+          from: 'items.id',
+          to: 'items_images.itemId',
+        },
+      },
 
       /**
        * Item may has sell tax rate.

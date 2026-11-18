@@ -7,9 +7,11 @@ import {
 } from '@/interfaces/Item';
 import { events } from '@/common/events/events';
 import { Item } from './models/Item';
+import { ItemImage } from './models/ItemImage';
 import { ERRORS } from './Items.constants';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { S3StorageService } from '../S3/S3Storage.service';
 
 @Injectable()
 export class DeleteItemService {
@@ -22,9 +24,13 @@ export class DeleteItemService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
+    private readonly s3StorageService: S3StorageService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
+
+    @Inject(ItemImage.name)
+    private readonly itemImageModel: TenantModelProxy<typeof ItemImage>,
   ) {}
 
   /**
@@ -42,8 +48,18 @@ export class DeleteItemService {
       .findOne('id', itemId)
       .throwIfNotFound();
 
+    // Retrieve the image keys before deleting the item so the S3 objects can
+    // be removed after the transaction is committed.
+    const itemImages = await this.itemImageModel()
+      .query()
+      .where('itemId', itemId);
+
     // Delete item in unit of work.
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+    await this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Delete the image rows first so `deleteIfNoRelations` does not treat
+      // the item's own images as a dependent relation that blocks deletion.
+      await this.itemImageModel().query(trx).where('itemId', itemId).delete();
+
       // Triggers `onItemDeleting` event.
       await this.eventEmitter.emitAsync(events.item.onDeleting, {
         trx,
@@ -61,5 +77,10 @@ export class DeleteItemService {
         trx,
       } as IItemEventDeletedPayload);
     }, trx);
+
+    // Remove the item image objects from S3, best-effort.
+    await this.s3StorageService.deleteObjects(
+      itemImages.flatMap((image) => [image.key, image.thumbnailKey]),
+    );
   }
 }

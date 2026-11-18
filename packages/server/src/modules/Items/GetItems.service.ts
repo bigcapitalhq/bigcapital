@@ -8,12 +8,14 @@ import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { ISortOrder } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
+import { S3StorageService } from '../S3/S3Storage.service';
 
 @Injectable()
 export class GetItemsService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformer: TransformerInjectable,
+    private readonly s3StorageService: S3StorageService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -65,7 +67,14 @@ export class GetItemsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed items.
-    const data = await this.transformer.transform(items, new ItemTransformer());
+    const imageUrls = await this.s3StorageService.getPresignedUrls(
+      items.map((item) => item.pictureUri),
+    );
+    const data = await this.transformer.transform(
+      items,
+      new ItemTransformer(),
+      { imageUrls },
+    );
     return {
       data,
       pagination,

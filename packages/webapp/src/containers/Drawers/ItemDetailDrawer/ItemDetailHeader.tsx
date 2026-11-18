@@ -3,6 +3,7 @@ import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
+import { ItemDetailImages } from './ItemDetailImages';
 import { If, DetailsMenu, DetailItem, Card } from '@/components';
 
 /**
@@ -29,6 +30,7 @@ export function ItemDetailHeader() {
   return (
     <Card>
       <div className="item-drawer__content">
+        <ItemDetailImages />
         <DetailsMenu direction={'vertical'}>
           <DetailItem
             name={'name'}
