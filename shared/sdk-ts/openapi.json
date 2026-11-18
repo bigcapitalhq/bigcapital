@@ -45109,6 +45109,9 @@
       "BankReconciliationDetailMetaDto": {
         "type": "object",
         "properties": {
+          "accountName": {
+            "type": "string"
+          },
           "isLatest": {
             "type": "boolean"
           },
@@ -45129,6 +45132,7 @@
           }
         },
         "required": [
+          "accountName",
           "isLatest",
           "canUndo",
           "canDelete",

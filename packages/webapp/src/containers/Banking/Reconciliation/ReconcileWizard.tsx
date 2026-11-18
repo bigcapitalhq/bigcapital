@@ -41,6 +41,11 @@ export function ReconcileWizard() {
     Number.isFinite(queryAccountId) && queryAccountId > 0
       ? queryAccountId
       : null;
+  const queryReconciliationId = Number(query.reconciliationId);
+  const selectedQueryReconciliationId =
+    Number.isFinite(queryReconciliationId) && queryReconciliationId > 0
+      ? queryReconciliationId
+      : null;
 
   const { data: accounts, isLoading: isAccountsLoading } =
     useCashflowAccounts();
@@ -91,6 +96,14 @@ export function ReconcileWizard() {
     formVersion,
   ]);
 
+  React.useEffect(() => {
+    if (!selectedAccountId || !selectedQueryReconciliationId) return;
+    if (reconciliationId === selectedQueryReconciliationId) return;
+
+    setReconciliationId(selectedQueryReconciliationId);
+    setStep(1);
+  }, [selectedAccountId, selectedQueryReconciliationId, reconciliationId]);
+
   const handleAccountSelect = (accountId: number) => {
     if (accountId !== selectedAccountId) {
       setStep(0);
@@ -98,7 +111,7 @@ export function ReconcileWizard() {
       setEndDate('');
       setEndingBalance('');
     }
-    setQuery({ accountId });
+    setQuery({ accountId, reconciliationId: undefined });
   };
 
   const handleStart = () => {
@@ -153,6 +166,7 @@ export function ReconcileWizard() {
     setEndDate('');
     setEndingBalance('');
     setFormVersion((version) => version + 1);
+    setQuery({ accountId: selectedAccountId, reconciliationId: undefined });
     refetchList();
   };
 

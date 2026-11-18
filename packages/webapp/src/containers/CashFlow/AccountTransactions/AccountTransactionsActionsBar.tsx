@@ -139,6 +139,10 @@ function AccountTransactionsActionsBarInner({
   const handleReconcileClick = () => {
     history.push(`/reconcile?accountId=${accountId}`);
   };
+  // Handle reconciliation history click.
+  const handleReconciliationsClick = () => {
+    history.push(`/cashflow-accounts/${accountId}/reconciliations`);
+  };
 
   // Handles the bank account disconnect click.
   const handleDisconnectClick = () => {
@@ -442,6 +446,10 @@ function AccountTransactionsActionsBarInner({
                   <MenuItem
                     onClick={handleReconcileClick}
                     text={'Reconcile account'}
+                  />
+                  <MenuItem
+                    onClick={handleReconciliationsClick}
+                    text={'Reconciliation history'}
                   />
                 </Can>
               )}

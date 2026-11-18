@@ -89,6 +89,9 @@ export class BankReconciliationListMetaDto {
 
 export class BankReconciliationDetailMetaDto {
   @ApiProperty()
+  accountName: string;
+
+  @ApiProperty()
   isLatest: boolean;
 
   @ApiProperty()

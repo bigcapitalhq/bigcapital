@@ -10,6 +10,8 @@ interface ReconciliationTransactionsTableProps {
   selectedKeys: string[];
   filter: ReconciliationTransactionFilter;
   readOnly?: boolean;
+  showStatus?: boolean;
+  flush?: boolean;
   isLoading?: boolean;
   onToggle?: (key: string) => void;
   onToggleAll?: (keys: string[], checked: boolean) => void;
@@ -27,6 +29,8 @@ export function ReconciliationTransactionsTable({
   selectedKeys,
   filter,
   readOnly,
+  showStatus = true,
+  flush,
   isLoading,
   onToggle,
   onToggleAll,
@@ -52,7 +56,7 @@ export function ReconciliationTransactionsTable({
   }
 
   return (
-    <TableWrap data-testId="reconciliation-transactions-table">
+    <TableWrap $flush={flush} data-testId="reconciliation-transactions-table">
       <Table>
         <thead>
           <tr>
@@ -76,7 +80,7 @@ export function ReconciliationTransactionsTable({
             <th>Description</th>
             <th className="money">Payment</th>
             <th className="money">Deposit</th>
-            <th>Status</th>
+            {showStatus && <th>Status</th>}
           </tr>
         </thead>
         <tbody>
@@ -120,14 +124,16 @@ export function ReconciliationTransactionsTable({
                 <td className="money">
                   {transaction.debit ? transaction.formattedDebit : '—'}
                 </td>
-                <td>
-                  <Tag
-                    minimal
-                    intent={statusIntent[transaction.status] ?? 'none'}
-                  >
-                    {transaction.status}
-                  </Tag>
-                </td>
+                {showStatus && (
+                  <td>
+                    <Tag
+                      minimal
+                      intent={statusIntent[transaction.status] ?? 'none'}
+                    >
+                      {transaction.status}
+                    </Tag>
+                  </td>
+                )}
               </tr>
             );
           })}
@@ -149,8 +155,8 @@ const EmptyWrap = styled.div`
   color: var(--x-recon-text-muted);
 `;
 
-const TableWrap = styled.div`
-  margin: 12px 15px 0;
+const TableWrap = styled.div<{ $flush?: boolean }>`
+  margin: ${({ $flush }) => ($flush ? '0' : '12px 15px 0')};
   overflow-x: auto;
   border: 1px solid var(--x-recon-border);
   border-radius: 4px;

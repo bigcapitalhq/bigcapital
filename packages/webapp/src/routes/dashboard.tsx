@@ -1266,6 +1266,30 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('banking.reconciliation.page_title'),
   },
   {
+    path: `/cashflow-accounts/:accountId/reconciliations/:reconciliationId`,
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconciliationDetailPage'
+      ).then((m) => ({
+        default: m.ReconciliationDetailPage,
+      })),
+    ),
+    sidebarExpand: false,
+    pageTitle: 'Reconciliation',
+  },
+  {
+    path: `/cashflow-accounts/:accountId/reconciliations`,
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconciliationsListPage'
+      ).then((m) => ({
+        default: m.ReconciliationsListPage,
+      })),
+    ),
+    sidebarExpand: false,
+    pageTitle: 'Reconciliations',
+  },
+  {
     path: `/cashflow-accounts/:id/transactions`,
     component: lazy(() =>
       import(

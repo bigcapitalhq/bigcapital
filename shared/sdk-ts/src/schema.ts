@@ -16564,6 +16564,7 @@ export interface components {
             difference: number;
         };
         BankReconciliationDetailMetaDto: {
+            accountName: string;
             isLatest: boolean;
             canUndo: boolean;
             canDelete: boolean;

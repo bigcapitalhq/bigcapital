@@ -45,6 +45,7 @@ interface CashflowAccountContextMenuProps {
   onMoneyInClick: (transactionType: string) => void;
   onMoneyOutClick: (transactionType: string) => void;
   onReconcileClick: () => void;
+  onReconciliationsClick: () => void;
 }
 
 interface CashflowBankAccountProps
@@ -131,6 +132,10 @@ function CashflowBankAccount({
   const handleReconcileClick = () => {
     history.push(`/reconcile?accountId=${account.id}`);
   };
+  // Handle reconciliation history action.
+  const handleReconciliationsClick = () => {
+    history.push(`/cashflow-accounts/${account.id}/reconciliations`);
+  };
 
   return (
     <ContextMenu2
@@ -145,6 +150,7 @@ function CashflowBankAccount({
           onMoneyInClick={handleMoneyInClick}
           onMoneyOutClick={handleMoneyOutClick}
           onReconcileClick={handleReconcileClick}
+          onReconciliationsClick={handleReconciliationsClick}
         />
       }
     >
@@ -281,6 +287,7 @@ function CashflowAccountContextMenu({
   onMoneyInClick,
   onMoneyOutClick,
   onReconcileClick,
+  onReconciliationsClick,
 }: CashflowAccountContextMenuProps) {
   return (
     <Menu>
@@ -295,6 +302,11 @@ function CashflowAccountContextMenu({
             icon={<Icon icon="tick-circle" />}
             text={intl.get('banking.reconciliation.action')}
             onClick={safeCallback(onReconcileClick)}
+          />
+          <MenuItem
+            icon={<Icon icon="reader-18" />}
+            text={'Reconciliation history'}
+            onClick={safeCallback(onReconciliationsClick)}
           />
         </Can>
       )}

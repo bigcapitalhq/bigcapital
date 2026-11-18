@@ -86,6 +86,7 @@ export class GetBankReconciliationService {
     );
 
     const meta = {
+      accountName: reconciliation.account?.name ?? '',
       isLatest,
       canUndo: reconciliation.isReconciled,
       canDelete: reconciliation.isInProgress || reconciliation.isVoided,
