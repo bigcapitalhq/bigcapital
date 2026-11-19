@@ -8,24 +8,18 @@ import {
   MenuItem,
   Popover,
   Spinner,
-  Tag,
 } from '@blueprintjs/core';
 import React from 'react';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ReconciliationSummary } from './ReconciliationSummary';
 import { ReconciliationTransactionsTable } from './ReconciliationTransactionsTable';
-import {
-  filterTransactions,
-  getReconciliationDifference,
-  isReconciliationBalanced,
-} from './utils';
-import type { ReconciliationTransactionFilter } from './utils';
+import { getReconciliationDifference, isReconciliationBalanced } from './utils';
 import type {
   BankReconciliationDetailResponse,
   BankReconciliationTransactionResponse,
 } from '@bigcapital/sdk-ts';
-import { AppToaster } from '@/components';
+import { AppToaster, Icon } from '@/components';
 import {
   useFinishBankReconciliation,
   useUpdateBankReconciliation,
@@ -41,6 +35,7 @@ interface ReconciliationWorkspaceProps {
   onDelete: () => void;
   onRefresh: () => void;
   actionsContainer?: HTMLElement | null;
+  endActionsContainer?: HTMLElement | null;
 }
 
 export function ReconciliationWorkspace({
@@ -52,6 +47,7 @@ export function ReconciliationWorkspace({
   onDelete,
   onRefresh,
   actionsContainer,
+  endActionsContainer,
 }: ReconciliationWorkspaceProps) {
   const reconciliation = detail.reconciliation;
   const readOnly = !reconciliation.isInProgress;
@@ -61,11 +57,20 @@ export function ReconciliationWorkspace({
       .filter((transaction) => transaction.isChecked)
       .map((transaction) => transaction.key),
   );
-  const [endingBalance, setEndingBalance] = React.useState<number | null>(
-    reconciliation.endingBalance ?? null,
+  const [endingBalance, setEndingBalance] = React.useState<string>(
+    reconciliation.endingBalance !== null &&
+      reconciliation.endingBalance !== undefined
+      ? String(reconciliation.endingBalance)
+      : '',
   );
-  const [filter, setFilter] =
-    React.useState<ReconciliationTransactionFilter>('all');
+
+  const endingBalanceValue = React.useMemo(() => {
+    const value = endingBalance.trim();
+    if (!value) return null;
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }, [endingBalance]);
 
   const { openDialog } = useDialogActions();
 
@@ -101,15 +106,14 @@ export function ReconciliationWorkspace({
         0,
       );
 
-  const hasEndingBalance =
-    endingBalance !== null && Number.isFinite(endingBalance);
+  const hasEndingBalance = endingBalanceValue !== null;
   const difference = readOnly
     ? Number(reconciliation.difference)
-    : getReconciliationDifference(endingBalance, clearedBalance);
+    : getReconciliationDifference(endingBalanceValue, clearedBalance);
   const isBalanced = readOnly
     ? Math.abs(difference) <= 0.005
     : hasEndingBalance &&
-      isReconciliationBalanced(endingBalance, clearedBalance);
+      isReconciliationBalanced(endingBalanceValue, clearedBalance);
 
   const handleToggle = (key: string) => {
     setSelectedKeys((current) =>
@@ -139,7 +143,7 @@ export function ReconciliationWorkspace({
     updateReconciliation({
       id: reconciliation.id,
       body: {
-        endingBalance: endingBalance ?? undefined,
+        endingBalance: endingBalanceValue ?? undefined,
         transactions: buildTransactionsPayload(),
       },
     })
@@ -164,7 +168,7 @@ export function ReconciliationWorkspace({
     finishReconciliation({
       id: reconciliation.id,
       body: {
-        endingBalance: endingBalance as number,
+        endingBalance: endingBalanceValue as number,
         transactions: buildTransactionsPayload(),
       },
     })
@@ -199,40 +203,45 @@ export function ReconciliationWorkspace({
     });
   };
 
-  const filteredCount = filterTransactions(detail.transactions, filter).length;
-  const showEmpty = filteredCount === 0;
-
   const actionsInBar = actionsContainer !== undefined;
   const showDelete =
     (reconciliation.isInProgress || reconciliation.isVoided) &&
     detail.meta.canDelete;
 
+  const saveButton = (
+    <Button
+      icon="floppy-disk"
+      text="Save for later"
+      minimal
+      onClick={handleSave}
+      loading={isSaving}
+      disabled={readOnly}
+    />
+  );
+
+  const reconcileButton = (
+    <Button
+      icon="tick"
+      text="Reconcile"
+      minimal={actionsInBar}
+      intent={Intent.PRIMARY}
+      onClick={handleFinish}
+      loading={isFinishing}
+      disabled={readOnly || !isBalanced}
+      data-testId="finish-reconciliation"
+    />
+  );
+
   const primaryActions = (
     <ButtonGroup>
       <Button
-        icon="refresh"
+        icon={<Icon icon="refresh-16" iconSize={16} />}
         minimal
         onClick={onRefresh}
         title="Refresh transactions"
       />
-      <Button
-        icon="floppy-disk"
-        text="Save for later"
-        minimal
-        onClick={handleSave}
-        loading={isSaving}
-        disabled={readOnly}
-      />
-      <Button
-        icon="tick"
-        text="Reconcile"
-        minimal={actionsInBar}
-        intent={Intent.PRIMARY}
-        onClick={handleFinish}
-        loading={isFinishing}
-        disabled={readOnly || !isBalanced}
-        data-testId="finish-reconciliation"
-      />
+      {saveButton}
+      {reconcileButton}
     </ButtonGroup>
   );
 
@@ -285,6 +294,10 @@ export function ReconciliationWorkspace({
     />
   );
 
+  const undoButton = reconciliation.isReconciled && (
+    <Button icon="undo" text="Undo" intent={Intent.WARNING} onClick={onUndo} />
+  );
+
   const inlineActions = (
     <>
       {primaryActions}
@@ -294,14 +307,11 @@ export function ReconciliationWorkspace({
 
   const barActions = (
     <>
-      {primaryActions}
+      {reconcileButton}
       {addTransactionButton}
       {deleteButton}
+      {saveButton}
     </>
-  );
-
-  const undoButton = reconciliation.isReconciled && (
-    <Button icon="undo" text="Undo" intent={Intent.WARNING} onClick={onUndo} />
   );
 
   if (!reconciliation) {
@@ -313,53 +323,53 @@ export function ReconciliationWorkspace({
   }
 
   return (
-    <WorkspaceWrap>
-      <WorkspaceHeader>
-        <div>
-          <WorkspaceTitle>
-            {reconciliation.isInProgress
-              ? 'Reconciliation in progress'
-              : reconciliation.isReconciled
-                ? 'Reconciled'
-                : 'Voided reconciliation'}
-          </WorkspaceTitle>
-          <WorkspaceSubtitle>
-            {reconciliation.formattedStartDate} –{' '}
-            {reconciliation.formattedEndDate}
-            {reconciliation.reconciledAt
-              ? ` · Completed ${reconciliation.reconciledAt}`
-              : ''}
-          </WorkspaceSubtitle>
-        </div>
+    <WorkspaceWrap $card={actionsInBar}>
+      {actionsContainer && createPortal(barActions, actionsContainer)}
+      {endActionsContainer &&
+        undoButton &&
+        createPortal(undoButton, endActionsContainer)}
 
-        <WorkspaceActions>
-          {actionsContainer === undefined ? (
-            <>
-              {inlineActions}
-              {undoButton}
-            </>
-          ) : (
-            <>
-              {actionsContainer && createPortal(barActions, actionsContainer)}
-              {undoButton}
-            </>
-          )}
-        </WorkspaceActions>
-      </WorkspaceHeader>
+      {actionsContainer === undefined && (
+        <WorkspaceHeader>
+          <div>
+            <WorkspaceTitle>
+              {reconciliation.isInProgress
+                ? 'Reconciliation in progress'
+                : reconciliation.isReconciled
+                  ? 'Reconciled'
+                  : 'Voided reconciliation'}
+            </WorkspaceTitle>
+            <WorkspaceSubtitle>
+              {reconciliation.formattedStartDate} –{' '}
+              {reconciliation.formattedEndDate}
+              {reconciliation.reconciledAt
+                ? ` · Completed ${reconciliation.reconciledAt}`
+                : ''}
+            </WorkspaceSubtitle>
+          </div>
 
-      <ReconciliationSummary
-        reconciliation={reconciliation}
-        endingBalance={endingBalance}
-        clearedBalance={clearedBalance}
-        currencyCode={currencyCode}
-        isEditable={!readOnly}
-        onEndingBalanceChange={setEndingBalance}
-      />
+          <WorkspaceActions>
+            {inlineActions}
+            {undoButton}
+          </WorkspaceActions>
+        </WorkspaceHeader>
+      )}
+
+      <SummarySection $card={actionsInBar}>
+        <ReconciliationSummary
+          reconciliation={reconciliation}
+          endingBalance={endingBalance}
+          clearedBalance={clearedBalance}
+          currencyCode={currencyCode}
+          isEditable={!readOnly}
+          onEndingBalanceChange={setEndingBalance}
+        />
+      </SummarySection>
 
       {detail.meta.uncategorizedTransactionsCount > 0 && (
         <Callout
           intent={Intent.WARNING}
-          style={{ margin: '14px 15px 0' }}
+          style={{ margin: actionsInBar ? '0 0 16px' : '14px 15px 0' }}
           title="Uncategorized bank transactions"
         >
           You have {detail.meta.uncategorizedTransactionsCount} uncategorized
@@ -371,7 +381,7 @@ export function ReconciliationWorkspace({
       {detail.meta.changedTransactions.length > 0 && (
         <Callout
           intent={Intent.WARNING}
-          style={{ margin: '14px 15px 0' }}
+          style={{ margin: actionsInBar ? '0 0 16px' : '14px 15px 0' }}
           title="Previously reconciled transactions changed"
         >
           {detail.meta.changedTransactions.length} transaction(s) from a
@@ -380,70 +390,43 @@ export function ReconciliationWorkspace({
         </Callout>
       )}
 
-      <Toolbar>
-        <FilterGroup>
-          <FilterButton
-            active={filter === 'all'}
-            onClick={() => setFilter('all')}
-            text={`All (${detail.transactions.length})`}
-          />
-          <FilterButton
-            active={filter === 'payments'}
-            onClick={() => setFilter('payments')}
-            text={`Payments (${filterTransactions(detail.transactions, 'payments').length})`}
-          />
-          <FilterButton
-            active={filter === 'deposits'}
-            onClick={() => setFilter('deposits')}
-            text={`Deposits (${filterTransactions(detail.transactions, 'deposits').length})`}
-          />
-        </FilterGroup>
-
-        {!readOnly && !actionsInBar && (
+      {!readOnly && !actionsInBar && (
+        <Toolbar>
           <ButtonGroup>{addTransactionButton}</ButtonGroup>
-        )}
-      </Toolbar>
-
-      {showEmpty ? (
-        <EmptyWrap>No transactions in this reconciliation.</EmptyWrap>
-      ) : (
-        <ReconciliationTransactionsTable
-          transactions={detail.transactions}
-          selectedKeys={
-            readOnly ? detail.transactions.map((t) => t.key) : selectedKeys
-          }
-          filter={filter}
-          readOnly={readOnly}
-          isLoading={isSaving || isFinishing}
-          onToggle={handleToggle}
-          onToggleAll={handleToggleAll}
-        />
+        </Toolbar>
       )}
 
-      <SummaryFooter>
-        <FooterItem>
-          <span>Selected</span>
-          <strong>
-            {readOnly ? detail.transactions.length : selectedKeys.length}
-          </strong>
-        </FooterItem>
-        <FooterItem>
-          <span>Difference</span>
-          <Tag intent={isBalanced ? Intent.SUCCESS : Intent.WARNING}>
-            {difference.toFixed(2)}
-          </Tag>
-        </FooterItem>
-      </SummaryFooter>
+      <ReconciliationTransactionsTable
+        transactions={detail.transactions}
+        selectedKeys={
+          readOnly ? detail.transactions.map((t) => t.key) : selectedKeys
+        }
+        filter="all"
+        card={!actionsInBar}
+        readOnly={readOnly}
+        isLoading={isSaving || isFinishing}
+        onToggle={handleToggle}
+        onToggleAll={handleToggleAll}
+      />
     </WorkspaceWrap>
   );
 }
 
-const WorkspaceWrap = styled.div`
+const WorkspaceWrap = styled.div<{ $card?: boolean }>`
   margin: 16px 15px 0;
-  border: 1px solid var(--x-recon-border);
-  border-radius: 4px;
-  background: var(--x-recon-surface);
-  overflow: hidden;
+
+  ${({ $card }) =>
+    $card &&
+    css`
+      background: var(--color-bank-transactions-content-background);
+      border: 2px solid var(--color-bank-transactions-content-border);
+      border-radius: 10px;
+      padding: 30px 18px;
+    `}
+`;
+
+const SummarySection = styled.div<{ $card?: boolean }>`
+  margin: ${({ $card }) => ($card ? '0 0 2rem' : '16px 15px 0')};
 `;
 
 const WorkspaceHeader = styled.div`
@@ -475,48 +458,10 @@ const WorkspaceActions = styled.div`
 const Toolbar = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   padding: 10px 16px;
   border-bottom: 1px solid var(--x-recon-border-light);
-`;
-
-const FilterGroup = styled(ButtonGroup)`
-  display: inline-flex;
-`;
-
-function FilterButton({
-  active,
-  text,
-  onClick,
-}: {
-  active: boolean;
-  text: string;
-  onClick: () => void;
-}) {
-  return <Button small active={active} text={text} onClick={onClick} minimal />;
-}
-
-const EmptyWrap = styled.div`
-  padding: 32px 16px;
-  text-align: center;
-  color: var(--x-recon-text-muted);
-`;
-
-const SummaryFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 24px;
-  padding: 10px 16px;
-  border-top: 1px solid var(--x-recon-border-light);
-  font-size: 13px;
-`;
-
-const FooterItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--x-recon-text-muted);
 `;
 
 const LoadingWrap = styled.div`

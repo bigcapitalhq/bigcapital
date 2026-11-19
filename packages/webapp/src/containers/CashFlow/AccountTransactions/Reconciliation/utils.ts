@@ -45,24 +45,6 @@ export const isReconciliationBalanced = (
   Math.abs(getReconciliationDifference(endingBalance, clearedBalance)) <=
   RECONCILIATION_TOLERANCE;
 
-export const formatMoney = (
-  value: number | null | undefined,
-  currencyCode?: string | null,
-): string => {
-  if (value === null || value === undefined) return '';
-
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: currencyCode || 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  } catch {
-    return Number(value).toFixed(2);
-  }
-};
-
 export const getStatusIntent = (
   status: BankReconciliationResponse['status'],
 ): 'none' | 'primary' | 'success' | 'warning' | 'danger' => {

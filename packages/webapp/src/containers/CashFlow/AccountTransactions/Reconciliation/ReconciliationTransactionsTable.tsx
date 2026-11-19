@@ -1,9 +1,12 @@
-import { Checkbox, Spinner, Tag } from '@blueprintjs/core';
+import { Checkbox, Tag } from '@blueprintjs/core';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { filterTransactions } from './utils';
 import type { ReconciliationTransactionFilter } from './utils';
+import type { DataTableColumn } from '@/components/Datatable/types';
 import type { BankReconciliationTransactionResponse } from '@bigcapital/sdk-ts';
+import { DataTable } from '@/components';
+import { TableStyle } from '@/constants';
 
 interface ReconciliationTransactionsTableProps {
   transactions: BankReconciliationTransactionResponse[];
@@ -12,6 +15,7 @@ interface ReconciliationTransactionsTableProps {
   readOnly?: boolean;
   showStatus?: boolean;
   flush?: boolean;
+  card?: boolean;
   isLoading?: boolean;
   onToggle?: (key: string) => void;
   onToggleAll?: (keys: string[], checked: boolean) => void;
@@ -31,194 +35,191 @@ export function ReconciliationTransactionsTable({
   readOnly,
   showStatus = true,
   flush,
+  card = true,
   isLoading,
   onToggle,
   onToggleAll,
 }: ReconciliationTransactionsTableProps) {
-  const rows = filterTransactions(transactions, filter);
-  const selectedSet = new Set(selectedKeys);
-  const selectedCount = rows.filter((row) => selectedSet.has(row.key)).length;
+  const rows = React.useMemo(
+    () => filterTransactions(transactions, filter),
+    [transactions, filter],
+  );
+
+  const selectedSet = React.useMemo(
+    () => new Set(selectedKeys),
+    [selectedKeys],
+  );
+
+  const selectedCount = React.useMemo(
+    () => rows.filter((row) => selectedSet.has(row.key)).length,
+    [rows, selectedSet],
+  );
+
   const allChecked = rows.length > 0 && selectedCount === rows.length;
   const someChecked = selectedCount > 0 && !allChecked;
 
-  if (isLoading) {
-    return (
-      <LoadingWrap>
-        <Spinner size={24} />
-      </LoadingWrap>
-    );
-  }
+  const columns = React.useMemo<
+    DataTableColumn<BankReconciliationTransactionResponse>[]
+  >(() => {
+    const cols: DataTableColumn<BankReconciliationTransactionResponse>[] = [
+      {
+        id: 'date',
+        Header: 'Date',
+        accessor: 'formattedDate',
+        width: 110,
+        textOverview: true,
+      },
+      {
+        id: 'type',
+        Header: 'Type',
+        width: 150,
+        textOverview: true,
+        Cell: ({ row }) => (
+          <TypeCell>
+            {row.original.transactionType || '—'}
+            {row.original.isPreviousOutstanding && (
+              <Tag minimal intent="warning">
+                Previous period
+              </Tag>
+            )}
+          </TypeCell>
+        ),
+      },
+      {
+        id: 'reference',
+        Header: 'Reference',
+        accessor: (transaction) =>
+          transaction.referenceNumber || transaction.transactionNumber || '—',
+        width: 160,
+        textOverview: true,
+      },
+      {
+        id: 'description',
+        Header: 'Description',
+        accessor: (transaction) => transaction.note || '—',
+        width: 220,
+        textOverview: true,
+      },
+      {
+        id: 'payment',
+        Header: 'Payment',
+        accessor: (transaction) =>
+          transaction.credit ? transaction.formattedCredit : '—',
+        width: 120,
+        textOverview: true,
+        align: 'right',
+        money: true,
+      },
+      {
+        id: 'deposit',
+        Header: 'Deposit',
+        accessor: (transaction) =>
+          transaction.debit ? transaction.formattedDebit : '—',
+        width: 120,
+        textOverview: true,
+        align: 'right',
+        money: true,
+      },
+    ];
 
-  if (rows.length === 0) {
-    return (
-      <EmptyWrap>No transactions found for this reconciliation.</EmptyWrap>
-    );
-  }
+    if (showStatus) {
+      cols.push({
+        id: 'status',
+        Header: 'Status',
+        width: 110,
+        Cell: ({ row }) => (
+          <Tag minimal intent={statusIntent[row.original.status] ?? 'none'}>
+            {row.original.status}
+          </Tag>
+        ),
+      });
+    }
+
+    if (!readOnly) {
+      cols.push({
+        id: 'selection',
+        Header: () => (
+          <div
+            className="selection-checkbox"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Checkbox
+              checked={allChecked}
+              indeterminate={someChecked}
+              onChange={(event) =>
+                onToggleAll?.(
+                  rows.map((row) => row.key),
+                  event.currentTarget.checked,
+                )
+              }
+            />
+          </div>
+        ),
+        Cell: ({ row }) => (
+          <div className="selection-checkbox">
+            <Checkbox
+              checked={selectedSet.has(row.original.key)}
+              onChange={() => onToggle?.(row.original.key)}
+            />
+          </div>
+        ),
+        width: 42,
+        minWidth: 42,
+        maxWidth: 42,
+        className: 'selection',
+      });
+    }
+
+    return cols;
+  }, [
+    allChecked,
+    onToggle,
+    onToggleAll,
+    readOnly,
+    rows,
+    selectedSet,
+    showStatus,
+    someChecked,
+  ]);
 
   return (
-    <TableWrap $flush={flush} data-testId="reconciliation-transactions-table">
-      <Table>
-        <thead>
-          <tr>
-            {!readOnly && (
-              <th className="selection">
-                <Checkbox
-                  checked={allChecked}
-                  indeterminate={someChecked}
-                  onChange={(event) =>
-                    onToggleAll?.(
-                      rows.map((row) => row.key),
-                      event.currentTarget.checked,
-                    )
-                  }
-                />
-              </th>
-            )}
-            <th>Date</th>
-            <th>Type</th>
-            <th>Reference</th>
-            <th>Description</th>
-            <th className="money">Payment</th>
-            <th className="money">Deposit</th>
-            {showStatus && <th>Status</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((transaction) => {
-            const checked = selectedSet.has(transaction.key);
-
-            return (
-              <tr
-                key={transaction.key}
-                className={checked ? 'is-checked' : undefined}
-                data-testId="reconciliation-transaction-row"
-              >
-                {!readOnly && (
-                  <td className="selection">
-                    <Checkbox
-                      checked={checked}
-                      onChange={() => onToggle?.(transaction.key)}
-                    />
-                  </td>
-                )}
-                <td>{transaction.formattedDate}</td>
-                <td>
-                  <TypeCell>
-                    {transaction.transactionType || '—'}
-                    {transaction.isPreviousOutstanding && (
-                      <Tag minimal intent="warning">
-                        Previous period
-                      </Tag>
-                    )}
-                  </TypeCell>
-                </td>
-                <td>
-                  {transaction.referenceNumber ||
-                    transaction.transactionNumber ||
-                    '—'}
-                </td>
-                <td className="description">{transaction.note || '—'}</td>
-                <td className="money">
-                  {transaction.credit ? transaction.formattedCredit : '—'}
-                </td>
-                <td className="money">
-                  {transaction.debit ? transaction.formattedDebit : '—'}
-                </td>
-                {showStatus && (
-                  <td>
-                    <Tag
-                      minimal
-                      intent={statusIntent[transaction.status] ?? 'none'}
-                    >
-                      {transaction.status}
-                    </Tag>
-                  </td>
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+    <TableWrap
+      $flush={flush}
+      $card={card}
+      data-testId="reconciliation-transactions-table"
+    >
+      <DataTable
+        columns={columns}
+        data={rows}
+        styleName={TableStyle.Constrant}
+        selectionColumn={false}
+        loading={isLoading}
+        rowTestId="reconciliation-transaction-row"
+        noResults="No transactions found for this reconciliation."
+      />
     </TableWrap>
   );
 }
 
-const LoadingWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
-`;
-
-const EmptyWrap = styled.div`
-  padding: 32px 16px;
-  text-align: center;
-  color: var(--x-recon-text-muted);
-`;
-
-const TableWrap = styled.div<{ $flush?: boolean }>`
-  margin: ${({ $flush }) => ($flush ? '0' : '12px 15px 0')};
+const TableWrap = styled.div<{ $flush?: boolean; $card?: boolean }>`
+  margin: ${({ $flush, $card }) => ($flush || !$card ? '0' : '12px 15px 0')};
   overflow-x: auto;
-  border: 1px solid var(--x-recon-border);
-  border-radius: 4px;
-  background: var(--x-recon-surface);
-`;
 
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  color: var(--x-recon-text);
+  ${({ $card }) =>
+    $card &&
+    css`
+      background: var(--color-bank-transactions-content-background);
+      border: 2px solid var(--color-bank-transactions-content-border);
+      border-radius: 10px;
+      padding: 30px 18px;
+    `}
 
-  th,
-  td {
-    padding: 8px 10px;
-    font-size: 13px;
-    border-bottom: 1px solid var(--x-recon-border-light);
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  th {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--x-recon-text-muted);
-    font-weight: 600;
-    background: var(--x-recon-table-header-background);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-
-  tbody tr:hover {
-    background: var(--x-recon-table-row-hover);
-  }
-
-  tbody tr.is-checked {
-    background: var(--x-recon-table-row-selected);
-  }
-
-  td.selection,
-  th.selection {
-    width: 42px;
-    text-align: center;
-  }
-
-  td.money,
-  th.money {
-    text-align: right;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-  }
-
-  td.description {
-    max-width: 280px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  tbody tr:last-child td {
-    border-bottom: none;
+  .bigcapital-datatable .table {
+    .thead .th,
+    .tbody .tr .td {
+      padding-top: 0.45rem;
+      padding-bottom: 0.45rem;
+    }
   }
 `;
 

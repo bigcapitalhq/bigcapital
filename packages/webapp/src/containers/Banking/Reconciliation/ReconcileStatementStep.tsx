@@ -196,7 +196,7 @@ export function ReconcileStatementStep({
             <FooterButton
               type="submit"
               intent={Intent.PRIMARY}
-              text="Continue"
+              text="Initiate Reconciliation"
               loading={isSubmitting}
               disabled={!canContinue}
               data-testId="start-reconciliation"

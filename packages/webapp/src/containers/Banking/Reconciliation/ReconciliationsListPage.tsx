@@ -139,19 +139,6 @@ export function ReconciliationsListPage() {
 
         {!isLoading && meta && meta.isSupported && (
           <ContentWrap>
-            <PageHeader>
-              <div>
-                <Title>Reconciliations</Title>
-                <Subtitle>{meta.accountName}</Subtitle>
-              </div>
-              <CountLabel>
-                {reconciliations.length}{' '}
-                {reconciliations.length === 1
-                  ? 'reconciliation'
-                  : 'reconciliations'}
-              </CountLabel>
-            </PageHeader>
-
             {reconciliations.length === 0 ? (
               <EmptyState>
                 <EmptyTitle>No reconciliations yet</EmptyTitle>
@@ -225,31 +212,7 @@ const LoadingWrap = styled.div`
 `;
 
 const ContentWrap = styled.div`
-  padding: 4px 20px 30px;
-`;
-
-const PageHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 8px 0 16px;
-`;
-
-const Title = styled.h2`
-  margin: 0 0 2px;
-  font-size: 20px;
-  font-weight: 600;
-`;
-
-const Subtitle = styled.div`
-  font-size: 13px;
-  color: var(--x-recon-text-muted);
-`;
-
-const CountLabel = styled.div`
-  font-size: 12px;
-  color: var(--x-recon-text-muted);
+  padding: 20px 20px 30px;
 `;
 
 const EmptyState = styled.div`

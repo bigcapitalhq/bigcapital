@@ -3,14 +3,13 @@ import {
   Button,
   Callout,
   Intent,
-  NavbarDivider,
   NavbarGroup,
   Spinner,
 } from '@blueprintjs/core';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { DashboardActionsBar, DashboardPageContent } from '@/components';
+import { DashboardActionsBar, DashboardPageContent, Icon } from '@/components';
 import { ReconciliationDetailPanel } from '@/containers/CashFlow/AccountTransactions/Reconciliation/ReconciliationDetailPanel';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
 import {
@@ -31,6 +30,8 @@ export function ReconcileTransactionsPage() {
     useParams<ReconcileTransactionsRouteParams>();
   const history = useHistory();
   const [actionsContainer, setActionsContainer] =
+    React.useState<HTMLDivElement | null>(null);
+  const [endActionsContainer, setEndActionsContainer] =
     React.useState<HTMLDivElement | null>(null);
 
   const accountId = Number(accountIdParam);
@@ -102,13 +103,22 @@ export function ReconcileTransactionsPage() {
     <ReconciliationTheme>
       <DashboardActionsBar>
         <NavbarGroup>
+          <ActionsSlot ref={setActionsContainer} />
+        </NavbarGroup>
+
+        <NavbarGroup align={Alignment.RIGHT}>
           <Button
             minimal
             icon="arrow-left"
             text="Statement details"
             onClick={handleBackClick}
           />
-          <NavbarDivider />
+          <Button
+            minimal
+            icon={<Icon icon="refresh-16" iconSize={16} />}
+            text="Reload"
+            onClick={handleRefresh}
+          />
           {detail && !detail.reconciliation.isInProgress && (
             <Button
               icon="plus"
@@ -116,10 +126,7 @@ export function ReconcileTransactionsPage() {
               onClick={handleStartAnotherClick}
             />
           )}
-        </NavbarGroup>
-
-        <NavbarGroup align={Alignment.RIGHT}>
-          <ActionsSlot ref={setActionsContainer} />
+          <ActionsSlot ref={setEndActionsContainer} />
         </NavbarGroup>
       </DashboardActionsBar>
 
@@ -148,6 +155,7 @@ export function ReconcileTransactionsPage() {
             accountName={meta?.accountName ?? detail.meta.accountName}
             currencyCode={meta?.currencyCode}
             actionsContainer={actionsContainer}
+            endActionsContainer={endActionsContainer}
             onRefresh={handleRefresh}
             onDeleted={handleDeleted}
           />
