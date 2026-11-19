@@ -1,6 +1,7 @@
 import {
   Button,
   Callout,
+  ControlGroup,
   FormGroup,
   InputGroup,
   Intent,
@@ -13,6 +14,7 @@ import type {
   BankingAccountsListResponse,
   BankReconciliationsListResponse,
 } from '@bigcapital/sdk-ts';
+import { Alert, InputPrependText, MoneyInputGroup } from '@/components';
 
 interface ReconcileStatementStepProps {
   accounts: BankingAccountsListResponse;
@@ -68,14 +70,17 @@ export function ReconcileStatementStep({
         </StepSubtitle>
       </StepHeader>
 
-      <FormGroup label="Bank account" labelFor="reconcile-bank-account">
+      <BankAccountFormGroup
+        label="Bank account"
+        labelFor="reconcile-bank-account"
+      >
         <BankAccountSelect
           accounts={accounts}
           selectedAccountId={selectedAccountId}
           onSelect={onAccountSelect}
           disabled={isSubmitting}
         />
-      </FormGroup>
+      </BankAccountFormGroup>
 
       {!selectedAccountId && (
         <Hint>Choose the bank account you want to reconcile.</Hint>
@@ -96,18 +101,25 @@ export function ReconcileStatementStep({
       )}
 
       {meta && meta.isSupported && meta.hasInProgress && (
-        <Callout intent={Intent.WARNING} title="Reconciliation in progress">
-          <p>
-            You have an unfinished reconciliation for this account. Resume it to
-            keep checking transactions and finish when the difference is zero.
-          </p>
-          <Button
-            intent={Intent.PRIMARY}
-            text="Resume reconciliation"
-            onClick={() => meta.inProgressId && onResume(meta.inProgressId)}
-            data-testId="resume-reconciliation"
-          />
-        </Callout>
+        <>
+          <Alert title="Reconciliation in progress" intent={Intent.PRIMARY}>
+            <p>
+              You have an unfinished reconciliation for this account. Resume it
+              to keep checking transactions and finish when the difference is
+              zero.
+            </p>
+          </Alert>
+          <Actions>
+            <FooterButton
+              type="button"
+              minimal
+              intent={Intent.PRIMARY}
+              text="Resume reconciliation"
+              onClick={() => meta.inProgressId && onResume(meta.inProgressId)}
+              data-testId="resume-reconciliation"
+            />
+          </Actions>
+        </>
       )}
 
       {meta && meta.isSupported && !meta.hasInProgress && (
@@ -146,16 +158,15 @@ export function ReconcileStatementStep({
               labelFor="reconcile-ending-balance"
               helperText="The closing balance shown on your bank statement."
             >
-              <InputGroup
-                id="reconcile-ending-balance"
-                type="number"
-                step="0.01"
-                value={endingBalance}
-                onChange={(event) =>
-                  onEndingBalanceChange(event.currentTarget.value)
-                }
-                required
-              />
+              <ControlGroup>
+                <InputPrependText text={meta.currencyCode} />
+                <MoneyInputGroup
+                  id="reconcile-ending-balance"
+                  value={endingBalance}
+                  onChange={(value) => onEndingBalanceChange(value ?? '')}
+                  required
+                />
+              </ControlGroup>
             </FormGroup>
 
             <FormGroup
@@ -175,17 +186,14 @@ export function ReconcileStatementStep({
 
             <FormGroup
               label="Period start"
-              labelFor="reconcile-start-date"
               helperText="The first day after the previous reconciliation."
             >
-              <ReadOnlyValue id="reconcile-start-date">
-                {meta.suggestedStartDate}
-              </ReadOnlyValue>
+              <PeriodStartText>{meta.suggestedStartDate}</PeriodStartText>
             </FormGroup>
           </FormGrid>
 
           <Actions>
-            <Button
+            <FooterButton
               type="submit"
               intent={Intent.PRIMARY}
               text="Continue"
@@ -203,8 +211,14 @@ export function ReconcileStatementStep({
 const Panel = styled.div`
   padding: 18px;
   border: 1px solid var(--x-recon-border);
-  border-radius: 4px;
+  border-radius: 5px;
   background: var(--x-recon-surface);
+`;
+
+const BankAccountFormGroup = styled(FormGroup)`
+  &.bp4-form-group {
+    margin-bottom: 30px;
+  }
 `;
 
 const StepHeader = styled.div`
@@ -237,9 +251,9 @@ const LoadingRow = styled.div`
 
 const BalanceRow = styled.div`
   display: flex;
-  gap: 28px;
-  margin-bottom: 16px;
-  padding-bottom: 14px;
+  gap: 50px;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
   border-bottom: 1px solid var(--x-recon-border-light);
 `;
 
@@ -272,14 +286,10 @@ const FormGrid = styled.div`
   gap: 16px;
 `;
 
-const ReadOnlyValue = styled.div`
+const PeriodStartText = styled.div`
   height: 30px;
   display: flex;
   align-items: center;
-  padding: 0 10px;
-  border: 1px solid var(--color-ui-input-border);
-  border-radius: 3px;
-  background: var(--color-ui-input-background);
   color: var(--x-recon-text-muted);
 `;
 
@@ -287,4 +297,8 @@ const Actions = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
+`;
+
+const FooterButton = styled(Button)`
+  min-width: 100px;
 `;

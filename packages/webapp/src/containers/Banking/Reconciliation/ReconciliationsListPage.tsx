@@ -54,9 +54,9 @@ export function ReconciliationsListPage() {
   };
 
   const handleResumeClick = () => {
-    history.push(
-      `/reconcile?accountId=${accountId}&reconciliationId=${meta?.inProgressId}`,
-    );
+    if (!meta?.inProgressId) return;
+
+    history.push(`/reconcile/${accountId}/${meta.inProgressId}`);
   };
 
   const handleRowClick = (reconciliation: BankReconciliationResponse) => {

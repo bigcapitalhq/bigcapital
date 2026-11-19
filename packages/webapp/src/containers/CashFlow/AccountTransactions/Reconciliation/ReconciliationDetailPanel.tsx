@@ -16,6 +16,7 @@ interface ReconciliationDetailPanelProps {
   accountId: number;
   accountName?: string;
   currencyCode?: string | null;
+  actionsContainer?: HTMLElement | null;
   onRefresh: () => void;
   onDeleted?: (reconciliationId: number) => void;
 }
@@ -28,6 +29,7 @@ export function ReconciliationDetailPanel({
   accountId,
   accountName,
   currencyCode,
+  actionsContainer,
   onRefresh,
   onDeleted,
 }: ReconciliationDetailPanelProps) {
@@ -95,6 +97,7 @@ export function ReconciliationDetailPanel({
         accountId={accountId}
         accountName={accountName}
         currencyCode={currencyCode}
+        actionsContainer={actionsContainer}
         onUndo={() => setUndoTarget(detail.reconciliation)}
         onDelete={() => setDeleteTarget(detail.reconciliation)}
         onRefresh={onRefresh}

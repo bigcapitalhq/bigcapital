@@ -11,6 +11,7 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { ReconciliationSummary } from './ReconciliationSummary';
 import { ReconciliationTransactionsTable } from './ReconciliationTransactionsTable';
@@ -39,6 +40,7 @@ interface ReconciliationWorkspaceProps {
   onUndo: () => void;
   onDelete: () => void;
   onRefresh: () => void;
+  actionsContainer?: HTMLElement | null;
 }
 
 export function ReconciliationWorkspace({
@@ -49,6 +51,7 @@ export function ReconciliationWorkspace({
   onUndo,
   onDelete,
   onRefresh,
+  actionsContainer,
 }: ReconciliationWorkspaceProps) {
   const reconciliation = detail.reconciliation;
   const readOnly = !reconciliation.isInProgress;
@@ -199,6 +202,108 @@ export function ReconciliationWorkspace({
   const filteredCount = filterTransactions(detail.transactions, filter).length;
   const showEmpty = filteredCount === 0;
 
+  const actionsInBar = actionsContainer !== undefined;
+  const showDelete =
+    (reconciliation.isInProgress || reconciliation.isVoided) &&
+    detail.meta.canDelete;
+
+  const primaryActions = (
+    <ButtonGroup>
+      <Button
+        icon="refresh"
+        minimal
+        onClick={onRefresh}
+        title="Refresh transactions"
+      />
+      <Button
+        icon="floppy-disk"
+        text="Save for later"
+        minimal
+        onClick={handleSave}
+        loading={isSaving}
+        disabled={readOnly}
+      />
+      <Button
+        icon="tick"
+        text="Reconcile"
+        minimal={actionsInBar}
+        intent={Intent.PRIMARY}
+        onClick={handleFinish}
+        loading={isFinishing}
+        disabled={readOnly || !isBalanced}
+        data-testId="finish-reconciliation"
+      />
+    </ButtonGroup>
+  );
+
+  const addTransactionButton = !readOnly && (
+    <Popover
+      minimal
+      content={
+        <Menu>
+          <MenuDivider title="Money in" />
+          <MenuItem
+            text="Owner contribution"
+            onClick={() => handleMoneyIn('owner_contribution')}
+          />
+          <MenuItem
+            text="Other income"
+            onClick={() => handleMoneyIn('other_income')}
+          />
+          <MenuItem
+            text="Transfer from account"
+            onClick={() => handleMoneyIn('transfer_from_account')}
+          />
+          <MenuDivider title="Money out" />
+          <MenuItem
+            text="Owner drawings"
+            onClick={() => handleMoneyOut('owner_drawing')}
+          />
+          <MenuItem
+            text="Expense"
+            onClick={() => handleMoneyOut('other_expense')}
+          />
+          <MenuItem
+            text="Transfer to account"
+            onClick={() => handleMoneyOut('transfer_to_account')}
+          />
+        </Menu>
+      }
+      placement="bottom-end"
+    >
+      <Button icon="plus" text="Add transaction" minimal />
+    </Popover>
+  );
+
+  const deleteButton = showDelete && (
+    <Button
+      icon="trash"
+      text="Delete"
+      minimal={actionsInBar}
+      intent={Intent.DANGER}
+      onClick={onDelete}
+    />
+  );
+
+  const inlineActions = (
+    <>
+      {primaryActions}
+      {deleteButton}
+    </>
+  );
+
+  const barActions = (
+    <>
+      {primaryActions}
+      {addTransactionButton}
+      {deleteButton}
+    </>
+  );
+
+  const undoButton = reconciliation.isReconciled && (
+    <Button icon="undo" text="Undo" intent={Intent.WARNING} onClick={onUndo} />
+  );
+
   if (!reconciliation) {
     return (
       <LoadingWrap>
@@ -228,49 +333,17 @@ export function ReconciliationWorkspace({
         </div>
 
         <WorkspaceActions>
-          <ButtonGroup>
-            <Button
-              icon="refresh"
-              minimal
-              onClick={onRefresh}
-              title="Refresh transactions"
-            />
-            <Button
-              icon="floppy-disk"
-              text="Save for later"
-              minimal
-              onClick={handleSave}
-              loading={isSaving}
-              disabled={readOnly}
-            />
-            <Button
-              icon="tick"
-              text="Reconcile"
-              intent={Intent.PRIMARY}
-              onClick={handleFinish}
-              loading={isFinishing}
-              disabled={readOnly || !isBalanced}
-              data-testId="finish-reconciliation"
-            />
-          </ButtonGroup>
-
-          {reconciliation.isReconciled && (
-            <Button
-              icon="undo"
-              text="Undo"
-              intent={Intent.WARNING}
-              onClick={onUndo}
-            />
+          {actionsContainer === undefined ? (
+            <>
+              {inlineActions}
+              {undoButton}
+            </>
+          ) : (
+            <>
+              {actionsContainer && createPortal(barActions, actionsContainer)}
+              {undoButton}
+            </>
           )}
-          {(reconciliation.isInProgress || reconciliation.isVoided) &&
-            detail.meta.canDelete && (
-              <Button
-                icon="trash"
-                text="Delete"
-                intent={Intent.DANGER}
-                onClick={onDelete}
-              />
-            )}
         </WorkspaceActions>
       </WorkspaceHeader>
 
@@ -326,45 +399,8 @@ export function ReconciliationWorkspace({
           />
         </FilterGroup>
 
-        {!readOnly && (
-          <ButtonGroup>
-            <Popover
-              minimal
-              content={
-                <Menu>
-                  <MenuDivider title="Money in" />
-                  <MenuItem
-                    text="Owner contribution"
-                    onClick={() => handleMoneyIn('owner_contribution')}
-                  />
-                  <MenuItem
-                    text="Other income"
-                    onClick={() => handleMoneyIn('other_income')}
-                  />
-                  <MenuItem
-                    text="Transfer from account"
-                    onClick={() => handleMoneyIn('transfer_from_account')}
-                  />
-                  <MenuDivider title="Money out" />
-                  <MenuItem
-                    text="Owner drawings"
-                    onClick={() => handleMoneyOut('owner_drawing')}
-                  />
-                  <MenuItem
-                    text="Expense"
-                    onClick={() => handleMoneyOut('other_expense')}
-                  />
-                  <MenuItem
-                    text="Transfer to account"
-                    onClick={() => handleMoneyOut('transfer_to_account')}
-                  />
-                </Menu>
-              }
-              placement="bottom-end"
-            >
-              <Button icon="plus" text="Add transaction" minimal />
-            </Popover>
-          </ButtonGroup>
+        {!readOnly && !actionsInBar && (
+          <ButtonGroup>{addTransactionButton}</ButtonGroup>
         )}
       </Toolbar>
 

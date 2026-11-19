@@ -81,9 +81,7 @@ export function ReconciliationDetailPage() {
   };
 
   const handleContinueClick = () => {
-    history.push(
-      `/reconcile?accountId=${accountId}&reconciliationId=${reconciliationId}`,
-    );
+    history.push(`/reconcile/${accountId}/${reconciliationId}`);
   };
 
   const handlePrintClick = () => {
