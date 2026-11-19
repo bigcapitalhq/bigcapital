@@ -3,8 +3,7 @@ import { Intent } from '@blueprintjs/core';
 import accounting from 'accounting';
 import clsx from 'classnames';
 import jsCookie from 'js-cookie';
-import Currencies from 'js-money/lib/currency';
-import Currency from 'js-money/lib/currency';
+import { currencies as Currencies } from '@/constants/currencies';
 import _ from 'lodash';
 import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
 import moment from 'moment';
@@ -200,7 +199,7 @@ export const defaultExpanderReducer = (tableRows, level) => {
 };
 
 export function formattedAmount(cents, currencyCode = '', props = {}) {
-  const currency = Currency[currencyCode];
+  const currency = Currencies[currencyCode];
 
   const parsedCurrency = {
     symbol: '',

@@ -1,6 +1,17 @@
-import currencies from 'js-money/lib/currency';
+import jsMoneyCurrencies from 'js-money/lib/currency';
+import { additionalCurrencies } from '@bigcapital/utils';
 import { sortBy } from 'lodash';
 import intl from 'react-intl-universal';
+
+/**
+ * Every currency the application supports: the `js-money` table plus the ISO
+ * 4217 currencies it does not ship (e.g. ANG, XCG). The two sets do not
+ * overlap.
+ */
+export const currencies: Record<string, any> = {
+  ...jsMoneyCurrencies,
+  ...additionalCurrencies,
+};
 
 export interface CurrencyOption {
   name: string;
