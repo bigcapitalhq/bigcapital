@@ -508,6 +508,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
             },
           },
           {
+            text: <T id={'sidebar.reconcile'} />,
+            href: '/reconcile',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.Reconcile,
+            },
+          },
+          {
             text: 'Rules',
             href: '/bank-rules',
             type: ISidebarMenuItemType.Link,

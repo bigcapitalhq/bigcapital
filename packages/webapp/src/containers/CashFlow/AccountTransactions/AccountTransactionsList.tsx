@@ -12,6 +12,7 @@ import {
   useAccountTransactionsContext,
 } from './AccountTransactionsProvider';
 import { AccountTransactionsLoadingBar } from './components';
+import { ReconciliationTab } from './Reconciliation/ReconciliationTab';
 import type { WithBankingProps } from '../withBanking';
 import { DashboardPageContent } from '@/components';
 import { AppContentShell } from '@/components/AppShell';
@@ -85,6 +86,9 @@ const AccountsTransactionsUncategorized = lazy(() =>
 function AccountTransactionsContent() {
   const { filterTab } = useAccountTransactionsContext();
 
+  if (filterTab === 'reconciliation') {
+    return <ReconciliationTab />;
+  }
   return filterTab === 'uncategorized' ? (
     <AccountsTransactionsUncategorized />
   ) : (

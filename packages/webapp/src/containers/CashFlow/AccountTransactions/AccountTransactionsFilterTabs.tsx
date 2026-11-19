@@ -8,7 +8,7 @@ const AccountContentTabs = styled(ContentTabs)`
 `;
 
 export function AccountTransactionsFilterTabs() {
-  const { filterTab, setFilterTab, bankAccountMetaSummary } =
+  const { filterTab, setFilterTab, bankAccountMetaSummary, currentAccount } =
     useAccountTransactionsContext();
 
   const handleChange = (value: string) => {
@@ -50,6 +50,13 @@ export function AccountTransactionsFilterTabs() {
         title={'All Transactions'}
         description={'In Bigcapital'}
       />
+      {currentAccount?.accountType === 'bank' && (
+        <ContentTabs.Tab
+          id="reconciliation"
+          title={'Reconciliation'}
+          description={'Match your bank statement'}
+        />
+      )}
     </AccountContentTabs>
   );
 }

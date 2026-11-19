@@ -4,7 +4,7 @@ import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 import type { CashflowAccountRow } from './components';
@@ -44,6 +44,8 @@ interface CashflowAccountContextMenuProps {
   onDeleteClick: () => void;
   onMoneyInClick: (transactionType: string) => void;
   onMoneyOutClick: (transactionType: string) => void;
+  onReconcileClick: () => void;
+  onReconciliationsClick: () => void;
 }
 
 interface CashflowBankAccountProps
@@ -125,6 +127,15 @@ function CashflowBankAccount({
       account_id: account.id,
     });
   };
+  // Handle reconcile account action.
+  const history = useHistory();
+  const handleReconcileClick = () => {
+    history.push(`/reconcile?accountId=${account.id}`);
+  };
+  // Handle reconciliation history action.
+  const handleReconciliationsClick = () => {
+    history.push(`/cashflow-accounts/${account.id}/reconciliations`);
+  };
 
   return (
     <ContextMenu2
@@ -138,6 +149,8 @@ function CashflowBankAccount({
           onEditClick={handleEditAccount}
           onMoneyInClick={handleMoneyInClick}
           onMoneyOutClick={handleMoneyOutClick}
+          onReconcileClick={handleReconcileClick}
+          onReconciliationsClick={handleReconciliationsClick}
         />
       }
     >
@@ -274,6 +287,8 @@ function CashflowAccountContextMenu({
   onDeleteClick,
   onMoneyInClick,
   onMoneyOutClick,
+  onReconcileClick,
+  onReconciliationsClick,
 }: CashflowAccountContextMenuProps) {
   return (
     <Menu>
@@ -282,6 +297,20 @@ function CashflowAccountContextMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewClick)}
       />
+      {account.accountType === 'bank' && (
+        <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
+          <MenuItem
+            icon={<Icon icon="tick-circle" />}
+            text={intl.get('banking.reconciliation.action')}
+            onClick={safeCallback(onReconcileClick)}
+          />
+          <MenuItem
+            icon={<Icon icon="reader-18" />}
+            text={'Reconciliation history'}
+            onClick={safeCallback(onReconciliationsClick)}
+          />
+        </Can>
+      )}
       <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
         <MenuDivider />
         <MenuItem

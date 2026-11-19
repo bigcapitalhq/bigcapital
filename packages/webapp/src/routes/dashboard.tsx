@@ -1256,6 +1256,53 @@ export const getDashboardRoutes = () => [
   },
   // Cash flow
   {
+    path: '/reconcile/:accountId/:reconciliationId',
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconcileTransactionsPage'
+      ).then((m) => ({
+        default: m.ReconcileTransactionsPage,
+      })),
+    ),
+    breadcrumb: intl.get('banking.reconciliation.page_title'),
+    pageTitle: intl.get('banking.reconciliation.page_title'),
+    sidebarExpand: false,
+  },
+  {
+    path: '/reconcile',
+    component: lazy(() =>
+      import('@/containers/Banking/Reconciliation/ReconcilePage').then((m) => ({
+        default: m.ReconcilePage,
+      })),
+    ),
+    breadcrumb: intl.get('banking.reconciliation.page_title'),
+    pageTitle: intl.get('banking.reconciliation.page_title'),
+  },
+  {
+    path: `/cashflow-accounts/:accountId/reconciliations/:reconciliationId`,
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconciliationDetailPage'
+      ).then((m) => ({
+        default: m.ReconciliationDetailPage,
+      })),
+    ),
+    sidebarExpand: false,
+    pageTitle: 'Reconciliation',
+  },
+  {
+    path: `/cashflow-accounts/:accountId/reconciliations`,
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconciliationsListPage'
+      ).then((m) => ({
+        default: m.ReconciliationsListPage,
+      })),
+    ),
+    sidebarExpand: false,
+    pageTitle: 'Reconciliations',
+  },
+  {
     path: `/cashflow-accounts/:id/transactions`,
     component: lazy(() =>
       import(
