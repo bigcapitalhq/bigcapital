@@ -47,10 +47,15 @@
 }
 
 .action {
-  min-width: 24px !important;
-  min-height: 24px !important;
-  padding: 2px !important;
-  color: $muted !important;
+  // Button renders as `bp4-button bp4-small bp4-minimal`; composing those
+  // global classes raises specificity above Blueprint's own button rules.
+  &:global(.bp4-button.bp4-small.bp4-minimal) {
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px;
+    color: $muted;
+  }
+
   opacity: 0;
   transition: opacity 0.15s;
 
@@ -58,22 +63,22 @@
     opacity: 0.8;
   }
 
-  &:hover {
-    opacity: 1 !important;
-    color: $accent !important;
+  &:global(.bp4-button.bp4-small.bp4-minimal):hover {
+    opacity: 1;
+    color: $accent;
   }
 }
 
-.likeActive,
-.likeActive:hover {
-  opacity: 1 !important;
-  color: $accent !important;
+.likeActive:global(.bp4-button.bp4-small.bp4-minimal),
+.likeActive:global(.bp4-button.bp4-small.bp4-minimal):hover {
+  opacity: 1;
+  color: $accent;
 }
 
-.dislikeActive,
-.dislikeActive:hover {
-  opacity: 1 !important;
-  color: $danger !important;
+.dislikeActive:global(.bp4-button.bp4-small.bp4-minimal),
+.dislikeActive:global(.bp4-button.bp4-small.bp4-minimal):hover {
+  opacity: 1;
+  color: $danger;
 }
 
 .copied {

@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import * as bluebird from 'bluebird';
 import * as uniqid from 'uniqid';
-import { entries, groupBy } from 'lodash';
+import { entries, groupBy, isEmpty } from 'lodash';
 import {
   AccountBase as PlaidAccountBase,
   Item as PlaidItem,
@@ -92,6 +92,44 @@ export class PlaidSyncDb {
       (createAccountDTO: any) => this.syncBankAccount(createAccountDTO, trx),
       { concurrency: CONCURRENCY_ASYNC },
     );
+  }
+
+  /**
+   * Caches the Plaid institution display metadata on the given item. The
+   * metadata is only written when it changed since the last sync (e.g. after
+   * the bank rebranded).
+   * @param {PlaidItemModel} plaidItem - The Plaid item.
+   * @param {PlaidInstitution} institution - The Plaid institution.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<void>}
+   */
+  public async syncPlaidItemInstitution(
+    plaidItem: PlaidItemModel,
+    institution: PlaidInstitution,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    const patch: Partial<PlaidItemModel> = {};
+
+    if (
+      institution.name &&
+      institution.name !== plaidItem.plaidInstitutionName
+    ) {
+      patch.plaidInstitutionName = institution.name;
+    }
+    if (
+      institution.logo &&
+      institution.logo !== plaidItem.plaidInstitutionLogo
+    ) {
+      patch.plaidInstitutionLogo = institution.logo;
+    }
+    // Never blank the cached logo when Plaid doesn't return one.
+    if (isEmpty(patch)) {
+      return;
+    }
+    await this.plaidItemModel()
+      .query(trx)
+      .findOne({ plaidItemId: plaidItem.plaidItemId })
+      .patch(patch);
   }
 
   /**

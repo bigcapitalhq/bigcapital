@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import styles from './AiAssistantEmpty.module.scss';
 
@@ -7,7 +7,27 @@ const SUGGESTIONS = [
   'ai_assistant.suggestion.item_turnover',
   'ai_assistant.suggestion.receivables',
   'ai_assistant.suggestion.profit',
+  'ai_assistant.suggestion.cash_position',
+  'ai_assistant.suggestion.low_stock',
+  'ai_assistant.suggestion.profit_loss',
+  'ai_assistant.suggestion.top_items',
+  'ai_assistant.suggestion.revenue',
 ];
+
+const MAX_SUGGESTIONS = 3;
+
+/**
+ * Picks a random subset of the suggestion prompts (Fisher-Yates shuffle).
+ */
+function pickRandomSuggestions(count = MAX_SUGGESTIONS): string[] {
+  const shuffled = [...SUGGESTIONS];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+}
 
 interface AiAssistantEmptyProps {
   onSelect: (text: string) => void;
@@ -20,6 +40,9 @@ export function AiAssistantEmpty({
   disabled,
   composer,
 }: AiAssistantEmptyProps) {
+  // Re-drawn on each mount (page visit / new chat), stable while mounted.
+  const [suggestions] = useState(() => pickRandomSuggestions());
+
   return (
     <div className={styles.empty}>
       <div className={styles.inner}>
@@ -33,7 +56,7 @@ export function AiAssistantEmpty({
           </h2>
 
           <div className={styles.suggestions}>
-            {SUGGESTIONS.map((suggestion) => (
+            {suggestions.map((suggestion) => (
               <button
                 key={suggestion}
                 type="button"

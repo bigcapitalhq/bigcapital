@@ -162,6 +162,7 @@ function CashflowBankAccount({
           code={account.code}
           balance={account.amount != null ? account.formattedAmount : '-'}
           type={account.accountType}
+          logoUrl={account.plaidInstitutionLogo}
           updatedBeforeText={
             account.lastFeedsUpdatedFromNow
               ? `Updated ${account.lastFeedsUpdatedFromNow} ago`

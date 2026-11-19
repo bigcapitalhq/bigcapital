@@ -17,6 +17,7 @@ describe('PlaidUpdateTransactions', () => {
       }),
     })) as any;
     const plaidSync = {
+      syncPlaidItemInstitution: jest.fn().mockResolvedValue(undefined),
       syncBankAccounts: jest.fn().mockResolvedValue(undefined),
       syncRemoveTransactions: jest.fn().mockResolvedValue(undefined),
       syncAccountsTransactions: jest.fn().mockResolvedValue(undefined),
@@ -62,6 +63,12 @@ describe('PlaidUpdateTransactions', () => {
     expect(plaidClient.institutionsGetById).toHaveBeenCalledWith({
       institution_id: 'ins_1',
       country_codes: [CountryCode.Us, CountryCode.Ca],
+      options: { include_optional_metadata: true },
     });
+    expect(plaidSync.syncPlaidItemInstitution).toHaveBeenCalledWith(
+      expect.objectContaining({ plaidItemId: 'item-id' }),
+      {},
+      undefined,
+    );
   });
 });
