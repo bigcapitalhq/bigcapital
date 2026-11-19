@@ -4,9 +4,9 @@ import { range } from 'lodash';
 import { useReducer, useEffect } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getPaginationRowRange } from './paginationRowRange';
 import { Icon, FormattedMessage as T } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { getPaginationRowRange } from './paginationRowRange';
 
 const StyledButtonGroup = styled(ButtonGroup)`
   .bp4-button {
