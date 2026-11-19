@@ -22,7 +22,21 @@ export default defineConfig(({ mode }) => {
   const clientEnv = pickClientEnv(env);
   const port = Number(env.PORT) || 4000;
   const plugins: PluginOption[] = [
-    react(),
+    react({
+      babel: {
+        plugins: [
+          [
+            'babel-plugin-react-compiler',
+            {
+              // The app runs on React 18, which requires the compiler runtime package.
+              target: '18',
+              // Skip components the compiler cannot safely optimize instead of failing the build.
+              panicThreshold: 'none',
+            },
+          ],
+        ],
+      },
+    }),
     legacy({
       targets: ['defaults', 'not IE 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
