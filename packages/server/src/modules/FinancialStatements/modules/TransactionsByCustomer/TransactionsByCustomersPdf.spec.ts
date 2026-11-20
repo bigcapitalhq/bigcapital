@@ -32,7 +32,11 @@ describe('TransactionsByCustomersPdf', () => {
         { provide: TableSheetPdf, useValue: tableSheetPdf },
       ],
     }).compile();
-    const query = { fromDate: '2026-01-01', toDate: '2026-12-31' } as any;
+    const query = {
+      fromDate: '2026-01-01',
+      toDate: '2026-12-31',
+      numberFormat: { showInRed: true },
+    } as any;
 
     const result = await moduleRef.get(TransactionsByCustomersPdf).pdf(query);
 
@@ -43,6 +47,8 @@ describe('TransactionsByCustomersPdf', () => {
       'BC Test Org',
       'Transactions By Customers',
       'From 2026-01-01 | To 2026-12-31',
+      undefined,
+      true,
     );
   });
 });
