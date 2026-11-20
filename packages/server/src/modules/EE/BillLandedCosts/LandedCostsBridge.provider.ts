@@ -66,17 +66,19 @@ export class LandedCostsBridgeProvider
   public async validateBillEntries(
     entries: IBillLandedCostEntryDTO[],
   ): Promise<void> {
-    const entriesItemsIds = entries.map((e) => e.itemId);
-    const entriesItems = await this.itemModel()
-      .query()
-      .whereIn('id', entriesItemsIds);
+    const entriesItemsIds = entries
+      .map((e) => e.itemId)
+      .filter((itemId) => !!itemId);
+    const entriesItems = entriesItemsIds.length
+      ? await this.itemModel().query().whereIn('id', entriesItemsIds)
+      : [];
 
     const entriesItemsById = transformToMap(entriesItems, 'id');
 
     const nonInventoryHasCost = entries.filter((entry) => {
       const item = entriesItemsById.get(entry.itemId);
 
-      return entry.landedCost && item.type !== 'inventory';
+      return entry.landedCost && (!item || item.type !== 'inventory');
     });
     if (nonInventoryHasCost.length > 0) {
       throw new ServiceError(

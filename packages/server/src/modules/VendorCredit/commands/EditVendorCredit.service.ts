@@ -119,6 +119,11 @@ export class EditVendorCreditService {
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       vendorCreditDTO.entries,
     );
+    // Validate entries have an item or a description with a cost account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      vendorCreditDTO.entries,
+      'costAccountId',
+    );
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       vendorCreditId,

@@ -14,9 +14,10 @@ import {
   PercentFieldCell,
   NumericInputCell,
   CheckBoxFieldCell,
+  AccountsListFieldCell,
 } from '@/components/DataTableCells';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
-import { Align, CellType } from '@/constants';
+import { Align, CellType, ACCOUNT_ROOT_TYPE } from '@/constants';
 import {
   PurchaseBatchAllocationsPopover,
   SaleBatchAllocationsPopover,
@@ -35,6 +36,24 @@ export function ItemHeaderCell() {
         tooltipProps={{
           // The `boundary: 'window'` value predates the popper v2 boundary
           // renames; the cast keeps the same runtime value.
+          boundary: 'window' as unknown as Tooltip2Props['boundary'],
+          position: Position.RIGHT,
+        }}
+      />
+    </>
+  );
+}
+
+/**
+ * Account header cell.
+ */
+export function AccountHeaderCell() {
+  return (
+    <>
+      <T id={'account'} />
+      <Hint
+        content={<T id={'item_entries.account.hint'} />}
+        tooltipProps={{
           boundary: 'window' as unknown as Tooltip2Props['boundary'],
           position: Position.RIGHT,
         }}
@@ -206,7 +225,7 @@ BatchQuantityCell.cellType = NumericInputCell.cellType;
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  const { landedCost, enableTaxRates, batchMode } =
+  const { landedCost, enableTaxRates, batchMode, accountField } =
     useItemEntriesTableContext();
 
   return React.useMemo(
@@ -228,6 +247,19 @@ export function useEditableItemsEntriesColumns() {
         disableSortBy: true,
         className: 'description',
         width: 120,
+      },
+      {
+        Header: AccountHeaderCell,
+        accessor: accountField || 'sellAccountId',
+        Cell: AccountsListFieldCell,
+        disableSortBy: true,
+        className: 'account',
+        width: 140,
+        filterAccountsByRootTypes: [
+          accountField === 'costAccountId'
+            ? ACCOUNT_ROOT_TYPE.EXPENSE
+            : ACCOUNT_ROOT_TYPE.INCOME,
+        ],
       },
       {
         Header: intl.get('quantity'),
@@ -296,6 +328,6 @@ export function useEditableItemsEntriesColumns() {
         align: Align.Center,
       },
     ],
-    [batchMode, enableTaxRates, landedCost],
+    [accountField, batchMode, enableTaxRates, landedCost],
   );
 }

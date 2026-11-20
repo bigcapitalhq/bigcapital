@@ -12,7 +12,7 @@ export class ItemEntry extends BaseModel {
   public referenceId: string;
 
   public index: number;
-  public itemId: number;
+  public itemId: number | null;
   public description: string;
 
   public sellAccountId: number;

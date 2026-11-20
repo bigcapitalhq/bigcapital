@@ -29,6 +29,7 @@ import {
 import type { EstimateFormValues } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
+import { isItemOrDescriptionEntry } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber, orderingLinesIndexes } from '@/utils';
 
@@ -98,7 +99,7 @@ function EstimateFormInner({}: EstimateFormRootProps) {
     setSubmitting(true);
 
     const entries = values.entries.filter(
-      (item) => item.itemId && item.quantity,
+      (item) => isItemOrDescriptionEntry(item) && item.quantity,
     );
     const totalQuantity = sumBy(entries, (entry) =>
       parseInt(String(entry.quantity), 10),

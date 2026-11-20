@@ -14,6 +14,7 @@ import { getEntriesTotal } from '@/containers/Entries/utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
@@ -35,6 +36,7 @@ export type CreditNoteEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
 };
 
 export type CreditNoteFormValues = {
@@ -67,6 +69,7 @@ export const defaultCreditNoteEntry: CreditNoteEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
 };
 
 // Default credit note object.
@@ -135,6 +138,7 @@ const defaultReqCreditNoteEntry = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
 };
 
 /**
@@ -150,7 +154,9 @@ const transformEntriesToSubmit = (entries: CreditNoteEntry[]) => {
  * Filters the given non-zero entries.
  */
 const filterNonZeroEntries = (entries: CreditNoteEntry[]) => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

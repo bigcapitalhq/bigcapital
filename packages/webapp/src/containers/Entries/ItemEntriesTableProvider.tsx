@@ -28,6 +28,8 @@ export interface ItemEntriesTableContextValue {
   items?: unknown[];
   /* The type of the items entries (sellable/purchasable). */
   itemType?: string;
+  /* The account field used on the entry line (sell/cost). */
+  accountField?: 'sellAccountId' | 'costAccountId';
   /* The form errors of the table. */
   errors?: unknown;
   /* The number of the lines displayed once the table is empty. */

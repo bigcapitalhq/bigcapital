@@ -69,6 +69,11 @@ export class CreateSaleEstimate {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       estimateDTO.entries,
     );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      estimateDTO.entries,
+      'sellAccountId',
+    );
     // Creates a sale estimate transaction with associated transactions as UOW.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimateCreating` event.

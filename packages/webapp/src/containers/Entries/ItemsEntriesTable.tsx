@@ -17,6 +17,7 @@ import type { Item, TaxRate } from '@bigcapital/sdk-ts';
 import { DataTableEditable } from '@/components';
 import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
+import { useAccounts } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 
@@ -36,6 +37,7 @@ interface ItemsEntriesTableProps {
   landedCost?: boolean;
   defaultEntry?: ItemEntry;
   batchMode?: 'purchase' | 'sale';
+  accountField?: 'sellAccountId' | 'costAccountId';
 }
 
 /**
@@ -84,7 +86,11 @@ function ItemEntriesTableRoot() {
     taxRates,
     itemType,
     batchMode,
+    accountField = 'sellAccountId',
   } = useItemEntriesTableContext();
+
+  // Fetches the accounts list.
+  const { data: accounts } = useAccounts();
 
   // Editiable items entries columns.
   const columns = useEditableItemsEntriesColumns();
@@ -110,10 +116,18 @@ function ItemEntriesTableRoot() {
       if (columnId === 'itemId') {
         setItemRow({ rowIndex, columnId, itemId: value as number });
       }
-      const newRows = composeRowsOnEditCell(rowIndex, columnId, value);
+      let newRows = composeRowsOnEditCell(rowIndex, columnId, value);
+
+      // Clear the line account once an item is selected, the item supplies
+      // the account in that case.
+      if (columnId === 'itemId' && value) {
+        newRows = newRows.map((row, index) =>
+          index === rowIndex ? { ...row, [accountField]: '' } : row,
+        );
+      }
       handleChange(newRows);
     },
-    [localValue, defaultEntry, handleChange],
+    [localValue, defaultEntry, handleChange, accountField],
   );
 
   // Handle table rows removing by index.
@@ -142,6 +156,7 @@ function ItemEntriesTableRoot() {
       cellsLoadingCoords={cellsLoading ?? undefined}
       payload={{
         items,
+        accounts: accounts ?? [],
         taxRates,
         errors: errors || [],
         updateData: handleUpdateData,
@@ -163,6 +178,8 @@ ItemsEntriesTable.defaultProps = {
     quantity: '',
     rate: '',
     discount: '',
+    sellAccountId: '',
+    costAccountId: '',
     batchId: null,
     batch: null,
     batches: [],
@@ -173,4 +190,5 @@ ItemsEntriesTable.defaultProps = {
   linesNumber: 1,
   minLinesNumber: 1,
   enableTaxRates: true,
+  accountField: 'sellAccountId',
 };

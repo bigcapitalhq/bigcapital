@@ -137,6 +137,11 @@ export class EditSaleInvoice {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       saleInvoiceDTO.entries,
     );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      saleInvoiceDTO.entries,
+      'sellAccountId',
+    );
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       saleInvoiceId,

@@ -93,6 +93,7 @@ export class VendorCreditAccrualGL {
   ): ILedgerEntry {
     const commonEntity = this.vendorCreditGLCommonEntry;
     const totalLocal = entry.totalExcludingTax * this.vendorCredit.exchangeRate;
+    const isInventoryItem = entry.item?.type === 'inventory';
 
     return {
       ...commonEntity,
@@ -100,10 +101,9 @@ export class VendorCreditAccrualGL {
       index: index + 2,
       itemId: entry.itemId,
       // itemQuantity: entry.quantity,
-      accountId:
-        'inventory' === entry.item.type
-          ? entry.item.inventoryAccountId
-          : entry.costAccountId || entry.item.costAccountId,
+      accountId: isInventoryItem
+        ? entry.item.inventoryAccountId
+        : (entry.costAccountId ?? entry.item?.costAccountId),
       accountNormal: AccountNormal.DEBIT,
     };
   }

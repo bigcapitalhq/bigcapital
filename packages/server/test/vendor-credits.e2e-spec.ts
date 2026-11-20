@@ -59,6 +59,35 @@ describe('Vendor Credits (e2e)', () => {
       .expect(201);
   });
 
+  it('/vendor-credits (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/vendor-credits')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...requestVendorCredit(),
+        entries: [
+          {
+            index: 1,
+            description: 'Office supplies',
+            quantity: 1,
+            rate: 1000,
+            costAccountId: 1019,
+          },
+        ],
+      })
+      .expect(201);
+
+    const vendorCredit = await request(app.getHttpServer())
+      .get(`/vendor-credits/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(vendorCredit.body.entries[0].item_id).toBeNull();
+    expect(vendorCredit.body.entries[0].cost_account_id).toBe(1019);
+  });
+
   it('/vendor-credits/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/vendor-credits')

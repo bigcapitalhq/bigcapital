@@ -17,7 +17,9 @@ import {
 } from './utils';
 import type { RecurringInvoiceFormValues } from './utils';
 import { AppToaster, PageForm } from '@/components';
+import { isItemOrDescriptionEntry } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { isBlank } from '@/utils';
 
 const validationSchema = Yup.object().shape({
   customerId: Yup.mixed().required(intl.get('customer_is_required')),
@@ -25,14 +27,47 @@ const validationSchema = Yup.object().shape({
   startDate: Yup.string().required(intl.get('field_is_required')),
   frequency: Yup.string().required(intl.get('field_is_required')),
   repeatInterval: Yup.number().min(1).required(),
-  entries: Yup.array().test(
-    'at-least-one-entry',
-    intl.get('recurring_invoice.form.entries_required'),
-    (entries) =>
-      (entries ?? []).some(
-        (entry: any) => entry.itemId && Number(entry.quantity) > 0,
-      ),
-  ),
+  entries: Yup.array()
+    .of(
+      Yup.object().shape({
+        itemId: Yup.mixed().nullable(),
+        sellAccountId: Yup.mixed()
+          .nullable()
+          .test(
+            'account-required-without-item',
+            intl.get('item_entries.account_required_without_item'),
+            function (value) {
+              const { itemId, quantity, rate } = this.parent;
+              if (isBlank(itemId) && !isBlank(quantity) && !isBlank(rate)) {
+                return !isBlank(value);
+              }
+              return true;
+            },
+          ),
+        description: Yup.string()
+          .nullable()
+          .test(
+            'item-or-description-required',
+            intl.get('item_entries.item_or_description_required'),
+            function (value) {
+              const { itemId, quantity, rate } = this.parent;
+              if (isBlank(itemId) && !isBlank(quantity) && !isBlank(rate)) {
+                return typeof value === 'string' && value.trim().length > 0;
+              }
+              return true;
+            },
+          ),
+      }),
+    )
+    .test(
+      'at-least-one-entry',
+      intl.get('recurring_invoice.form.entries_required'),
+      (entries) =>
+        (entries ?? []).some(
+          (entry: any) =>
+            isItemOrDescriptionEntry(entry) && Number(entry.quantity) > 0,
+        ),
+    ),
 });
 
 export function RecurringInvoiceForm() {

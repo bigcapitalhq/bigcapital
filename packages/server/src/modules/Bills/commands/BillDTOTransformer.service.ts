@@ -7,7 +7,7 @@ import { formatDateFields } from '@/utils/format-date-fields';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
-import { Item } from '@/modules/Items/models/Item';
+import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';
 import { Bill } from '../models/Bill';
@@ -27,7 +27,7 @@ export class BillDTOTransformer {
     @Inject(ItemEntry.name)
     private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
 
-    @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
+    private readonly itemsEntriesService: ItemsEntriesService,
   ) {}
 
   /**
@@ -71,7 +71,7 @@ export class BillDTOTransformer {
       // Associate tax rate id from tax code to entries.
       this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries,
       // Sets the default cost account to the bill entries.
-      this.setBillEntriesDefaultAccounts(),
+      this.itemsEntriesService.setPurchaseEntriesDefaultAccounts,
     )(initialEntries);
 
     const entries = R.compose(
@@ -109,28 +109,5 @@ export class BillDTOTransformer {
       // Associates tax amount withheld to the model.
       this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
     )(asyncDto) as Bill;
-  }
-
-  /**
-   * Sets the default cost account to the bill entries.
-   */
-  private setBillEntriesDefaultAccounts() {
-    return async (entries: ItemEntry[]) => {
-      const entriesItemsIds = entries.map((e) => e.itemId);
-      const items = await this.itemModel()
-        .query()
-        .whereIn('id', entriesItemsIds);
-
-      return entries.map((entry) => {
-        const item = items.find((i) => i.id === entry.itemId);
-
-        return {
-          ...entry,
-          ...(item.type !== 'inventory' && {
-            costAccountId: entry.costAccountId || item.costAccountId,
-          }),
-        };
-      });
-    };
   }
 }

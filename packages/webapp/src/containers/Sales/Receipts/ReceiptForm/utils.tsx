@@ -14,6 +14,7 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
@@ -34,6 +35,7 @@ export type ReceiptEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
 };
 
 export type ReceiptFormValues = {
@@ -67,6 +69,7 @@ export const defaultReceiptEntry: ReceiptEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
 };
 
 const defaultReceiptEntryReq = {
@@ -76,6 +79,7 @@ const defaultReceiptEntryReq = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
 };
 
 export const defaultReceipt: ReceiptFormValues = {
@@ -216,7 +220,9 @@ export const handleErrors = (
 export const transformFormValuesToRequest = (
   values: ReceiptFormValues,
 ): CreateSaleReceiptBody => {
-  const entries = values.entries.filter((item) => item.itemId && item.quantity);
+  const entries = values.entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
   const attachments = transformAttachmentsToRequest(values);
 
   return {

@@ -89,6 +89,11 @@ export class EditSaleEstimate {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       estimateDTO.entries,
     );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      estimateDTO.entries,
+      'sellAccountId',
+    );
     // Edits estimate transaction with associated transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
