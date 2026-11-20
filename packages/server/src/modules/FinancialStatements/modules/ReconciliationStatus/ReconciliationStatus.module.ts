@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { ReconciliationStatusController } from './ReconciliationStatus.controller';
 import { ReconciliationStatusService } from './ReconciliationStatus.service';
+import { ReconciliationStatusRepository } from './ReconciliationStatusRepository';
 import { ReconciliationStatusExportInjectable } from './ReconciliationStatusExportInjectable';
 import { ReconciliationStatusPdfInjectable } from './ReconciliationStatusPdfInjectable';
 import { ReconciliationStatusTableInjectable } from './ReconciliationStatusTableInjectable';
@@ -16,6 +17,7 @@ import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
   ],
   controllers: [ReconciliationStatusController],
   providers: [
+    ReconciliationStatusRepository,
     ReconciliationStatusService,
     ReconciliationStatusTableInjectable,
     ReconciliationStatusExportInjectable,
