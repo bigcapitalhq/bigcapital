@@ -3,13 +3,13 @@ import { Intent } from '@blueprintjs/core';
 import accounting from 'accounting';
 import clsx from 'classnames';
 import jsCookie from 'js-cookie';
-import { currencies as Currencies } from '@/constants/currencies';
 import _ from 'lodash';
 import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
 import moment from 'moment';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { deepMapKeys } from './map-key-deep';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import { currencies as Currencies } from '@/constants/currencies';
 export * from './deep';
 export * from './flatten-infinity-pages';
 

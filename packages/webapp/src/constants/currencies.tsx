@@ -1,5 +1,5 @@
-import jsMoneyCurrencies from 'js-money/lib/currency';
 import { additionalCurrencies } from '@bigcapital/utils';
+import jsMoneyCurrencies from 'js-money/lib/currency';
 import { sortBy } from 'lodash';
 import intl from 'react-intl-universal';
 
