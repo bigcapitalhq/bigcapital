@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import {
   InventoryItemDetailsLoadingBar,
   InventoryItemDetailsAlerts,
@@ -37,6 +38,7 @@ function InventoryItemDetailsInner({
       fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(_filter);
     setLocationQuery({ ..._filter });
   };
   // Handle number format submit.
