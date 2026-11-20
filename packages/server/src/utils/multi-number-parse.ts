@@ -25,15 +25,37 @@ export const multiNumberParse = (
     throw new TypeError('standardDecSep must be a single character string');
   }
 
-  // check if negative
-  const negative = number[0] === '-';
+  let value = number.trim().replace(/^\u2212/, '-');
+  let negative = false;
 
-  // strip unnecessary chars
-  const stripped = number
-    // get rid of trailing non-numbers
-    .replace(/[^\d]+$/, '')
-    // get rid of the signal
-    .slice(negative ? 1 : 0);
+  // A currency before a bracketed amount: $(5.00)
+  value = value.replace(/^[^\d.,()-]*[\p{L}/]\.\s*/u, '');
+  value = value.replace(/^[^\d.,()-]+(?=\()/, '');
+
+  // (5.00) and 5.00- are negative amounts
+  const bracketed = /^\((.*)\)$/.exec(value);
+  if (bracketed) {
+    negative = true;
+    value = bracketed[1].trim();
+  }
+  if (value.endsWith('-')) {
+    negative = !negative;
+    value = value.slice(0, -1).trim();
+  }
+  // What a CR or DR marker means depends on whose statement it is
+  if (/(^|[\d\s])(cr|dr)\.?$/i.test(value)) {
+    return Number.NaN;
+  }
+  // currency symbols and codes before the amount: $5, -$5, CA$ 5, USD 5, Rs.5
+  value = value.replace(/^[^\d.,-]*[\p{L}/]\.\s*/u, '');
+  value = value.replace(/^[^\d.,-]+/, '');
+  if (value[0] === '-') {
+    negative = !negative;
+    value = value.slice(1).replace(/^[^\d.,]+/, '');
+  }
+
+  // get rid of trailing non-numbers (currency after the amount: 5 €, 5 USD)
+  const stripped = value.replace(/[^\d]+$/, '');
 
   // analyze separators
   const separatorMatches: string[] = stripped.match(/[^\d]/g) || [];
