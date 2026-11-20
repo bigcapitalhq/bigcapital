@@ -69,6 +69,46 @@ describe('Credit Notes (e2e)', () => {
       .expect(201);
   });
 
+  it('/credit-notes (POST) numbers a credit note sent without a number', async () => {
+    // Auto-increment is on by default; set it explicitly so the test doesn't
+    // depend on the organization's current setting.
+    await request(app.getHttpServer())
+      .put('/settings')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        options: [{ group: 'credit_note', key: 'auto_increment', value: true }],
+      })
+      .expect(200);
+
+    const settings = await request(app.getHttpServer())
+      .get('/settings')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+    const creditNoteSetting = (key: string) =>
+      settings.body.find(
+        (setting) => setting.group === 'credit_note' && setting.key === key,
+      )?.value ?? '';
+    const expectedNumber = `${creditNoteSetting('number_prefix')}${creditNoteSetting('next_number')}`;
+
+    const response = await request(app.getHttpServer())
+      .post('/credit-notes')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(requestCreditNote())
+      .expect(201);
+
+    const creditNote = await request(app.getHttpServer())
+      .get(`/credit-notes/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(expectedNumber).not.toBe('');
+    expect(creditNote.body.credit_note_number).toBe(expectedNumber);
+  });
+
   it('/credit-notes/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/credit-notes')

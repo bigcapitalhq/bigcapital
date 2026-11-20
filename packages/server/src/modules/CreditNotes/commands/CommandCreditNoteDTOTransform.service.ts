@@ -62,7 +62,8 @@ export class CommandCreditNoteDTOTransform {
     )(creditNoteDTO.entries);
 
     // Retrieves the next credit note number.
-    const autoNextNumber = this.creditNoteAutoIncrement.getNextCreditNumber();
+    const autoNextNumber =
+      await this.creditNoteAutoIncrement.getNextCreditNumber();
 
     // Determines the credit note number.
     const creditNoteNumber =
