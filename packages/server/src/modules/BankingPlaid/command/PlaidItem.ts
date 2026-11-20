@@ -9,12 +9,14 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { IPlaidItemCreatedEventPayload } from '../types/BankingPlaid.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { PlaidItemDto } from '../dtos/PlaidItem.dto';
+import { LinkPlaidAccountsService } from './LinkPlaidAccounts.service';
 
 @Injectable()
 export class PlaidItemService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
+    private readonly linkPlaidAccounts: LinkPlaidAccountsService,
 
     @Inject(SystemPlaidItem.name)
     private readonly systemPlaidItemModel: typeof SystemPlaidItem,
@@ -45,6 +47,17 @@ export class PlaidItemService {
     const plaidAccessToken = response.data.access_token;
     const plaidItemId = response.data.item_id;
 
+    // Resolve the existing accounts to link before storing the item, and
+    // remove the item from Plaid if the links are rejected.
+    const accountsLinks = await this.linkPlaidAccounts
+      .validateLinks(plaidAccessToken, itemDTO.accounts)
+      .catch(async (error) => {
+        await this.plaidClient
+          .itemRemove({ access_token: plaidAccessToken })
+          .catch(() => null);
+        throw error;
+      });
+
     // Store the Plaid item metadata on tenant scope.
     const _plaidItem = await this.plaidItemModel().query().insertAndFetch({
       tenantId,
@@ -54,6 +67,9 @@ export class PlaidItemService {
     });
     // Stores the Plaid item id on system scope.
     await this.systemPlaidItemModel.query().insert({ tenantId, plaidItemId });
+
+    // Links the existing accounts before the first sync creates new ones.
+    await this.linkPlaidAccounts.linkAccounts(plaidItemId, accountsLinks);
 
     // Triggers `onPlaidItemCreated` event.
     await this.eventEmitter.emitAsync(events.plaid.onItemCreated, {
