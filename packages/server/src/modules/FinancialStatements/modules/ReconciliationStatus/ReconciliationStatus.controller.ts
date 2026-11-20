@@ -14,7 +14,9 @@ import {
   ReconciliationStatusResponseDto,
   ReconciliationStatusTableResponseDto,
 } from './ReconciliationStatusResponse.dto';
-import { ReconciliationStatusFormats } from './ReconciliationStatusFormats.service';
+import { ReconciliationStatusExportInjectable } from './ReconciliationStatusExportInjectable';
+import { ReconciliationStatusPdfInjectable } from './ReconciliationStatusPdfInjectable';
+import { ReconciliationStatusTableInjectable } from './ReconciliationStatusTableInjectable';
 import { ReportsAction } from '../../types/Report.types';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { AcceptType } from '@/constants/accept-type';
@@ -47,7 +49,9 @@ const RESPONSE_TYPES = [
 export class ReconciliationStatusController {
   constructor(
     private readonly report: ReconciliationStatusService,
-    private readonly formats: ReconciliationStatusFormats,
+    private readonly tableFormat: ReconciliationStatusTableInjectable,
+    private readonly exportFormat: ReconciliationStatusExportInjectable,
+    private readonly pdfFormat: ReconciliationStatusPdfInjectable,
   ) {}
 
   @Get()
@@ -82,24 +86,24 @@ export class ReconciliationStatusController {
 
     switch (req.accepts(RESPONSE_TYPES)) {
       case AcceptType.ApplicationJsonTable: {
-        const data = await this.formats.table(query);
+        const data = await this.tableFormat.table(query);
         res.type(AcceptType.ApplicationJsonTable);
         return data;
       }
       case AcceptType.ApplicationCsv:
       case CSV_CONTENT_TYPE: {
-        const csv = await this.formats.csv(query);
+        const csv = await this.exportFormat.csv(query);
         res.attachment('reconciliation-status.csv').send(csv);
         return;
       }
       case AcceptType.ApplicationXlsx:
       case XLSX_CONTENT_TYPE: {
-        const xlsx = await this.formats.xlsx(query);
+        const xlsx = await this.exportFormat.xlsx(query);
         res.attachment('reconciliation-status.xlsx').send(xlsx);
         return;
       }
       case AcceptType.ApplicationPdf: {
-        const pdf = await this.formats.pdf(query);
+        const pdf = await this.pdfFormat.pdf(query);
         res.setHeader(
           'Content-Disposition',
           'inline; filename="reconciliation-status.pdf"',
