@@ -61,6 +61,13 @@ export const financialReportMenus: FinancialSection[] = [
         ability: ReportsAction.READ_GENERAL_LEDGET,
       },
       {
+        title: <T id="report.reconciliation_status.title" />,
+        desc: <T id="report.reconciliation_status.description" />,
+        link: '/financial-reports/reconciliation-status',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_RECONCILIATION_STATUS,
+      },
+      {
         title: <T id={'receivable_aging_summary'} />,
         desc: (
           <T id={'summarize_total_unpaid_balances_of_customers_invoices'} />

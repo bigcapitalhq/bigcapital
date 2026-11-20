@@ -32,6 +32,7 @@
   "profit_loss_sheet": "Profit/loss sheet",
   "journal": "Journal",
   "general_ledger": "General ledger",
+  "reconciliation_status": "Reconciliation Status",
   "cashflow_report": "Cashflow",
   "AR_aging_summary_report": "A/R aging summary",
   "AP_aging_summary_report": "A/P aging summary",

@@ -676,6 +676,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
             },
           },
           {
+            text: <T id="report.reconciliation_status.title" />,
+            href: '/financial-reports/reconciliation-status',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_RECONCILIATION_STATUS,
+            },
+          },
+          {
             text: <T id={'sidebar.profit_loss_sheet'} />,
             href: '/financial-reports/profit-loss-sheet',
             type: ISidebarMenuItemType.Link,

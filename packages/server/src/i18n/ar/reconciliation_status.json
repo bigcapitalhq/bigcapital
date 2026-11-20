@@ -1,0 +1,17 @@
+{
+  "sheet_name": "حالة التسوية البنكية",
+  "date": "التاريخ",
+  "reference": "المرجع",
+  "type": "النوع",
+  "deposit": "الإيداع",
+  "withdrawal": "السحب",
+  "status": "الحالة",
+  "opening_balance": "الرصيد الافتتاحي",
+  "closing_balance": "الرصيد الختامي",
+  "no_transactions": "لا توجد معاملات تطابق الحالة والتواريخ المحددة.",
+  "from": "من",
+  "to": "إلى",
+  "all_dates": "جميع التواريخ",
+  "reconciled": "تمت التسوية",
+  "unreconciled": "لم تتم التسوية"
+}

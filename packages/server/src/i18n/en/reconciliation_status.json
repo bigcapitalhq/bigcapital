@@ -1,0 +1,17 @@
+{
+  "sheet_name": "Reconciliation Status",
+  "date": "Date",
+  "reference": "Reference",
+  "type": "Type",
+  "deposit": "Deposit",
+  "withdrawal": "Withdrawal",
+  "status": "Status",
+  "opening_balance": "Opening balance",
+  "closing_balance": "Closing Balance",
+  "no_transactions": "No transactions match the selected status and dates.",
+  "from": "From",
+  "to": "To",
+  "all_dates": "All dates",
+  "reconciled": "Reconciled",
+  "unreconciled": "Unreconciled"
+}

@@ -17,6 +17,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../../useRequest';
+import { financialReportsKeys } from '../../FinancialReports/query-keys';
 import { bankingKeys } from '../query-keys';
 import type {
   BankReconciliationDetailResponse,
@@ -149,6 +150,9 @@ export function useFinishBankReconciliation(
         data.reconciliation.accountId,
         data.reconciliation.id,
       );
+      queryClient.invalidateQueries({
+        queryKey: financialReportsKeys.reconciliationStatus(),
+      });
       options?.onSuccess?.(data, variables, context, mutation);
     },
   });
@@ -177,6 +181,9 @@ export function useUndoBankReconciliation(
         data.reconciliation.accountId,
         data.reconciliation.id,
       );
+      queryClient.invalidateQueries({
+        queryKey: financialReportsKeys.reconciliationStatus(),
+      });
       options?.onSuccess?.(data, variables, context, mutation);
     },
   });
