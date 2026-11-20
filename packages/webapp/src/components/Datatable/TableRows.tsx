@@ -3,13 +3,14 @@ import TableContext from './TableContext';
 
 export default function TableRows() {
   const {
-    table: { prepareRow, page },
-    props: { TableRowRenderer, TableCellRenderer },
+    table: { prepareRow, page, rows },
+    props: { TableRowRenderer, TableCellRenderer, pagination },
   } = useContext(TableContext);
 
+  // usePagination always limits `page` to its page size, even without a paginator.
   return (
     <>
-      {page.map((row, index) => {
+      {(pagination ? page : rows).map((row, index) => {
         prepareRow(row);
         return (
           <TableRowRenderer
