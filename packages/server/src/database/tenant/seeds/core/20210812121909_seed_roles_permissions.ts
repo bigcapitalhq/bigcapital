@@ -8,6 +8,9 @@ export default class SeedRolesAndPermissions extends TenantSeeder {
    */
   async up(knex) {
     return knex('role_permissions').insert([
+      // Assign user view permission to staff role.
+      { roleId: 2, subject: 'User', ability: 'View', value: true },
+
       // Assign sale invoice permissions to staff role.
       { roleId: 2, subject: 'SaleInvoice', ability: 'create' },
       { roleId: 2, subject: 'SaleInvoice', ability: 'delete' },

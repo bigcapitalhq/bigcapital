@@ -39,6 +39,13 @@ export enum RecurringJournalAction {
   Delete = 'Delete',
 }
 
+export enum UserAction {
+  View = 'View',
+  Create = 'Create',
+  Edit = 'Edit',
+  Delete = 'Delete',
+}
+
 export interface ISubjectAbilitySchema {
   key: string;
   label: string;
@@ -79,6 +86,7 @@ export enum AbilitySubject {
   Webhook = 'Webhook',
   AuditLog = 'AuditLog',
   Role = 'Role',
+  User = 'User',
   Warehouse = 'Warehouse',
   Branch = 'Branch',
   Attachment = 'Attachment',
