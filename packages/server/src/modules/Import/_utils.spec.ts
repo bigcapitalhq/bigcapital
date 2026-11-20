@@ -339,4 +339,35 @@ describe('valueParser', () => {
 
     await expect(parser(46030, 'description')).resolves.toBe(46030);
   });
+
+  describe('enumeration field', () => {
+    const enumFields: any = {
+      unit: {
+        fieldType: 'enumeration',
+        name: 'Unit',
+        options: [
+          { key: 'piece', label: 'Piece' },
+          { key: 'kg', label: 'Kilogram (kg)' },
+        ],
+      },
+    };
+
+    it('should match an option by its label', async () => {
+      const parser = valueParser(enumFields, () => null);
+
+      await expect(parser('Kilogram (kg)', 'unit')).resolves.toBe('kg');
+    });
+
+    it('should match an option by its key, as written by an export', async () => {
+      const parser = valueParser(enumFields, () => null);
+
+      await expect(parser('KG', 'unit')).resolves.toBe('kg');
+    });
+
+    it('should leave an unknown value unmapped', async () => {
+      const parser = valueParser(enumFields, () => null);
+
+      await expect(parser('stone', 'unit')).resolves.toBeUndefined();
+    });
+  });
 });
