@@ -8,10 +8,11 @@ import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { ItemRenderer } from '@blueprintjs/select';
 import { FormattedMessage as T } from '@/components';
-import { useItemBatches } from '@/ee/batches/hooks/query';
+import { useBatches } from '@/ee/batches/hooks/query';
 
 interface SaleBatchAllocationsPopoverProps {
   itemId: number;
+  warehouseId?: number | string;
   entryQuantity: number | string;
   allocations?: ItemEntryBatchAllocation[];
   onApply: (allocations: ItemEntryBatchAllocation[]) => void;
@@ -116,6 +117,7 @@ const renderBatchOption: ItemRenderer<BatchOption> = (
  */
 export function SaleBatchAllocationsPopover({
   itemId,
+  warehouseId,
   entryQuantity,
   allocations,
   onApply,
@@ -126,9 +128,12 @@ export function SaleBatchAllocationsPopover({
   const hasDraftRef = React.useRef(false);
   const prevItemIdRef = React.useRef(itemId);
   const rowCounter = React.useRef(0);
-  const { data: batchesData, isLoading } = useItemBatches(itemId, {
-    enabled: isOpen && !!itemId,
-  });
+  const { data: batchesData, isLoading } = useBatches(
+    { itemId, ...(warehouseId ? { warehouseId: Number(warehouseId) } : {}) },
+    {
+      enabled: isOpen && !!itemId,
+    },
+  );
 
   const requiredQuantity = toNumber(entryQuantity);
   const allocatedByBatch = React.useMemo(() => {

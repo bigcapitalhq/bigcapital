@@ -22,6 +22,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { BulkDeleteWarehouseTransfersService } from './BulkDeleteWarehouseTransfers.service';
 import { ValidateBulkDeleteWarehouseTransfersService } from './ValidateBulkDeleteWarehouseTransfers.service';
+import { BatchesModule } from '../EE/Batches/Batches.module';
 
 const models = [
   RegisterTenancyModel(WarehouseTransfer),
@@ -32,6 +33,7 @@ const models = [
   imports: [
     ItemsModule,
     InventoryCostModule,
+    BatchesModule,
     DynamicListModule,
     AutoIncrementOrdersModule,
     ...models,

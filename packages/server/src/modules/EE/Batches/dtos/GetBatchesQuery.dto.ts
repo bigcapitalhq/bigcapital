@@ -70,4 +70,10 @@ export class GetBatchesQueryDto {
   @IsInt()
   @IsOptional()
   pageSize?: number;
+
+  @ApiProperty({ description: 'Filter by warehouse stock', required: false })
+  @ToNumber()
+  @IsInt()
+  @IsOptional()
+  warehouseId?: number;
 }

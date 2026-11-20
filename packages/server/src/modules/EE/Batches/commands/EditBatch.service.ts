@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
 import { Batch } from '../models/Batch';
+import { BatchWarehouseBalance } from '../models/BatchWarehouseBalance';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { batchEvents } from '../Batches.events';
@@ -27,6 +29,14 @@ export class EditBatchService {
 
     @Inject(Batch.name)
     private readonly batchModel: TenantModelProxy<typeof Batch>,
+
+    @Inject(BatchWarehouseBalance.name)
+    private readonly batchWarehouseBalanceModel: TenantModelProxy<
+      typeof BatchWarehouseBalance
+    >,
+
+    @Inject(Warehouse.name)
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
 
     private readonly validators: BatchesValidators,
   ) {}
@@ -98,6 +108,38 @@ export class EditBatchService {
           ...(quantity !== undefined ? { quantity } : {}),
           ...(quantityOnHand !== undefined ? { quantityOnHand } : {}),
         });
+
+      if (quantityOnHand !== undefined) {
+        const primaryWarehouse = await this.warehouseModel()
+          .query(transaction)
+          .findOne({ primary: true });
+        if (primaryWarehouse) {
+          const delta = toBatchQuantity(
+            quantityOnHand - toBatchQuantity(oldBatch.quantityOnHand),
+          );
+          const balanceQuery =
+            this.batchWarehouseBalanceModel().query(transaction);
+          await balanceQuery
+            .insert({
+              batchId: id,
+              warehouseId: primaryWarehouse.id,
+              quantityOnHand: oldBatch.quantityOnHand,
+            })
+            .onConflict(['batchId', 'warehouseId'])
+            .ignore();
+          if (delta > 0) {
+            await this.batchWarehouseBalanceModel()
+              .query(transaction)
+              .where({ batchId: id, warehouseId: primaryWarehouse.id })
+              .increment('quantityOnHand', delta);
+          } else if (delta < 0) {
+            await this.batchWarehouseBalanceModel()
+              .query(transaction)
+              .where({ batchId: id, warehouseId: primaryWarehouse.id })
+              .decrement('quantityOnHand', Math.abs(delta));
+          }
+        }
+      }
 
       // Triggers `onBatchEdited` event.
       await this.eventEmitter.emitAsync(batchEvents.onEdited, {

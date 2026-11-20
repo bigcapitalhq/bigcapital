@@ -31,8 +31,8 @@ export class BatchesApplication {
   /**
    * Retrieves the available batches of the given item.
    */
-  public available(itemId: number) {
-    return this.getBatchesService.getAvailableBatches(itemId);
+  public available(itemId: number, warehouseId?: number) {
+    return this.getBatchesService.getAvailableBatches(itemId, warehouseId);
   }
 
   /**

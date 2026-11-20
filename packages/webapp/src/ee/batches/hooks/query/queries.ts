@@ -56,6 +56,7 @@ export interface BatchesQuery {
   toDate?: string;
   page?: number;
   pageSize?: number;
+  warehouseId?: number;
 }
 
 export interface CreateBatchBody {

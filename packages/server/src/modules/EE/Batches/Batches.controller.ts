@@ -40,7 +40,7 @@ export class BatchesController {
   @Get('/available')
   @ApiOperation({ summary: 'Retrieves the available batches of an item' })
   public available(@Query() query: GetAvailableBatchesQueryDto) {
-    return this.batchesApplication.available(query.itemId);
+    return this.batchesApplication.available(query.itemId, query.warehouseId);
   }
 
   @Get('/:id')

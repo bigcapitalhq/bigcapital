@@ -23,6 +23,7 @@ interface IValidateBatchesEntriesOptions {
   checkAvailability?: boolean;
   referenceType?: string;
   referenceId?: number;
+  warehouseId?: number;
 }
 
 @Injectable()
@@ -196,6 +197,7 @@ export class BatchesValidators {
       await this.batchesBalance.getAvailableQuantities(
         batches,
         excludeTransaction,
+        options.warehouseId,
       );
 
     for (const [batchId, requestedQuantity] of requestedQuantities.entries()) {
