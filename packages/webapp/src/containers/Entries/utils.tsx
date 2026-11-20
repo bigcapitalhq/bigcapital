@@ -75,7 +75,7 @@ export function updateItemsEntriesTotal<T extends ItemsEntryRow>(
 export function getEntriesTotal<T extends { amount?: string | number }>(
   entries: T[],
 ): number {
-  return sumBy(entries, 'amount');
+  return sumBy(entries, (entry) => toSafeNumber(entry.amount));
 }
 
 /**
