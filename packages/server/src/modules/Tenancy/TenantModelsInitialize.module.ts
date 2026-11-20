@@ -11,6 +11,7 @@ const RegisteredModels = [
   'Expense',
   'BankTransaction',
   'MatchedBankTransaction',
+  'ManualJournal',
   'ManualJournalEntry',
   'Account',
   'UncategorizedBankTransaction',
