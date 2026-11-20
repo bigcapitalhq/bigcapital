@@ -37,3 +37,17 @@ describe('ItemEntry.calcAmount', () => {
     ).toBe(1900);
   });
 });
+
+describe('ItemEntry.taxAmount', () => {
+  it('is zero when the entry has no tax rate', () => {
+    const exclusive = ItemEntry.fromJson({ quantity: 1, rate: 1000 });
+    const inclusive = ItemEntry.fromJson({
+      quantity: 1,
+      rate: 1000,
+      isInclusiveTax: true,
+    });
+
+    expect(exclusive.taxAmount).toBe(0);
+    expect(inclusive.taxAmount).toBe(0);
+  });
+});

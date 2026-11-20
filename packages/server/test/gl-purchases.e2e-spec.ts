@@ -31,32 +31,34 @@ describe('GL entries — Purchases transactions (e2e)', () => {
   });
 
   describe('Bill', () => {
+    const billDTO = (overrides: Record<string, any> = {}) => ({
+      vendorId,
+      billDate: '2023-01-01',
+      dueDate: '2023-02-01',
+      billNumber: faker.string.alphanumeric(10),
+      referenceNo: 'REF-000201',
+      open: true,
+      discountType: 'percentage',
+      discount: 10,
+      branchId: 1,
+      warehouseId: 1,
+      entries: [
+        {
+          index: 1,
+          itemId,
+          quantity: 2,
+          rate: 1000,
+          description: 'Item description...',
+        },
+      ],
+      ...overrides,
+    });
+
     const createBill = async (overrides: Record<string, any> = {}) => {
       const res = await request(app.getHttpServer())
         .post('/bills')
         .set(authHeaders())
-        .send({
-          vendorId,
-          billDate: '2023-01-01',
-          dueDate: '2023-02-01',
-          billNumber: faker.string.alphanumeric(10),
-          referenceNo: 'REF-000201',
-          open: true,
-          discountType: 'percentage',
-          discount: 10,
-          branchId: 1,
-          warehouseId: 1,
-          entries: [
-            {
-              index: 1,
-              itemId,
-              quantity: 2,
-              rate: 1000,
-              description: 'Item description...',
-            },
-          ],
-          ...overrides,
-        })
+        .send(billDTO(overrides))
         .expect(201);
 
       return res.body.id;
@@ -183,6 +185,52 @@ describe('GL entries — Purchases transactions (e2e)', () => {
           { accountCode: '40002', debit: 1818.18 },
           { accountCode: '20006', debit: 181.82 },
           { accountCode: '40009', credit: 200 },
+        ],
+        'Bill',
+      );
+    });
+
+    it('posts a balanced journal after the tax is removed from an edited bill', async () => {
+      const billNumber = faker.string.alphanumeric(10);
+      const entry = {
+        index: 1,
+        itemId,
+        quantity: 2,
+        rate: 1000,
+        description: 'Item description...',
+      };
+      const billId = await createBill({
+        billNumber,
+        entries: [{ ...entry, taxRateId: taxRate10 }],
+      });
+
+      await request(app.getHttpServer())
+        .put(`/bills/${billId}`)
+        .set(authHeaders())
+        .send(billDTO({ billNumber, entries: [entry] }))
+        .expect(200);
+
+      const billRes = await request(app.getHttpServer())
+        .get(`/bills/${billId}`)
+        .set(authHeaders())
+        .expect(200);
+
+      expect(billRes.body.total).toBeCloseTo(1800, 2);
+
+      const legs = await fetchLegs('Bill', billId);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          {
+            accountCode: '20001',
+            contactId: vendorId,
+            credit: 1800,
+            basis: 'accrual',
+          },
+          { accountCode: '40002', debit: 2000, basis: 'accrual' },
+          { accountCode: '40009', credit: 200, basis: 'accrual' },
         ],
         'Bill',
       );
