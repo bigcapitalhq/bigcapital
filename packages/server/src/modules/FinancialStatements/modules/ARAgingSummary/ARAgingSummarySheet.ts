@@ -13,8 +13,8 @@ import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { ModelObject } from 'objection';
 import { ARAgingSummaryRepository } from './ARAgingSummaryRepository';
 import { Customer } from '@/modules/Customers/models/Customer';
-import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
+import { IAgingDocument } from '../AgingSummary/AgingAsOf';
 import {
   IFinancialReportMeta,
   DEFAULT_REPORT_META,
@@ -24,14 +24,8 @@ export class ARAgingSummarySheet extends AgingSummaryReport {
   readonly query: ARAgingSummaryQueryDto;
   readonly agingPeriods: IAgingPeriod[];
   readonly repository: ARAgingSummaryRepository;
-  readonly overdueInvoicesByContactId: Record<
-    string,
-    ModelObject<SaleInvoice>[]
-  >;
-  readonly currentInvoicesByContactId: Record<
-    number,
-    Array<ModelObject<SaleInvoice>>
-  >;
+  readonly overdueInvoicesByContactId: Record<number, IAgingDocument[]>;
+  readonly currentInvoicesByContactId: Record<number, IAgingDocument[]>;
 
   /**
    * Constructor method.
