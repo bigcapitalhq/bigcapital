@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import * as moment from 'moment';
-import { first, sumBy } from 'lodash';
+import { first, isNil, sumBy } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { Inject, Injectable } from '@nestjs/common';
 import {
@@ -15,6 +15,14 @@ import { GetMatchedTransactionsByInvoices } from './GetMatchedTransactionsByInvo
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { sortClosestMatchTransactions } from '../_utils';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+
+/**
+ * Days either side of the uncategorized transaction date that candidate
+ * transactions are searched in, when the request doesn't say otherwise.
+ * Without a window every unmatched invoice, bill, expense, journal and cash
+ * flow transaction in the ledger is loaded, sorted and serialized per request.
+ */
+const DEFAULT_MATCH_DATE_WINDOW_DAYS = 90;
 
 @Injectable()
 export class GetMatchedTransactions {
@@ -62,6 +70,10 @@ export class GetMatchedTransactions {
 
     const totalPending = sumBy(uncategorizedTransactions, 'amount');
 
+    const boundedFilter = this.withDefaultDateWindow(
+      filter,
+      uncategorizedTransactions,
+    );
     const filtered = filter.transactionType
       ? this.registered.filter((item) => item.type === filter.transactionType)
       : this.registered;
@@ -69,7 +81,7 @@ export class GetMatchedTransactions {
     const matchedTransactions = await PromisePool.withConcurrency(2)
       .for(filtered)
       .process(async ({ type: _type, service }) => {
-        return service.getMatchedTransactions(filter);
+        return service.getMatchedTransactions(boundedFilter);
       });
     const { perfectMatches, possibleMatches } = this.groupMatchedResults(
       uncategorizedTransactions,
@@ -79,6 +91,53 @@ export class GetMatchedTransactions {
       perfectMatches,
       possibleMatches,
       totalPending,
+    };
+  }
+
+  /**
+   * Bounds the candidate search to a date window around the given uncategorized
+   * transactions. An explicit `fromDate` or `toDate` always wins, and a
+   * `dateWindowDays` of zero searches the whole ledger.
+   *
+   * A perfect match requires the same amount on the same day, so narrowing the
+   * window can only ever drop possible matches, never perfect ones.
+   * @param {GetMatchedTransactionsFilter} filter
+   * @param {Array<any>} uncategorizedTransactions
+   * @returns {GetMatchedTransactionsFilter}
+   */
+  private withDefaultDateWindow(
+    filter: GetMatchedTransactionsFilter,
+    uncategorizedTransactions: Array<any>,
+  ): GetMatchedTransactionsFilter {
+    if (filter.fromDate || filter.toDate) {
+      return filter;
+    }
+    const windowDays = isNil(filter.dateWindowDays)
+      ? DEFAULT_MATCH_DATE_WINDOW_DAYS
+      : Number(filter.dateWindowDays);
+
+    if (!windowDays || windowDays <= 0) {
+      return filter;
+    }
+    const dates = uncategorizedTransactions
+      .map((transaction) => moment(transaction.date))
+      .filter((date) => date.isValid());
+
+    if (dates.length === 0) {
+      return filter;
+    }
+    return {
+      ...filter,
+      fromDate: moment
+        .min(dates)
+        .clone()
+        .subtract(windowDays, 'days')
+        .format('YYYY-MM-DD'),
+      toDate: moment
+        .max(dates)
+        .clone()
+        .add(windowDays, 'days')
+        .format('YYYY-MM-DD'),
     };
   }
 
