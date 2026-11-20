@@ -4673,6 +4673,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/reconciliation-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the reconciliation status report */
+        get: operations["ReconciliationStatusController_getReconciliationStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/trial-balance-sheet": {
         parameters: {
             query?: never;
@@ -17435,6 +17452,62 @@ export interface components {
             query: components["schemas"]["GeneralLedgerQueryResponseDto"];
             /** @description Report metadata */
             meta: components["schemas"]["GeneralLedgerMetaDto"];
+        };
+        ReconciliationStatusBankAccountDto: {
+            id: number;
+            name: string;
+            currencyCode: string;
+        };
+        ReconciliationStatusTransactionDto: {
+            id: number;
+            /** Format: date */
+            date: string | null;
+            reference: string | null;
+            type: string | null;
+            deposit: number;
+            withdrawal: number;
+            /** @enum {string} */
+            status: "R" | "U";
+        };
+        ReconciliationStatusAccountReportDto: {
+            id: number;
+            name: string;
+            currencyCode: string;
+            /** @description Ledger balance before the first report date */
+            openingBalance: number;
+            /** @description Ledger balance through the last report date */
+            closingBalance: number;
+            transactions: components["schemas"]["ReconciliationStatusTransactionDto"][];
+        };
+        ReconciliationStatusResponseDto: {
+            /** @description Bank accounts available for filtering */
+            bankAccounts: components["schemas"]["ReconciliationStatusBankAccountDto"][];
+            accounts: components["schemas"]["ReconciliationStatusAccountReportDto"][];
+        };
+        ReconciliationStatusTableRowDto: {
+            /** @description Cell data for this row */
+            cells: components["schemas"]["FinancialTableCellDto"][];
+            /** @description Row type classifications */
+            rowTypes: string[];
+            id: string;
+        };
+        ReconciliationStatusTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["FinancialTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["ReconciliationStatusTableRowDto"][];
+        };
+        ReconciliationStatusTableMetaDto: {
+            organizationName: string;
+            sheetName: string;
+            formattedDateRange: string;
+            /** @enum {string} */
+            status: "R" | "U";
+        };
+        ReconciliationStatusTableResponseDto: {
+            table: components["schemas"]["ReconciliationStatusTableDataDto"];
+            meta: components["schemas"]["ReconciliationStatusTableMetaDto"];
+            bankAccounts: components["schemas"]["ReconciliationStatusBankAccountDto"][];
         };
         TrialBalanceSheetQueryResponseDto: {
             /** @description Start date */
@@ -33526,6 +33599,44 @@ export interface operations {
                      */
                     "application/json": components["schemas"]["GeneralLedgerResponseDto"];
                     "application/json+table": components["schemas"]["GeneralLedgerTableResponseDto"];
+                };
+            };
+        };
+    };
+    ReconciliationStatusController_getReconciliationStatus: {
+        parameters: {
+            query?: {
+                /** @description Bank account ID */
+                accountId?: number;
+                /** @description First transaction date, inclusive */
+                fromDate?: string;
+                /** @description Last transaction date, inclusive */
+                toDate?: string;
+                /** @description R for reconciled transactions or U for unreconciled transactions */
+                status?: "R" | "U";
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reconciliation status report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReconciliationStatusResponseDto"];
+                    "application/json+table": components["schemas"]["ReconciliationStatusTableResponseDto"];
+                    "text/csv": string;
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                    "application/pdf": string;
                 };
             };
         };

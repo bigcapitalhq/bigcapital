@@ -11,39 +11,73 @@ import { parseDateRangeQuery } from '@/utils';
 
 const FINANCIAL_REPORT_MAX_DATE = moment().add(5, 'years').toDate();
 
-export function FinancialStatementDateRange() {
-  const dateInputFormatter = useDateInputFormatter();
-  const { values, setFieldValue } = useFormikContext<any>();
+interface FinancialStatementDateRangeProps {
+  allDatesLabel?: string;
+}
 
-  const selectedDateRange = useMemo(
-    () => resolveDateRange(values.dateRange, values.fromDate, values.toDate),
-    [values.dateRange, values.fromDate, values.toDate],
-  );
+interface ReportDateRangeValues {
+  dateRange?: string;
+  fromDate: Date | string | null;
+  toDate: Date | string | null;
+}
+
+export function FinancialStatementDateRange({
+  allDatesLabel,
+}: FinancialStatementDateRangeProps) {
+  const dateInputFormatter = useDateInputFormatter();
+  const { values, setValues } = useFormikContext<ReportDateRangeValues>();
+
+  const selectedDateRange = useMemo(() => {
+    if (
+      allDatesLabel &&
+      !values.fromDate &&
+      !values.toDate &&
+      values.dateRange !== 'custom'
+    ) {
+      return 'all_dates';
+    }
+    return resolveDateRange(values.dateRange, values.fromDate, values.toDate);
+  }, [allDatesLabel, values.dateRange, values.fromDate, values.toDate]);
+
+  const options = allDatesLabel
+    ? [{ value: 'all_dates', label: allDatesLabel }, ...dateRangeOptions]
+    : dateRangeOptions;
 
   return (
     <>
       <Row>
         <Col xs={4}>
-          <FormGroup label={intl.get('report_date_range')} labelInfo={<Hint />}>
+          <FormGroup
+            label={intl.get('report_date_range')}
+            labelFor="report-date-range"
+            labelInfo={<Hint />}
+          >
             <HTMLSelect
+              id="report-date-range"
               fill={true}
-              options={dateRangeOptions}
+              options={options}
               value={selectedDateRange}
               onChange={(e) => {
                 const newValue = e.target.value;
 
-                if (newValue !== 'custom') {
-                  const dateRange = parseDateRangeQuery(newValue);
-
-                  if (dateRange) {
-                    setFieldValue(
-                      'fromDate',
-                      moment(dateRange.fromDate).toDate(),
-                    );
-                    setFieldValue('toDate', moment(dateRange.toDate).toDate());
-                  }
+                if (newValue === 'custom') {
+                  setValues({ ...values, dateRange: newValue });
+                } else if (newValue === 'all_dates') {
+                  setValues({
+                    ...values,
+                    dateRange: newValue,
+                    fromDate: '',
+                    toDate: '',
+                  });
+                } else {
+                  const range = parseDateRangeQuery(newValue);
+                  setValues({
+                    ...values,
+                    dateRange: newValue,
+                    fromDate: moment(range.fromDate).toDate(),
+                    toDate: moment(range.toDate).toDate(),
+                  });
                 }
-                setFieldValue('dateRange', newValue);
               }}
             />
           </FormGroup>
@@ -63,7 +97,7 @@ export function FinancialStatementDateRange() {
               {...dateInputFormatter}
               popoverProps={{ minimal: true, position: Position.BOTTOM_LEFT }}
               maxDate={FINANCIAL_REPORT_MAX_DATE}
-              canClearSelection={false}
+              canClearSelection={Boolean(allDatesLabel)}
               fill
             />
           </FFormGroup>
@@ -80,7 +114,7 @@ export function FinancialStatementDateRange() {
               name={'toDate'}
               {...dateInputFormatter}
               popoverProps={{ minimal: true, position: Position.BOTTOM }}
-              canClearSelection={false}
+              canClearSelection={Boolean(allDatesLabel)}
               fill
               maxDate={FINANCIAL_REPORT_MAX_DATE}
             />

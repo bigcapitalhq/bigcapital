@@ -214,6 +214,18 @@ export const getDashboardRoutes = () => [
 
   // Financial Reports.
   {
+    path: '/financial-reports/reconciliation-status',
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/ReconciliationStatus/ReconciliationStatus'
+      ).then((m) => ({ default: m.ReconciliationStatus })),
+    ),
+    breadcrumb: intl.get('report.reconciliation_status.title'),
+    pageTitle: intl.get('report.reconciliation_status.title'),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
     path: `/financial-reports/general-ledger`,
     component: lazy(() =>
       import(

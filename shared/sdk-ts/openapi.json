@@ -21116,6 +21116,113 @@
         ]
       }
     },
+    "/api/reports/reconciliation-status": {
+      "get": {
+        "operationId": "ReconciliationStatusController_getReconciliationStatus",
+        "summary": "Get the reconciliation status report",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": false,
+            "in": "query",
+            "description": "Bank account ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "First transaction date, inclusive",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Last transaction date, inclusive",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "R for reconciled transactions or U for unreconciled transactions",
+            "schema": {
+              "default": "R",
+              "enum": [
+                "R",
+                "U"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reconciliation status report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReconciliationStatusResponseDto"
+                }
+              },
+              "application/json+table": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReconciliationStatusTableResponseDto"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/api/reports/trial-balance-sheet": {
       "get": {
         "operationId": "TrialBalanceSheetController_getTrialBalanceSheet",
@@ -47469,6 +47576,225 @@
           "table",
           "query",
           "meta"
+        ]
+      },
+      "ReconciliationStatusBankAccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "currencyCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "currencyCode"
+        ]
+      },
+      "ReconciliationStatusTransactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "deposit": {
+            "type": "number"
+          },
+          "withdrawal": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "R",
+              "U"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "reference",
+          "type",
+          "deposit",
+          "withdrawal",
+          "status"
+        ]
+      },
+      "ReconciliationStatusAccountReportDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "currencyCode": {
+            "type": "string"
+          },
+          "openingBalance": {
+            "type": "number",
+            "description": "Ledger balance before the first report date"
+          },
+          "closingBalance": {
+            "type": "number",
+            "description": "Ledger balance through the last report date"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReconciliationStatusTransactionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "currencyCode",
+          "openingBalance",
+          "closingBalance",
+          "transactions"
+        ]
+      },
+      "ReconciliationStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "bankAccounts": {
+            "description": "Bank accounts available for filtering",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReconciliationStatusBankAccountDto"
+            }
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReconciliationStatusAccountReportDto"
+            }
+          }
+        },
+        "required": [
+          "bankAccounts",
+          "accounts"
+        ]
+      },
+      "ReconciliationStatusTableRowDto": {
+        "type": "object",
+        "properties": {
+          "cells": {
+            "description": "Cell data for this row",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableCellDto"
+            }
+          },
+          "rowTypes": {
+            "description": "Row type classifications",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cells",
+          "rowTypes",
+          "id"
+        ]
+      },
+      "ReconciliationStatusTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReconciliationStatusTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
+      "ReconciliationStatusTableMetaDto": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string"
+          },
+          "sheetName": {
+            "type": "string"
+          },
+          "formattedDateRange": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "R",
+              "U"
+            ]
+          }
+        },
+        "required": [
+          "organizationName",
+          "sheetName",
+          "formattedDateRange",
+          "status"
+        ]
+      },
+      "ReconciliationStatusTableResponseDto": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "$ref": "#/components/schemas/ReconciliationStatusTableDataDto"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ReconciliationStatusTableMetaDto"
+          },
+          "bankAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReconciliationStatusBankAccountDto"
+            }
+          }
+        },
+        "required": [
+          "table",
+          "meta",
+          "bankAccounts"
         ]
       },
       "TrialBalanceSheetQueryResponseDto": {
