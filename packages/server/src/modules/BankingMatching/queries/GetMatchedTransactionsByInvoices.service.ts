@@ -115,6 +115,13 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
       customerId: invoice.customerId,
       paymentDate: uncategorizedTransaction.date,
       amount: invoice.dueAmount,
+      // A bank account in the invoice's currency is paid at the invoice's
+      // rate, so no rate difference is posted as an exchange gain or loss.
+      // A bank account in the base currency keeps rate 1.
+      exchangeRate:
+        uncategorizedTransaction.currencyCode === invoice.currencyCode
+          ? invoice.exchangeRate
+          : 1,
       depositAccountId: uncategorizedTransaction.accountId,
       entries: [
         {
