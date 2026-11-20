@@ -34,7 +34,7 @@ export class TransactionsByContactsTableRows {
       { key: 'transactionNumber', accessor: 'transactionNumber' },
       { key: 'credit', accessor: 'credit.formattedAmount' },
       { key: 'debit', accessor: 'debit.formattedAmount' },
-      { key: 'runningBalance', accessor: 'runningBalance.formattedAmount' },
+      { key: 'running_balance', accessor: 'runningBalance.formattedAmount' },
     ];
     return tableMapper(contact.transactions, columns, {
       rowTypes: [ROW_TYPE.TRANSACTION],

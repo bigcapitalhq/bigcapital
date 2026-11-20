@@ -21,7 +21,14 @@ export class APAgingSummaryTableInjectable {
     query: APAgingSummaryQueryDto,
   ): Promise<IAPAgingSummaryTable> {
     const report = await this.APAgingSummarySheet.APAgingSummary(query);
-    const table = new APAgingSummaryTable(report.data, query, this.i18nService);
+    // The report resolves the query defaults (aging periods, days before), and
+    // the columns must be built from them, otherwise a request that omits the
+    // aging parameters renders no aging-period headers.
+    const table = new APAgingSummaryTable(
+      report.data,
+      report.query,
+      this.i18nService,
+    );
 
     return {
       table: {

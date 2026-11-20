@@ -102,12 +102,13 @@ describe('Financial statement PDFs (e2e)', () => {
   });
 
   /**
-   * Requests the report as PDF and returns the HTML handed to the converter.
+   * Requests the report as PDF and returns the HTML handed to the converter
+   * alongside the conversion options.
    */
-  const fetchPdfHtml = async (
+  const fetchPdf = async (
     path: string,
     query: Record<string, unknown> = {},
-  ): Promise<string> => {
+  ): Promise<{ html: string; options: Record<string, any> }> => {
     convertHtmlContent.mockClear();
     await request(app.getHttpServer())
       .get(path)
@@ -117,8 +118,18 @@ describe('Financial statement PDFs (e2e)', () => {
       .expect(200);
 
     expect(convertHtmlContent).toHaveBeenCalledTimes(1);
-    return convertHtmlContent.mock.calls[0][0];
+    const [html, options] = convertHtmlContent.mock.calls[0];
+
+    return { html, options };
   };
+
+  /**
+   * Requests the report as PDF and returns the HTML handed to the converter.
+   */
+  const fetchPdfHtml = async (
+    path: string,
+    query: Record<string, unknown> = {},
+  ): Promise<string> => (await fetchPdf(path, query)).html;
 
   it.each(REPORTS)('%s PDF includes its custom CSS', async (_, path, css) => {
     const html = await fetchPdfHtml(path);
@@ -134,6 +145,39 @@ describe('Financial statement PDFs (e2e)', () => {
 
     expect(html).toMatch(/<tr class="row-type--total row-id--assets[ "]/);
     expect(html).not.toMatch(/<tr class="[^"]*,/);
+  });
+
+  it('balance sheet PDF renders the previous-year comparison headers', async () => {
+    const { html, options } = await fetchPdf('/reports/balance-sheet', {
+      previousYear: true,
+      previousYearAmountChange: true,
+      previousYearPercentageChange: true,
+    });
+    const headers = [...html.matchAll(/<th\b[^>]*>(.*?)<\/th>/g)].map(
+      (match) => match[1],
+    );
+
+    // Group header, then account name, total, previous year, change and
+    // percentage leaves.
+    expect(headers).toHaveLength(6);
+    expect(headers[0]).toBe('Account name');
+    expect(headers[1]).toBe('Total');
+    expect(headers[2]).toBe('Total');
+    expect(headers[3]).toContain('(PY)');
+    expect(headers[4]).toBe('Change (PY)');
+    expect(headers[5]).toBe('% Change (PY)');
+    expect(html).toMatch(/<th[^>]*colspan="4"[^>]*>Total<\/th>/);
+    expect(options.landscape).toBe(true);
+  });
+
+  it('receivable aging summary PDF renders the default aging period headers', async () => {
+    const { html, options } = await fetchPdf(
+      '/reports/receivable-aging-summary',
+    );
+
+    // Account name, current, the three default aging periods and the total.
+    expect(html.match(/<th\b/g)).toHaveLength(6);
+    expect(options.landscape).toBe(true);
   });
 
   it('echoes numberFormat.showInRed in the report query', async () => {
