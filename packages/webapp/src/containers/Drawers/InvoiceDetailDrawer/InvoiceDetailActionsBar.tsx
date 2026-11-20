@@ -38,6 +38,7 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
+import { useDuplicateInvoiceAction } from '@/containers/Sales/Invoices/hooks/use-duplicate-invoice';
 import { ArrowBottomLeft } from '@/icons/ArrowBottomLeft';
 
 interface InvoiceDetailActionsBarInnerProps
@@ -64,6 +65,8 @@ function InvoiceDetailActionsBarInner({
   // Invoice detail drawer context.
   const { invoiceId, invoice } = useInvoiceDetailDrawerContext();
 
+  const { duplicateInvoice, isDuplicating } = useDuplicateInvoiceAction();
+
   if (!invoice) {
     return null;
   }
@@ -72,6 +75,12 @@ function InvoiceDetailActionsBarInner({
   const handleEditInvoice = () => {
     history.push(`/invoices/${invoiceId}/edit`);
     closeDrawer(DRAWERS.INVOICE_DETAILS);
+  };
+
+  // Duplicates the invoice, closes the drawer and opens the duplicate in edit mode.
+  const handleDuplicateInvoice = () => {
+    if (!invoiceId) return;
+    duplicateInvoice(invoiceId, () => closeDrawer(DRAWERS.INVOICE_DETAILS));
   };
 
   // Hanlde deliver sale invoice.
@@ -137,6 +146,16 @@ function InvoiceDetailActionsBarInner({
             icon={<Icon icon="pen-18" />}
             text={<T id={'edit_invoice'} />}
             onClick={handleEditInvoice}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="content-copy" iconSize={16} />}
+            text={<T id={'duplicate'} />}
+            onClick={handleDuplicateInvoice}
+            disabled={isDuplicating}
           />
           <NavbarDivider />
         </Can>

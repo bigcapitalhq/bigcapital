@@ -10,12 +10,15 @@ import {
   Popover,
   PopoverInteractionKind,
   Position,
+  Tooltip,
 } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { useBulkDeleteInvoicesDialog } from '../hooks/use-bulk-delete-accounts-dialog';
+import { useDuplicateInvoiceAction } from '../hooks/use-duplicate-invoice';
 import { useInvoicesListContext } from './InvoicesListProvider';
 import { withInvoiceActions } from './withInvoiceActions';
 import { withInvoices } from './withInvoices';
@@ -107,10 +110,33 @@ function InvoiceActionsBar({
     openBulkDeleteDialog(invoicesSelectedRows as number[]);
   };
 
+  const { duplicateInvoice, isDuplicating } = useDuplicateInvoiceAction();
+  const isSingleSelection = invoicesSelectedRows.length === 1;
+
+  // Duplicates the selected invoice and opens the duplicate in edit mode.
+  const handleDuplicate = () => {
+    duplicateInvoice((invoicesSelectedRows as number[])[0]);
+  };
+
   if (!isEmpty(invoicesSelectedRows)) {
     return (
       <DashboardActionsBar>
         <NavbarGroup>
+          <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+            <Tooltip
+              content={intl.get('select_a_single_invoice_to_duplicate')}
+              disabled={isSingleSelection}
+              position={Position.BOTTOM}
+            >
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon="content-copy" iconSize={16} />}
+                text={<T id={'duplicate'} />}
+                onClick={handleDuplicate}
+                disabled={!isSingleSelection || isDuplicating}
+              />
+            </Tooltip>
+          </Can>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}

@@ -7,6 +7,7 @@ import {
   bulkDeleteSaleInvoices,
   validateBulkDeleteSaleInvoices,
   deliverSaleInvoice,
+  duplicateSaleInvoice,
   writeOffSaleInvoice,
   cancelWrittenOffSaleInvoice,
   fetchReceivableSaleInvoices,
@@ -196,6 +197,27 @@ export function useDeliverInvoice(
       queryClient.invalidateQueries({
         queryKey: invoicesKeys.detail(invoiceId),
       });
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+/**
+ * Duplicates the given sale invoice as a new draft invoice.
+ * Resolves to the id of the duplicate.
+ */
+export function useDuplicateInvoice(
+  props?: UseMutationOptions<{ id: number }, Error, number>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (invoiceId: number) => duplicateSaleInvoice(fetcher, invoiceId),
+    onSuccess: () => {
+      // Also refreshes the invoice settings: the duplicate may have advanced
+      // the auto-increment sequence.
       commonInvalidateQueries(queryClient);
     },
   });

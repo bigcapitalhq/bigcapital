@@ -5,6 +5,7 @@ import { BatchAllocationsIntegrationModule } from '../TransactionItemEntry/integ
 import { CreateSaleInvoice } from './commands/CreateSaleInvoice.service';
 import { DeleteSaleInvoice } from './commands/DeleteSaleInvoice.service';
 import { DeliverSaleInvoice } from './commands/DeliverSaleInvoice.service';
+import { DuplicateSaleInvoice } from './commands/DuplicateSaleInvoice.service';
 import { EditSaleInvoice } from './commands/EditSaleInvoice.service';
 import { GenerateShareLink } from './commands/GenerateInvoicePaymentLink.service';
 import { SaleInvoiceIncrement } from './commands/SaleInvoiceIncrement.service';
@@ -107,6 +108,7 @@ import { SubscriptionModule } from '../Subscription/Subscription.module';
     DeleteSaleInvoice,
     GetSaleInvoicesPayable,
     DeliverSaleInvoice,
+    DuplicateSaleInvoice,
     GenerateShareLink,
     GetInvoicePaymentMail,
     SaleInvoiceIncrement,
