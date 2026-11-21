@@ -77,6 +77,7 @@ export interface IGetBatchesFilter {
   toDate?: string;
   page?: number;
   pageSize?: number;
+  warehouseId?: number;
   sort?: string;
 }
 

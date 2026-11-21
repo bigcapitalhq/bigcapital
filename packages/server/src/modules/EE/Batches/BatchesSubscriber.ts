@@ -53,9 +53,12 @@ export class BatchesSubscriber {
   @OnEvent(events.saleInvoice.onCreating, { suppressErrors: false })
   public async onSaleInvoiceCreating({
     saleInvoiceDTO,
+    trx,
   }: ISaleInvoiceCreatingPaylaod) {
     await this.validators.validateEntriesBatches(saleInvoiceDTO.entries, {
       checkAvailability: true,
+      trx,
+      warehouseId: saleInvoiceDTO.warehouseId,
     });
   }
 
@@ -66,12 +69,15 @@ export class BatchesSubscriber {
   @OnEvent(events.saleInvoice.onEditing, { suppressErrors: false })
   public async onSaleInvoiceEditing({
     saleInvoiceDTO,
+    trx,
     oldSaleInvoice,
   }: ISaleInvoiceEditingPayload) {
     await this.validators.validateEntriesBatches(saleInvoiceDTO.entries, {
       checkAvailability: true,
+      trx,
       referenceType: 'SaleInvoice',
       referenceId: oldSaleInvoice.id,
+      warehouseId: saleInvoiceDTO.warehouseId ?? oldSaleInvoice.warehouseId,
     });
   }
 
@@ -81,9 +87,12 @@ export class BatchesSubscriber {
   @OnEvent(events.saleInvoice.onDelivering, { suppressErrors: false })
   public async onSaleInvoiceDelivering({
     oldSaleInvoice,
+    trx,
   }: ISaleInvoiceDeliveringPayload) {
     await this.validators.validateEntriesBatches(oldSaleInvoice.entries, {
       checkAvailability: true,
+      trx,
+      warehouseId: oldSaleInvoice.warehouseId,
     });
   }
 }

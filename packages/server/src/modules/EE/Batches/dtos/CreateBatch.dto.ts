@@ -22,6 +22,17 @@ export class CreateBatchDto {
   itemId: number;
 
   @ApiProperty({
+    description:
+      'Warehouse for manual opening stock (defaults to the primary warehouse)',
+    required: false,
+  })
+  @ToNumber()
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  openingWarehouseId?: number;
+
+  @ApiProperty({
     description: 'The batch number',
     example: 'BATCH-001',
   })

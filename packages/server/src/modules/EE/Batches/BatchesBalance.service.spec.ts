@@ -3,10 +3,18 @@ import { BatchStatus } from './types/Batches.types';
 
 describe('BatchesBalanceService', () => {
   const inventoryTransactionModel = jest.fn();
+  const where = jest.fn().mockReturnThis();
+  const whereIn = jest.fn();
+  const warehouseBalanceModel = () => ({
+    query: () => ({ where, whereIn, modify: jest.fn().mockReturnThis() }),
+  });
   let service: BatchesBalanceService;
 
   beforeEach(() => {
-    service = new BatchesBalanceService(inventoryTransactionModel as any);
+    service = new BatchesBalanceService(
+      inventoryTransactionModel as any,
+      warehouseBalanceModel as any,
+    );
   });
 
   describe('attachBalance', () => {
@@ -21,6 +29,20 @@ describe('BatchesBalanceService', () => {
 
       expect(batch.quantityOnHand).toBe(7.5);
       expect(batch.status).toBe(BatchStatus.Active);
+    });
+
+    it('uses only the selected warehouse and treats a missing balance as zero', async () => {
+      whereIn.mockResolvedValue([{ batchId: 1, quantityOnHand: '2.500' }]);
+      const balances = await service.attachBalance(
+        [
+          { id: 1, quantityOnHand: 9 },
+          { id: 2, quantityOnHand: 5 },
+        ],
+        7,
+      );
+      expect(where).toHaveBeenCalledWith('warehouseId', 7);
+      expect(balances.map((batch) => batch.quantityOnHand)).toEqual([2.5, 0]);
+      expect(balances[1].status).toBe(BatchStatus.Depleted);
     });
 
     it('marks batches without stock as depleted', async () => {

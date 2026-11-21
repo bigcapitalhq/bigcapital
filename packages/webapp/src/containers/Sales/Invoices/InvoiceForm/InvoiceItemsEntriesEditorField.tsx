@@ -14,7 +14,7 @@ import { TaxType } from '@/interfaces/TaxRates';
  * Invoice items entries editor field.
  */
 export function InvoiceItemsEntriesEditorField() {
-  const { items, taxRates } = useInvoiceFormContext();
+  const { items, taxRates, invoice } = useInvoiceFormContext();
   const { featureCan } = useFeatureCan();
   const isBatchTrackingEnabled = featureCan(Features.BatchTracking);
 
@@ -43,8 +43,66 @@ export function InvoiceItemsEntriesEditorField() {
           currencyCode={values.currencyCode}
           isInclusiveTax={values.inclusiveExclusiveTax === TaxType.Inclusive}
           batchMode={isBatchTrackingEnabled ? 'sale' : undefined}
+          warehouseId={values.warehouseId}
+          batchAvailabilityAdjustment={(batchId, rowIndex, warehouseId) => {
+            const posted = invoice?.isDelivered ? invoice.entries : [];
+            const reserved = values.entries.filter(
+              (_, index) => index !== rowIndex,
+            );
+            return (
+              allocatedInWarehouse(
+                posted,
+                batchId,
+                invoice?.warehouseId,
+                warehouseId,
+              ) -
+              allocatedInWarehouse(
+                reserved,
+                batchId,
+                values.warehouseId,
+                warehouseId,
+              )
+            );
+          }}
         />
       )}
     </FastField>
   );
+}
+
+function allocatedInWarehouse(
+  entries: Array<{
+    warehouseId?: number | string;
+    batchId?: number | null;
+    quantity: number | string;
+    batches?: { batchId: number; quantity: number }[];
+  }>,
+  batchId: number,
+  documentWarehouse?: number | string,
+  selectedWarehouse?: number | string,
+): number {
+  return entries.reduce((sum, entry) => {
+    if (
+      selectedWarehouse &&
+      Number(entry.warehouseId || documentWarehouse) !==
+        Number(selectedWarehouse)
+    )
+      return sum;
+    if (entry.batches?.length) {
+      return (
+        sum +
+        entry.batches.reduce(
+          (total, allocation) =>
+            total +
+            (Number(allocation.batchId) === batchId
+              ? Number(allocation.quantity)
+              : 0),
+          0,
+        )
+      );
+    }
+    return (
+      sum + (Number(entry.batchId) === batchId ? Number(entry.quantity) : 0)
+    );
+  }, 0);
 }

@@ -1,3 +1,4 @@
+import type { IInventoryTransactionRecord } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 
@@ -19,6 +20,12 @@ export interface IBatchAllocationEntry {
  * enterprise edition.
  */
 export interface IBatchAllocationsProvider {
+  allocateTransfer(
+    entries: IInventoryTransactionRecord[],
+    override: boolean,
+    trx?: Knex.Transaction,
+  ): Promise<IInventoryTransactionRecord[]>;
+
   /**
    * Replaces the stored batch allocations of the given transaction entries
    * with the allocations of the given DTO entries.
@@ -43,6 +50,16 @@ export interface IBatchAllocationsProvider {
 @Injectable()
 export class BatchAllocationsBridge {
   private provider: IBatchAllocationsProvider | null = null;
+
+  public async allocateTransfer(
+    entries: IInventoryTransactionRecord[],
+    override: boolean,
+    trx?: Knex.Transaction,
+  ): Promise<IInventoryTransactionRecord[]> {
+    return this.provider
+      ? this.provider.allocateTransfer(entries, override, trx)
+      : entries;
+  }
 
   /**
    * Registers the batch allocations provider.

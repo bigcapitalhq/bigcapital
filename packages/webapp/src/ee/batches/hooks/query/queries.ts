@@ -56,9 +56,11 @@ export interface BatchesQuery {
   toDate?: string;
   page?: number;
   pageSize?: number;
+  warehouseId?: number;
 }
 
 export interface CreateBatchBody {
+  openingWarehouseId?: number;
   itemId: number;
   batchNumber: string;
   batchRef?: string;
@@ -71,7 +73,7 @@ export interface CreateBatchBody {
 
 export type EditBatchBody = Omit<
   Partial<CreateBatchBody>,
-  'batchRef' | 'manufacturedDate' | 'expiryDate'
+  'batchRef' | 'manufacturedDate' | 'expiryDate' | 'openingWarehouseId'
 > & {
   id: number;
   // Null clears the optional field; undefined leaves it untouched.
@@ -132,6 +134,7 @@ export function useBatches(
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
+    staleTime: 0,
     ...props,
     queryKey: batchesKeys.list(query as Record<string, unknown>),
     queryFn: () =>

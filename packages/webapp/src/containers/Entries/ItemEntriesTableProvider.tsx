@@ -2,6 +2,12 @@ import React, { createContext } from 'react';
 import type { ItemEntry } from '@/interfaces/ItemEntries';
 import type { TaxRate } from '@bigcapital/sdk-ts';
 
+export type BatchAvailabilityAdjustment = (
+  batchId: number,
+  rowIndex: number,
+  warehouseId?: number | string,
+) => number;
+
 export interface ItemEntriesTableContextValue {
   /* Controlled value of the table. */
   value?: ItemEntry[];
@@ -40,6 +46,8 @@ export interface ItemEntriesTableContextValue {
   landedCost?: boolean;
   /* The batch tracking mode of the table (purchase/sale). */
   batchMode?: 'purchase' | 'sale';
+  warehouseId?: number | string;
+  batchAvailabilityAdjustment?: BatchAvailabilityAdjustment;
 }
 
 const ItemEntriesTableContext = createContext<
