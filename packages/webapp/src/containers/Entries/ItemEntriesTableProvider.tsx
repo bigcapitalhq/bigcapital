@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import type { ItemEntry } from '@/interfaces/ItemEntries';
-import type { TaxRate } from '@bigcapital/sdk-ts';
+import type { Item, TaxRate } from '@bigcapital/sdk-ts';
 
 export interface ItemEntriesTableContextValue {
   /* Controlled value of the table. */
@@ -25,7 +25,7 @@ export interface ItemEntriesTableContextValue {
   /* Controls whether the tax rate column is displayed. */
   enableTaxRates?: boolean;
   /* The items list used on the item cell suggestions. */
-  items?: unknown[];
+  items?: Item[];
   /* The type of the items entries (sellable/purchasable). */
   itemType?: string;
   /* The account field used on the entry line (sell/cost). */

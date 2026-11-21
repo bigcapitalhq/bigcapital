@@ -80,7 +80,6 @@ export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
 function ItemEntriesTableRoot() {
   const {
     localValue,
-    defaultEntry,
     handleChange,
     items,
     errors,
@@ -117,20 +116,28 @@ function ItemEntriesTableRoot() {
   const handleUpdateData = useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
       if (columnId === 'itemId') {
-        setItemRow({ rowIndex, columnId, itemId: value as number });
+        const item = items?.find((item) => item.id === value);
+        setItemRow(item ? { rowIndex, columnId, itemId: item.id } : null);
+        if (item) {
+          handleChange(
+            composeRowsOnUpdateRow(rowIndex, {
+              itemId: item.id,
+              [accountField]: item[accountField] ?? '',
+            }),
+          );
+          return;
+        }
       }
-      let newRows = composeRowsOnEditCell(rowIndex, columnId, value);
-
-      // Clear the line account once an item is selected, the item supplies
-      // the account in that case.
-      if (columnId === 'itemId' && value) {
-        newRows = newRows.map((row, index) =>
-          index === rowIndex ? { ...row, [accountField]: '' } : row,
-        );
-      }
-      handleChange(newRows);
+      handleChange(composeRowsOnEditCell(rowIndex, columnId, value));
     },
-    [localValue, defaultEntry, handleChange, accountField],
+    [
+      accountField,
+      composeRowsOnEditCell,
+      composeRowsOnUpdateRow,
+      handleChange,
+      items,
+      setItemRow,
+    ],
   );
 
   // Handle table rows removing by index.
