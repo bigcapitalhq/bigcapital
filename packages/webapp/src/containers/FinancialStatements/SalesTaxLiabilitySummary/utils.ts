@@ -3,6 +3,8 @@ import moment from 'moment';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { FALLBACK_REPORT_BASIS, ReportBasis } from '../reportBasis';
+import { useDefaultReportBasis } from '../withReportBasis';
 import { salesTaxLiabilitySummaryDynamicColumns } from './dynamicColumns';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import { useAppQueryString } from '@/hooks';
@@ -11,10 +13,12 @@ import { transformToForm } from '@/utils';
 /**
  * Retrieves the default sales tax liability summary query.
  */
-export const getDefaultSalesTaxLiablitySummaryQuery = () => ({
+export const getDefaultSalesTaxLiablitySummaryQuery = (
+  basis: ReportBasis = FALLBACK_REPORT_BASIS,
+) => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  basis: 'cash',
+  basis,
   numberFormat: {},
 });
 
@@ -23,8 +27,9 @@ export const getDefaultSalesTaxLiablitySummaryQuery = () => ({
  */
 const parseSalesTaxLiabilitySummaryQuery = (
   locationQuery: Record<string, any>,
+  basis: ReportBasis,
 ): SalesByItemsTableQuery => {
-  const defaultQuery = getDefaultSalesTaxLiablitySummaryQuery();
+  const defaultQuery = getDefaultSalesTaxLiablitySummaryQuery(basis);
 
   const transformed = {
     ...defaultQuery,
@@ -44,11 +49,12 @@ const parseSalesTaxLiabilitySummaryQuery = (
 export const useSalesTaxLiabilitySummaryQuery = () => {
   // Retrieves location query.
   const [locationQuery, setLocationQuery] = useAppQueryString();
+  const { basis } = useDefaultReportBasis();
 
   // Merges the default filter query with location URL query.
   const parsedQuery = useMemo(
-    () => parseSalesTaxLiabilitySummaryQuery(locationQuery),
-    [locationQuery],
+    () => parseSalesTaxLiabilitySummaryQuery(locationQuery, basis),
+    [locationQuery, basis],
   );
   return [parsedQuery, setLocationQuery] as const;
 };

@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useEffect } from 'react';
+import { withReportBasis } from '../withReportBasis';
 import { BalanceSheetActionsBar } from './BalanceSheetActionsBar';
 import { BalanceSheetBody } from './BalanceSheetBody';
 import { BalanceSheetDialogs } from './BalanceSheetDialogs';
@@ -79,4 +80,8 @@ function BalanceSheetInner({
   );
 }
 
-export const BalanceSheet = FF.pipe(BalanceSheetInner, withBalanceSheetActions);
+export const BalanceSheet = FF.pipe(
+  BalanceSheetInner,
+  withBalanceSheetActions,
+  withReportBasis,
+);
