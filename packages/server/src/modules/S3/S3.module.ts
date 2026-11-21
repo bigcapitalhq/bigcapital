@@ -10,13 +10,15 @@ const services = [
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => {
       const config = configService.get('s3');
+      const { accessKeyId, secretAccessKey } = config;
 
       return new S3Client({
         region: config.region,
-        credentials: {
-          accessKeyId: config.accessKeyId,
-          secretAccessKey: config.secretAccessKey,
-        },
+        // Static keys when both are set; otherwise the SDK's default credential
+        // chain (EKS Pod Identity, IRSA, ECS task role, instance profile).
+        ...(accessKeyId && secretAccessKey
+          ? { credentials: { accessKeyId, secretAccessKey } }
+          : {}),
         endpoint: config.endpoint,
         forcePathStyle: config.forcePathStyle,
       });
