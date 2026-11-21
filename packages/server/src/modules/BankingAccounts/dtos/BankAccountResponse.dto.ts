@@ -39,6 +39,12 @@ export class BankAccountResponseDto {
   accountType: string;
 
   @ApiProperty({
+    description: 'Whether this account supports bank reconciliation',
+    example: true,
+  })
+  isReconciliationSupported: boolean;
+
+  @ApiProperty({
     description: 'The parent account ID',
     example: null,
   })

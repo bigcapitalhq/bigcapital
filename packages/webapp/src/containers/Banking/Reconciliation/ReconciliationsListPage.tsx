@@ -21,11 +21,7 @@ import {
   formatReconciliationPeriod,
   getStatusIntent,
 } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
-import {
-  useAccount,
-  useCashflowAccounts,
-  useCurrentOrganization,
-} from '@/hooks/query';
+import { useAccount, useCashflowAccounts } from '@/hooks/query';
 import { useBankReconciliations } from '@/hooks/query/banking';
 
 /**
@@ -43,13 +39,8 @@ export function ReconciliationsListPage() {
     refetch: refetchAccount,
   } = useAccount(accountId);
   const { data: accounts } = useCashflowAccounts();
-  const { data: organization } = useCurrentOrganization();
-  const baseCurrency = organization?.metadata?.baseCurrency;
   const supportedAccounts = (accounts ?? []).filter(
-    (account) =>
-      organization &&
-      account.accountType === 'bank' &&
-      (!baseCurrency || account.currencyCode === baseCurrency),
+    (account) => account.isReconciliationSupported,
   );
 
   const {
