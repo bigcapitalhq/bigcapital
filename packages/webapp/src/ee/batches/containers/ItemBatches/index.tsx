@@ -1,4 +1,4 @@
-import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
+import { Button, HTMLSelect, Intent, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -11,10 +11,12 @@ import {
   FormattedMessage as T,
   TableSkeletonRows,
 } from '@/components';
-import { TableStyle } from '@/constants';
+import { useWarehouses } from '@/hooks/query/warehouses/queries';
+import { useFeatureCan } from '@/hooks/state';
+import { Features, TableStyle } from '@/constants';
 import { useItemDetailDrawerContext } from '@/containers/Drawers/ItemDetailDrawer/ItemDetailDrawerProvider';
 import { BatchFormPopover, BatchStatusTag } from '@/ee/batches/components';
-import { useDeleteBatch, useItemBatches } from '@/ee/batches/hooks/query';
+import { useDeleteBatch, useBatches } from '@/ee/batches/hooks/query';
 
 /**
  * Renders the batch date or a dash when the date is empty.
@@ -134,11 +136,21 @@ function BatchActionsCell({ row: { original } }: { row: { original: Batch } }) {
 export function ItemBatchesTable() {
   const { itemId, item } = useItemDetailDrawerContext();
   const columns = useItemBatchesColumns();
+  const [warehouseId, setWarehouseId] = React.useState<number>();
+  const { featureCan } = useFeatureCan();
+  const multiWarehouse = featureCan(Features.Warehouses);
+  const { data: warehouses } = useWarehouses({}, { enabled: multiWarehouse });
   const {
     data: batches,
     isLoading,
     isFetching,
-  } = useItemBatches(itemId, { enabled: !!itemId });
+  } = useBatches(
+    {
+      itemId: Number(itemId),
+      warehouseId: multiWarehouse ? warehouseId : undefined,
+    },
+    { enabled: !!itemId },
+  );
 
   return (
     <Card>
@@ -151,8 +163,27 @@ export function ItemBatchesTable() {
             <T id={'batch.tab.description'} />
           </p>
         </div>
+        {multiWarehouse && (
+          <label>
+            <T id="warehouse" />{' '}
+            <HTMLSelect
+              value={warehouseId ?? ''}
+              onChange={(event) =>
+                setWarehouseId(Number(event.currentTarget.value) || undefined)
+              }
+            >
+              <option value="">{intl.get('all')}</option>
+              {warehouses?.map((warehouse) => (
+                <option key={warehouse.id} value={warehouse.id}>
+                  {warehouse.name}
+                </option>
+              ))}
+            </HTMLSelect>
+          </label>
+        )}
         {item?.type === 'inventory' && (
           <BatchFormPopover
+            openingWarehouseId={multiWarehouse ? warehouseId : undefined}
             itemId={itemId as number}
             buttonText={<T id={'batch.tab.new_batch'} />}
             buttonProps={{ intent: Intent.PRIMARY, small: false }}

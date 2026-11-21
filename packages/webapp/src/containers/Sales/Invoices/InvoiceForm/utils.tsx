@@ -38,6 +38,7 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type InvoiceEntry = {
+  warehouseId?: number;
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -157,6 +158,9 @@ export function transformToEditForm(
   const initialEntries = [
     ...invoice.entries.map((entry) => ({
       ...transformToForm(entry, defaultInvoiceEntry),
+      ...(entry.warehouseId && entry.warehouseId !== invoice.warehouseId
+        ? { warehouseId: entry.warehouseId }
+        : {}),
     })),
     ...repeatValue(
       defaultInvoiceEntry,
@@ -224,6 +228,7 @@ export const transformErrors = (
 };
 
 type FastFieldShouldUpdateProps = {
+  formik?: { values?: { warehouseId?: number | string } };
   shouldUpdateDeps?: { items?: unknown[] };
   items?: unknown;
   taxRates?: unknown;
@@ -251,6 +256,8 @@ export const entriesFieldShouldUpdate = (
   oldProps: FastFieldShouldUpdateProps,
 ): boolean => {
   return (
+    newProps.formik?.values?.warehouseId !==
+      oldProps.formik?.values?.warehouseId ||
     newProps.items !== oldProps.items ||
     newProps.taxRates !== oldProps.taxRates ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -292,6 +299,7 @@ const transformEntriesToRequest = (entries: InvoiceEntry[]) => {
 
     return {
       ...rest,
+      ...(entry.warehouseId ? { warehouseId: entry.warehouseId } : {}),
       ...(normalizedBatches.length > 0 ? { batches: normalizedBatches } : {}),
     };
   });

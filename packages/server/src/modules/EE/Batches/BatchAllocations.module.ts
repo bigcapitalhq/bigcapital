@@ -1,3 +1,4 @@
+import { BatchTransferAllocations } from './BatchTransferAllocations';
 import { Module } from '@nestjs/common';
 import { RegisterTenancyModel } from '../../Tenancy/TenancyModels/Tenancy.module';
 import { BatchAllocationsIntegrationModule } from '../../TransactionItemEntry/integrations/BatchAllocationsIntegration.module';
@@ -15,7 +16,11 @@ const models = [RegisterTenancyModel(ItemEntryBatch)];
  */
 @Module({
   imports: [...models, BatchAllocationsIntegrationModule],
-  providers: [BatchAllocationsService, BatchAllocationsBridgeProvider],
+  providers: [
+    BatchTransferAllocations,
+    BatchAllocationsService,
+    BatchAllocationsBridgeProvider,
+  ],
   exports: [...models, BatchAllocationsService],
 })
 export class BatchAllocationsModule {}

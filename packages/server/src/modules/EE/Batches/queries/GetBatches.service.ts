@@ -112,7 +112,10 @@ export class GetBatchesService {
     }
 
     const batches = await query;
-    const batchesWithBalance = await this.batchesBalance.attachBalance(batches);
+    const batchesWithBalance = await this.batchesBalance.attachBalance(
+      batches,
+      filter.warehouseId,
+    );
 
     const filteredBatches = filter.status
       ? batchesWithBalance.filter((batch) => batch.status === filter.status)
@@ -149,8 +152,9 @@ export class GetBatchesService {
    */
   public async getAvailableBatches(
     itemId: number,
+    warehouseId?: number,
   ): Promise<IBatchWithBalance[]> {
-    const { results } = await this.getBatches({ itemId });
+    const { results } = await this.getBatches({ itemId, warehouseId });
 
     return results
       .filter((batch) =>

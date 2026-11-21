@@ -1,3 +1,4 @@
+import type { IWarehousesActivatedPayload } from '@/modules/Warehouses/Warehouse.types';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
@@ -12,6 +13,25 @@ export class BatchesQuantitySyncSubscriber {
   constructor(
     private readonly batchesQuantitySync: BatchesQuantitySyncService,
   ) {}
+
+  @OnEvent(events.warehouse.onActivated, { suppressErrors: false })
+  public async initializeWarehouseBalances({
+    primaryWarehouse,
+    trx,
+  }: IWarehousesActivatedPayload) {
+    await trx('batches')
+      .whereNull('openingWarehouseId')
+      .whereNull('sourceTransactionType')
+      .update({ openingWarehouseId: primaryWarehouse.id });
+    await trx.raw(
+      `
+      INSERT INTO BATCH_WAREHOUSE_BALANCES (BATCH_ID, WAREHOUSE_ID, QUANTITY_ON_HAND)
+      SELECT ID, ?, QUANTITY_ON_HAND FROM BATCHES WHERE QUANTITY_ON_HAND <> 0
+      ON DUPLICATE KEY UPDATE QUANTITY_ON_HAND = VALUES(QUANTITY_ON_HAND)
+    `,
+      [primaryWarehouse.id],
+    );
+  }
 
   /**
    * Syncs the batches quantity on hand once inventory transactions created.

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
 import { Batch } from '../models/Batch';
+import { BatchesQuantitySyncService } from '../BatchesQuantitySync.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { batchEvents } from '../Batches.events';
@@ -27,6 +28,8 @@ export class EditBatchService {
 
     @Inject(Batch.name)
     private readonly batchModel: TenantModelProxy<typeof Batch>,
+
+    private readonly quantitySync: BatchesQuantitySyncService,
 
     private readonly validators: BatchesValidators,
   ) {}
@@ -98,6 +101,16 @@ export class EditBatchService {
           ...(quantity !== undefined ? { quantity } : {}),
           ...(quantityOnHand !== undefined ? { quantityOnHand } : {}),
         });
+
+      if (quantityOnHand !== undefined) {
+        const delta = toBatchQuantity(quantity - oldBatch.quantity);
+        await this.quantitySync.changeWarehouseBalance(
+          id,
+          delta,
+          oldBatch.openingWarehouseId,
+          transaction,
+        );
+      }
 
       // Triggers `onBatchEdited` event.
       await this.eventEmitter.emitAsync(batchEvents.onEdited, {

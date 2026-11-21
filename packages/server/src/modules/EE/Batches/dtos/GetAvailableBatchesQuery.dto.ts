@@ -1,6 +1,6 @@
 import { ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class GetAvailableBatchesQueryDto {
   @ApiProperty({ description: 'The item id', example: 1 })
@@ -8,4 +8,10 @@ export class GetAvailableBatchesQueryDto {
   @IsInt()
   @IsNotEmpty()
   itemId: number;
+
+  @ApiProperty({ description: 'The warehouse id', required: false })
+  @ToNumber()
+  @IsInt()
+  @IsOptional()
+  warehouseId?: number;
 }

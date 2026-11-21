@@ -1,3 +1,5 @@
+import type { IInventoryTransactionRecord } from '@/modules/InventoryCost/types/InventoryCost.types';
+import { BatchTransferAllocations } from './BatchTransferAllocations';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
@@ -15,9 +17,18 @@ export class BatchAllocationsBridgeProvider
   implements IBatchAllocationsProvider, OnModuleInit
 {
   constructor(
+    private readonly transfers: BatchTransferAllocations,
     private readonly bridge: BatchAllocationsBridge,
     private readonly batchAllocations: BatchAllocationsService,
   ) {}
+
+  public allocateTransfer(
+    entries: IInventoryTransactionRecord[],
+    override: boolean,
+    trx?: Knex.Transaction,
+  ) {
+    return this.transfers.allocateTransfer(entries, override, trx);
+  }
 
   /**
    * Registers the batch allocations provider.

@@ -26,6 +26,7 @@ interface BatchFormValues {
 }
 
 interface BatchFormProps {
+  openingWarehouseId?: number;
   itemId: number;
   batch?: Batch | null;
   defaultQuantity?: number | string;
@@ -228,6 +229,7 @@ interface BatchFormPopoverProps extends BatchFormProps {
  * Popover containing the create/edit batch form.
  */
 export function BatchFormPopover({
+  openingWarehouseId,
   itemId,
   batch,
   defaultQuantity,
@@ -290,6 +292,7 @@ export function BatchFormPopover({
       const savedBatch = batch
         ? await editBatch({ id: batch.id, ...payload })
         : await createBatch({
+            openingWarehouseId,
             itemId,
             ...payload,
             batchRef: payload.batchRef || undefined,

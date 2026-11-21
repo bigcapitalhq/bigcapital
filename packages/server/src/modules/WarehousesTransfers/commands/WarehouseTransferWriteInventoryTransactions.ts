@@ -1,14 +1,26 @@
 import { Knex } from 'knex';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InventoryTransactionsService } from '../../InventoryCost/commands/InventoryTransactions.service';
 import { ModelObject } from 'objection';
 import { IInventoryTransactionRecord } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { WarehouseTransfer } from '../models/WarehouseTransfer';
 import { WarehouseTransferEntry } from '../models/WarehouseTransferEntry';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
+import { BatchAllocationsBridge } from '@/modules/TransactionItemEntry/integrations/BatchAllocationsBridge';
 
 @Injectable()
 export class WarehouseTransferInventoryTransactions {
-  constructor(private readonly inventory: InventoryTransactionsService) {}
+  constructor(
+    private readonly inventory: InventoryTransactionsService,
+
+    @Inject(InventoryTransaction.name)
+    private readonly inventoryTransactionModel: TenantModelProxy<
+      typeof InventoryTransaction
+    >,
+
+    private readonly batchAllocations: BatchAllocationsBridge,
+  ) {}
 
   /**
    * Writes all (initiate and transfer) inventory transactions.
@@ -22,11 +34,20 @@ export class WarehouseTransferInventoryTransactions {
     override?: boolean,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    const inventoryTransactions =
-      this.getWarehouseTransferInventoryTransactions(warehouseTransfer);
+    const fromTransactions =
+      await this.getWarehouseFromTransferInventoryTransactions(
+        warehouseTransfer,
+        trx,
+        override,
+      );
+    const toTransactions = fromTransactions.map((transaction) => ({
+      ...transaction,
+      direction: 'IN' as const,
+      warehouseId: warehouseTransfer.toWarehouseId,
+    }));
 
     await this.inventory.recordInventoryTransactions(
-      inventoryTransactions,
+      [...toTransactions, ...fromTransactions],
       override,
       trx,
     );
@@ -45,7 +66,11 @@ export class WarehouseTransferInventoryTransactions {
     trx?: Knex.Transaction,
   ): Promise<void> => {
     const inventoryTransactions =
-      this.getWarehouseFromTransferInventoryTransactions(warehouseTransfer);
+      await this.getWarehouseFromTransferInventoryTransactions(
+        warehouseTransfer,
+        trx,
+        override,
+      );
 
     await this.inventory.recordInventoryTransactions(
       inventoryTransactions,
@@ -67,7 +92,10 @@ export class WarehouseTransferInventoryTransactions {
     trx?: Knex.Transaction,
   ): Promise<void> => {
     const inventoryTransactions =
-      this.getWarehouseToTransferInventoryTransactions(warehouseTransfer);
+      await this.getWarehouseToTransferInventoryTransactions(
+        warehouseTransfer,
+        trx,
+      );
 
     await this.inventory.recordInventoryTransactions(
       inventoryTransactions,
@@ -98,16 +126,20 @@ export class WarehouseTransferInventoryTransactions {
    * @param   {IWarehouseTransfer} warehouseTransfer
    * @returns {IInventoryTransaction[]}
    */
-  private getWarehouseFromTransferInventoryTransactions = (
+  private getWarehouseFromTransferInventoryTransactions = async (
     warehouseTransfer: ModelObject<WarehouseTransfer>,
-  ): IInventoryTransactionRecord[] => {
+    trx?: Knex.Transaction,
+    override?: boolean,
+  ): Promise<IInventoryTransactionRecord[]> => {
     const commonEntry = {
       date: warehouseTransfer.date,
       transactionType: 'WarehouseTransfer',
       transactionId: warehouseTransfer.id,
     };
-    return warehouseTransfer.entries.map(
-      (entry: ModelObject<WarehouseTransferEntry>) => ({
+    const entries = warehouseTransfer.entries.map(
+      (
+        entry: ModelObject<WarehouseTransferEntry>,
+      ): IInventoryTransactionRecord => ({
         ...commonEntry,
         entryId: entry.id,
         itemId: entry.itemId,
@@ -117,6 +149,7 @@ export class WarehouseTransferInventoryTransactions {
         warehouseId: warehouseTransfer.fromWarehouseId,
       }),
     );
+    return this.batchAllocations.allocateTransfer(entries, override, trx);
   };
 
   /**
@@ -124,43 +157,31 @@ export class WarehouseTransferInventoryTransactions {
    * @param   {ModelObject<WarehouseTransfer>} warehouseTransfer - Warehouse transfer.
    * @returns {IInventoryTransaction[]}
    */
-  private getWarehouseToTransferInventoryTransactions = (
+  private getWarehouseToTransferInventoryTransactions = async (
     warehouseTransfer: ModelObject<WarehouseTransfer>,
-  ): IInventoryTransactionRecord[] => {
+    trx?: Knex.Transaction,
+  ): Promise<IInventoryTransactionRecord[]> => {
     const commonEntry = {
       date: warehouseTransfer.date,
       transactionType: 'WarehouseTransfer',
       transactionId: warehouseTransfer.id,
     };
-    return warehouseTransfer.entries.map(
-      (entry: ModelObject<WarehouseTransferEntry>) => ({
-        ...commonEntry,
-        entryId: entry.id,
-        itemId: entry.itemId,
-        quantity: entry.quantity,
-        rate: entry.cost,
-        direction: 'IN',
-        warehouseId: warehouseTransfer.toWarehouseId,
-      }),
-    );
-  };
-
-  /**
-   * Retrieves the inventory transactions of the given warehouse transfer.
-   * @param {ModelObject<WarehouseTransfer>} warehouseTransfer - Warehouse transfer.
-   * @returns {IInventoryTransaction[]}
-   */
-  private getWarehouseTransferInventoryTransactions = (
-    warehouseTransfer: ModelObject<WarehouseTransfer>,
-  ) => {
-    // Retrieve the to inventory transactions of warehouse transfer.
-    const toTransactions =
-      this.getWarehouseToTransferInventoryTransactions(warehouseTransfer);
-
-    // Retrieve the from inventory transactions of warehouse transfer.
-    const fromTransactions =
-      this.getWarehouseFromTransferInventoryTransactions(warehouseTransfer);
-
-    return [...toTransactions, ...fromTransactions];
+    const sourceTransactions = await this.inventoryTransactionModel()
+      .query(trx)
+      .where({
+        transactionType: 'WarehouseTransfer',
+        transactionId: warehouseTransfer.id,
+        direction: 'OUT',
+      });
+    return sourceTransactions.map((transaction) => ({
+      ...commonEntry,
+      entryId: transaction.entryId,
+      itemId: transaction.itemId,
+      quantity: transaction.quantity,
+      rate: transaction.rate,
+      direction: 'IN',
+      warehouseId: warehouseTransfer.toWarehouseId,
+      batchId: transaction.batchId,
+    }));
   };
 }

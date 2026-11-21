@@ -18,7 +18,14 @@ describe('BatchesQuantitySyncService', () => {
         return query;
       }),
     }));
-    service = new BatchesQuantitySyncService(batchModel);
+    service = new BatchesQuantitySyncService(
+      batchModel,
+      jest.fn(),
+      () =>
+        ({
+          query: () => ({ findOne: async () => undefined }),
+        }) as any,
+    );
   });
 
   describe('getBatchesQuantityChanges', () => {
@@ -35,6 +42,21 @@ describe('BatchesQuantitySyncService', () => {
       expect(changes).toEqual([
         { batchId: 1, balanceChange: 3 },
         { batchId: 2, balanceChange: -3 },
+      ]);
+    });
+
+    it('keeps both warehouse legs of a transfer and reverses them independently', () => {
+      const rows = [
+        { batchId: 1, warehouseId: 2, direction: 'OUT', quantity: 3 },
+        { batchId: 1, warehouseId: 4, direction: 'IN', quantity: 3 },
+      ] as any;
+      expect(service.getBatchesQuantityChanges(rows)).toEqual([
+        { batchId: 1, warehouseId: 2, balanceChange: -3 },
+        { batchId: 1, warehouseId: 4, balanceChange: 3 },
+      ]);
+      expect(service.getReverseBatchesQuantityChanges(rows)).toEqual([
+        { batchId: 1, warehouseId: 2, balanceChange: 3 },
+        { batchId: 1, warehouseId: 4, balanceChange: -3 },
       ]);
     });
 

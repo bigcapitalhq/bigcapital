@@ -20014,6 +20014,8 @@ export interface components {
              * @example 1
              */
             itemId: number;
+            /** @description Warehouse for manual opening stock (defaults to the primary warehouse) */
+            openingWarehouseId?: number;
             /**
              * @description The batch number
              * @example BATCH-001
@@ -37617,6 +37619,8 @@ export interface operations {
                 page?: number;
                 /** @description The page size */
                 pageSize?: number;
+                /** @description Filter by warehouse stock */
+                warehouseId?: number;
             };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
@@ -37668,6 +37672,8 @@ export interface operations {
             query: {
                 /** @description The item id */
                 itemId: number;
+                /** @description The warehouse id */
+                warehouseId?: number;
             };
             header: {
                 /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */

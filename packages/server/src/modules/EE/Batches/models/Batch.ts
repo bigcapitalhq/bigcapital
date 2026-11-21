@@ -11,6 +11,7 @@ export class Batch extends TenantBaseModel {
   public batchRef?: string | null;
   public manufacturedDate?: Date | string | null;
   public expiryDate?: Date | string | null;
+  public openingWarehouseId?: number | null;
   public quantity!: number;
   public quantityOnHand!: number;
   public sourceTransactionType?: string | null;

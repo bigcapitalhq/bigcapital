@@ -20,6 +20,7 @@ describe('BatchAllocationsBridge', () => {
 
   it('delegates the synchronization to the registered provider', async () => {
     const provider: jest.Mocked<IBatchAllocationsProvider> = {
+      allocateTransfer: jest.fn(),
       syncEntriesAllocations: jest.fn().mockResolvedValue(undefined),
     };
     const entries = [

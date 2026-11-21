@@ -52,13 +52,28 @@ export class InventoryTransactionsService {
     // Prevent inventory transactions that would make the items stock negative.
     await this.stockGuard.assertSufficientStock(transactions, override, trx);
 
-    const bulkInsertOpers = [];
-
-    transactions.forEach((transaction: IInventoryTransactionRecord) => {
-      const oper = this.recordInventoryTransaction(transaction, override, trx);
-      bulkInsertOpers.push(oper);
-    });
-    const inventoryTransactions = await Promise.all(bulkInsertOpers);
+    if (override) {
+      // Reverse each document once, even when multiple rows share a batch.
+      const references = new Map(
+        transactions.map((row) => [
+          `${row.transactionType}:${row.transactionId}`,
+          row,
+        ]),
+      );
+      for (const { transactionId, transactionType } of references.values()) {
+        await this.deleteInventoryTransactions(
+          transactionId,
+          transactionType,
+          trx,
+          false,
+        );
+      }
+    }
+    const inventoryTransactions = await Promise.all(
+      transactions.map((row) =>
+        this.recordInventoryTransaction(row, false, trx),
+      ),
+    );
 
     // Triggers `onInventoryTransactionsCreated` event.
     await this.eventEmitter.emitAsync(

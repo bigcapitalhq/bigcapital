@@ -1,8 +1,10 @@
+import type { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { raw } from 'objection';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Batch } from './models/Batch';
+import { BatchWarehouseBalance } from './models/BatchWarehouseBalance';
 import {
   calcBatchBalance,
   getBatchStatus,
@@ -30,6 +32,11 @@ export class BatchesBalanceService {
     private readonly inventoryTransactionModel: TenantModelProxy<
       typeof InventoryTransaction
     >,
+
+    @Inject(BatchWarehouseBalance.name)
+    private readonly batchWarehouseBalanceModel: TenantModelProxy<
+      typeof BatchWarehouseBalance
+    >,
   ) {}
 
   /**
@@ -43,32 +50,22 @@ export class BatchesBalanceService {
   }
 
   /**
-   * Sums the quantity in/out of the given batches for a specific transaction.
-   * Used to exclude the current transaction when validating an edit.
-   */
-  private async getTransactionTotalsForReference(
-    transactionType: string,
-    transactionId: number,
-    batchesIds: number[],
-  ): Promise<Map<number, IBatchTransactionsTotals>> {
-    return this.sumTransactionsTotals(batchesIds, {
-      transactionType,
-      transactionId,
-    });
-  }
-
-  /**
    * Aggregates the inventory transactions quantity in/out by batch id.
    */
   private async sumTransactionsTotals(
     batchesIds: number[],
-    filter?: { transactionType: string; transactionId: number },
+    filter?: {
+      transactionType: string;
+      transactionId: number;
+      warehouseId?: number;
+    },
+    trx?: Knex.Transaction,
   ): Promise<Map<number, IBatchTransactionsTotals>> {
     if (batchesIds.length === 0) {
       return new Map();
     }
     const query = this.inventoryTransactionModel()
-      .query()
+      .query(trx)
       .select('batchId')
       .select(
         raw(
@@ -88,6 +85,9 @@ export class BatchesBalanceService {
         transactionType: filter.transactionType,
         transactionId: filter.transactionId,
       });
+      if (filter.warehouseId !== undefined) {
+        query.where('warehouseId', filter.warehouseId);
+      }
     }
     const totals = await query;
 
@@ -109,9 +109,34 @@ export class BatchesBalanceService {
       quantityOnHand: number;
       expiryDate?: Date | string | null;
     },
-  >(batches: T[]): Promise<Array<T & IBatchWithBalance>> {
+  >(
+    batches: T[],
+    warehouseId?: number,
+    trx?: Knex.Transaction,
+  ): Promise<Array<T & IBatchWithBalance>> {
+    const warehouseBalances = warehouseId
+      ? await this.batchWarehouseBalanceModel()
+          .query(trx)
+          .modify((query) => {
+            if (trx) query.forUpdate();
+          })
+          .where('warehouseId', warehouseId)
+          .whereIn(
+            'batchId',
+            batches.map((batch) => batch.id),
+          )
+      : [];
+    const balanceByBatch = new Map(
+      warehouseBalances.map((balance) => [
+        Number(balance.batchId),
+        toBatchQuantity(balance.quantityOnHand),
+      ]),
+    );
+
     return batches.map((batch) => {
-      const quantityOnHand = toBatchQuantity(batch.quantityOnHand);
+      const quantityOnHand = warehouseId
+        ? (balanceByBatch.get(batch.id) ?? 0)
+        : toBatchQuantity(batch.quantityOnHand);
 
       return {
         ...batch,
@@ -160,18 +185,21 @@ export class BatchesBalanceService {
   public async getAvailableQuantities(
     batches: Batch[],
     excludeTransaction?: IExcludeTransaction,
+    warehouseId?: number,
+    trx?: Knex.Transaction,
   ): Promise<Map<number, number>> {
+    const withBalance = await this.attachBalance(batches, warehouseId, trx);
     const quantities = new Map<number, number>(
-      batches.map((batch) => [batch.id, toBatchQuantity(batch.quantityOnHand)]),
+      withBalance.map((batch) => [batch.id, batch.quantityOnHand]),
     );
 
     if (!excludeTransaction || batches.length === 0) {
       return quantities;
     }
-    const totals = await this.getTransactionTotalsForReference(
-      excludeTransaction.transactionType,
-      excludeTransaction.transactionId,
+    const totals = await this.sumTransactionsTotals(
       batches.map((batch) => batch.id),
+      { ...excludeTransaction, warehouseId },
+      trx,
     );
 
     totals.forEach((total, batchId) => {

@@ -3,11 +3,14 @@ import { Knex } from 'knex';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Batch } from './models/Batch';
+import { BatchWarehouseBalance } from './models/BatchWarehouseBalance';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { toBatchQuantity } from './Batches.utils';
 
 export interface IBatchQuantityChange {
   batchId: number;
   balanceChange: number;
+  warehouseId?: number;
 }
 
 /**
@@ -21,6 +24,14 @@ export class BatchesQuantitySyncService {
   constructor(
     @Inject(Batch.name)
     private readonly batchModel: TenantModelProxy<typeof Batch>,
+
+    @Inject(BatchWarehouseBalance.name)
+    private readonly batchWarehouseBalanceModel: TenantModelProxy<
+      typeof BatchWarehouseBalance
+    >,
+
+    @Inject(Warehouse.name)
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
   ) {}
 
   /**
@@ -31,7 +42,7 @@ export class BatchesQuantitySyncService {
   public getBatchesQuantityChanges(
     inventoryTransactions: InventoryTransaction[],
   ): IBatchQuantityChange[] {
-    const balanceChanges = new Map<number, number>();
+    const balanceChanges = new Map<string, IBatchQuantityChange>();
 
     inventoryTransactions.forEach((transaction) => {
       if (transaction.batchId === null || transaction.batchId === undefined) {
@@ -41,16 +52,24 @@ export class BatchesQuantitySyncService {
       const quantity = toBatchQuantity(transaction.quantity);
       const balanceChange =
         transaction.direction === 'IN' ? quantity : -quantity;
+      const warehouseId = transaction.warehouseId
+        ? Number(transaction.warehouseId)
+        : undefined;
+      const key = `${batchId}:${warehouseId ?? ''}`;
+      const current = balanceChanges.get(key);
 
-      balanceChanges.set(
+      balanceChanges.set(key, {
         batchId,
-        toBatchQuantity((balanceChanges.get(batchId) ?? 0) + balanceChange),
-      );
+        warehouseId,
+        balanceChange: toBatchQuantity(
+          (current?.balanceChange ?? 0) + balanceChange,
+        ),
+      });
     });
 
-    return [...balanceChanges.entries()]
-      .map(([batchId, balanceChange]) => ({ batchId, balanceChange }))
-      .filter((change) => change.balanceChange !== 0);
+    return [...balanceChanges.values()].filter(
+      (change) => change.balanceChange !== 0,
+    );
   }
 
   /**
@@ -64,6 +83,7 @@ export class BatchesQuantitySyncService {
     return this.getBatchesQuantityChanges(inventoryTransactions).map(
       (change) => ({
         batchId: change.batchId,
+        warehouseId: change.warehouseId,
         balanceChange: -change.balanceChange,
       }),
     );
@@ -82,7 +102,9 @@ export class BatchesQuantitySyncService {
     // Applying the changes in a deterministic order avoids deadlocks when a
     // single transaction touches multiple batches.
     const sortedChanges = [...batchesQuantity].sort(
-      (a, b) => a.batchId - b.batchId,
+      (a, b) =>
+        a.batchId - b.batchId ||
+        Number(a.warehouseId ?? 0) - Number(b.warehouseId ?? 0),
     );
 
     for (const change of sortedChanges) {
@@ -96,7 +118,38 @@ export class BatchesQuantitySyncService {
       } else {
         await query.decrement('quantityOnHand', Math.abs(change.balanceChange));
       }
+
+      await this.changeWarehouseBalance(
+        change.batchId,
+        change.balanceChange,
+        change.warehouseId,
+        trx,
+      );
     }
+  }
+
+  public async getPrimaryWarehouseId(
+    trx?: Knex.Transaction,
+  ): Promise<number | undefined> {
+    return (await this.warehouseModel().query(trx).findOne({ primary: true }))
+      ?.id;
+  }
+
+  public async changeWarehouseBalance(
+    batchId: number,
+    delta: number,
+    warehouseId?: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    if (!delta) return;
+    const location = warehouseId ?? (await this.getPrimaryWarehouseId(trx));
+    if (!location) return;
+
+    const knex = trx ?? this.batchWarehouseBalanceModel().knex();
+    await knex('batch_warehouse_balances')
+      .insert({ batchId, warehouseId: location, quantityOnHand: delta })
+      .onConflict(['batchId', 'warehouseId'])
+      .merge({ quantityOnHand: knex.raw('?? + ?', ['quantityOnHand', delta]) });
   }
 
   /**

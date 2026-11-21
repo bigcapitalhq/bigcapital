@@ -1,3 +1,4 @@
+import type { BatchAvailabilityAdjustment } from '@/containers/Entries/ItemEntriesTableProvider';
 import { Button, Intent, MenuItem, NumericInput, Tag } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import { Select2 } from '@blueprintjs/select';
@@ -8,10 +9,13 @@ import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { ItemRenderer } from '@blueprintjs/select';
 import { FormattedMessage as T } from '@/components';
-import { useItemBatches } from '@/ee/batches/hooks/query';
+import { useBatches } from '@/ee/batches/hooks/query';
 
 interface SaleBatchAllocationsPopoverProps {
   itemId: number;
+  warehouseId?: number | string;
+  rowIndex: number;
+  batchAvailabilityAdjustment?: BatchAvailabilityAdjustment;
   entryQuantity: number | string;
   allocations?: ItemEntryBatchAllocation[];
   onApply: (allocations: ItemEntryBatchAllocation[]) => void;
@@ -116,6 +120,9 @@ const renderBatchOption: ItemRenderer<BatchOption> = (
  */
 export function SaleBatchAllocationsPopover({
   itemId,
+  warehouseId,
+  rowIndex,
+  batchAvailabilityAdjustment,
   entryQuantity,
   allocations,
   onApply,
@@ -126,9 +133,12 @@ export function SaleBatchAllocationsPopover({
   const hasDraftRef = React.useRef(false);
   const prevItemIdRef = React.useRef(itemId);
   const rowCounter = React.useRef(0);
-  const { data: batchesData, isLoading } = useItemBatches(itemId, {
-    enabled: isOpen && !!itemId,
-  });
+  const { data: batchesData, isLoading } = useBatches(
+    { itemId, ...(warehouseId ? { warehouseId: Number(warehouseId) } : {}) },
+    {
+      enabled: isOpen && !!itemId,
+    },
+  );
 
   const requiredQuantity = toNumber(entryQuantity);
   const allocatedByBatch = React.useMemo(() => {
@@ -157,15 +167,14 @@ export function SaleBatchAllocationsPopover({
       map.set(batch.id, batch);
     });
     (allocations ?? []).forEach((allocation) => {
-      if (allocation.batch && !map.has(allocation.batchId)) {
+      if (!batchesData && allocation.batch && !map.has(allocation.batchId)) {
         map.set(allocation.batchId, allocation.batch);
       }
     });
     return map;
   }, [batchesData, allocations]);
 
-  // The available quantity of a batch takes into account the quantity that is
-  // already allocated to this line, since the allocation is replaced on save.
+  // Credit posted quantities in this warehouse and reserve the other draft lines.
   const batchOptionsById = React.useMemo(() => {
     const options = new Map<number, BatchOption>();
 
@@ -173,21 +182,29 @@ export function SaleBatchAllocationsPopover({
       const isAllocated = allocatedByBatch[batchId] !== undefined;
       const isSelectableStatus =
         batch.status === 'active' || batch.status === 'expiring_soon';
-      const onHand = toNumber(batch.quantityOnHand);
+      const available =
+        toNumber(batch.quantityOnHand) +
+        (batchAvailabilityAdjustment?.(batchId, rowIndex, warehouseId) ?? 0);
 
       if (
-        (!isSelectableStatus && !isAllocated) ||
-        (onHand <= 0 && !isAllocated)
+        (!isSelectableStatus && batch.status !== 'depleted' && !isAllocated) ||
+        (available <= 0 && !isAllocated)
       ) {
         return;
       }
       options.set(batchId, {
         batch,
-        available: Math.max(onHand + toNumber(allocatedByBatch[batchId]), 0),
+        available: Math.max(available, 0),
       });
     });
     return options;
-  }, [batchById, allocatedByBatch]);
+  }, [
+    batchById,
+    allocatedByBatch,
+    batchAvailabilityAdjustment,
+    rowIndex,
+    warehouseId,
+  ]);
 
   const batchOptions = React.useMemo(
     () => Array.from(batchOptionsById.values()).sort(sortBatchOptions),
@@ -347,12 +364,13 @@ export function SaleBatchAllocationsPopover({
     if (row.batchId === null) return false;
 
     const option = batchOptionsById.get(row.batchId);
-    return option ? row.quantity > option.available + EPSILON : false;
+    return option ? row.quantity > option.available + EPSILON : true;
   });
   const hasIncompleteRow = rows.some(
     (row) => row.batchId !== null && toNumber(row.quantity) <= 0,
   );
   const canApply =
+    !!batchesData &&
     requiredQuantity > 0 &&
     allocatedTotal > 0 &&
     isBalanced &&

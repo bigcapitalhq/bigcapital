@@ -1,3 +1,4 @@
+import type { BatchAvailabilityAdjustment } from './ItemEntriesTableProvider';
 import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
@@ -116,6 +117,7 @@ interface BatchEntryCellProps {
   row: {
     index: number;
     original: {
+      warehouseId?: number | string;
       itemId?: number | string;
       batchId?: number | null;
       batch?: Batch | null;
@@ -126,6 +128,8 @@ interface BatchEntryCellProps {
   payload: {
     items?: Array<{ id: number; type?: string; name?: string }>;
     batchMode?: 'purchase' | 'sale';
+    batchAvailabilityAdjustment?: BatchAvailabilityAdjustment;
+    warehouseId?: number | string;
     updateRow: (rowIndex: number, patch: Record<string, unknown>) => void;
   };
 }
@@ -159,6 +163,10 @@ export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
     return (
       <SaleBatchAllocationsPopover
         itemId={Number(original.itemId)}
+        rowIndex={index}
+        batchAvailabilityAdjustment={payload.batchAvailabilityAdjustment}
+        key={original.warehouseId || payload.warehouseId}
+        warehouseId={original.warehouseId || payload.warehouseId}
         entryQuantity={original.quantity ?? 0}
         allocations={allocations}
         onApply={(nextAllocations) => {

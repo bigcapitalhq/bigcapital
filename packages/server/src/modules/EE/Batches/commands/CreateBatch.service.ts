@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
 import { Batch } from '../models/Batch';
+import { BatchesQuantitySyncService } from '../BatchesQuantitySync.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { batchEvents } from '../Batches.events';
@@ -27,6 +28,8 @@ export class CreateBatchService {
 
     @Inject(Batch.name)
     private readonly batchModel: TenantModelProxy<typeof Batch>,
+
+    private readonly quantitySync: BatchesQuantitySyncService,
 
     private readonly validators: BatchesValidators,
   ) {}
@@ -54,6 +57,10 @@ export class CreateBatchService {
 
       const quantity = toBatchQuantity(dto.quantity);
 
+      const openingWarehouseId = dto.sourceTransactionType
+        ? null
+        : (dto.openingWarehouseId ??
+          (await this.quantitySync.getPrimaryWarehouseId(transaction)));
       const batch = await this.batchModel()
         .query(transaction)
         .insertAndFetch({
@@ -63,6 +70,7 @@ export class CreateBatchService {
           manufacturedDate: formatBatchDate(dto.manufacturedDate),
           expiryDate: formatBatchDate(dto.expiryDate),
           quantity,
+          openingWarehouseId,
           // A batch created for a transaction (e.g. a bill) starts empty; its
           // quantity is driven by the linked inventory transactions. A batch
           // created manually stores the entered quantity as opening stock.
@@ -70,6 +78,15 @@ export class CreateBatchService {
           sourceTransactionType: dto.sourceTransactionType || null,
           sourceTransactionId: dto.sourceTransactionId || null,
         });
+
+      if (!dto.sourceTransactionType) {
+        await this.quantitySync.changeWarehouseBalance(
+          batch.id,
+          quantity,
+          openingWarehouseId,
+          transaction,
+        );
+      }
 
       // Triggers `onBatchCreated` event.
       await this.eventEmitter.emitAsync(batchEvents.onCreated, {

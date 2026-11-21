@@ -27411,6 +27411,15 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "warehouseId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by warehouse stock",
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -27497,6 +27506,15 @@
             "description": "The item id",
             "schema": {
               "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "warehouseId",
+            "required": false,
+            "in": "query",
+            "description": "The warehouse id",
+            "schema": {
               "type": "number"
             }
           }
@@ -53871,6 +53889,10 @@
             "type": "number",
             "description": "The id of the inventory item",
             "example": 1
+          },
+          "openingWarehouseId": {
+            "type": "number",
+            "description": "Warehouse for manual opening stock (defaults to the primary warehouse)"
           },
           "batchNumber": {
             "type": "string",

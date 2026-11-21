@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React, { useCallback } from 'react';
 import { useEditableItemsEntriesColumns } from './components';
 import {
+  type BatchAvailabilityAdjustment,
   ItemEntriesTableProvider,
   useItemEntriesTableContext,
 } from './ItemEntriesTableProvider';
@@ -36,6 +37,8 @@ interface ItemsEntriesTableProps {
   landedCost?: boolean;
   defaultEntry?: ItemEntry;
   batchMode?: 'purchase' | 'sale';
+  warehouseId?: number | string;
+  batchAvailabilityAdjustment?: BatchAvailabilityAdjustment;
 }
 
 /**
@@ -84,6 +87,8 @@ function ItemEntriesTableRoot() {
     taxRates,
     itemType,
     batchMode,
+    warehouseId,
+    batchAvailabilityAdjustment,
   } = useItemEntriesTableContext();
 
   // Editiable items entries columns.
@@ -150,6 +155,8 @@ function ItemEntriesTableRoot() {
         autoFocus: ['itemId', 0],
         currencyCode,
         batchMode,
+        warehouseId,
+        batchAvailabilityAdjustment,
       }}
     />
   );

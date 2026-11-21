@@ -1,3 +1,4 @@
+import type { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 import { Batch } from './models/Batch';
@@ -13,6 +14,7 @@ export interface IEntryBatchAllocation {
 }
 
 export interface IEntryBatchReference {
+  warehouseId?: number;
   itemId: number;
   batchId?: number | null;
   quantity?: number;
@@ -20,9 +22,11 @@ export interface IEntryBatchReference {
 }
 
 interface IValidateBatchesEntriesOptions {
+  trx?: Knex.Transaction;
   checkAvailability?: boolean;
   referenceType?: string;
   referenceId?: number;
+  warehouseId?: number;
 }
 
 @Injectable()
@@ -143,6 +147,7 @@ export class BatchesValidators {
       ({ entry, allocations }) =>
         allocations.map((allocation) => ({
           itemId: entry.itemId,
+          warehouseId: entry.warehouseId || options.warehouseId,
           batchId: allocation.batchId,
           quantity: allocation.quantity,
         })),
@@ -157,7 +162,12 @@ export class BatchesValidators {
     const batchesIds = [
       ...new Set(batchesEntries.map((entry) => Number(entry.batchId))),
     ];
-    const batches = await this.batchModel().query().whereIn('id', batchesIds);
+    const query = this.batchModel()
+      .query(options.trx)
+      .whereIn('id', batchesIds);
+    if (options.checkAvailability && options.trx)
+      query.orderBy('id').forUpdate();
+    const batches = await query;
 
     if (batches.length !== batchesIds.length) {
       throw new ServiceError(BATCHES_ERRORS.BATCH_NOT_FOUND);
@@ -178,11 +188,21 @@ export class BatchesValidators {
     if (!options.checkAvailability) {
       return;
     }
-    const requestedQuantities = batchesEntries.reduce((map, entry) => {
+    const requestedByWarehouse = new Map<
+      number | undefined,
+      Map<number, number>
+    >();
+    for (const entry of batchesEntries) {
+      const quantities =
+        requestedByWarehouse.get(entry.warehouseId) ??
+        new Map<number, number>();
       const batchId = Number(entry.batchId);
-      map.set(batchId, (map.get(batchId) ?? 0) + Number(entry.quantity ?? 0));
-      return map;
-    }, new Map<number, number>());
+      quantities.set(
+        batchId,
+        (quantities.get(batchId) ?? 0) + Number(entry.quantity ?? 0),
+      );
+      requestedByWarehouse.set(entry.warehouseId, quantities);
+    }
 
     const excludeTransaction =
       options.referenceType && options.referenceId
@@ -192,27 +212,35 @@ export class BatchesValidators {
           }
         : undefined;
 
-    const availableQuantities =
-      await this.batchesBalance.getAvailableQuantities(
-        batches,
-        excludeTransaction,
-      );
-
-    for (const [batchId, requestedQuantity] of requestedQuantities.entries()) {
-      const batch = batchesMap.get(batchId)!;
-      const availableQuantity = availableQuantities.get(batchId) ?? 0;
-
-      if (requestedQuantity - availableQuantity > 0.0001) {
-        throw new ServiceError(
-          BATCHES_ERRORS.BATCH_INSUFFICIENT_QUANTITY,
-          undefined,
-          {
-            batchId,
-            batchNumber: batch.batchNumber,
-            requestedQuantity,
-            availableQuantity,
-          },
+    for (const [warehouseId, requestedQuantities] of requestedByWarehouse) {
+      const availableQuantities =
+        await this.batchesBalance.getAvailableQuantities(
+          batches,
+          excludeTransaction,
+          warehouseId,
+          options.trx,
         );
+
+      for (const [
+        batchId,
+        requestedQuantity,
+      ] of requestedQuantities.entries()) {
+        const batch = batchesMap.get(batchId)!;
+        const availableQuantity = availableQuantities.get(batchId) ?? 0;
+
+        if (requestedQuantity - availableQuantity > 0.0001) {
+          throw new ServiceError(
+            BATCHES_ERRORS.BATCH_INSUFFICIENT_QUANTITY,
+            undefined,
+            {
+              batchId,
+              batchNumber: batch.batchNumber,
+              warehouseId,
+              requestedQuantity,
+              availableQuantity,
+            },
+          );
+        }
       }
     }
   }
