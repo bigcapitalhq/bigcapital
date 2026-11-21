@@ -1,3 +1,5 @@
+import { ERRORS } from '../constants';
+import { IBankReconciliationTransactionKey } from '../types/BankingReconciliation.types';
 import { FinishBankReconciliationService } from './FinishBankReconciliation.service';
 
 const buildQuery = () => {
@@ -11,7 +13,9 @@ const buildQuery = () => {
 };
 
 describe('FinishBankReconciliationService', () => {
-  it('records the reconciled journal entries in one batch insert', async () => {
+  const setup = (
+    draftTransactions: IBankReconciliationTransactionKey[] | null = null,
+  ) => {
     const trx = {} as any;
     const query = buildQuery();
     const reconciliationTransactionModel = jest.fn(() => ({
@@ -31,7 +35,7 @@ describe('FinishBankReconciliationService', () => {
       status: 'in_progress',
       isInProgress: true,
       notes: null,
-      draftTransactions: null,
+      draftTransactions,
     };
 
     const rows = [
@@ -77,6 +81,11 @@ describe('FinishBankReconciliationService', () => {
       { get: jest.fn().mockReturnValue(1) } as any,
     );
 
+    return { service, query };
+  };
+
+  it('records the reconciled journal entries in one batch insert', async () => {
+    const { service, query } = setup();
     await service.finishBankReconciliation(1, {
       endingBalance: 130,
       transactions: [
@@ -112,5 +121,56 @@ describe('FinishBankReconciliationService', () => {
         transactionIndex: 0,
       },
     ]);
+  });
+
+  const deposit = {
+    referenceType: 'CashflowTransaction',
+    referenceId: 11,
+    index: 0,
+  };
+
+  it.each(['request', 'draft'])(
+    'checks the balance with a repeated %s selection counted once',
+    async (source) => {
+      const selections = [deposit, { ...deposit }];
+      const { service, query } = setup(source === 'draft' ? selections : null);
+      const result = service.finishBankReconciliation(1, {
+        endingBalance: 140,
+        transactions: source === 'request' ? selections : undefined,
+      });
+
+      await expect(result).rejects.toMatchObject({
+        errorType: ERRORS.BANK_RECONCILIATION_DIFFERENCE_NOT_ZERO,
+        payload: { difference: 20, clearedBalance: 120, endingBalance: 140 },
+      });
+      expect(query.delete).not.toHaveBeenCalled();
+      expect(query.insert).not.toHaveBeenCalled();
+      expect(query.patchAndFetchById).not.toHaveBeenCalled();
+    },
+  );
+
+  it('finishes with one link when the repeated selection balances the statement', async () => {
+    const { service, query } = setup();
+    await service.finishBankReconciliation(1, {
+      endingBalance: 120,
+      transactions: [
+        deposit,
+        {
+          referenceType: deposit.referenceType,
+          referenceId: deposit.referenceId,
+        },
+      ],
+    });
+
+    expect(query.insert).toHaveBeenCalledWith([
+      expect.objectContaining({ accountTransactionId: 1002 }),
+    ]);
+    expect(query.patchAndFetchById).toHaveBeenCalledWith(
+      1,
+      expect.objectContaining({
+        clearedBalance: 120,
+        difference: 0,
+      }),
+    );
   });
 });
