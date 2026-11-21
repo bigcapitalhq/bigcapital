@@ -92,13 +92,13 @@ const negativeTable: ITableData = {
 
 /**
  * Renders the table to PDF with the conversion mocked, and returns the HTML
- * that would have been handed to the converter.
+ * that would have been handed to the converter and the conversion options.
  */
-const renderPdfHtml = async (
+const renderPdf = async (
   customCSS?: string,
   showNegativeInRed?: boolean,
   data: ITableData = table,
-): Promise<string> => {
+): Promise<{ html: string; options: Record<string, any> }> => {
   const convertHtmlContent = jest.fn().mockResolvedValue(Buffer.from('%PDF'));
   const tableSheetPdf = new TableSheetPdf({ convertHtmlContent } as any);
 
@@ -110,8 +110,27 @@ const renderPdfHtml = async (
     customCSS,
     showNegativeInRed,
   );
-  return convertHtmlContent.mock.calls[0][0];
+  const [html, options] = convertHtmlContent.mock.calls[0];
+
+  return { html, options };
 };
+
+/**
+ * Renders the table to PDF with the conversion mocked, and returns the HTML
+ * that would have been handed to the converter.
+ */
+const renderPdfHtml = async (
+  customCSS?: string,
+  showNegativeInRed?: boolean,
+  data: ITableData = table,
+): Promise<string> =>
+  (await renderPdf(customCSS, showNegativeInRed, data)).html;
+
+/**
+ * Returns the header labels rendered by the PDF template, in order.
+ */
+const readHeaderLabels = (html: string): string[] =>
+  [...html.matchAll(/<th\b[^>]*>(.*?)<\/th>/g)].map((match) => match[1]);
 
 describe('TableSheetPdf', () => {
   it('renders the report custom CSS verbatim in a <style> after the template styles', async () => {
@@ -147,6 +166,92 @@ describe('TableSheetPdf', () => {
     expect(html).toContain(
       '<span style="padding-left: 15px;"></span>Petty Cash',
     );
+  });
+
+  describe('nested columns', () => {
+    const nestedColumnsTable: ITableData = {
+      columns: [
+        { key: 'name', label: 'Account name' },
+        {
+          key: 'total',
+          label: 'Total',
+          children: [
+            { key: 'previous_year', label: 'Previous year' },
+            { key: 'total', label: 'Total' },
+          ],
+        },
+      ],
+      rows: [
+        {
+          cells: [
+            { key: 'name', value: 'Assets' },
+            { key: 'previous_year', value: '$1,000.00' },
+            { key: 'total', value: '$1,200.00' },
+          ],
+        },
+      ],
+    };
+
+    it('renders the parent column as a grouped sub-header', async () => {
+      const html = await renderPdfHtml(undefined, false, nestedColumnsTable);
+
+      expect(readHeaderLabels(html)).toEqual([
+        'Account name',
+        'Total',
+        'Previous year',
+        'Total',
+      ]);
+      expect(html).toMatch(/<th[^>]*rowspan="2"[^>]*>Account name<\/th>/);
+      expect(html).toMatch(/<th[^>]*colspan="2"[^>]*>Total<\/th>/);
+    });
+
+    it('keeps a parent column with no children as a leaf', async () => {
+      const html = await renderPdfHtml(undefined, false, {
+        columns: [
+          { key: 'name', label: 'Account name' },
+          { key: 'total', label: 'Total', children: [] },
+        ],
+        rows: [
+          {
+            cells: [
+              { key: 'name', value: 'Assets' },
+              { key: 'total', value: '$1,200.00' },
+            ],
+          },
+        ],
+      });
+
+      expect(readHeaderLabels(html)).toEqual(['Account name', 'Total']);
+      expect(html).not.toContain('colspan');
+      expect(html).not.toContain('rowspan');
+    });
+
+    it('uses landscape when the leaf columns are more than four', async () => {
+      const { options } = await renderPdf(undefined, false, {
+        columns: [
+          { key: 'name', label: 'Account name' },
+          {
+            key: 'total',
+            label: 'Total',
+            children: [
+              { key: 'percentage_column', label: '% of column' },
+              { key: 'percentage_row', label: '% of row' },
+              { key: 'previous_year', label: 'Previous year' },
+              { key: 'total', label: 'Total' },
+            ],
+          },
+        ],
+        rows: [],
+      });
+
+      expect(options).toEqual(expect.objectContaining({ landscape: true }));
+    });
+
+    it('stays portrait when the leaf columns are four or fewer', async () => {
+      const { options } = await renderPdf();
+
+      expect(options).toEqual(expect.objectContaining({ landscape: false }));
+    });
   });
 
   describe('with "Show negative in red."', () => {

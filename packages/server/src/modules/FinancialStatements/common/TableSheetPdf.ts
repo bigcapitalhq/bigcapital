@@ -8,7 +8,10 @@ import { FinancialTableStructure } from './FinancialTableStructure';
 import { tableClassNames } from '../utils';
 import { Injectable } from '@nestjs/common';
 import { ChromiumlyTenancy } from '../../ChromiumlyTenancy/ChromiumlyTenancy.service';
-import { renderFinancialSheetTemplateHtml } from '@bigcapital/pdf-templates';
+import {
+  renderFinancialSheetTemplateHtml,
+  TableColumn,
+} from '@bigcapital/pdf-templates';
 import { isNegativeAmount } from '@bigcapital/utils';
 
 /**
@@ -79,7 +82,7 @@ export class TableSheetPdf {
     // Prepare columns and rows for PDF conversion
     const columns = this.tablePdfColumns(table.columns);
     const rows = this.tablePdfRows(table.rows);
-    const landscape = columns.length > 4;
+    const landscape = this.countLeafColumns(columns) > 4;
     const markNegatives = showNegativeInRed === true;
 
     // Generate HTML content from the React template
@@ -88,11 +91,7 @@ export class TableSheetPdf {
       sheetName,
       sheetDate,
       table: {
-        columns: columns.map((col) => ({
-          key: col.key,
-          label: col.label,
-          style: (col as any).style, // style may be added during transformation
-        })),
+        columns,
         rows: rows.map((row) => ({
           cells: markNegatives
             ? row.cells.map((cell, index) =>
@@ -117,11 +116,38 @@ export class TableSheetPdf {
 
   /**
    * Converts the table columns to pdf columns.
+   *
+   * Keeps the column tree: report tables nest the comparison and percentage
+   * columns under a parent column (for example the Balance Sheet and
+   * Profit/Loss `total` column), and the PDF template renders them as grouped
+   * sub-headers.
    * @param {ITableColumn[]} columns
-   * @returns {ITableColumn[]}
+   * @returns {TableColumn[]}
    */
-  private tablePdfColumns = (columns: ITableColumn[]): ITableColumn[] => {
-    return columns;
+  private tablePdfColumns = (columns: ITableColumn[]): TableColumn[] => {
+    return columns.map((column) => ({
+      key: column.key,
+      label: column.label,
+      style: (column as any).style, // style may be added during transformation
+      ...(column.children?.length
+        ? { children: this.tablePdfColumns(column.children) }
+        : {}),
+    }));
+  };
+
+  /**
+   * Counts the columns a row has a cell for, walking the column tree. Used to
+   * decide the page orientation since child columns widen the table too.
+   * @param {TableColumn[]} columns
+   * @returns {number}
+   */
+  private countLeafColumns = (columns: TableColumn[]): number => {
+    return columns.reduce(
+      (count, column) =>
+        count +
+        (column.children?.length ? this.countLeafColumns(column.children) : 1),
+      0,
+    );
   };
 
   /**

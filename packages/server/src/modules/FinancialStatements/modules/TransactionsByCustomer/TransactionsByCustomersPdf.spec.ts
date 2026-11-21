@@ -43,6 +43,8 @@ describe('TransactionsByCustomersPdf', () => {
       'BC Test Org',
       'Transactions By Customers',
       'From 2026-01-01 | To 2026-12-31',
+      undefined,
+      undefined,
     );
   });
 });
