@@ -1,6 +1,8 @@
 import React from 'react';
+import { CashflowAccountMenu } from './CashflowAccountMenu';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 import { useCashFlowAccountsTableColumns } from './components';
+import type { CashflowAccountRow } from './components';
 import {
   DataTable,
   TableFastCell,
@@ -11,10 +13,23 @@ import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useSettingCashFlow } from '@/hooks/query';
 
+interface CashflowAccountsContextMenuProps {
+  row: { original: CashflowAccountRow };
+}
+
+/**
+ * Cashflow accounts table context menu.
+ */
+function CashflowAccountsContextMenu({
+  row,
+}: CashflowAccountsContextMenuProps) {
+  return <CashflowAccountMenu account={row.original} />;
+}
+
 /**
  * Cash flow accounts data table.
  */
-function CashFlowAccountsDataTableInner() {
+export function CashFlowAccountsDataTable() {
   // Settings hook.
   const { data: cashflowSettings } = useSettingCashFlow();
   const cashflowTableSize = cashflowSettings?.tableSize as string | undefined;
@@ -49,11 +64,10 @@ function CashFlowAccountsDataTableInner() {
       TableCellRenderer={TableFastCell}
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={CashflowAccountsContextMenu}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={cashflowTableSize}
     />
   );
 }
-
-export const CashFlowAccountsDataTable = CashFlowAccountsDataTableInner;
