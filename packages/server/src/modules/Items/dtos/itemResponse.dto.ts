@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DEFAULT_ITEM_UNIT, ITEM_UNITS } from '../Items.constants';
+import { ItemImageResponseDto } from './ItemImage.dto';
 
 export class ItemResponseDto {
   @ApiProperty({
@@ -244,6 +245,20 @@ export class ItemResponseDto {
       name: string;
     };
   }>;
+
+  @ApiProperty({
+    description: 'The presigned URL of the resized primary item image',
+    required: false,
+    nullable: true,
+  })
+  pictureUri?: string | null;
+
+  @ApiProperty({
+    description: 'The item images',
+    type: [ItemImageResponseDto],
+    required: false,
+  })
+  images?: ItemImageResponseDto[];
 
   @ApiProperty({
     description: 'The date when the item was created',

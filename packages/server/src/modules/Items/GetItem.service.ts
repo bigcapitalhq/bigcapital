@@ -6,6 +6,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { ClsService } from 'nestjs-cls';
+import { S3StorageService } from '../S3/S3Storage.service';
 
 @Injectable()
 export class GetItemService {
@@ -15,6 +16,7 @@ export class GetItemService {
     private readonly eventEmitter2: EventEmitter2,
     private readonly transformerInjectable: TransformerInjectable,
     private readonly clsService: ClsService,
+    private readonly s3StorageService: S3StorageService,
   ) {}
 
   /**
@@ -33,11 +35,21 @@ export class GetItemService {
       .withGraphFetched('itemWarehouses.warehouse')
       .withGraphFetched('sellTaxRate')
       .withGraphFetched('purchaseTaxRate')
+      .withGraphFetched('images')
       .throwIfNotFound();
+
+    const imageUrls = await this.s3StorageService.getPresignedUrls([
+      item.pictureUri,
+      ...(item.images ?? []).flatMap((image) => [
+        image.key,
+        image.thumbnailKey,
+      ]),
+    ]);
 
     const transformed = await this.transformerInjectable.transform(
       item,
       new ItemTransformer(),
+      { imageUrls },
     );
     const eventPayload = { itemId };
 

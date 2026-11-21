@@ -6,6 +6,7 @@ import type {
   AccountsList,
   TaxRatesListResponse,
   CreateItemBody,
+  CreateItemResponse,
   EditItemBody,
   ItemCategoriesListResponse,
 } from '@bigcapital/sdk-ts';
@@ -38,6 +39,7 @@ type ItemFormContextValue = {
   taxRates: TaxRatesListResponse;
   submitPayload: ItemFormSubmitPayload;
   isNewMode: boolean;
+  itemImagesEnabled: boolean;
 
   isFormLoading: boolean;
   isAccountsLoading: boolean;
@@ -45,7 +47,7 @@ type ItemFormContextValue = {
   isItemLoading: boolean;
   isTaxRatesLoading: boolean;
 
-  createItemMutate: (values: CreateItemBody) => Promise<void>;
+  createItemMutate: (values: CreateItemBody) => Promise<CreateItemResponse>;
   editItemMutate: (args: [number, EditItemBody]) => Promise<void>;
   setSubmitPayload: React.Dispatch<React.SetStateAction<ItemFormSubmitPayload>>;
 };
@@ -85,7 +87,9 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   useWatchItemError(itemQuery);
 
   // Fetches item settings.
-  const { isLoading: isItemsSettingsLoading } = useSettingsItems();
+  const { isLoading: isItemsSettingsLoading, data: itemsSettings } =
+    useSettingsItems();
+  const itemImagesEnabled = Boolean(itemsSettings?.itemImagesEnabled);
 
   // Create and edit item mutations.
   const { mutateAsync: editItemMutate } = useEditItem();
@@ -114,6 +118,7 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
     taxRates: taxRates ?? [],
     submitPayload,
     isNewMode,
+    itemImagesEnabled,
 
     isFormLoading,
     isAccountsLoading,
@@ -123,7 +128,7 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
 
     createItemMutate: createItemMutate as (
       values: CreateItemBody,
-    ) => Promise<void>,
+    ) => Promise<CreateItemResponse>,
     editItemMutate: editItemMutate as (
       args: [number, EditItemBody],
     ) => Promise<void>,

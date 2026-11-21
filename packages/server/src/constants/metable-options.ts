@@ -185,6 +185,9 @@ export const SettingsOptions = {
     prevent_stock_from_going_below_zero: {
       type: 'boolean',
     },
+    item_images_enabled: {
+      type: 'boolean',
+    },
     table_size: {
       type: 'string',
     },

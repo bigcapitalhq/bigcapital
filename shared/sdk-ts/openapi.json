@@ -1047,8 +1047,15 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "The item has been successfully created."
+          "201": {
+            "description": "The item has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemActionResponseDto"
+                }
+              }
+            }
           },
           "400": {
             "description": "Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc.",
@@ -1112,7 +1119,14 @@
         },
         "responses": {
           "200": {
-            "description": "The item has been successfully updated."
+            "description": "The item has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemActionResponseDto"
+                }
+              }
+            }
           },
           "400": {
             "description": "Validation error. Possible error types: ITEM_NAME_EXISTS, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc.",
@@ -1233,6 +1247,138 @@
           },
           "404": {
             "description": "The item not found."
+          }
+        },
+        "tags": [
+          "Items"
+        ]
+      }
+    },
+    "/api/items/{id}/images": {
+      "post": {
+        "operationId": "ItemsController_uploadItemImages",
+        "summary": "Upload item images.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "front",
+                      "rear",
+                      "other"
+                    ]
+                  }
+                },
+                "required": [
+                  "files",
+                  "type"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The item images have been uploaded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadItemImagesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Items"
+        ]
+      }
+    },
+    "/api/items/{id}/images/{imageId}": {
+      "delete": {
+        "operationId": "ItemsController_deleteItemImage",
+        "summary": "Delete the given item image.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "imageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The item image has been successfully deleted."
           }
         },
         "tags": [
@@ -29799,6 +29945,94 @@
           "required"
         ]
       },
+      "ItemActionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The item id",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "description": "The response message",
+            "example": "The item has been successfully created."
+          }
+        },
+        "required": [
+          "id",
+          "message"
+        ]
+      },
+      "ItemImageResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The item image id",
+            "example": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "The role of the image",
+            "enum": [
+              "front",
+              "rear",
+              "other"
+            ],
+            "example": "front"
+          },
+          "originName": {
+            "type": "string",
+            "description": "The original file name",
+            "example": "front.jpg"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "The image MIME type",
+            "example": "image/jpeg"
+          },
+          "size": {
+            "type": "number",
+            "description": "The image size in bytes",
+            "example": 123456
+          },
+          "imageUri": {
+            "type": "string",
+            "description": "The presigned URL of the original image",
+            "nullable": true
+          },
+          "thumbnailUri": {
+            "type": "string",
+            "description": "The presigned URL of the resized image",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The image creation date"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ]
+      },
+      "UploadItemImagesResponseDto": {
+        "type": "object",
+        "properties": {
+          "images": {
+            "description": "The item images",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemImageResponseDto"
+            }
+          }
+        },
+        "required": [
+          "images"
+        ]
+      },
       "ItemErrorResponseDto": {
         "type": "object",
         "properties": {
@@ -29830,7 +30064,12 @@
               "INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM",
               "COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM",
               "NOT_FOUND",
-              "ITEMS_NOT_FOUND"
+              "ITEMS_NOT_FOUND",
+              "ITEM_IMAGE_NOT_FOUND",
+              "ITEM_IMAGES_LIMIT_EXCEEDED",
+              "ITEM_IMAGE_INVALID_FORMAT",
+              "ITEM_IMAGE_INVALID_TYPE",
+              "ITEM_IMAGE_UPLOAD_FAILED"
             ],
             "example": "ITEM_NAME_EXISTS"
           },
@@ -30484,6 +30723,18 @@
           "itemWarehouses": {
             "type": "array",
             "description": "The warehouse quantities for the item"
+          },
+          "pictureUri": {
+            "type": "string",
+            "description": "The presigned URL of the resized primary item image",
+            "nullable": true
+          },
+          "images": {
+            "description": "The item images",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemImageResponseDto"
+            }
           },
           "createdAt": {
             "format": "date-time",

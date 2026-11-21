@@ -22,6 +22,7 @@ export interface ItemPreferencesFormValues {
   reorderPointNotifications: boolean;
   reorderPointNotificationEmail: string;
   preventStockFromGoingBelowZero: boolean;
+  itemImagesEnabled: boolean;
 }
 
 export function ItemForm(): React.ReactElement {
@@ -157,6 +158,19 @@ export function ItemForm(): React.ReactElement {
         <FSwitch
           name={'preventStockFromGoingBelowZero'}
           labelElement={<T id={'prevent_stock_from_going_below_zero'} />}
+        />
+      </ItemFormGroup>
+
+      {/* ----------- Item images ----------- */}
+      <ItemFormGroup
+        name={'itemImagesEnabled'}
+        helperText={<T id={'item_images_enabled_hint'} />}
+        inline={true}
+      >
+        <FSwitch
+          name={'itemImagesEnabled'}
+          labelElement={<T id={'item_images_enabled'} />}
+          large={true}
         />
       </ItemFormGroup>
 

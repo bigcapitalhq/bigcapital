@@ -9,11 +9,15 @@ import {
   Put,
   Query,
   HttpCode,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import {
+  ApiBody,
+  ApiConsumes,
   ApiExtraModels,
   ApiOperation,
   ApiParam,
@@ -25,6 +29,12 @@ import {
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 import { ItemResponseDto } from './dtos/itemResponse.dto';
+import {
+  ItemImageResponseDto,
+  UploadItemImagesDto,
+  UploadItemImagesResponseDto,
+} from './dtos/ItemImage.dto';
+import { ItemActionResponseDto } from './dtos/ItemActionResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ItemInvoiceResponseDto } from './dtos/ItemInvoiceResponse.dto';
 import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
@@ -41,6 +51,9 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { ItemAction } from '@/interfaces/Item';
+import { FilesInterceptor } from '@/common/interceptors/file.interceptor';
+import { uploadItemImagesMulterOptions } from './ItemImages.multer';
+import { ITEM_IMAGE_TYPES, MAX_ITEM_IMAGES } from './Items.constants';
 
 @Controller('/items')
 @ApiTags('Items')
@@ -53,6 +66,9 @@ import { ItemAction } from '@/interfaces/Item';
 @ApiExtraModels(ItemReceiptsResponseDto)
 @ApiExtraModels(ValidateBulkDeleteItemsResponseDto)
 @ApiExtraModels(ItemApiErrorResponseDto)
+@ApiExtraModels(ItemImageResponseDto)
+@ApiExtraModels(UploadItemImagesResponseDto)
+@ApiExtraModels(ItemActionResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class ItemsController extends TenantController {
@@ -157,6 +173,7 @@ export class ItemsController extends TenantController {
   @ApiResponse({
     status: 200,
     description: 'The item has been successfully updated.',
+    type: ItemActionResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -180,6 +197,70 @@ export class ItemsController extends TenantController {
     const itemId = parseInt(id, 10);
     await this.itemsApplication.editItem(itemId, editItemDto);
     return { id: itemId, message: 'The item has been successfully updated.' };
+  }
+
+  /**
+   * Uploads item images (front, rear, or other).
+   */
+  @Post(':id/images')
+  @HttpCode(200)
+  @RequirePermission(ItemAction.EDIT, AbilitySubject.Item)
+  @UseInterceptors(
+    FilesInterceptor('files', MAX_ITEM_IMAGES, uploadItemImagesMulterOptions),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload item images.' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: { type: 'string', format: 'binary' },
+        },
+        type: { type: 'string', enum: [...ITEM_IMAGE_TYPES] },
+      },
+      required: ['files', 'type'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The item images have been uploaded successfully.',
+    type: UploadItemImagesResponseDto,
+  })
+  @ApiParam({ name: 'id', required: true, type: Number })
+  async uploadItemImages(
+    @Param('id') id: string,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() uploadItemImagesDto: UploadItemImagesDto,
+  ): Promise<UploadItemImagesResponseDto> {
+    return this.itemsApplication.addItemImages(
+      parseInt(id, 10),
+      files,
+      uploadItemImagesDto.type,
+    );
+  }
+
+  /**
+   * Deletes the given item image.
+   */
+  @Delete(':id/images/:imageId')
+  @RequirePermission(ItemAction.EDIT, AbilitySubject.Item)
+  @ApiOperation({ summary: 'Delete the given item image.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item image has been successfully deleted.',
+  })
+  @ApiParam({ name: 'id', required: true, type: Number })
+  @ApiParam({ name: 'imageId', required: true, type: Number })
+  async deleteItemImage(
+    @Param('id') id: string,
+    @Param('imageId') imageId: string,
+  ): Promise<void> {
+    return this.itemsApplication.deleteItemImage(
+      parseInt(id, 10),
+      parseInt(imageId, 10),
+    );
   }
 
   @Post('validate-bulk-delete')
@@ -223,8 +304,9 @@ export class ItemsController extends TenantController {
   @RequirePermission(ItemAction.CREATE, AbilitySubject.Item)
   @ApiOperation({ summary: 'Create a new item (product or service).' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'The item has been successfully created.',
+    type: ItemActionResponseDto,
   })
   @ApiResponse({
     status: 400,

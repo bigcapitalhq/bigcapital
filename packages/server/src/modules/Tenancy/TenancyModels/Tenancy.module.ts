@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { Global, Module } from '@nestjs/common';
 import { TENANCY_DB_CONNECTION } from '../TenancyDB/TenancyDB.constants';
 import { Item } from '../../../modules/Items/models/Item';
+import { ItemImage } from '../../../modules/Items/models/ItemImage';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
@@ -48,6 +49,7 @@ import { TenantUser } from './models/TenantUser.model';
 
 const models = [
   Item,
+  ItemImage,
   Account,
   ItemEntry,
   AccountTransaction,

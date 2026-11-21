@@ -82,7 +82,9 @@ function ItemsDataTableInner({
   const itemsTableSize = itemsSettings?.tableSize as string | undefined;
 
   // Datatable columns.
-  const columns = useItemsTableColumns();
+  const columns = useItemsTableColumns({
+    itemImagesEnabled: Boolean(itemsSettings?.itemImagesEnabled),
+  });
 
   // History context.
   const history = useHistory();

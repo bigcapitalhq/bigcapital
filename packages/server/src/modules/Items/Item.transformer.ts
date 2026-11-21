@@ -1,5 +1,6 @@
 import { Transformer } from '../Transformer/Transformer';
 import { Item } from './models/Item';
+import type { ItemImage } from './models/ItemImage';
 // import { GetItemWarehouseTransformer } from '@/services/Warehouses/Items/GettItemWarehouseTransformer';
 
 export class ItemTransformer extends Transformer {
@@ -17,12 +18,47 @@ export class ItemTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'pictureUri',
+      'images',
       'typeFormatted',
       'sellPriceFormatted',
       'costPriceFormatted',
       'itemWarehouses',
     ];
   };
+
+  /**
+   * Resolves the presigned URL of the primary item image thumbnail.
+   * @param {Item} item
+   * @returns {string | null}
+   */
+  public pictureUri(item: Item): string | null {
+    if (!item.pictureUri) {
+      return null;
+    }
+    return this.options?.imageUrls?.[item.pictureUri] ?? null;
+  }
+
+  /**
+   * Resolves the item images with presigned URLs.
+   * @param {Item} item
+   * @returns {Array | undefined}
+   */
+  public images(item: Item) {
+    if (!item.images) {
+      return undefined;
+    }
+    return item.images.map((image: ItemImage) => ({
+      id: image.id,
+      type: image.type,
+      originName: image.originName,
+      mimeType: image.mimeType,
+      size: image.size,
+      imageUri: this.options?.imageUrls?.[image.key] ?? null,
+      thumbnailUri: this.options?.imageUrls?.[image.thumbnailKey] ?? null,
+      createdAt: (image as unknown as { createdAt?: Date }).createdAt,
+    }));
+  }
 
   /**
    * Formatted item type.

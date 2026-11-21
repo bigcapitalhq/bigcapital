@@ -500,6 +500,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/items/{id}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload item images. */
+        post: operations["ItemsController_uploadItemImages"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/items/{id}/images/{imageId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete the given item image. */
+        delete: operations["ItemsController_deleteItemImage"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/items/validate-bulk-delete": {
         parameters: {
             query?: never;
@@ -6408,6 +6442,59 @@ export interface components {
              */
             required: boolean;
         };
+        ItemActionResponseDto: {
+            /**
+             * @description The item id
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description The response message
+             * @example The item has been successfully created.
+             */
+            message: string;
+        };
+        ItemImageResponseDto: {
+            /**
+             * @description The item image id
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description The role of the image
+             * @example front
+             * @enum {string}
+             */
+            type: "front" | "rear" | "other";
+            /**
+             * @description The original file name
+             * @example front.jpg
+             */
+            originName?: string;
+            /**
+             * @description The image MIME type
+             * @example image/jpeg
+             */
+            mimeType?: string;
+            /**
+             * @description The image size in bytes
+             * @example 123456
+             */
+            size?: number;
+            /** @description The presigned URL of the original image */
+            imageUri?: string | null;
+            /** @description The presigned URL of the resized image */
+            thumbnailUri?: string | null;
+            /**
+             * Format: date-time
+             * @description The image creation date
+             */
+            createdAt?: string;
+        };
+        UploadItemImagesResponseDto: {
+            /** @description The item images */
+            images: components["schemas"]["ItemImageResponseDto"][];
+        };
         ItemErrorResponseDto: {
             /**
              * @description HTTP status code
@@ -6419,7 +6506,7 @@ export interface components {
              * @example ITEM_NAME_EXISTS
              * @enum {string}
              */
-            type: "ITEM_NAME_EXISTS" | "ITEM_CATEOGRY_NOT_FOUND" | "COST_ACCOUNT_NOT_COGS" | "COST_ACCOUNT_NOT_FOUMD" | "SELL_ACCOUNT_NOT_FOUND" | "SELL_ACCOUNT_NOT_INCOME" | "INVENTORY_ACCOUNT_NOT_FOUND" | "INVENTORY_ACCOUNT_NOT_INVENTORY" | "ITEMS_HAVE_ASSOCIATED_TRANSACTIONS" | "ITEM_HAS_ASSOCIATED_TRANSACTINS" | "ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT" | "ITEM_CANNOT_CHANGE_INVENTORY_TYPE" | "TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS" | "INVENTORY_ACCOUNT_CANNOT_MODIFIED" | "PURCHASE_TAX_RATE_NOT_FOUND" | "SELL_TAX_RATE_NOT_FOUND" | "INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM" | "COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM" | "NOT_FOUND" | "ITEMS_NOT_FOUND";
+            type: "ITEM_NAME_EXISTS" | "ITEM_CATEOGRY_NOT_FOUND" | "COST_ACCOUNT_NOT_COGS" | "COST_ACCOUNT_NOT_FOUMD" | "SELL_ACCOUNT_NOT_FOUND" | "SELL_ACCOUNT_NOT_INCOME" | "INVENTORY_ACCOUNT_NOT_FOUND" | "INVENTORY_ACCOUNT_NOT_INVENTORY" | "ITEMS_HAVE_ASSOCIATED_TRANSACTIONS" | "ITEM_HAS_ASSOCIATED_TRANSACTINS" | "ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT" | "ITEM_CANNOT_CHANGE_INVENTORY_TYPE" | "TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS" | "INVENTORY_ACCOUNT_CANNOT_MODIFIED" | "PURCHASE_TAX_RATE_NOT_FOUND" | "SELL_TAX_RATE_NOT_FOUND" | "INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM" | "COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM" | "NOT_FOUND" | "ITEMS_NOT_FOUND" | "ITEM_IMAGE_NOT_FOUND" | "ITEM_IMAGES_LIMIT_EXCEEDED" | "ITEM_IMAGE_INVALID_FORMAT" | "ITEM_IMAGE_INVALID_TYPE" | "ITEM_IMAGE_UPLOAD_FAILED";
             /**
              * @description Human-readable error message
              * @example The item name is already exist.
@@ -6901,6 +6988,10 @@ export interface components {
             purchaseTaxRate?: Record<string, never>;
             /** @description The warehouse quantities for the item */
             itemWarehouses?: unknown[];
+            /** @description The presigned URL of the resized primary item image */
+            pictureUri?: string | null;
+            /** @description The item images */
+            images?: components["schemas"]["ItemImageResponseDto"][];
             /**
              * Format: date-time
              * @description The date when the item was created
@@ -21419,11 +21510,13 @@ export interface operations {
         };
         responses: {
             /** @description The item has been successfully created. */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ItemActionResponseDto"];
+                };
             };
             /** @description Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc. */
             400: {
@@ -21497,7 +21590,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ItemActionResponseDto"];
+                };
             };
             /** @description Validation error. Possible error types: ITEM_NAME_EXISTS, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc. */
             400: {
@@ -21552,6 +21647,67 @@ export interface operations {
             };
             /** @description The item not found. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ItemsController_uploadItemImages: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    files: string[];
+                    /** @enum {string} */
+                    type: "front" | "rear" | "other";
+                };
+            };
+        };
+        responses: {
+            /** @description The item images have been uploaded successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadItemImagesResponseDto"];
+                };
+            };
+        };
+    };
+    ItemsController_deleteItemImage: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+                imageId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The item image has been successfully deleted. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -28,6 +28,7 @@ export type ItemTableRow = Item & {
   active?: boolean;
   quantityOnHand?: number;
   category?: { id?: number; name?: string };
+  pictureUri?: string | null;
 };
 
 interface CellProps {
@@ -224,75 +225,125 @@ export const ItemsActionsTableCell = (props: ActionsMenuProps) => {
 };
 
 /**
+ * Resized item image thumbnail cell.
+ */
+function ItemImageCell({ row }: CellProps) {
+  const pictureUri = row?.original?.pictureUri;
+  const thumbnailStyle: React.CSSProperties = {
+    width: 32,
+    height: 32,
+    objectFit: 'cover',
+    borderRadius: 4,
+    display: 'block',
+    background: 'rgba(128, 128, 128, 0.12)',
+  };
+
+  if (!pictureUri) {
+    return (
+      <span
+        style={{
+          ...thumbnailStyle,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#8f99a8',
+        }}
+      >
+        <Icon icon="image" iconSize={16} />
+      </span>
+    );
+  }
+  return <img src={pictureUri} alt="" style={thumbnailStyle} loading="lazy" />;
+}
+
+/**
  * Retrieve all items table columns.
  */
-export const useItemsTableColumns = (): DataTableColumn<ItemTableRow>[] => {
-  return React.useMemo(
-    () =>
-      [
-        {
-          id: 'name',
-          Header: intl.get('item_name'),
-          accessor: 'name',
-          className: 'name',
-          width: 180,
-          clickable: true,
-          textOverview: true,
-        },
-        {
-          id: 'code',
-          Header: intl.get('item_code'),
-          accessor: 'code',
-          className: clsx(Classes.TEXT_MUTED),
-          width: 120,
-          clickable: true,
-        },
-        {
-          id: 'type',
-          Header: intl.get('item_type'),
-          accessor: ItemTypeAccessor,
-          className: 'item_type',
-          width: 120,
-          clickable: true,
-        },
-        {
-          id: 'category',
-          Header: intl.get('category'),
-          accessor: 'category.name',
-          className: clsx(Classes.TEXT_MUTED),
-          width: 150,
-          clickable: true,
-          textOverview: true,
-        },
-        {
-          id: 'sell_price',
-          Header: intl.get('sell_price'),
-          accessor: 'sellPriceFormatted',
-          align: 'right',
-          width: 150,
-          clickable: true,
-          money: true,
-        },
-        {
-          id: 'cost_price',
-          Header: intl.get('cost_price'),
-          accessor: 'costPriceFormatted',
-          align: 'right',
-          width: 150,
-          clickable: true,
-          money: true,
-        },
-        {
-          id: 'quantity_on_hand',
-          Header: intl.get('quantity_on_hand'),
-          accessor: 'quantityOnHand',
-          Cell: QuantityOnHandCell,
-          align: 'right',
-          width: 140,
-          clickable: true,
-          money: true,
-        },
-      ] as DataTableColumn<ItemTableRow>[],
-    [],
-  );
+export const useItemsTableColumns = (options?: {
+  itemImagesEnabled?: boolean;
+}): DataTableColumn<ItemTableRow>[] => {
+  const itemImagesEnabled = Boolean(options?.itemImagesEnabled);
+
+  return React.useMemo(() => {
+    const columns: DataTableColumn<ItemTableRow>[] = [
+      {
+        id: 'name',
+        Header: intl.get('item_name'),
+        accessor: 'name',
+        className: 'name',
+        width: 180,
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'code',
+        Header: intl.get('item_code'),
+        accessor: 'code',
+        className: clsx(Classes.TEXT_MUTED),
+        width: 120,
+        clickable: true,
+      },
+      {
+        id: 'type',
+        Header: intl.get('item_type'),
+        accessor: ItemTypeAccessor,
+        className: 'item_type',
+        width: 120,
+        clickable: true,
+      },
+      {
+        id: 'category',
+        Header: intl.get('category'),
+        accessor: (row: ItemTableRow) => row.category?.name,
+        className: clsx(Classes.TEXT_MUTED),
+        width: 150,
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'sell_price',
+        Header: intl.get('sell_price'),
+        accessor: 'sellPriceFormatted',
+        align: 'right',
+        width: 150,
+        clickable: true,
+        money: true,
+      },
+      {
+        id: 'cost_price',
+        Header: intl.get('cost_price'),
+        accessor: 'costPriceFormatted',
+        align: 'right',
+        width: 150,
+        clickable: true,
+        money: true,
+      },
+      {
+        id: 'quantity_on_hand',
+        Header: intl.get('quantity_on_hand'),
+        accessor: 'quantityOnHand',
+        Cell: QuantityOnHandCell,
+        align: 'right',
+        width: 140,
+        clickable: true,
+        money: true,
+      },
+    ];
+
+    if (!itemImagesEnabled) {
+      return columns;
+    }
+    return [
+      {
+        id: 'image',
+        Header: '',
+        accessor: 'pictureUri',
+        Cell: ItemImageCell,
+        width: 52,
+        clickable: true,
+        disableSortBy: true,
+      },
+      ...columns,
+    ];
+  }, [itemImagesEnabled]);
 };

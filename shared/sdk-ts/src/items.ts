@@ -1,4 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
+import { withFormData } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -14,15 +15,20 @@ export const ITEMS_ROUTES = {
   ESTIMATES: '/api/items/{id}/estimates',
   RECEIPTS: '/api/items/{id}/receipts',
   WAREHOUSES: '/api/items/{id}/warehouses',
+  IMAGES: '/api/items/{id}/images',
+  IMAGE: '/api/items/{id}/images/{imageId}',
 } as const satisfies Record<string, keyof paths>;
 
 export type ItemsListResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.LIST, 'get'>>;
 export type Item = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.BY_ID, 'get'>>;
+export type ItemImage = NonNullable<Item['images']>[number];
 export type CreateItemBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.LIST, 'post'>>;
+export type CreateItemResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.LIST, 'post'>>;
 export type EditItemBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.BY_ID, 'put'>>;
 export type BulkDeleteItemsBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.BULK_DELETE, 'post'>>;
 export type ValidateBulkDeleteItemsResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type GetItemsQuery = OpQueryParams<OpForPath<typeof ITEMS_ROUTES.LIST, 'get'>>;
+export type ItemImageRole = 'front' | 'rear' | 'other';
 
 export type ItemAssociatedInvoicesResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.INVOICES, 'get'>>;
 export type ItemAssociatedBillsResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.BILLS, 'get'>>;
@@ -50,9 +56,10 @@ export async function fetchItem(fetcher: ApiFetcher, id: number): Promise<Item> 
 export async function createItem(
   fetcher: ApiFetcher,
   values: CreateItemBody
-): Promise<void> {
+): Promise<CreateItemResponse> {
   const post = fetcher.path(ITEMS_ROUTES.LIST).method('post').create();
-  await post(values);
+  const { data } = (await post(values)) as { data: CreateItemResponse };
+  return data;
 }
 
 export async function editItem(
@@ -139,4 +146,42 @@ export async function fetchItemWarehouses(
   const get = fetcher.path(ITEMS_ROUTES.WAREHOUSES).method('get').create();
   const { data } = await get({ id });
   return data;
+}
+
+/**
+ * Uploads one or more item images for the given role.
+ *
+ * @param fetcher - API fetcher.
+ * @param id - Item id.
+ * @param type - Image role.
+ * @param files - Image files.
+ */
+export async function uploadItemImages(
+  fetcher: ApiFetcher,
+  id: number,
+  type: ItemImageRole,
+  files: File[],
+): Promise<void> {
+  const formData = new FormData();
+  files.forEach((file) => formData.append('files', file));
+  formData.append('type', type);
+
+  const post = fetcher.path(ITEMS_ROUTES.IMAGES).method('post').create();
+  await post({ id } as never, withFormData(formData));
+}
+
+/**
+ * Deletes the given item image.
+ *
+ * @param fetcher - API fetcher.
+ * @param id - Item id.
+ * @param imageId - Item image id.
+ */
+export async function deleteItemImage(
+  fetcher: ApiFetcher,
+  id: number,
+  imageId: number,
+): Promise<void> {
+  const del = fetcher.path(ITEMS_ROUTES.IMAGE).method('delete').create();
+  await del({ id, imageId } as never);
 }
