@@ -111,6 +111,8 @@ export interface ICashflowTransactionUncategorizedPayload {
 export enum CashflowAction {
   Create = 'Create',
   Delete = 'Delete',
+  Reconcile = 'Reconcile',
+  UndoReconciliation = 'UndoReconciliation',
   View = 'View',
 }
 

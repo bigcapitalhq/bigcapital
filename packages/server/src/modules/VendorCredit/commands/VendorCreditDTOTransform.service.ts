@@ -54,6 +54,8 @@ export class VendorCreditDTOTransformService {
         vendorCreditDTO.entries.map((entry: VendorCreditEntryDto) => ({
           referenceType: 'VendorCredit',
           ...entry,
+          batches: entry.batches ?? [],
+          batchId: entry.batchId ?? null,
         })),
       );
 

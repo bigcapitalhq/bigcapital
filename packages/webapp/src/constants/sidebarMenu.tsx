@@ -508,6 +508,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
             },
           },
           {
+            text: <T id={'sidebar.reconcile'} />,
+            href: '/reconcile',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Cashflow,
+              ability: CashflowAction.Reconcile,
+            },
+          },
+          {
             text: 'Rules',
             href: '/bank-rules',
             type: ISidebarMenuItemType.Link,
@@ -664,6 +673,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
             permission: {
               subject: AbilitySubject.Report,
               ability: ReportsAction.READ_GENERAL_LEDGET,
+            },
+          },
+          {
+            text: <T id="report.reconciliation_status.title" />,
+            href: '/financial-reports/reconciliation-status',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_RECONCILIATION_STATUS,
             },
           },
           {

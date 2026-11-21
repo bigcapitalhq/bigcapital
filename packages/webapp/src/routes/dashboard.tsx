@@ -214,6 +214,18 @@ export const getDashboardRoutes = () => [
 
   // Financial Reports.
   {
+    path: '/financial-reports/reconciliation-status',
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/ReconciliationStatus/ReconciliationStatus'
+      ).then((m) => ({ default: m.ReconciliationStatus })),
+    ),
+    breadcrumb: intl.get('report.reconciliation_status.title'),
+    pageTitle: intl.get('report.reconciliation_status.title'),
+    backLink: true,
+    sidebarExpand: false,
+  },
+  {
     path: `/financial-reports/general-ledger`,
     component: lazy(() =>
       import(
@@ -1255,6 +1267,53 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
   },
   // Cash flow
+  {
+    path: '/reconcile/:accountId/:reconciliationId',
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconcileTransactionsPage'
+      ).then((m) => ({
+        default: m.ReconcileTransactionsPage,
+      })),
+    ),
+    breadcrumb: intl.get('banking.reconciliation.page_title'),
+    pageTitle: intl.get('banking.reconciliation.page_title'),
+    sidebarExpand: false,
+  },
+  {
+    path: '/reconcile',
+    component: lazy(() =>
+      import('@/containers/Banking/Reconciliation/ReconcilePage').then((m) => ({
+        default: m.ReconcilePage,
+      })),
+    ),
+    breadcrumb: intl.get('banking.reconciliation.page_title'),
+    pageTitle: intl.get('banking.reconciliation.page_title'),
+  },
+  {
+    path: `/cashflow-accounts/:accountId/reconciliations/:reconciliationId`,
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconciliationDetailPage'
+      ).then((m) => ({
+        default: m.ReconciliationDetailPage,
+      })),
+    ),
+    sidebarExpand: false,
+    pageTitle: intl.get('banking.reconciliation.detail_title'),
+  },
+  {
+    path: `/cashflow-accounts/:accountId/reconciliations`,
+    component: lazy(() =>
+      import(
+        '@/containers/Banking/Reconciliation/ReconciliationsListPage'
+      ).then((m) => ({
+        default: m.ReconciliationsListPage,
+      })),
+    ),
+    sidebarExpand: false,
+    pageTitle: intl.get('banking.reconciliation.title'),
+  },
   {
     path: `/cashflow-accounts/:id/transactions`,
     component: lazy(() =>

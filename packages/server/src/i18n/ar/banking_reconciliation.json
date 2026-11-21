@@ -1,0 +1,4 @@
+{
+  "BANK_RECONCILIATION_ACCOUNT_INVALID": "التسوية متاحة للحسابات البنكية فقط.",
+  "BANK_RECONCILIATION_FOREIGN_CURRENCY_NOT_SUPPORTED": "التسوية غير مدعومة حاليًا للحسابات بالعملات الأجنبية."
+}

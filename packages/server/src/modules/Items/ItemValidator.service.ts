@@ -1,3 +1,5 @@
+import { Features } from '@/common/types/Features';
+import { FeaturesManager } from '../Features/FeaturesManager';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ACCOUNT_PARENT_TYPE,
@@ -28,6 +30,7 @@ export class ItemsValidators {
    * @param {typeof InventoryAdjustment} inventoryAdjustmentEntryModel - The InventoryAdjustment model.
    */
   constructor(
+    private readonly features: FeaturesManager,
     @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
 
     @Inject(Account.name)
@@ -52,6 +55,19 @@ export class ItemsValidators {
       typeof InventoryAdjustment
     >,
   ) {}
+
+  async validateBatchTrackingEnabled(item: CreateItemDto) {
+    if (
+      item.type === 'inventory' &&
+      item.inventoryTracking === 'batches' &&
+      !(await this.features.accessible(Features.BATCH_TRACKING))
+    ) {
+      throw new ServiceError(
+        'BATCH_FEATURE_NOT_ENABLED',
+        'The batch tracking feature is not enabled.',
+      );
+    }
+  }
 
   /**
    * Validate wether the given item name already exists on the storage.

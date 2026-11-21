@@ -16,22 +16,37 @@ import {
 } from 'class-validator';
 
 export class WarehouseTransferEntryDto {
+  @ApiProperty()
   @IsNotEmpty()
   index: number;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsInt()
   itemId: number;
 
+  @ApiProperty({
+    description: 'Batch assigned to this inventory movement',
+    required: false,
+  })
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @IsPositive()
+  batchId?: number;
+
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   description?: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsInt()
   @IsPositive()
   quantity: number;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsDecimal()
   cost?: number;
@@ -94,6 +109,7 @@ export class CommandWarehouseTransferDto {
   @Type(() => WarehouseTransferEntryDto)
   @ApiProperty({
     description: 'The entries of the warehouse transfer',
+    type: [WarehouseTransferEntryDto],
     example: [
       {
         index: 1,

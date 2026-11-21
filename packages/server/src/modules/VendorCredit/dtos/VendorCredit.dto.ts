@@ -106,6 +106,7 @@ export class CommandVendorCreditDto {
   @ValidateNested({ each: true })
   @Type(() => VendorCreditEntryDto)
   @ApiProperty({
+    type: [ItemEntryDto],
     description: 'The entries of the vendor credit',
     example: [
       {

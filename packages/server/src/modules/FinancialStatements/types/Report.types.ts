@@ -25,6 +25,7 @@ export enum ReportsAction {
   READ_PROFIT_LOSS = 'read-profit-loss',
   READ_JOURNAL = 'read-journal',
   READ_GENERAL_LEDGET = 'read-general-ledger',
+  READ_RECONCILIATION_STATUS = 'read-reconciliation-status',
   READ_CASHFLOW = 'read-cashflow',
   READ_AR_AGING_SUMMARY = 'read-ar-aging-summary',
   READ_AP_AGING_SUMMARY = 'read-ap-aging-summary',

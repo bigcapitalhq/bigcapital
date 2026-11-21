@@ -231,6 +231,20 @@ export class Account extends TenantBaseModel {
       },
 
       /**
+       * Account may has many bank reconciliations.
+       */
+      reconciliations: {
+        relation: Model.HasManyRelation,
+        modelClass:
+          require('../../BankingReconciliation/models/BankReconciliation')
+            .BankReconciliation,
+        join: {
+          from: 'accounts.id',
+          to: 'bank_reconciliations.accountId',
+        },
+      },
+
+      /**
        * Account may has many items as cost account.
        */
       itemsCostAccount: {

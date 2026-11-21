@@ -677,6 +677,10 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             key: ReportsAction.READ_GENERAL_LEDGET,
           },
           {
+            label: intl.get('report.reconciliation_status.title'),
+            key: ReportsAction.READ_RECONCILIATION_STATUS,
+          },
+          {
             label: intl.get('permissions.a_r_aging_summary_report'),
             key: ReportsAction.READ_AR_AGING_SUMMARY,
           },

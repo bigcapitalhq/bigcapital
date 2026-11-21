@@ -3,6 +3,7 @@ export const BALANCE_SHEET = 'BALANCE-SHEET';
 export const TRIAL_BALANCE_SHEET = 'TRIAL-BALANCE-SHEET';
 export const PROFIT_LOSS_SHEET = 'PROFIT-LOSS-SHEET';
 export const GENERAL_LEDGER = 'GENERAL-LEDGER';
+export const RECONCILIATION_STATUS = 'RECONCILIATION-STATUS';
 export const JOURNAL = 'JOURNAL';
 export const AR_AGING_SUMMARY = 'AR-AGING-SUMMARY';
 export const AP_AGING_SUMMARY = 'AP-AGING-SUMMARY';
@@ -32,6 +33,10 @@ export const financialReportsKeys = {
     [FINANCIAL_REPORT, PROFIT_LOSS_SHEET, query] as const,
   generalLedger: (query?: Record<string, unknown>) =>
     [FINANCIAL_REPORT, GENERAL_LEDGER, query] as const,
+  reconciliationStatus: (query?: Record<string, unknown>) =>
+    query
+      ? ([FINANCIAL_REPORT, RECONCILIATION_STATUS, query] as const)
+      : ([FINANCIAL_REPORT, RECONCILIATION_STATUS] as const),
   journal: (query?: Record<string, unknown>) =>
     [FINANCIAL_REPORT, JOURNAL, query] as const,
   arAgingSummary: (query?: Record<string, unknown>) =>
@@ -75,6 +80,7 @@ export const FinancialReportsQueryKeys = {
   TRIAL_BALANCE_SHEET,
   PROFIT_LOSS_SHEET,
   GENERAL_LEDGER,
+  RECONCILIATION_STATUS,
   JOURNAL,
   AR_AGING_SUMMARY,
   AP_AGING_SUMMARY,

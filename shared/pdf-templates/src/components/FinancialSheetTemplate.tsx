@@ -5,6 +5,7 @@ export interface TableColumn {
   key: string;
   label: string;
   style?: string;
+  children?: TableColumn[];
 }
 
 export interface TableCell {
@@ -28,6 +29,69 @@ export interface FinancialSheetTemplateProps {
   };
   customCSS?: string;
 }
+
+interface TableHeaderCell {
+  column: TableColumn;
+  colSpan?: number;
+  rowSpan?: number;
+}
+
+/**
+ * Counts the columns that have no children, which are the ones a row has a
+ * cell for.
+ */
+const countLeafColumns = (columns: TableColumn[]): number => {
+  return columns.reduce(
+    (count, column) =>
+      count + (column.children?.length ? countLeafColumns(column.children) : 1),
+    0,
+  );
+};
+
+/**
+ * Number of header rows the column tree needs.
+ */
+const getHeaderDepth = (columns: TableColumn[]): number => {
+  return columns.reduce(
+    (depth, column) =>
+      Math.max(
+        depth,
+        column.children?.length ? 1 + getHeaderDepth(column.children) : 1,
+      ),
+    0,
+  );
+};
+
+/**
+ * Lays the column tree out as header rows. Parent columns span their children
+ * on their own row, and leaf columns are placed on the last row, so every row
+ * of cells keeps a matching header.
+ */
+const buildHeaderRows = (columns: TableColumn[]): TableHeaderCell[][] => {
+  const depth = getHeaderDepth(columns);
+  const rows: TableHeaderCell[][] = Array.from({ length: depth }, () => []);
+
+  const walk = (nodes: TableColumn[], level: number): void => {
+    nodes.forEach((column) => {
+      if (column.children?.length) {
+        rows[level].push({
+          column,
+          colSpan: countLeafColumns(column.children),
+        });
+        walk(column.children, level + 1);
+      } else {
+        const rowSpan = depth - level;
+        rows[level].push({
+          column,
+          rowSpan: rowSpan > 1 ? rowSpan : undefined,
+        });
+      }
+    });
+  };
+  walk(columns, 0);
+
+  return rows;
+};
 
 export function FinancialSheetTemplate({
   organizationName,
@@ -56,19 +120,24 @@ export function FinancialSheetTemplate({
           borderCollapse="collapse"
         >
           <x.thead>
-            <x.tr>
-              {table.columns.map((column) => (
-                <x.th
-                  key={column.key}
-                  color="#000"
-                  borderBottom="1px solid #000000"
-                  p="0.5rem"
-                  className={`column--${column.key}`}
-                >
-                  {column.label}
-                </x.th>
-              ))}
-            </x.tr>
+            {buildHeaderRows(table.columns).map((headerRow, rowIndex) => (
+              <x.tr key={rowIndex}>
+                {headerRow.map(({ column, colSpan, rowSpan }, cellIndex) => (
+                  <x.th
+                    key={`${column.key}-${cellIndex}`}
+                    {...(colSpan ? { colspan: colSpan } : {})}
+                    {...(rowSpan ? { rowspan: rowSpan } : {})}
+                    textAlign={colSpan ? "center" : undefined}
+                    color="#000"
+                    borderBottom="1px solid #000000"
+                    p="0.5rem"
+                    className={`column--${column.key}`}
+                  >
+                    {column.label}
+                  </x.th>
+                ))}
+              </x.tr>
+            ))}
           </x.thead>
           <x.tbody>
             {table.rows.map((row, rowIndex) => (

@@ -4,6 +4,7 @@ import { range } from 'lodash';
 import { useReducer, useEffect } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getPaginationRowRange } from './paginationRowRange';
 import { Icon, FormattedMessage as T } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
@@ -334,9 +335,8 @@ export function Pagination({
         alignItems="center"
       >
         {intl.get('showing_current_page_to_total', {
-          currentPage: state.currentPage,
-          totalPages: state.totalPages,
-          total: total,
+          ...getPaginationRowRange(state.currentPage, state.size, state.total),
+          total: state.total,
         })}
       </x.div>
     </x.div>

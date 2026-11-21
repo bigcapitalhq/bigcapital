@@ -12,13 +12,15 @@ import type { AxiosRequestConfig } from 'axios';
  *
  * @param options - Optional configuration
  * @param options.enableCamelCaseTransform - If true, automatically transforms response data from snake_case to camelCase
+ * @param options.locale - Locale to send in Accept-Language when supplied
  */
 export function useApiFetcher(options?: {
   enableCamelCaseTransform?: boolean;
+  locale?: string;
 }) {
   const token = useAuthToken();
   const organizationId = useAuthOrganizationId();
-  const currentLocale = getCookie('locale');
+  const currentLocale = options?.locale ?? getCookie('locale');
   const onError = useApiFetcherOnError();
 
   return React.useMemo(() => {

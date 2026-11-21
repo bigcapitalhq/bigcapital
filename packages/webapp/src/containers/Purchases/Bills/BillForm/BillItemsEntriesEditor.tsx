@@ -23,7 +23,6 @@ export function BillFormBody() {
   const { items, taxRates } = useBillFormContext();
   const { featureCan } = useFeatureCan();
   const isLandedCostEnabled = featureCan(Features.LandedCost);
-  const isBatchTrackingEnabled = featureCan(Features.BatchTracking);
 
   return (
     <FastField
@@ -45,7 +44,7 @@ export function BillFormBody() {
           accountField={'costAccountId'}
           taxRates={taxRates}
           landedCost={isLandedCostEnabled}
-          batchMode={isBatchTrackingEnabled ? 'purchase' : undefined}
+          batchMode="purchase"
         />
       )}
     </FastField>

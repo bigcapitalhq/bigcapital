@@ -7,7 +7,7 @@ import { ItemMeta } from './Item.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
-import { ItemDefaultViews } from '../Items.constants';
+import { ItemDefaultViews, type InventoryTracking } from '../Items.constants';
 
 @ExportableModel()
 @ImportableModel()
@@ -15,6 +15,7 @@ import { ItemDefaultViews } from '../Items.constants';
 @InjectModelMeta(ItemMeta)
 @InjectModelDefaultViews(ItemDefaultViews)
 export class Item extends TenantBaseModel {
+  public readonly inventoryTracking: InventoryTracking;
   public readonly quantityOnHand: number;
   public readonly reorderPoint: number | null;
   public readonly reorderPointNotified: boolean;

@@ -323,9 +323,13 @@ export const valueParser =
 
       // Parses the enumeration value.
     } else if (field.fieldType === 'enumeration') {
-      const option = get(field, 'options', []).find(
-        (option) => option.label?.toLowerCase() === value?.toLowerCase(),
-      );
+      const options = get(field, 'options', []);
+      const lowered = value?.toLowerCase();
+      // Matches the localized label first, then the raw key (what an export
+      // writes for enumerations without a formatted accessor).
+      const option =
+        options.find((option) => option.label?.toLowerCase() === lowered) ??
+        options.find((option) => option.key?.toLowerCase() === lowered);
       _value = get(option, 'key');
       // Parses the numeric value.
     } else if (field.fieldType === 'number') {

@@ -7,6 +7,7 @@ export class InventoryAdjustmentEntry extends BaseModel {
   adjustmentId!: number;
   index!: number;
   itemId!: number;
+  batchId?: number;
   quantity!: number;
   cost!: number;
   value!: number;

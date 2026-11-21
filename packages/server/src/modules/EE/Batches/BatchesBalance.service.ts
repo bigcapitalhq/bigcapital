@@ -1,3 +1,4 @@
+import type { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { raw } from 'objection';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
@@ -43,32 +44,18 @@ export class BatchesBalanceService {
   }
 
   /**
-   * Sums the quantity in/out of the given batches for a specific transaction.
-   * Used to exclude the current transaction when validating an edit.
-   */
-  private async getTransactionTotalsForReference(
-    transactionType: string,
-    transactionId: number,
-    batchesIds: number[],
-  ): Promise<Map<number, IBatchTransactionsTotals>> {
-    return this.sumTransactionsTotals(batchesIds, {
-      transactionType,
-      transactionId,
-    });
-  }
-
-  /**
    * Aggregates the inventory transactions quantity in/out by batch id.
    */
   private async sumTransactionsTotals(
     batchesIds: number[],
-    filter?: { transactionType: string; transactionId: number },
+    filter?: IExcludeTransaction,
+    trx?: Knex.Transaction,
   ): Promise<Map<number, IBatchTransactionsTotals>> {
     if (batchesIds.length === 0) {
       return new Map();
     }
     const query = this.inventoryTransactionModel()
-      .query()
+      .query(trx)
       .select('batchId')
       .select(
         raw(
@@ -160,6 +147,7 @@ export class BatchesBalanceService {
   public async getAvailableQuantities(
     batches: Batch[],
     excludeTransaction?: IExcludeTransaction,
+    trx?: Knex.Transaction,
   ): Promise<Map<number, number>> {
     const quantities = new Map<number, number>(
       batches.map((batch) => [batch.id, toBatchQuantity(batch.quantityOnHand)]),
@@ -168,10 +156,10 @@ export class BatchesBalanceService {
     if (!excludeTransaction || batches.length === 0) {
       return quantities;
     }
-    const totals = await this.getTransactionTotalsForReference(
-      excludeTransaction.transactionType,
-      excludeTransaction.transactionId,
+    const totals = await this.sumTransactionsTotals(
       batches.map((batch) => batch.id),
+      excludeTransaction,
+      trx,
     );
 
     totals.forEach((total, batchId) => {

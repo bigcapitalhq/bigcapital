@@ -42,6 +42,7 @@ export class InitiateWarehouseTransfer {
       .query(trx)
       .findById(warehouseTransferId)
       .forUpdate()
+      .withGraphFetched('entries')
       .throwIfNotFound();
 
     // Validate the given warehouse transfer not already initiated.

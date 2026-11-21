@@ -1,0 +1,4 @@
+{
+  "BANK_RECONCILIATION_ACCOUNT_INVALID": "Reconciliation is only available for bank accounts.",
+  "BANK_RECONCILIATION_FOREIGN_CURRENCY_NOT_SUPPORTED": "Reconciliation is not supported for foreign currency accounts yet."
+}

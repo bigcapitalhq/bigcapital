@@ -65,6 +65,13 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: CashflowAction.Create, label: 'ability.create' },
       { key: CashflowAction.Delete, label: 'ability.delete' },
     ],
+    extraAbilities: [
+      { key: CashflowAction.Reconcile, label: 'ability.reconcile' },
+      {
+        key: CashflowAction.UndoReconciliation,
+        label: 'ability.undo_reconciliation',
+      },
+    ],
   },
   {
     subject: AbilitySubject.Item,
@@ -320,6 +327,10 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       {
         key: ReportsAction.READ_GENERAL_LEDGET,
         label: 'ability.general_ledger',
+      },
+      {
+        key: ReportsAction.READ_RECONCILIATION_STATUS,
+        label: 'ability.reconciliation_status',
       },
       { key: ReportsAction.READ_CASHFLOW, label: 'ability.cashflow_report' },
       {

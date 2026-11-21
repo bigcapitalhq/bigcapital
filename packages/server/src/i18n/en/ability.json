@@ -23,6 +23,8 @@
   "create": "Create",
   "edit": "Edit",
   "delete": "Delete",
+  "reconcile": "Reconcile bank accounts",
+  "undo_reconciliation": "Undo bank reconciliations",
   "transactions_locking": "Ability to transactions locking.",
 
   "balance_sheet_report": "Balance sheet.",
@@ -30,6 +32,7 @@
   "profit_loss_sheet": "Profit/loss sheet",
   "journal": "Journal",
   "general_ledger": "General ledger",
+  "reconciliation_status": "Reconciliation Status",
   "cashflow_report": "Cashflow",
   "AR_aging_summary_report": "A/R aging summary",
   "AP_aging_summary_report": "A/P aging summary",

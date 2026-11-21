@@ -60,6 +60,7 @@ function InventoryAdjustmentFormInner({
         date: moment(inventoryAdjustment.date).format('YYYY-MM-DD'),
         type,
         adjustmentAccountId: inventoryAdjustment.adjustmentAccountId ?? '',
+        batchId: entry?.batchId,
         itemId: entry?.itemId ?? itemId ?? '',
         reason: inventoryAdjustment.reason ?? '',
         cost: entry?.cost ?? '',

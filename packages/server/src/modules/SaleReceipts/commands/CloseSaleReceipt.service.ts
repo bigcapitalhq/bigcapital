@@ -39,7 +39,7 @@ export class CloseSaleReceipt {
     const oldSaleReceipt = await this.saleReceiptModel()
       .query()
       .findById(saleReceiptId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.batches')
       .throwIfNotFound();
 
     // Throw service error if the sale receipt already closed.
@@ -59,7 +59,7 @@ export class CloseSaleReceipt {
         .patchAndFetchById(saleReceiptId, {
           closedAt: moment().toMySqlDateTime(),
         })
-        .withGraphFetched('entries');
+        .withGraphFetched('entries.batches');
 
       // Triggers `onSaleReceiptClosed` event.
       await this.eventEmitter.emitAsync(events.saleReceipt.onClosed, {

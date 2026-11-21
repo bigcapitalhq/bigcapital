@@ -166,14 +166,17 @@ export class Transformer<T = object, ExtraContext = object> {
    * @param {string} format
    * @returns {string}
    */
-  protected formatDate(date: string | Date, format?: string) {
+  protected formatDate(date: string | Date, format?: string, locale?: string) {
     // Use the export date format if the async operation is in exporting,
     // otherwise use the given or default format.
     const _format = this.context.exportAls.isExport
       ? EXPORT_DTE_FORMAT
       : format || this.dateFormat;
 
-    return date ? moment(date).format(_format) : '';
+    if (!date) return '';
+
+    const value = moment(date);
+    return (locale ? value.locale(locale) : value).format(_format);
   }
 
   /**

@@ -53,9 +53,10 @@ async function loadYupLocales(currentLocale) {
  * Dynamically loads the moment.js locale bundle for the given locale.
  */
 async function loadMomentLocale(currentLocale) {
-  const momentLocale = transformMomentLocale(currentLocale);
-  if (momentLocale === 'en') return;
-  await import(`moment/locale/${momentLocale}`);
+  if (currentLocale === 'ar') {
+    // Use the ES module locale so Vite loads it into the app's Moment instance.
+    await import('moment/dist/locale/ar-ly');
+  }
 }
 
 /**

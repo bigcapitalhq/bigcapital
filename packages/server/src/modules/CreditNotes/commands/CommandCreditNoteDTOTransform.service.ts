@@ -55,9 +55,10 @@ export class CommandCreditNoteDTOTransform {
         creditNoteDTO.entries.map((entry: CreditNoteEntryDto) => ({
           ...entry,
           referenceType: 'CreditNote',
+          batches: entry.batches ?? [],
+          batchId: entry.batchId ?? null,
         })),
       );
-
     const entries = R.compose(
       // Associate the default index to each item entry.
       assocItemEntriesDefaultIndex,

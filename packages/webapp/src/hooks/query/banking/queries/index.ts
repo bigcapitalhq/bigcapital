@@ -5,3 +5,4 @@ export * from './recognized-transactions';
 export * from './account-summary';
 export * from './pending-transactions';
 export * from './plaid';
+export * from './reconciliations';
