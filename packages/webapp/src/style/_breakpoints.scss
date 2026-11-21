@@ -1,0 +1,37 @@
+@use 'sass:map';
+
+// Shared breakpoints. Keep in sync with the Bootstrap-like grid classes used by
+// `components/Grid/Row.tsx` and `components/Grid/Col.tsx`.
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+) !default;
+
+@function breakpoint-min($name) {
+  $min: map.get($breakpoints, $name);
+
+  @if $min == null {
+    @error 'Unknown breakpoint `#{$name}`.';
+  }
+
+  @return $min;
+}
+
+/// Media query for screens at or above the given breakpoint.
+/// @example
+///   .card { padding: 8px; @include bp-up(md) { padding: 16px; } }
+@mixin bp-up($name) {
+  @media (min-width: breakpoint-min($name)) {
+    @content;
+  }
+}
+
+/// Media query for screens below the given breakpoint.
+@mixin bp-down($name) {
+  @media (max-width: (breakpoint-min($name) - 0.02px)) {
+    @content;
+  }
+}

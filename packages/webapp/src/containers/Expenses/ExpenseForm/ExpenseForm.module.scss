@@ -1,0 +1,170 @@
+// Expense form layout and feature styles.
+//
+// Conventions:
+// - Classes are local to the module; Blueprint internals are targeted with
+//   `:global(...)`.
+// - Theme-aware values use CSS custom properties so `.bp4-dark` can override
+//   them without re-rendering components.
+// - Use logical properties (`margin-inline`, `inset-inline`) for RTL support.
+
+.form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.formInner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.formBody {
+  flex: 1;
+  overflow: auto;
+}
+
+.formContent {
+  padding: 18px $space-8 0;
+}
+
+.header {
+  --expense-form-header-background: #fff;
+  --expense-form-header-border: #d2dce2;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-5;
+  padding: 25px $space-8;
+  background-color: var(--expense-form-header-background);
+  border-bottom: 1px solid var(--expense-form-header-border);
+
+  @include dark-mode {
+    --expense-form-header-background: var(--color-dark-gray1);
+    --expense-form-header-border: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.headerFields {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+
+  :global(.bp4-form-group) {
+    margin-bottom: 0;
+
+    &:global(.bp4-inline) {
+      max-width: 450px;
+    }
+
+    :global(.bp4-label) {
+      min-width: 150px;
+      font-weight: $font-weight-medium;
+    }
+
+    :global(.bp4-form-content) {
+      width: 100%;
+    }
+  }
+}
+
+.attachmentsFooter {
+  flex: 1;
+  margin-top: $space-5;
+  padding: 0 $space-8 $space-5;
+}
+
+.attachmentsPaper {
+  --expense-form-paper-background: #fff;
+  --expense-form-paper-border: #d2dce2;
+
+  padding: $space-5;
+  background-color: var(--expense-form-paper-background);
+  border: 1px solid var(--expense-form-paper-border);
+
+  @include dark-mode {
+    --expense-form-paper-background: var(--color-dark-gray1);
+    --expense-form-paper-border: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.descriptionGroup {
+  &:global(.bp4-form-group) {
+    :global(.bp4-label) {
+      margin-bottom: $space-3;
+      font-size: $font-size-sm;
+    }
+
+    :global(.bp4-form-content) {
+      margin-inline-start: 10px;
+    }
+  }
+}
+
+.totalLines {
+  --expense-form-total-lines-text: #555555;
+
+  width: 100%;
+  color: var(--expense-form-total-lines-text);
+
+  @include dark-mode {
+    --expense-form-total-lines-text: var(--color-light-gray4);
+  }
+}
+
+.footerActions {
+  --expense-form-actions-background: #fff;
+  --expense-form-actions-border: rgb(210, 221, 226);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px $space-5;
+  background: var(--expense-form-actions-background);
+  border-top: 1px solid var(--expense-form-actions-border);
+  box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.05);
+
+  @include dark-mode {
+    --expense-form-actions-background: var(--color-dark-gray1);
+    --expense-form-actions-border: rgba(255, 255, 255, 0.1);
+  }
+
+  :global(.bp4-button-group) {
+    :global(.bp4-button) {
+      &:not(:last-child),
+      &:global(.bp4-popover-wrapper):not(:last-child) {
+        margin-inline-end: 0;
+        border-inline-end: 1px solid rgba(92, 112, 127, 0.3);
+
+        &:global(.bp4-intent-primary) {
+          border-inline-end: 1px solid rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+}
+
+.footerActionsGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.saveButton {
+  min-width: 85px;
+}
+
+.insider {
+  min-height: calc(100vh - var(--top-offset));
+  max-height: calc(100vh - var(--top-offset));
+}
