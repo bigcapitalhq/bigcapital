@@ -1,5 +1,3 @@
-import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
-import { useFeatureCan } from '@/hooks/state';
 import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { find, get } from 'lodash';
@@ -12,6 +10,8 @@ import {
   InputGroupCell,
 } from '@/components';
 import { Align, CellType, Features } from '@/constants';
+import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
+import { useFeatureCan } from '@/hooks/state';
 
 interface WarehouseTransferEntryRow {
   itemId?: number | string;

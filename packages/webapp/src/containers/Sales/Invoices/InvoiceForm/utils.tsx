@@ -1,4 +1,3 @@
-import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import * as FF from 'fp-ts/function';
@@ -26,6 +25,7 @@ import {
   assignEntriesTaxAmount,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {

@@ -1,11 +1,10 @@
-import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
-import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useFormikContext } from 'formik';
 import { omit, first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useReceiptFormContext } from './ReceiptFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { SaleReceipt, CreateSaleReceiptBody } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -17,6 +16,7 @@ import {
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,

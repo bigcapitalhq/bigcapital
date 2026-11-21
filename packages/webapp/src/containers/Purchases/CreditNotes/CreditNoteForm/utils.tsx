@@ -1,11 +1,10 @@
-import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
-import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useFormikContext } from 'formik';
 import * as FF from 'fp-ts/function';
 import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { CreateVendorCreditBody, VendorCredit } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -16,6 +15,7 @@ import {
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,

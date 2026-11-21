@@ -1,4 +1,3 @@
-import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
 import { Classes, FormGroup, Position } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
@@ -30,6 +29,7 @@ import {
   FAccountsSuggestField,
 } from '@/components';
 import { Features } from '@/constants';
+import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
 import { toSafeNumber } from '@/utils';
