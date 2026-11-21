@@ -57,6 +57,7 @@ export class CreateQuickInventoryAdjustmentService {
       {
         index: 1,
         itemId: adjustmentDTO.itemId,
+        batchId: adjustmentDTO.batchId,
         ...('increment' === adjustmentDTO.type
           ? {
               quantity: adjustmentDTO.quantity,
@@ -72,7 +73,13 @@ export class CreateQuickInventoryAdjustmentService {
     ];
     const initialDTO = {
       ...formatDateFields(
-        omit(adjustmentDTO, ['quantity', 'cost', 'itemId', 'publish']),
+        omit(adjustmentDTO, [
+          'quantity',
+          'cost',
+          'itemId',
+          'batchId',
+          'publish',
+        ]),
         ['date'],
       ),
       userId: authorizedUser.id,

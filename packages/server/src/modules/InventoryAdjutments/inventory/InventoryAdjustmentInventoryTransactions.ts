@@ -33,6 +33,7 @@ export class InventoryAdjustmentInventoryTransactions {
     return inventoryAdjustment.entries.map((entry) => ({
       ...commonTransaction,
       itemId: entry.itemId,
+      batchId: entry.batchId,
       quantity: entry.quantity,
       rate: entry.cost,
     }));

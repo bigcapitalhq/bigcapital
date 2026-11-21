@@ -27,6 +27,9 @@ export const DEFAULT_ITEM_UNIT = 'piece';
 
 export type ItemUnit = (typeof ITEM_UNITS)[number];
 
+export const INVENTORY_TRACKING = ['none', 'batches'] as const;
+export type InventoryTracking = (typeof INVENTORY_TRACKING)[number];
+
 export const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',

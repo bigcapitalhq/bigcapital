@@ -1,3 +1,4 @@
+import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
 import { Classes, FormGroup, Position } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
@@ -41,7 +42,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
   const dateFieldRef = useAutofocus<HTMLInputElement>();
   const dateInputFormatter = useDateInputFormatter();
 
-  const { accounts, branches, warehouses } = useInventoryAdjContext();
+  const { accounts, branches, warehouses, item } = useInventoryAdjContext();
   const { values, setFieldValue } =
     useFormikContext<InventoryAdjustmentFormValues>();
 
@@ -134,6 +135,17 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
       </Row>
 
       <InventoryAdjustmentQuantityFields />
+
+      {featureCan(Features.BatchTracking) &&
+        (item?.inventoryTracking === 'batches' || values.batchId) && (
+          <FormGroup label={intl.get('batch.tab.label')}>
+            <ItemBatchSelect
+              itemId={Number(values.itemId)}
+              batchId={values.batchId}
+              onChange={(batchId) => setFieldValue('batchId', batchId)}
+            />
+          </FormGroup>
+        )}
 
       <FFormGroup
         name={'adjustmentAccountId'}

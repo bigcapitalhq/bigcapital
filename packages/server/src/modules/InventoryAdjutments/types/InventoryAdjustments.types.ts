@@ -13,6 +13,7 @@ export interface IQuickInventoryAdjustmentDTO {
   description: string;
   referenceNo: string;
   itemId: number;
+  batchId?: number;
   quantity: number;
   cost: number;
   publish: boolean;

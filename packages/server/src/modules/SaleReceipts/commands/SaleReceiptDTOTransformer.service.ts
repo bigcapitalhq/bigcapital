@@ -72,6 +72,8 @@ export class SaleReceiptDTOTransformer {
     const initialEntries = saleReceiptDTO.entries.map((entry) => ({
       reference_type: 'SaleReceipt',
       ...entry,
+      batches: entry.batches ?? [],
+      batchId: entry.batchId ?? null,
     }));
     const asyncEntries = await composeAsync(
       // Sets default cost and sell account to receipt items entries.

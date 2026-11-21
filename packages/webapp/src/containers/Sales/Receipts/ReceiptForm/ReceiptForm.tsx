@@ -2,7 +2,7 @@ import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as FF from 'fp-ts/function';
-import { sumBy, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import {
@@ -32,7 +32,7 @@ import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, safeSumBy, transactionNumber } from '@/utils';
 
 type ReceiptFormRootProps = Record<string, never>;
 
@@ -98,9 +98,7 @@ function ReceiptFormRoot({}: ReceiptFormRootProps) {
     const entries = values.entries.filter(
       (item) => item.itemId && item.quantity,
     );
-    const totalQuantity = sumBy(entries, (entry) =>
-      parseInt(String(entry.quantity)),
-    );
+    const totalQuantity = safeSumBy(entries, 'quantity');
 
     if (totalQuantity === 0) {
       AppToaster.show({

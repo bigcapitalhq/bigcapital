@@ -12,7 +12,12 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, ToNumber } from '@/common/decorators/Validators';
-import { ITEM_UNITS, ItemUnit } from '../Items.constants';
+import {
+  ITEM_UNITS,
+  ItemUnit,
+  INVENTORY_TRACKING,
+  type InventoryTracking,
+} from '../Items.constants';
 
 export class CommandItemDto {
   @IsString()
@@ -33,6 +38,15 @@ export class CommandItemDto {
     example: 'inventory',
   })
   type: 'service' | 'non-inventory' | 'inventory';
+
+  @IsIn([...INVENTORY_TRACKING])
+  @ValidateIf((_item, value) => value !== undefined)
+  @ApiProperty({
+    enum: [...INVENTORY_TRACKING],
+    description: 'Inventory tracking mode. New items default to none.',
+    required: false,
+  })
+  inventoryTracking?: InventoryTracking;
 
   @IsOptional()
   @IsString()

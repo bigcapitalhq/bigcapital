@@ -1,3 +1,5 @@
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useFormikContext } from 'formik';
 import { omit, first } from 'lodash';
 import moment from 'moment';
@@ -27,6 +29,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type ReceiptEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -60,6 +64,8 @@ export type ReceiptFormValues = {
 };
 
 export const defaultReceiptEntry: ReceiptEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -226,6 +232,7 @@ export const transformFormValuesToRequest = (
     }),
     entries: entries.map((entry) => ({
       ...transformToForm(entry, defaultReceiptEntryReq),
+      ...getEntryBatchRequest(entry),
     })),
     closed: false,
     attachments,

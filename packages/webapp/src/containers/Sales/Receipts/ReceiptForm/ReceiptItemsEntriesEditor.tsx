@@ -31,6 +31,7 @@ export function ReceiptItemsEntriesEditor() {
             errors={error}
             linesNumber={4}
             currencyCode={values.currencyCode}
+            batchMode="sale"
             enableTaxRates={false}
           />
         )}

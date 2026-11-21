@@ -60,7 +60,7 @@ export class OpenCreditNoteService {
         .updateAndFetchById(creditNoteId, {
           openedAt: new Date(),
         })
-        .withGraphFetched('entries');
+        .withGraphFetched('entries.batches');
       // Triggers `onCreditNoteOpened` event.
       await this.eventPublisher.emitAsync(events.creditNote.onOpened, {
         ...eventPayload,
@@ -87,6 +87,7 @@ export class OpenCreditNoteService {
       .query(trx)
       .findById(creditNoteId)
       .forUpdate()
+      .withGraphFetched('entries.batches')
       .throwIfNotFound();
 
     // Throw service error if the credit note is already open.

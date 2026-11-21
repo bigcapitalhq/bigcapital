@@ -1,3 +1,5 @@
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useFormikContext } from 'formik';
 import * as FF from 'fp-ts/function';
 import { first } from 'lodash';
@@ -28,6 +30,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type CreditNoteEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -60,6 +64,8 @@ export type CreditNoteFormValues = {
 
 // Default entry object.
 export const defaultCreditNoteEntry: CreditNoteEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -142,7 +148,10 @@ const defaultReqCreditNoteEntry = {
  */
 const transformEntriesToSubmit = (entries: CreditNoteEntry[]) => {
   return orderingLinesIndexes(
-    entries.map((entry) => transformToForm(entry, defaultReqCreditNoteEntry)),
+    entries.map((entry) => ({
+      ...transformToForm(entry, defaultReqCreditNoteEntry),
+      ...getEntryBatchRequest(entry),
+    })),
   );
 };
 

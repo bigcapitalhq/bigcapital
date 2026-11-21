@@ -35,7 +35,7 @@ interface ItemsEntriesTableProps {
   isInclusiveTax?: boolean;
   landedCost?: boolean;
   defaultEntry?: ItemEntry;
-  batchMode?: 'purchase' | 'sale';
+  batchMode?: 'purchase' | 'sale' | 'return';
 }
 
 /**
@@ -58,6 +58,9 @@ export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
     <ItemEntriesTableProvider
       value={{
         ...props,
+        batchMode: featureCan(Features.BatchTracking)
+          ? props.batchMode
+          : undefined,
         enableTaxRates: props.enableTaxRates !== false && isSalesTaxFeatureCan,
         localValue,
         handleChange,

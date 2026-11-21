@@ -91,6 +91,7 @@ export class PublishInventoryAdjustmentService {
       .query(trx)
       .findById(inventoryAdjustmentId)
       .forUpdate()
+      .withGraphFetched('entries')
       .throwIfNotFound();
 
     // Validate adjustment not already published against the locked row.

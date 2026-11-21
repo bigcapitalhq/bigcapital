@@ -6776,6 +6776,11 @@ export interface components {
              */
             type: "service" | "non-inventory" | "inventory";
             /**
+             * @default none
+             * @enum {string}
+             */
+            inventoryTracking: "none" | "batches";
+            /**
              * @description The formatted type of the item
              * @example Inventory Item
              */
@@ -6927,6 +6932,11 @@ export interface components {
              */
             type: "service" | "non-inventory" | "inventory";
             /**
+             * @description Inventory tracking mode. New items default to none.
+             * @enum {string}
+             */
+            inventoryTracking?: "none" | "batches";
+            /**
              * @description Item code/SKU
              * @example CHAIR-X2000
              */
@@ -7052,6 +7062,11 @@ export interface components {
              */
             type: "service" | "non-inventory" | "inventory";
             /**
+             * @description Inventory tracking mode. New items default to none.
+             * @enum {string}
+             */
+            inventoryTracking?: "none" | "batches";
+            /**
              * @description Item code/SKU
              * @example CHAIR-X2000
              */
@@ -7176,6 +7191,8 @@ export interface components {
              * @example 1
              */
             itemId: number;
+            /** @description Batch assigned to this inventory movement */
+            batchId?: number;
             /**
              * @description The quantity of the entry
              * @example 10
@@ -7316,6 +7333,8 @@ export interface components {
             referenceNo: string;
             /** @description ID of the item being adjusted */
             itemId: number;
+            /** @description Batch assigned to this inventory movement */
+            batchId?: number;
             /** @description Quantity to adjust */
             quantity: number;
             /** @description Cost of the item */
@@ -7348,6 +7367,8 @@ export interface components {
             referenceNo: string;
             /** @description ID of the item being adjusted */
             itemId: number;
+            /** @description Batch assigned to this inventory movement */
+            batchId?: number;
             /** @description Quantity to adjust */
             quantity: number;
             /** @description Cost of the item */
@@ -10808,6 +10829,8 @@ export interface components {
              * @example 1
              */
             itemId: number;
+            /** @description Batch assigned to this inventory movement */
+            batchId?: number;
             /**
              * @description The quantity of items being transferred
              * @example 100
@@ -10914,6 +10937,15 @@ export interface components {
              */
             updatedAt: string;
         };
+        WarehouseTransferEntryDto: {
+            index: number;
+            itemId: number;
+            /** @description Batch assigned to this inventory movement */
+            batchId?: number;
+            description?: string;
+            quantity: number;
+            cost?: number;
+        };
         CreateWarehouseTransferDto: {
             /**
              * @description The id of the warehouse to transfer from
@@ -10958,7 +10990,7 @@ export interface components {
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["WarehouseTransferEntryDto"][];
         };
         EditWarehouseTransferDto: {
             /**
@@ -11004,7 +11036,7 @@ export interface components {
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["WarehouseTransferEntryDto"][];
         };
         ValidateBulkDeleteCustomersResponseDto: {
             /**
@@ -12654,11 +12686,13 @@ export interface components {
              * @description The entries of the sale receipt
              * @example [
              *       {
-             *         "key": "123456"
+             *         "itemId": 1,
+             *         "quantity": 1,
+             *         "rate": 10
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["ItemEntryDto"][];
             /**
              * @description The receipt message of the sale receipt
              * @example 123456
@@ -12673,7 +12707,9 @@ export interface components {
              * @description The attachments of the sale receipt
              * @example [
              *       {
-             *         "key": "123456"
+             *         "itemId": 1,
+             *         "quantity": 1,
+             *         "rate": 10
              *       }
              *     ]
              */
@@ -12750,11 +12786,13 @@ export interface components {
              * @description The entries of the sale receipt
              * @example [
              *       {
-             *         "key": "123456"
+             *         "itemId": 1,
+             *         "quantity": 1,
+             *         "rate": 10
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["ItemEntryDto"][];
             /**
              * @description The receipt message of the sale receipt
              * @example 123456
@@ -12769,7 +12807,9 @@ export interface components {
              * @description The attachments of the sale receipt
              * @example [
              *       {
-             *         "key": "123456"
+             *         "itemId": 1,
+             *         "quantity": 1,
+             *         "rate": 10
              *       }
              *     ]
              */
@@ -14087,7 +14127,7 @@ export interface components {
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["ItemEntryDto"][];
             /**
              * @description The pdf template ID
              * @example 1
@@ -14175,7 +14215,7 @@ export interface components {
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["ItemEntryDto"][];
             /**
              * @description The pdf template ID
              * @example 1
@@ -14642,7 +14682,7 @@ export interface components {
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["ItemEntryDto"][];
             /**
              * @description The attachments of the vendor credit
              * @example [
@@ -14728,7 +14768,7 @@ export interface components {
              *       }
              *     ]
              */
-            entries: string[];
+            entries: components["schemas"]["ItemEntryDto"][];
             /**
              * @description The attachments of the vendor credit
              * @example [

@@ -66,7 +66,7 @@ export class OpenVendorCreditService {
         .updateAndFetchById(vendorCreditId, {
           openedAt: new Date(),
         })
-        .withGraphFetched('entries');
+        .withGraphFetched('entries.batches');
       // Triggers `onVendorCreditOpened` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onOpened, {
         ...eventPayload,
@@ -93,6 +93,7 @@ export class OpenVendorCreditService {
       .query(trx)
       .findById(vendorCreditId)
       .forUpdate()
+      .withGraphFetched('entries.batches')
       .throwIfNotFound();
 
     // Throw service error if the credit note is already open.

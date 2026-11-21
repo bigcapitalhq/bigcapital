@@ -1,3 +1,4 @@
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import * as FF from 'fp-ts/function';
@@ -283,16 +284,9 @@ const transformEntriesToRequest = (entries: InvoiceEntry[]) => {
       entry,
       defaultReqInvoiceEntry,
     );
-    const normalizedBatches = ((batches ?? []) as ItemEntryBatchAllocation[])
-      .filter((allocation) => allocation.batchId && allocation.quantity > 0)
-      .map((allocation) => ({
-        batchId: allocation.batchId,
-        quantity: allocation.quantity,
-      }));
-
     return {
       ...rest,
-      ...(normalizedBatches.length > 0 ? { batches: normalizedBatches } : {}),
+      ...getEntryBatchRequest(entry),
     };
   });
 };

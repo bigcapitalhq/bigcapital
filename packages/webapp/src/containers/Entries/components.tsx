@@ -125,7 +125,7 @@ interface BatchEntryCellProps {
   };
   payload: {
     items?: Array<{ id: number; type?: string; name?: string }>;
-    batchMode?: 'purchase' | 'sale';
+    batchMode?: 'purchase' | 'sale' | 'return';
     updateRow: (rowIndex: number, patch: Record<string, unknown>) => void;
   };
 }
@@ -155,14 +155,19 @@ export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
           ]
         : [];
 
-  if (payload.batchMode === 'sale') {
+  if (payload.batchMode === 'sale' || payload.batchMode === 'return') {
     return (
       <SaleBatchAllocationsPopover
+        isReturn={payload.batchMode === 'return'}
         itemId={Number(original.itemId)}
         entryQuantity={original.quantity ?? 0}
         allocations={allocations}
         onApply={(nextAllocations) => {
-          payload.updateRow(index, { batches: nextAllocations });
+          payload.updateRow(index, {
+            batches: nextAllocations,
+            batchId: null,
+            batch: null,
+          });
         }}
       />
     );
@@ -173,7 +178,11 @@ export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
       entryQuantity={original.quantity ?? 0}
       allocations={allocations}
       onApply={(nextAllocations) => {
-        payload.updateRow(index, { batches: nextAllocations });
+        payload.updateRow(index, {
+          batches: nextAllocations,
+          batchId: null,
+          batch: null,
+        });
       }}
     />
   );

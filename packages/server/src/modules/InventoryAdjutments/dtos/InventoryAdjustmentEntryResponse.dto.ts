@@ -27,6 +27,12 @@ export class InventoryAdjustmentEntryResponseDto {
   itemId: number;
 
   @ApiProperty({
+    description: 'Batch assigned to this inventory movement',
+    required: false,
+  })
+  batchId?: number;
+
+  @ApiProperty({
     description: 'The quantity of the entry',
     example: 10,
   })
