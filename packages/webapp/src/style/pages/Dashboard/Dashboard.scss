@@ -662,4 +662,43 @@ $dashboard-views-bar-height: 44px;
       color: #777;
     }
   }
+
+  .menu-item--appearance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 7px;
+
+    // On the menu surface the shared control's outlined segments read
+    // inverted, so here the chosen segment is the only filled one.
+    .segmented-control .bp4-button {
+      margin-left: 0;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+      min-width: 28px;
+      padding: 0 6px;
+      color: var(--color-appearance-switch-text);
+      font-weight: 400;
+
+      svg {
+        display: block;
+      }
+
+      &:hover {
+        background: var(--color-appearance-switch-hover-background);
+      }
+
+      &.bp4-active:not(.bp4-disabled) {
+        &,
+        &:hover {
+          border: 0;
+          background: var(--color-appearance-switch-active-background);
+          color: var(--color-appearance-switch-active-text);
+          font-weight: 500;
+        }
+      }
+    }
+  }
 }
