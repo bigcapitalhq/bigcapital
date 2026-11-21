@@ -1,3 +1,5 @@
+import { ITEM_UNITS } from '../Items.constants';
+
 export const ItemMeta = {
   importable: true,
   exportable: true,
@@ -147,6 +149,11 @@ export const ItemMeta = {
       type: 'text',
       exportable: true,
     },
+    unit: {
+      name: 'item.field.unit',
+      type: 'text',
+      exportable: true,
+    },
     sellable: {
       name: 'item.field.sellable',
       type: 'boolean',
@@ -254,6 +261,14 @@ export const ItemMeta = {
     code: {
       name: 'item.field.code',
       fieldType: 'text',
+    },
+    unit: {
+      name: 'item.field.unit',
+      fieldType: 'enumeration',
+      options: ITEM_UNITS.map((unit) => ({
+        key: unit,
+        label: `item.field.unit.${unit}`,
+      })),
     },
     sellable: {
       name: 'item.field.sellable',
