@@ -66,6 +66,36 @@ describe('Sale Estimates (e2e)', () => {
       .expect(201);
   });
 
+  it('/sale-estimates (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .send(
+        makeEstimateRequest({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 1000,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      )
+      .expect(201);
+
+    const estimate = await request(app.getHttpServer())
+      .get(`/sale-estimates/${response.body.id}`)
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+
+    expect(estimate.body.entries[0].item_id).toBeNull();
+    expect(estimate.body.entries[0].sell_account_id).toBe(1026);
+  });
+
   it('/sale-estimates (POST) applies amount-type line discounts to totals', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')

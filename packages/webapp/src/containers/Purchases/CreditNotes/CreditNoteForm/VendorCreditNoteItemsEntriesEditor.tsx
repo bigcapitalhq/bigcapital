@@ -32,6 +32,7 @@ export function VendorCreditNoteItemsEntriesEditor() {
             currencyCode={values.currencyCode}
             batchMode="sale"
             enableTaxRates={false}
+            accountField={'costAccountId'}
           />
         )}
       </FastField>

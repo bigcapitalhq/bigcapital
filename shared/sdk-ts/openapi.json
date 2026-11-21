@@ -32488,21 +32488,17 @@
         },
         "required": [
           "index",
-          "itemId",
           "rate",
           "quantity",
           "discount",
           "discountType",
-          "description",
           "taxCode",
           "taxRateId",
           "warehouseId",
           "projectId",
           "projectRefId",
           "projectRefType",
-          "projectRefInvoicedAmount",
-          "sellAccountId",
-          "costAccountId"
+          "projectRefInvoicedAmount"
         ]
       },
       "SaleInvoiceTaxEntryDto": {
@@ -40176,21 +40172,17 @@
         },
         "required": [
           "index",
-          "itemId",
           "rate",
           "quantity",
           "discount",
           "discountType",
-          "description",
           "taxCode",
           "taxRateId",
           "warehouseId",
           "projectId",
           "projectRefId",
           "projectRefType",
-          "projectRefInvoicedAmount",
-          "sellAccountId",
-          "costAccountId"
+          "projectRefInvoicedAmount"
         ]
       },
       "AttachmentDto": {

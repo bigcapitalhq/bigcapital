@@ -110,7 +110,7 @@ export class CreditNoteAccrualGL {
     return {
       ...commonEntry,
       debit: totalLocal,
-      accountId: entry.sellAccountId || entry.item.sellAccountId,
+      accountId: entry.sellAccountId ?? entry.item?.sellAccountId,
       note: entry.description,
       index: index + 2,
       itemId: entry.itemId,

@@ -54,6 +54,7 @@ export function RecurringInvoiceItemsField() {
             items={items}
             taxRates={isSalesTax ? taxRates : []}
             itemType={ITEM_TYPE.SELLABLE}
+            accountField={'sellAccountId'}
             errors={error}
             linesNumber={4}
             currencyCode={values.currencyCode}

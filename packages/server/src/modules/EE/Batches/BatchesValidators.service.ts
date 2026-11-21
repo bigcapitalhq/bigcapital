@@ -15,7 +15,7 @@ export interface IEntryBatchAllocation {
 
 export interface IEntryBatchReference {
   index?: number;
-  itemId: number;
+  itemId?: number | null;
   batchId?: number | null;
   quantity?: number;
   batches?: IEntryBatchAllocation[];
@@ -117,7 +117,10 @@ export class BatchesValidators {
   ): Promise<void> {
     const unassigned = entries
       .map((entry, position) => ({ entry, index: entry.index ?? position + 1 }))
-      .filter(({ entry }) => !entry.batchId && !entry.batches?.length);
+      .filter(
+        ({ entry }) =>
+          entry.itemId != null && !entry.batchId && !entry.batches?.length,
+      );
 
     if (unassigned.length) {
       const trackedItems = await this.itemModel()

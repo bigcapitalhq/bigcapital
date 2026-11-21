@@ -265,13 +265,14 @@ export class BillPaymentCashGL {
     ratio: number,
     billExchangeRate: number,
   ): ILedgerEntry => {
+    const isInventoryItem = item.item?.type === 'inventory';
+
     return {
       ...this.cashEntriesCommonEntry,
       debit: item.totalExcludingTax * billExchangeRate * ratio,
-      accountId:
-        ['inventory'].indexOf(item.item.type) !== -1
-          ? item.item.inventoryAccountId
-          : item.costAccountId,
+      accountId: isInventoryItem
+        ? item.item.inventoryAccountId
+        : (item.costAccountId ?? item.item?.costAccountId),
       index: index + 2,
       itemId: item.itemId,
       accountNormal: AccountNormal.DEBIT,

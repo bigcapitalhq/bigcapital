@@ -23,6 +23,7 @@ import {
   ensureEntriesHaveEmptyLine,
   assignEntriesTaxAmount,
   aggregateItemEntriesTaxRates,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
@@ -46,6 +47,7 @@ export type BillFormEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  costAccountId: string | number;
   landedCost: boolean;
   landedCostDisabled?: boolean;
   taxRateId: string | number;
@@ -85,7 +87,9 @@ export const defaultBillEntry: BillFormEntry = {
   quantity: '',
   description: '',
   amount: '',
+  costAccountId: '',
   landedCost: false,
+  landedCostDisabled: true,
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
@@ -191,7 +195,9 @@ export const transformEntriesToSubmit = (
 export const filterNonZeroEntries = (
   entries: BillFormEntry[],
 ): BillFormEntry[] => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

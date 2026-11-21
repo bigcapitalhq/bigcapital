@@ -141,13 +141,14 @@ export class RefundVendorCreditCashGL {
     const commonEntry = this.cashEntriesCommonEntry;
     const exchangeRate = defaultTo(this.vendorCredit?.exchangeRate, 1);
 
+    const isInventoryItem = item.item?.type === 'inventory';
+
     return {
       ...commonEntry,
       credit: item.totalExcludingTax * exchangeRate * this.refundRatio,
-      accountId:
-        'inventory' === item.item.type
-          ? item.item.inventoryAccountId
-          : item.costAccountId || item.item.costAccountId,
+      accountId: isInventoryItem
+        ? item.item.inventoryAccountId
+        : (item.costAccountId ?? item.item?.costAccountId),
       note: item.description,
       index: index + 2,
       itemId: item.itemId,

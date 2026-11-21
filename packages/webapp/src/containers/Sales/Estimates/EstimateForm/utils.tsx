@@ -15,6 +15,7 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
@@ -35,6 +36,7 @@ export type EstimateEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
 };
 
 export type EstimateFormValues = {
@@ -67,6 +69,7 @@ export const defaultEstimateEntry: EstimateEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
 };
 
 const defaultEstimateEntryReq = {
@@ -76,6 +79,7 @@ const defaultEstimateEntryReq = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
 };
 
 export const defaultEstimate: EstimateFormValues = {
@@ -237,7 +241,9 @@ export const handleErrors = (
 export function transformValueToRequest(
   values: EstimateFormValues,
 ): CreateSaleEstimateBody {
-  const entries = values.entries.filter((item) => item.itemId && item.quantity);
+  const entries = values.entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
   const attachments = transformAttachmentsToRequest(values);
 
   return {

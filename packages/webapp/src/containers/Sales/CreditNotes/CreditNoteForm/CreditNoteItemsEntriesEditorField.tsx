@@ -36,6 +36,7 @@ export function CreditNoteItemsEntriesEditorField() {
             currencyCode={values.currencyCode}
             batchMode="return"
             enableTaxRates={false}
+            accountField={'sellAccountId'}
           />
         )}
       </FastField>

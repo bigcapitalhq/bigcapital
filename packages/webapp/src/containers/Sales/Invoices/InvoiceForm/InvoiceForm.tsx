@@ -33,6 +33,7 @@ import type { InvoiceFormValues } from './utils';
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { isItemOrDescriptionEntry } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { orderingLinesIndexes, safeSumBy, transactionNumber } from '@/utils';
 
@@ -104,7 +105,7 @@ function InvoiceFormRoot({}: InvoiceFormRootProps) {
     setSubmitting(true);
 
     const entries = values.entries.filter(
-      (item) => item.itemId && item.quantity,
+      (item) => isItemOrDescriptionEntry(item) && item.quantity,
     );
     const totalQuantity = safeSumBy(entries, 'quantity');
 

@@ -115,6 +115,11 @@ export class EditCreditNoteService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       creditNoteEditDTO.entries,
     );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      creditNoteEditDTO.entries,
+      'sellAccountId',
+    );
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       creditNoteId,
