@@ -132,6 +132,11 @@ export class EditBillService {
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       billDTO.entries,
     );
+    // Validate entries have an item or a description with a cost account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      billDTO.entries,
+      'costAccountId',
+    );
 
     // Transforms the bill DTO to model object.
     const billObj = await this.transformerDTO.billDTOToModel(

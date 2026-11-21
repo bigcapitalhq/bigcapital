@@ -6,6 +6,20 @@ interface EntryBatchAllocationsSummarySource {
   batch?: { batchNumber?: string | null } | null;
 }
 
+export function getEntryBatchRequest(
+  entry: EntryBatchAllocationsSummarySource,
+) {
+  if (entry.batches?.length) {
+    return {
+      batches: entry.batches.map(({ batchId, quantity }) => ({
+        batchId,
+        quantity: Number(quantity),
+      })),
+    };
+  }
+  return entry.batchId ? { batchId: entry.batchId } : {};
+}
+
 export type BatchMovementDirection = 'in' | 'out';
 
 export interface BatchMovementRow {

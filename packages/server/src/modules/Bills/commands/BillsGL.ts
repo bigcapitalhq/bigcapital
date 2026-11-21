@@ -91,13 +91,14 @@ export class BillGL {
     const totalLocal = this.bill.exchangeRate * entry.totalExcludingTax;
     const landedCostAmount = this.itemAllocatedCosts.get(entry.id) ?? 0;
 
+    const isInventoryItem = entry.item?.type === 'inventory';
+
     return {
       ...commonJournalMeta,
       debit: totalLocal + landedCostAmount,
-      accountId:
-        ['inventory'].indexOf(entry.item.type) !== -1
-          ? entry.item.inventoryAccountId
-          : entry.costAccountId,
+      accountId: isInventoryItem
+        ? entry.item.inventoryAccountId
+        : (entry.costAccountId ?? entry.item?.costAccountId),
       index: index + 1,
       indexGroup: 10,
       itemId: entry.itemId,

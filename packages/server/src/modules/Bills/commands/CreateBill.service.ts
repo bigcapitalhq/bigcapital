@@ -69,6 +69,11 @@ export class CreateBill {
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       billDTO.entries,
     );
+    // Validate entries have an item or a description with a cost account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      billDTO.entries,
+      'costAccountId',
+    );
     // Validates the cost entries should be with inventory items.
     await this.validators.validateCostEntriesShouldBeInventoryItems(
       billDTO.entries,

@@ -39,16 +39,36 @@ const BillFormSchema = Yup.object().shape({
           then: Yup.number().required(),
         }),
       rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
-      itemId: Yup.number()
+      itemId: Yup.number().nullable(),
+      costAccountId: Yup.number()
         .nullable()
-        .when(['quantity', 'rate'], {
-          is: (quantity: unknown, rate: unknown) =>
-            !isBlank(quantity) && !isBlank(rate),
-          then: Yup.number().required(),
-        }),
+        .test(
+          'account-required-without-item',
+          intl.get('item_entries.account_required_without_item'),
+          function (value) {
+            const { itemId, quantity, rate } = this.parent;
+            if (isBlank(itemId) && !isBlank(quantity) && !isBlank(rate)) {
+              return !isBlank(value);
+            }
+            return true;
+          },
+        ),
       total: Yup.number().nullable(),
       discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),
-      description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
+      description: Yup.string()
+        .nullable()
+        .max(DATATYPES_LENGTH.TEXT)
+        .test(
+          'item-or-description-required',
+          intl.get('item_entries.item_or_description_required'),
+          function (value) {
+            const { itemId, quantity, rate } = this.parent;
+            if (isBlank(itemId) && !isBlank(quantity) && !isBlank(rate)) {
+              return typeof value === 'string' && value.trim().length > 0;
+            }
+            return true;
+          },
+        ),
     }),
   ),
 });

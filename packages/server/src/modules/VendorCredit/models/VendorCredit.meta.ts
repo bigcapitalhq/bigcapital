@@ -220,8 +220,15 @@ export const VendorCreditMeta = {
           fieldType: 'relation',
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
-          required: true,
+          required: false,
           importHint: 'invoice.field.item_hint',
+        },
+        costAccountId: {
+          name: 'item.field.cost_account',
+          fieldType: 'relation',
+          relationModel: 'Account',
+          relationImportMatch: ['name', 'code'],
+          importHint: 'account.field.account_hint',
         },
         rate: {
           name: 'vendor_credit.field.rate',

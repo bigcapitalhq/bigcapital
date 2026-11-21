@@ -89,6 +89,7 @@ export class CommandCreditNoteDto {
   @Type(() => CreditNoteEntryDto)
   @ArrayMinSize(1)
   @ApiProperty({
+    type: [ItemEntryDto],
     example: [{ itemId: 1, quantity: 1, rate: 10, taxRateId: 1 }],
     description: 'The credit note entries',
   })

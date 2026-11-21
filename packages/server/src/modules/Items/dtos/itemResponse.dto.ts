@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DEFAULT_ITEM_UNIT, ITEM_UNITS } from '../Items.constants';
+import {
+  DEFAULT_ITEM_UNIT,
+  ITEM_UNITS,
+  INVENTORY_TRACKING,
+  type InventoryTracking,
+} from '../Items.constants';
 
 export class ItemResponseDto {
   @ApiProperty({
@@ -20,6 +25,13 @@ export class ItemResponseDto {
     example: 'inventory',
   })
   type: string;
+
+  @ApiProperty({
+    enum: [...INVENTORY_TRACKING],
+    default: 'none',
+    required: true,
+  })
+  inventoryTracking: InventoryTracking;
 
   @ApiProperty({
     description: 'The formatted type of the item',

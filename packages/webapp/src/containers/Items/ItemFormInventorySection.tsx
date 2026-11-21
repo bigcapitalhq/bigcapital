@@ -1,3 +1,4 @@
+import { Button, ButtonGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 import { useItemFormContext } from './ItemFormProvider';
@@ -6,16 +7,18 @@ import { accountsFieldShouldUpdate } from './utils';
 import type { ItemFormValues } from './types';
 import {
   AccountsSelect,
+  FeatureCan,
   FFormGroup,
   FInputGroup,
   FormattedMessage as T,
   Box,
 } from '@/components';
+import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 export function ItemFormInventorySection() {
   const { accounts } = useItemFormContext();
-  const { values } = useFormikContext<ItemFormValues>();
+  const { values, setFieldValue } = useFormikContext<ItemFormValues>();
 
   return (
     <Box data-section-id="inventory">
@@ -38,6 +41,33 @@ export function ItemFormInventorySection() {
           accounts={accounts}
         />
       </FFormGroup>
+
+      {values.type === 'inventory' && (
+        <FeatureCan feature={Features.BatchTracking}>
+          <FFormGroup
+            name="inventoryTracking"
+            label={intl.get('item.inventory_tracking')}
+            inline
+          >
+            <ButtonGroup
+              aria-label={intl.get('item.inventory_tracking')}
+              role="group"
+            >
+              {(['none', 'batches'] as const).map((mode) => (
+                <Button
+                  key={mode}
+                  type="button"
+                  active={values.inventoryTracking === mode}
+                  aria-pressed={values.inventoryTracking === mode}
+                  onClick={() => setFieldValue('inventoryTracking', mode)}
+                >
+                  {intl.get(mode === 'none' ? 'none' : 'batch.tab.label')}
+                </Button>
+              ))}
+            </ButtonGroup>
+          </FFormGroup>
+        </FeatureCan>
+      )}
 
       {/*------------- Reorder point ------------- */}
       {values.type === 'inventory' && (

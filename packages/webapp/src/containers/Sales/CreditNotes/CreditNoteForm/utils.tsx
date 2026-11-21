@@ -4,6 +4,7 @@ import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { CreateCreditNoteBody, CreditNote } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -14,7 +15,9 @@ import { getEntriesTotal } from '@/containers/Entries/utils';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
@@ -28,6 +31,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type CreditNoteEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -35,6 +40,7 @@ export type CreditNoteEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
 };
 
 export type CreditNoteFormValues = {
@@ -60,6 +66,8 @@ export type CreditNoteFormValues = {
 
 // Default entry object.
 export const defaultCreditNoteEntry: CreditNoteEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -67,6 +75,7 @@ export const defaultCreditNoteEntry: CreditNoteEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
 };
 
 // Default credit note object.
@@ -135,6 +144,7 @@ const defaultReqCreditNoteEntry = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
 };
 
 /**
@@ -142,7 +152,10 @@ const defaultReqCreditNoteEntry = {
  */
 const transformEntriesToSubmit = (entries: CreditNoteEntry[]) => {
   return orderingLinesIndexes(
-    entries.map((entry) => transformToForm(entry, defaultReqCreditNoteEntry)),
+    entries.map((entry) => ({
+      ...transformToForm(entry, defaultReqCreditNoteEntry),
+      ...getEntryBatchRequest(entry),
+    })),
   );
 };
 
@@ -150,7 +163,9 @@ const transformEntriesToSubmit = (entries: CreditNoteEntry[]) => {
  * Filters the given non-zero entries.
  */
 const filterNonZeroEntries = (entries: CreditNoteEntry[]) => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

@@ -16,6 +16,7 @@ interface SaleBatchAllocationsPopoverProps {
   allocations?: ItemEntryBatchAllocation[];
   onApply: (allocations: ItemEntryBatchAllocation[]) => void;
   disabled?: boolean;
+  isReturn?: boolean;
 }
 
 interface BatchOption {
@@ -120,6 +121,7 @@ export function SaleBatchAllocationsPopover({
   allocations,
   onApply,
   disabled,
+  isReturn = false,
 }: SaleBatchAllocationsPopoverProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [rows, setRows] = React.useState<AllocationRow[]>([]);
@@ -175,19 +177,18 @@ export function SaleBatchAllocationsPopover({
         batch.status === 'active' || batch.status === 'expiring_soon';
       const onHand = toNumber(batch.quantityOnHand);
 
-      if (
-        (!isSelectableStatus && !isAllocated) ||
-        (onHand <= 0 && !isAllocated)
-      ) {
+      if (!isReturn && !isAllocated && (!isSelectableStatus || onHand <= 0)) {
         return;
       }
       options.set(batchId, {
         batch,
-        available: Math.max(onHand + toNumber(allocatedByBatch[batchId]), 0),
+        available: isReturn
+          ? onHand
+          : Math.max(onHand + toNumber(allocatedByBatch[batchId]), 0),
       });
     });
     return options;
-  }, [batchById, allocatedByBatch]);
+  }, [batchById, allocatedByBatch, isReturn]);
 
   const batchOptions = React.useMemo(
     () => Array.from(batchOptionsById.values()).sort(sortBatchOptions),
@@ -258,7 +259,8 @@ export function SaleBatchAllocationsPopover({
     );
     const hasUnselectedBatch = batchOptions.some(
       (option) =>
-        option.available > EPSILON && !selectedBatchIds.has(option.batch.id),
+        (isReturn || option.available > EPSILON) &&
+        !selectedBatchIds.has(option.batch.id),
     );
     return hasUnselectedBatch ? [...nextRows, createEmptyRow()] : nextRows;
   };
@@ -292,7 +294,9 @@ export function SaleBatchAllocationsPopover({
         currentRows.filter((row) => row.key !== rowKey),
       );
       const remaining = Math.max(requiredQuantity - otherRowsTotal, 0);
-      const quantity = Math.min(option.available, remaining);
+      const quantity = isReturn
+        ? remaining
+        : Math.min(option.available, remaining);
 
       const nextRows = currentRows.map((row) =>
         row.key === rowKey ? { ...row, batchId: batch.id, quantity } : row,
@@ -343,12 +347,14 @@ export function SaleBatchAllocationsPopover({
 
   const allocatedTotal = getRowsTotal(rows);
   const isBalanced = Math.abs(allocatedTotal - requiredQuantity) <= EPSILON;
-  const hasExceededAvailable = rows.some((row) => {
-    if (row.batchId === null) return false;
+  const hasExceededAvailable =
+    !isReturn &&
+    rows.some((row) => {
+      if (row.batchId === null) return false;
 
-    const option = batchOptionsById.get(row.batchId);
-    return option ? row.quantity > option.available + EPSILON : false;
-  });
+      const option = batchOptionsById.get(row.batchId);
+      return option ? row.quantity > option.available + EPSILON : false;
+    });
   const hasIncompleteRow = rows.some(
     (row) => row.batchId !== null && toNumber(row.quantity) <= 0,
   );
@@ -367,7 +373,8 @@ export function SaleBatchAllocationsPopover({
   );
   const hasUnselectedAvailableBatch = batchOptions.some(
     (option) =>
-      option.available > EPSILON && !selectedBatchIds.has(option.batch.id),
+      (isReturn || option.available > EPSILON) &&
+      !selectedBatchIds.has(option.batch.id),
   );
   const canAddRow =
     !hasBlankRow &&
@@ -466,7 +473,11 @@ export function SaleBatchAllocationsPopover({
                         {intl.get('batch.select.available')}
                       </th>
                       <th className={'batch-form-table__col-quantity'}>
-                        {intl.get('batch.select.quantity_out')}
+                        {intl.get(
+                          isReturn
+                            ? 'batch.column.quantity_in'
+                            : 'batch.select.quantity_out',
+                        )}
                       </th>
                       <th className={'batch-form-table__col-actions'} />
                     </tr>
@@ -480,9 +491,10 @@ export function SaleBatchAllocationsPopover({
                       const selectedBatch = selectedOption?.batch ?? null;
                       const available = selectedOption?.available ?? 0;
                       const quantity = toNumber(row.quantity);
-                      const exceeded = selectedBatch
-                        ? quantity > available + EPSILON
-                        : false;
+                      const exceeded =
+                        !isReturn && selectedBatch
+                          ? quantity > available + EPSILON
+                          : false;
 
                       const otherSelectedBatchIds = new Set(
                         rows
@@ -579,7 +591,11 @@ export function SaleBatchAllocationsPopover({
                             <NumericInput
                               value={quantity || ''}
                               min={0}
-                              max={selectedBatch ? available : undefined}
+                              max={
+                                selectedBatch && !isReturn
+                                  ? available
+                                  : undefined
+                              }
                               disabled={!selectedBatch}
                               buttonPosition={'none'}
                               fill={true}

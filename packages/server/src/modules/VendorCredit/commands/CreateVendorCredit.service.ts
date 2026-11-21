@@ -59,6 +59,11 @@ export class CreateVendorCreditService {
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       vendorCreditCreateDTO.entries,
     );
+    // Validate entries have an item or a description with a cost account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      vendorCreditCreateDTO.entries,
+      'costAccountId',
+    );
     // Transforms the credit DTO to storage layer.
     const vendorCreditModel =
       await this.vendorCreditDTOTransformService.transformCreateEditDTOToModel(

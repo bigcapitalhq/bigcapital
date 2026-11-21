@@ -9,7 +9,7 @@ export const transformReceiptToBrandingTemplateAttributes = (
     total: saleReceipt.totalFormatted,
     subtotal: saleReceipt.subtotalFormatted,
     lines: saleReceipt.entries?.map((entry) => ({
-      item: entry.item.name,
+      item: entry.item?.name ?? '',
       description: entry.description,
       rate: entry.rateFormatted,
       quantity: entry.quantityFormatted,

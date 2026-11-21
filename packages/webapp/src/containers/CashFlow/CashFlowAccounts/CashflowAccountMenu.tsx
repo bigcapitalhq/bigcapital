@@ -2,6 +2,7 @@ import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
 import type { CashflowAccountRow } from './components';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -90,6 +91,8 @@ function CashflowAccountMenuInner({
   openDialog,
   openDrawer,
 }: CashflowAccountMenuInnerProps) {
+  const history = useHistory();
+
   // Handle view detail account.
   const handleViewClick = () => {
     openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: account.id });
@@ -135,6 +138,22 @@ function CashflowAccountMenuInner({
         text={intl.get('view_details')}
         onClick={safeCallback(handleViewClick)}
       />
+      {account.accountType === 'bank' && (
+        <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
+          <MenuItem
+            icon={<Icon icon="tick-circle" />}
+            text={intl.get('banking.reconciliation.action')}
+            onClick={() => history.push(`/reconcile?accountId=${account.id}`)}
+          />
+          <MenuItem
+            icon={<Icon icon="reader-18" />}
+            text={intl.get('banking.reconciliation.history')}
+            onClick={() =>
+              history.push(`/cashflow-accounts/${account.id}/reconciliations`)
+            }
+          />
+        </Can>
+      )}
       <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
         <MenuDivider />
         <MenuItem

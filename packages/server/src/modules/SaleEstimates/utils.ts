@@ -9,7 +9,7 @@ export const transformEstimateToPdfTemplate = (
     estimateNumebr: estimate.estimateNumber,
     estimateDate: estimate.formattedEstimateDate,
     lines: estimate.entries.map((entry) => ({
-      item: entry.item.name,
+      item: entry.item?.name ?? '',
       description: entry.description,
       rate: entry.rateFormatted,
       quantity: entry.quantityFormatted,

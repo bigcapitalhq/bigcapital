@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
+import { WarehouseTransferEntry } from '@/modules/WarehousesTransfers/models/WarehouseTransferEntry';
+import { InventoryAdjustmentEntry } from '@/modules/InventoryAdjutments/models/InventoryAdjustmentEntry';
 import { Batch } from '../models/Batch';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { ItemEntryBatch } from '@/modules/TransactionItemEntry/models/ItemEntryBatch';
@@ -46,6 +48,16 @@ export class DeleteBatchService {
       typeof InventoryTransaction
     >,
 
+    @Inject(WarehouseTransferEntry.name)
+    private readonly transferEntryModel: TenantModelProxy<
+      typeof WarehouseTransferEntry
+    >,
+
+    @Inject(InventoryAdjustmentEntry.name)
+    private readonly adjustmentEntryModel: TenantModelProxy<
+      typeof InventoryAdjustmentEntry
+    >,
+
     private readonly validators: BatchesValidators,
   ) {}
 
@@ -53,29 +65,26 @@ export class DeleteBatchService {
    * Deletes the given batch when it has no associated transactions.
    */
   public async deleteBatch(id: number): Promise<void> {
-    const oldBatch = await this.batchModel().query().findById(id);
-    this.validators.validateBatchExistance(oldBatch);
-
-    const transactionsCount = await this.inventoryTransactionModel()
-      .query()
-      .where('batchId', id)
-      .resultSize();
-
-    const entriesCount = await this.itemEntryModel()
-      .query()
-      .where('batchId', id)
-      .resultSize();
-
-    const allocationsCount = await this.itemEntryBatchModel()
-      .query()
-      .where('batchId', id)
-      .resultSize();
-
-    if (transactionsCount > 0 || entriesCount > 0 || allocationsCount > 0) {
-      throw new ServiceError(BATCHES_ERRORS.BATCH_HAS_ASSOCIATED_TRANSACTIONS);
-    }
-
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      const oldBatch = await this.batchModel()
+        .query(trx)
+        .findById(id)
+        .forUpdate();
+      this.validators.validateBatchExistance(oldBatch);
+
+      const references = await Promise.all([
+        this.inventoryTransactionModel().query(trx).findOne({ batchId: id }),
+        this.itemEntryModel().query(trx).findOne({ batchId: id }),
+        this.itemEntryBatchModel().query(trx).findOne({ batchId: id }),
+        this.transferEntryModel().query(trx).findOne({ batchId: id }),
+        this.adjustmentEntryModel().query(trx).findOne({ batchId: id }),
+      ]);
+      if (references.some(Boolean)) {
+        throw new ServiceError(
+          BATCHES_ERRORS.BATCH_HAS_ASSOCIATED_TRANSACTIONS,
+        );
+      }
+
       // Triggers `onBatchDeleting` event.
       await this.eventEmitter.emitAsync(batchEvents.onDeleting, {
         batchId: id,

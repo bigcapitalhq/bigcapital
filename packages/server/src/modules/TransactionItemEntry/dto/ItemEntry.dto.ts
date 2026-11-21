@@ -46,13 +46,15 @@ export class ItemEntryDto {
   })
   index: number;
 
-  @IsNotEmpty()
+  @ToNumber()
+  @IsOptional()
   @IsInt()
   @ApiProperty({
     description: 'The id of the item',
     example: 1,
+    required: false,
   })
-  itemId: number;
+  itemId?: number;
 
   @ApiProperty({
     description: 'The nested item summary',
@@ -102,6 +104,7 @@ export class ItemEntryDto {
   @ApiProperty({
     description: 'The description of the item entry',
     example: 'This is a description',
+    required: false,
   })
   description?: string;
 
@@ -115,6 +118,7 @@ export class ItemEntryDto {
   taxCode?: string;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -124,6 +128,7 @@ export class ItemEntryDto {
   taxRateId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -154,6 +159,7 @@ export class ItemEntryDto {
   batches?: ItemEntryBatchDto[];
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -163,6 +169,7 @@ export class ItemEntryDto {
   projectId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -182,6 +189,7 @@ export class ItemEntryDto {
   projectRefType?: string;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({
@@ -191,20 +199,24 @@ export class ItemEntryDto {
   projectRefInvoicedAmount?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The sell account id of the item entry',
     example: 1020,
+    required: false,
   })
   sellAccountId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The cost account id of the item entry',
     example: 1021,
+    required: false,
   })
   costAccountId?: number;
 

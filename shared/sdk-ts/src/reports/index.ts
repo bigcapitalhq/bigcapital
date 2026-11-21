@@ -18,4 +18,5 @@ export * from './inventory-summary';
 export * from './inventory-details';
 export * from './sales-tax-liability';
 export * from './transactions-reference';
+export * from './reconciliation-status';
 export * from './table-column-keys';

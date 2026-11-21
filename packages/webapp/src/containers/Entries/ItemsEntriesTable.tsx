@@ -17,6 +17,7 @@ import type { Item, TaxRate } from '@bigcapital/sdk-ts';
 import { DataTableEditable } from '@/components';
 import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
+import { useAccounts } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 
@@ -35,7 +36,8 @@ interface ItemsEntriesTableProps {
   isInclusiveTax?: boolean;
   landedCost?: boolean;
   defaultEntry?: ItemEntry;
-  batchMode?: 'purchase' | 'sale';
+  accountField?: 'sellAccountId' | 'costAccountId';
+  batchMode?: 'purchase' | 'sale' | 'return';
 }
 
 /**
@@ -58,6 +60,9 @@ export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
     <ItemEntriesTableProvider
       value={{
         ...props,
+        batchMode: featureCan(Features.BatchTracking)
+          ? props.batchMode
+          : undefined,
         enableTaxRates: props.enableTaxRates !== false && isSalesTaxFeatureCan,
         localValue,
         handleChange,
@@ -75,7 +80,6 @@ export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
 function ItemEntriesTableRoot() {
   const {
     localValue,
-    defaultEntry,
     handleChange,
     items,
     errors,
@@ -84,7 +88,11 @@ function ItemEntriesTableRoot() {
     taxRates,
     itemType,
     batchMode,
+    accountField = 'sellAccountId',
   } = useItemEntriesTableContext();
+
+  // Fetches the accounts list.
+  const { data: accounts } = useAccounts();
 
   // Editiable items entries columns.
   const columns = useEditableItemsEntriesColumns();
@@ -108,12 +116,28 @@ function ItemEntriesTableRoot() {
   const handleUpdateData = useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
       if (columnId === 'itemId') {
-        setItemRow({ rowIndex, columnId, itemId: value as number });
+        const item = items?.find((item) => item.id === value);
+        setItemRow(item ? { rowIndex, columnId, itemId: item.id } : null);
+        if (item) {
+          handleChange(
+            composeRowsOnUpdateRow(rowIndex, {
+              itemId: item.id,
+              [accountField]: item[accountField] ?? '',
+            }),
+          );
+          return;
+        }
       }
-      const newRows = composeRowsOnEditCell(rowIndex, columnId, value);
-      handleChange(newRows);
+      handleChange(composeRowsOnEditCell(rowIndex, columnId, value));
     },
-    [localValue, defaultEntry, handleChange],
+    [
+      accountField,
+      composeRowsOnEditCell,
+      composeRowsOnUpdateRow,
+      handleChange,
+      items,
+      setItemRow,
+    ],
   );
 
   // Handle table rows removing by index.
@@ -142,6 +166,7 @@ function ItemEntriesTableRoot() {
       cellsLoadingCoords={cellsLoading ?? undefined}
       payload={{
         items,
+        accounts: accounts ?? [],
         taxRates,
         errors: errors || [],
         updateData: handleUpdateData,
@@ -163,6 +188,8 @@ ItemsEntriesTable.defaultProps = {
     quantity: '',
     rate: '',
     discount: '',
+    sellAccountId: '',
+    costAccountId: '',
     batchId: null,
     batch: null,
     batches: [],
@@ -173,4 +200,5 @@ ItemsEntriesTable.defaultProps = {
   linesNumber: 1,
   minLinesNumber: 1,
   enableTaxRates: true,
+  accountField: 'sellAccountId',
 };

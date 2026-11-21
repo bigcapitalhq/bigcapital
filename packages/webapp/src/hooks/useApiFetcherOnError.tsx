@@ -101,6 +101,8 @@ export function useApiFetcherOnError() {
         }
         const batchError = errors.find((e) =>
           [
+            'BATCH_FEATURE_NOT_ENABLED',
+            'BATCH_ALLOCATIONS_REQUIRED',
             'BATCH_NOT_FOUND',
             'BATCH_NUMBER_EXISTS',
             'BATCH_ITEM_NOT_FOUND',
@@ -116,12 +118,26 @@ export function useApiFetcherOnError() {
         );
         if (batchError) {
           const payload = batchError.payload ?? {};
-          const message = intl.get(`batch.error.${batchError.type}`, payload);
+          const indexes = payload.entryIndexes;
+          const message = intl
+            .get(`batch.error.${batchError.type}`, payload)
+            .defaultMessage(
+              batchError.message || intl.get('something_went_wrong'),
+            );
           AppToaster.show({
             message:
-              message === `batch.error.${batchError.type}`
-                ? intl.get('something_went_wrong')
-                : message,
+              Array.isArray(indexes) && indexes.length > 0 ? (
+                <>
+                  {message}
+                  <div>
+                    {intl.get('batch.missing_lines', {
+                      lines: indexes.join(', '),
+                    })}
+                  </div>
+                </>
+              ) : (
+                message
+              ),
             intent: Intent.DANGER,
           });
         }

@@ -23,7 +23,9 @@ import {
   ensureEntriesHaveEmptyLine,
   assignEntriesTaxAmount,
   aggregateItemEntriesTaxRates,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
@@ -45,6 +47,7 @@ export type BillFormEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  costAccountId: string | number;
   landedCost: boolean;
   landedCostDisabled?: boolean;
   taxRateId: string | number;
@@ -84,7 +87,9 @@ export const defaultBillEntry: BillFormEntry = {
   quantity: '',
   description: '',
   amount: '',
+  costAccountId: '',
   landedCost: false,
+  landedCostDisabled: true,
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
@@ -172,16 +177,9 @@ export const transformEntriesToSubmit = (
       entry,
       defaultBillEntry,
     );
-    const normalizedBatches = ((batches ?? []) as ItemEntryBatchAllocation[])
-      .filter((allocation) => allocation.batchId && allocation.quantity > 0)
-      .map((allocation) => ({
-        batchId: allocation.batchId,
-        quantity: allocation.quantity,
-      }));
-
     return {
       ...rest,
-      ...(normalizedBatches.length > 0 ? { batches: normalizedBatches } : {}),
+      ...getEntryBatchRequest(entry),
     };
   };
   return FF.pipe(
@@ -197,7 +195,9 @@ export const transformEntriesToSubmit = (
 export const filterNonZeroEntries = (
   entries: BillFormEntry[],
 ): BillFormEntry[] => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

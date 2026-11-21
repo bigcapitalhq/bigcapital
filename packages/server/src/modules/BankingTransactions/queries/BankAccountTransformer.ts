@@ -1,5 +1,6 @@
 import { Account } from '../../Accounts/models/Account.model';
 import { Transformer } from '../../Transformer/Transformer';
+import { getReconciliationSupport } from '../../BankingReconciliation/getReconciliationSupport';
 
 export class CashflowAccountTransformer extends Transformer {
   /**
@@ -9,6 +10,7 @@ export class CashflowAccountTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'formattedAmount',
+      'isReconciliationSupported',
       'lastFeedsUpdatedAt',
       'lastFeedsUpdatedAtFormatted',
       'lastFeedsUpdatedFromNow',
@@ -17,6 +19,13 @@ export class CashflowAccountTransformer extends Transformer {
       'plaidInstitutionLogo',
     ];
   };
+
+  protected isReconciliationSupported(account: Account): boolean {
+    return getReconciliationSupport(
+      account,
+      this.context?.organization?.baseCurrency,
+    ).isSupported;
+  }
 
   /**
    * Exclude these attributes to sale invoice object.

@@ -125,7 +125,7 @@ export class RefundCreditNoteCashGL {
     return {
       ...commonEntry,
       debit: item.totalExcludingTax * exchangeRate * this.refundRatio,
-      accountId: item.sellAccountId || item.item.sellAccountId,
+      accountId: item.sellAccountId ?? item.item?.sellAccountId,
       note: item.description,
       index: index + 2,
       itemId: item.itemId,

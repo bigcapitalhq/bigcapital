@@ -90,6 +90,111 @@ describe('Sale Invoices (e2e)', () => {
       .expect(201);
   });
 
+  it('/sale-invoices (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 100,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      )
+      .expect(201);
+
+    const invoice = await request(app.getHttpServer())
+      .get(`/sale-invoices/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(invoice.body.entries[0].item_id).toBeNull();
+    expect(invoice.body.entries[0].sell_account_id).toBe(1026);
+    expect(invoice.body.entries[0].description).toBe('Consulting services');
+  });
+
+  it('/sale-invoices (POST) rejects a line without an item, description or account', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [{ index: 1, quantity: 1, rate: 100 }],
+        }),
+      )
+      .expect(400);
+  });
+
+  it('/sale-invoices (POST) rejects a line without an account when no item is selected', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 100,
+            },
+          ],
+        }),
+      )
+      .expect(400);
+  });
+
+  it('/sale-invoices (POST) rejects a line without a description when no item is selected', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              quantity: 1,
+              rate: 100,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      )
+      .expect(400);
+  });
+
+  it('/sale-invoices (POST) rejects an invalid sell account type', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 100,
+              sellAccountId: 1019,
+            },
+          ],
+        }),
+      )
+      .expect(400);
+  });
+
   it('/sale-invoices/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')

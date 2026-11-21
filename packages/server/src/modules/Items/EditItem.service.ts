@@ -33,6 +33,7 @@ export class EditItemService {
    * @param {Item} oldItem
    */
   async authorize(itemDTO: EditItemDto, oldItem: Item) {
+    await this.validators.validateBatchTrackingEnabled(itemDTO);
     // Validate edit item type from inventory type.
     this.validators.validateEditItemFromInventory(itemDTO, oldItem);
 
@@ -112,6 +113,9 @@ export class EditItemService {
 
     return {
       ...itemDTO,
+      ...(itemDTO.type !== 'inventory' && {
+        inventoryTracking: 'none' as const,
+      }),
       ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
         ? {
             quantityOnHand: 0,

@@ -37,6 +37,7 @@ const defaultInitialValues: ItemFormValues = {
   name: '',
   type: 'service',
   code: '',
+  inventoryTracking: 'none',
   reorderPoint: '',
   unit: DEFAULT_ITEM_UNIT,
   costPrice: '',

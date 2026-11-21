@@ -24,7 +24,7 @@ export interface IDocumentBatch {
 export interface IItemEntryDTO {
   id?: number;
   index?: number;
-  itemId: number;
+  itemId?: number;
   landedCost?: boolean;
   warehouseId?: number;
   batchId?: number;

@@ -49,16 +49,20 @@ export class VendorCreditDTOTransformService {
     const amount = this.itemsEntriesService.getTotalItemsEntries(
       vendorCreditDTO.entries,
     );
+    const entriesWithDefaults =
+      await this.itemsEntriesService.setPurchaseEntriesDefaultAccounts(
+        vendorCreditDTO.entries.map((entry: VendorCreditEntryDto) => ({
+          referenceType: 'VendorCredit',
+          ...entry,
+          batches: entry.batches ?? [],
+          batchId: entry.batchId ?? null,
+        })),
+      );
+
     const entries = R.compose(
       // Associate the default index to each item entry.
       assocItemEntriesDefaultIndex,
-
-      // Associate the reference type to item entries.
-      R.map((entry: VendorCreditEntryDto) => ({
-        referenceType: 'VendorCredit',
-        ...entry,
-      })),
-    )(vendorCreditDTO.entries);
+    )(entriesWithDefaults);
 
     // Retreive the next vendor credit number.
     const autoNextNumber =

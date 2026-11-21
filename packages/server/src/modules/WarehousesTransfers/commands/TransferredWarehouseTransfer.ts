@@ -41,6 +41,7 @@ export class TransferredWarehouseTransfer {
       .query(trx)
       .findById(warehouseTransferId)
       .forUpdate()
+      .withGraphFetched('entries')
       .throwIfNotFound();
 
     // Validate the warehouse transfer not already transferred.

@@ -64,6 +64,11 @@ export class CreateCreditNoteService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       creditNoteDTO.entries,
     );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      creditNoteDTO.entries,
+      'sellAccountId',
+    );
     // Transformes the given DTO to storage layer data.
     const creditNoteModel =
       await this.commandCreditNoteDTOTransform.transformCreateEditDTOToModel(

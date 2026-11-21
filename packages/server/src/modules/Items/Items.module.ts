@@ -1,3 +1,4 @@
+import { FeaturesModule } from '../Features/Features.module';
 import { Module } from '@nestjs/common';
 import { ItemsController } from './Item.controller';
 import { CreateItemService } from './CreateItem.service';
@@ -22,6 +23,7 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
 
 @Module({
   imports: [
+    FeaturesModule,
     TenancyModule,
     TenancyDatabaseModule,
     DynamicListModule,
