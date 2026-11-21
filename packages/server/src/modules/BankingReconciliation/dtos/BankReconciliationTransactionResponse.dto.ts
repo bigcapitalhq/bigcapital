@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class BankReconciliationTransactionResponseDto {
   @ApiProperty({ description: 'Stable transaction key' })
@@ -24,6 +24,9 @@ export class BankReconciliationTransactionResponseDto {
 
   @ApiProperty({ description: 'Transaction type', nullable: true })
   transactionType: string | null;
+
+  @ApiPropertyOptional({ description: 'Localized transaction type label' })
+  transactionTypeLabel?: string;
 
   @ApiProperty({ description: 'Transaction number', nullable: true })
   transactionNumber: string | null;

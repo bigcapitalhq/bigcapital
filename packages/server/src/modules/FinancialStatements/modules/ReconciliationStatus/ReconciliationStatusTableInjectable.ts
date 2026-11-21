@@ -9,6 +9,7 @@ import {
 } from './ReconciliationStatusQuery.dto';
 import { ReconciliationStatusTableResponseDto } from './ReconciliationStatusResponse.dto';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { getReconciliationDateLocale } from '@/modules/BankingReconciliation/reconciliation-localization';
 
 @Injectable()
 export class ReconciliationStatusTableInjectable {
@@ -31,19 +32,26 @@ export class ReconciliationStatusTableInjectable {
       this.tenancyContext.getTenantMetadata(),
     ]);
     const dateFormat = organization.dateFormat || 'DD MMM YYYY';
+    const dateLocale = getReconciliationDateLocale();
     const table = new ReconciliationStatusTable(
       accounts,
       dateFormat,
       this.i18n,
+      dateLocale,
     );
-    const dateRange = [
-      query.fromDate &&
-        `${this.i18n.t('reconciliation_status.from')} ${moment(query.fromDate).format(dateFormat)}`,
-      query.toDate &&
-        `${this.i18n.t('reconciliation_status.to')} ${moment(query.toDate).format(dateFormat)}`,
-    ]
-      .filter(Boolean)
-      .join(' | ');
+    const formatDate = (date: string) =>
+      moment(date).locale(dateLocale).format(dateFormat);
+    const dates = {
+      fromDate: query.fromDate ? formatDate(query.fromDate) : '',
+      toDate: query.toDate ? formatDate(query.toDate) : '',
+    };
+    const dateRangeKey = dates.fromDate
+      ? dates.toDate
+        ? 'date_range'
+        : 'from_date'
+      : dates.toDate
+        ? 'to_date'
+        : 'all_dates';
 
     return {
       table: {
@@ -54,8 +62,10 @@ export class ReconciliationStatusTableInjectable {
       meta: {
         organizationName: organization.name,
         sheetName: this.i18n.t('reconciliation_status.sheet_name'),
-        formattedDateRange:
-          dateRange || this.i18n.t('reconciliation_status.all_dates'),
+        formattedDateRange: this.i18n.t(
+          `reconciliation_status.${dateRangeKey}`,
+          { args: dates },
+        ),
         status: query.status ?? ReconciliationReportStatus.Reconciled,
       },
     };

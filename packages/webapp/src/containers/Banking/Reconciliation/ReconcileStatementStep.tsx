@@ -8,6 +8,7 @@ import {
   Spinner,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { BankAccountSelect } from './BankAccountSelect';
 import type {
@@ -15,6 +16,7 @@ import type {
   BankReconciliationsListResponse,
 } from '@bigcapital/sdk-ts';
 import { Alert, InputPrependText, MoneyInputGroup } from '@/components';
+import { formatReconciliationDate } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 
 interface ReconcileStatementStepProps {
   accounts: BankingAccountsListResponse;
@@ -63,15 +65,16 @@ export function ReconcileStatementStep({
   return (
     <Panel>
       <StepHeader>
-        <StepTitle>Statement details</StepTitle>
+        <StepTitle>
+          {intl.get('banking.reconciliation.statement_details')}
+        </StepTitle>
         <StepSubtitle>
-          Select the bank account and enter the closing balance and date from
-          your bank statement.
+          {intl.get('banking.reconciliation.statement_details_hint')}
         </StepSubtitle>
       </StepHeader>
 
       <BankAccountFormGroup
-        label="Bank account"
+        label={intl.get('banking.reconciliation.bank_account')}
         labelFor="reconcile-bank-account"
       >
         <BankAccountSelect
@@ -83,38 +86,40 @@ export function ReconcileStatementStep({
       </BankAccountFormGroup>
 
       {!selectedAccountId && (
-        <Hint>Choose the bank account you want to reconcile.</Hint>
+        <Hint>{intl.get('banking.reconciliation.account_hint')}</Hint>
       )}
 
       {selectedAccountId && isLoading && !meta && (
         <LoadingRow>
           <Spinner size={20} />
-          <span>Loading account details...</span>
+          <span>{intl.get('banking.reconciliation.loading_account')}</span>
         </LoadingRow>
       )}
 
       {meta && !meta.isSupported && (
-        <Callout intent={Intent.DANGER} title="Reconciliation unavailable">
+        <Callout
+          intent={Intent.DANGER}
+          title={intl.get('banking.reconciliation.unavailable')}
+        >
           {meta.unsupportedReason ||
-            'This account does not support reconciliation yet.'}
+            intl.get('banking.reconciliation.unavailable_hint')}
         </Callout>
       )}
 
       {meta && meta.isSupported && meta.hasInProgress && (
         <>
-          <Alert title="Reconciliation in progress" intent={Intent.PRIMARY}>
-            <p>
-              You have an unfinished reconciliation for this account. Resume it
-              to keep checking transactions and finish when the difference is
-              zero.
-            </p>
+          <Alert
+            title={intl.get('banking.reconciliation.in_progress')}
+            intent={Intent.PRIMARY}
+          >
+            <p>{intl.get('banking.reconciliation.resume_hint')}</p>
           </Alert>
           <Actions>
             <FooterButton
               type="button"
               minimal
               intent={Intent.PRIMARY}
-              text="Resume reconciliation"
+              text={intl.get('banking.reconciliation.resume')}
               onClick={() => meta.inProgressId && onResume(meta.inProgressId)}
               data-testId="resume-reconciliation"
             />
@@ -126,27 +131,37 @@ export function ReconcileStatementStep({
         <form onSubmit={handleSubmit}>
           <BalanceRow>
             <BalanceItem>
-              <BalanceLabel>Beginning balance</BalanceLabel>
+              <BalanceLabel>
+                {intl.get('banking.reconciliation.beginning_balance')}
+              </BalanceLabel>
               <BalanceValue>{meta.formattedBeginningBalance}</BalanceValue>
               <BalanceHint>
-                Carried from the previous reconciliation or the account
-                register.
+                {intl.get('banking.reconciliation.beginning_balance_hint')}
               </BalanceHint>
             </BalanceItem>
             <BalanceItem>
-              <BalanceLabel>Balance in Bigcapital</BalanceLabel>
+              <BalanceLabel>
+                {intl.get('banking.reconciliation.book_balance')}
+              </BalanceLabel>
               <BalanceValue>{meta.formattedAccountAmount}</BalanceValue>
-              <BalanceHint>Current balance of the account.</BalanceHint>
+              <BalanceHint>
+                {intl.get('banking.reconciliation.book_balance_hint')}
+              </BalanceHint>
             </BalanceItem>
             {meta.uncategorizedTransactionsCount > 0 && (
               <BalanceItem>
-                <BalanceLabel>Uncategorized transactions</BalanceLabel>
+                <BalanceLabel>
+                  {intl.get(
+                    'banking.reconciliation.uncategorized_transactions',
+                  )}
+                </BalanceLabel>
                 <BalanceValue>
-                  {meta.uncategorizedTransactionsCount}
+                  {intl.get('banking.reconciliation.number', {
+                    count: meta.uncategorizedTransactionsCount,
+                  })}
                 </BalanceValue>
                 <BalanceHint>
-                  Categorize or match them before reconciling for the best
-                  result.
+                  {intl.get('banking.reconciliation.categorize_hint')}
                 </BalanceHint>
               </BalanceItem>
             )}
@@ -154,9 +169,11 @@ export function ReconcileStatementStep({
 
           <FormGrid>
             <FormGroup
-              label="Statement ending balance"
+              label={intl.get('banking.reconciliation.ending_balance')}
               labelFor="reconcile-ending-balance"
-              helperText="The closing balance shown on your bank statement."
+              helperText={intl.get(
+                'banking.reconciliation.ending_balance_hint',
+              )}
             >
               <ControlGroup>
                 <InputPrependText text={meta.currencyCode} />
@@ -170,9 +187,9 @@ export function ReconcileStatementStep({
             </FormGroup>
 
             <FormGroup
-              label="Statement ending date"
+              label={intl.get('banking.reconciliation.ending_date')}
               labelFor="reconcile-end-date"
-              helperText="The closing date shown on your bank statement."
+              helperText={intl.get('banking.reconciliation.ending_date_hint')}
             >
               <InputGroup
                 id="reconcile-end-date"
@@ -185,10 +202,12 @@ export function ReconcileStatementStep({
             </FormGroup>
 
             <FormGroup
-              label="Period start"
-              helperText="The first day after the previous reconciliation."
+              label={intl.get('banking.reconciliation.period_start')}
+              helperText={intl.get('banking.reconciliation.period_start_hint')}
             >
-              <PeriodStartText>{meta.suggestedStartDate}</PeriodStartText>
+              <PeriodStartText>
+                {formatReconciliationDate(meta.suggestedStartDate)}
+              </PeriodStartText>
             </FormGroup>
           </FormGrid>
 
@@ -196,7 +215,7 @@ export function ReconcileStatementStep({
             <FooterButton
               type="submit"
               intent={Intent.PRIMARY}
-              text="Initiate Reconciliation"
+              text={intl.get('banking.reconciliation.start')}
               loading={isSubmitting}
               disabled={!canContinue}
               data-testId="start-reconciliation"

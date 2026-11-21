@@ -1,4 +1,6 @@
 import { ITableCell } from '../../types/Table.types';
+import type { I18nService } from 'nestjs-i18n';
+import { ReconciliationReportStatus } from './ReconciliationStatusQuery.dto';
 import { ReconciliationStatusTableDataDto } from './ReconciliationStatusResponse.dto';
 
 /**
@@ -19,3 +21,28 @@ export const mapCellValues = (
     })),
   };
 };
+
+export function getReconciliationReportStatusLabel(
+  i18n: I18nService,
+  status: ReconciliationReportStatus,
+): string {
+  return i18n.t(
+    status === ReconciliationReportStatus.Reconciled
+      ? 'reconciliation_status.reconciled'
+      : 'reconciliation_status.unreconciled',
+  );
+}
+
+export function localizeReconciliationStatusCell(
+  i18n: I18nService,
+  { key, value }: ITableCell,
+): string {
+  if (
+    key === 'status' &&
+    (value === ReconciliationReportStatus.Reconciled ||
+      value === ReconciliationReportStatus.Unreconciled)
+  ) {
+    return getReconciliationReportStatusLabel(i18n, value);
+  }
+  return value;
+}

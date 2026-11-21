@@ -8,6 +8,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { I18nService } from 'nestjs-i18n';
 import { ReconciliationStatusService } from './ReconciliationStatus.service';
 import { ReconciliationStatusQueryDto } from './ReconciliationStatusQuery.dto';
 import {
@@ -52,6 +53,7 @@ export class ReconciliationStatusController {
     private readonly tableFormat: ReconciliationStatusTableInjectable,
     private readonly exportFormat: ReconciliationStatusExportInjectable,
     private readonly pdfFormat: ReconciliationStatusPdfInjectable,
+    private readonly i18n: I18nService,
   ) {}
 
   @Get()
@@ -83,6 +85,7 @@ export class ReconciliationStatusController {
     @Res({ passthrough: true }) res: Response,
   ) {
     res.vary('Accept');
+    res.vary('Accept-Language');
 
     switch (req.accepts(RESPONSE_TYPES)) {
       case AcceptType.ApplicationJsonTable: {
@@ -93,20 +96,20 @@ export class ReconciliationStatusController {
       case AcceptType.ApplicationCsv:
       case CSV_CONTENT_TYPE: {
         const csv = await this.exportFormat.csv(query);
-        res.attachment('reconciliation-status.csv').send(csv);
+        res.attachment(this.exportFilename('csv')).send(csv);
         return;
       }
       case AcceptType.ApplicationXlsx:
       case XLSX_CONTENT_TYPE: {
         const xlsx = await this.exportFormat.xlsx(query);
-        res.attachment('reconciliation-status.xlsx').send(xlsx);
+        res.attachment(this.exportFilename('xlsx')).send(xlsx);
         return;
       }
       case AcceptType.ApplicationPdf: {
         const pdf = await this.pdfFormat.pdf(query);
         res.setHeader(
           'Content-Disposition',
-          'inline; filename="reconciliation-status.pdf"',
+          `inline; filename="reconciliation-status.pdf"; filename*=UTF-8''${encodeURIComponent(this.exportFilename('pdf'))}`,
         );
         res.type(AcceptType.ApplicationPdf).send(pdf);
         return;
@@ -114,5 +117,9 @@ export class ReconciliationStatusController {
       default:
         return this.report.getReport(query);
     }
+  }
+
+  private exportFilename(format: 'csv' | 'xlsx' | 'pdf'): string {
+    return `${this.i18n.t('reconciliation_status.filename')}.${format}`;
   }
 }

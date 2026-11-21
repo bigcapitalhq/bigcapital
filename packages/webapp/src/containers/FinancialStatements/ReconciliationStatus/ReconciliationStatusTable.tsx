@@ -23,7 +23,7 @@ const COLUMN_WIDTHS: Record<string, number> = {
   type: 170,
   deposit: 120,
   withdrawal: 120,
-  status: 80,
+  status: 145,
 };
 
 function StatusCell({ value }: CellProps<ReconciliationStatusRow, string>) {
@@ -43,7 +43,7 @@ function StatusCell({ value }: CellProps<ReconciliationStatusRow, string>) {
       title={label}
       aria-label={label}
     >
-      {value}
+      {label}
     </Tag>
   );
 }

@@ -9,9 +9,16 @@
   "opening_balance": "الرصيد الافتتاحي",
   "closing_balance": "الرصيد الختامي",
   "no_transactions": "لا توجد معاملات تطابق الحالة والتواريخ المحددة.",
-  "from": "من",
-  "to": "إلى",
   "all_dates": "جميع التواريخ",
   "reconciled": "تمت التسوية",
-  "unreconciled": "لم تتم التسوية"
+  "unreconciled": "لم تتم التسوية",
+  "date_range": "من {fromDate} إلى {toDate}",
+  "from_date": "من {fromDate}",
+  "to_date": "إلى {toDate}",
+  "pdf_title": "حالة التسوية البنكية ({mode})",
+  "account_heading": "{accountName} ({currencyCode})",
+  "unknown_type": "نوع معاملة غير معروف",
+  "filename": "حالة-التسوية-البنكية",
+  "invalid_range": "يجب أن يكون تاريخ الانتهاء موافقًا لتاريخ البدء أو بعده.",
+  "account_not_found": "تعذّر العثور على الحساب البنكي للتسوية."
 }

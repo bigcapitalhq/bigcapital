@@ -3,10 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { groupBy, keyBy, startCase } from 'lodash';
+import { groupBy, keyBy } from 'lodash';
 import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { getReconciliationTransactionTypeLabel } from '@/modules/BankingReconciliation/reconciliation-localization';
 import { ReconciliationStatusRepository } from './ReconciliationStatusRepository';
 import {
   ReconciliationReportStatus,
@@ -35,13 +36,15 @@ export class ReconciliationStatusService {
     } = query;
     if (fromDate && toDate && fromDate > toDate) {
       throw new BadRequestException(
-        'The end date must be on or after the start date.',
+        this.i18n.t('reconciliation_status.invalid_range'),
       );
     }
     const { bankAccounts, selectedAccounts, balances, transactions } =
       await this.repository.getReportData({ ...query, status });
     if (accountId && selectedAccounts.length === 0) {
-      throw new NotFoundException('Bank account not found for reconciliation.');
+      throw new NotFoundException(
+        this.i18n.t('reconciliation_status.account_not_found'),
+      );
     }
     const balancesByAccount = keyBy(balances, 'accountId');
     const transactionsByAccount = groupBy(transactions, 'accountId');
@@ -68,8 +71,6 @@ export class ReconciliationStatusService {
     transaction: AccountTransaction,
     status: ReconciliationReportStatus,
   ): ReconciliationStatusTransactionDto {
-    const typeKey = transaction.referenceTypeFormatted;
-
     return {
       id: transaction.id,
       date: transaction.date
@@ -77,10 +78,11 @@ export class ReconciliationStatusService {
         : null,
       reference:
         transaction.referenceNumber || transaction.transactionNumber || null,
-      type: typeKey
-        ? this.i18n.t(typeKey)
-        : startCase(transaction.transactionType || transaction.referenceType) ||
-          null,
+      type: getReconciliationTransactionTypeLabel(
+        this.i18n,
+        transaction.referenceType,
+        transaction.transactionType,
+      ),
       deposit: Number(transaction.debit ?? 0),
       withdrawal: Number(transaction.credit ?? 0),
       status,

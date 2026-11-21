@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from 'react-intl-universal';
 import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
 import type { SelectOptionProps } from '@blueprintjs-formik/select';
 import { BPSelect } from '@/components';
@@ -45,7 +46,10 @@ export function BankAccountSelect({
         if (value === null || value === undefined) return;
         onSelect(Number(value));
       }}
-      placeholder="Select a bank account"
+      placeholder={intl.get('banking.reconciliation.account_placeholder')}
+      noResultsText={intl.get('no_results')}
+      inputProps={{ placeholder: intl.get('search') }}
+      buttonProps={{ id: 'reconcile-bank-account' }}
       disabled={disabled}
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
     />

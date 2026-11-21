@@ -7,11 +7,13 @@ import {
   Spinner,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { DashboardActionsBar, DashboardPageContent, Icon } from '@/components';
 import { ReconciliationDetailPanel } from '@/containers/CashFlow/AccountTransactions/Reconciliation/ReconciliationDetailPanel';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
+import { getReconciliationErrorMessage } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 import {
   useBankReconciliation,
   useBankReconciliations,
@@ -82,11 +84,14 @@ export function ReconcileTransactionsPage() {
       <ReconciliationTheme>
         <DashboardPageContent>
           <ContentWrap>
-            <Callout intent={Intent.DANGER} title="Invalid reconciliation">
-              The reconciliation link is not valid.
+            <Callout
+              intent={Intent.DANGER}
+              title={intl.get('banking.reconciliation.invalid_link')}
+            >
+              {intl.get('banking.reconciliation.invalid_link_hint')}
               <div style={{ marginTop: 12 }}>
                 <Button
-                  text="Back to reconcile"
+                  text={intl.get('banking.reconciliation.back_to_reconcile')}
                   onClick={() => history.push('/reconcile')}
                 />
               </div>
@@ -110,19 +115,19 @@ export function ReconcileTransactionsPage() {
           <Button
             minimal
             icon="arrow-left"
-            text="Statement details"
+            text={intl.get('banking.reconciliation.statement_details')}
             onClick={handleBackClick}
           />
           <Button
             minimal
             icon={<Icon icon="refresh-16" iconSize={16} />}
-            text="Reload"
+            text={intl.get('banking.reconciliation.reload')}
             onClick={handleRefresh}
           />
           {detail && !detail.reconciliation.isInProgress && (
             <Button
               icon="plus"
-              text="Start another reconciliation"
+              text={intl.get('banking.reconciliation.start_another')}
               onClick={handleStartAnotherClick}
             />
           )}
@@ -139,10 +144,16 @@ export function ReconcileTransactionsPage() {
 
         {!isLoading && error && (
           <ContentWrap>
-            <Callout intent={Intent.DANGER} title="Unable to load">
-              {error.message || 'Unable to load the reconciliation.'}
+            <Callout
+              intent={Intent.DANGER}
+              title={intl.get('banking.reconciliation.load_error_title')}
+            >
+              {getReconciliationErrorMessage(error, 'load_error')}
               <div style={{ marginTop: 12 }}>
-                <Button text="Retry" onClick={() => refetchDetail()} />
+                <Button
+                  text={intl.get('banking.reconciliation.retry')}
+                  onClick={() => refetchDetail()}
+                />
               </div>
             </Callout>
           </ContentWrap>

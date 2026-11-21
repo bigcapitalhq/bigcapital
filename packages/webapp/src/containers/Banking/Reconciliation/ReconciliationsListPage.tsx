@@ -10,6 +10,7 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import type { BankReconciliationResponse } from '@bigcapital/sdk-ts';
@@ -17,9 +18,12 @@ import { DashboardActionsBar, DashboardPageContent, Icon } from '@/components';
 import { AccountDetailsBar } from '@/containers/CashFlow/AccountTransactions/AccountTransactionsDetailsBar';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
 import {
-  formatReconciledDate,
+  formatReconciliationAccountPrompt,
+  formatReconciliationDate,
   formatReconciliationPeriod,
   getStatusIntent,
+  getReconciliationErrorMessage,
+  getReconciliationStatusLabel,
 } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 import { useAccount, useCashflowAccounts } from '@/hooks/query';
 import { useBankReconciliations } from '@/hooks/query/banking';
@@ -86,14 +90,14 @@ export function ReconciliationsListPage() {
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="arrow-left" iconSize={16} />}
-            text={'Back to account'}
+            text={intl.get('banking.reconciliation.back_to_account')}
             onClick={handleBackClick}
           />
           <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="refresh-16" iconSize={14} />}
-            text={'Refresh'}
+            text={intl.get('banking.reconciliation.refresh')}
             onClick={handleRefreshClick}
             loading={isFetching || isAccountFetching}
           />
@@ -104,7 +108,7 @@ export function ReconciliationsListPage() {
             <Button
               minimal
               icon={<Icon icon="play-16" iconSize={16} />}
-              text={'Resume reconciliation'}
+              text={intl.get('banking.reconciliation.resume')}
               onClick={handleResumeClick}
               data-testId="resume-reconciliation"
             />
@@ -112,7 +116,7 @@ export function ReconciliationsListPage() {
             <Button
               intent={Intent.PRIMARY}
               icon={<Icon icon="plus" iconSize={16} />}
-              text={'New reconciliation'}
+              text={intl.get('banking.reconciliation.new')}
               onClick={handleStartClick}
               data-testId="new-reconciliation"
             />
@@ -147,12 +151,14 @@ export function ReconciliationsListPage() {
           <ContentWrap>
             <Callout
               intent={Intent.DANGER}
-              title="Unable to load reconciliations"
+              title={intl.get('banking.reconciliation.list_error_title')}
             >
-              {error?.message ||
-                'The reconciliation details for this account could not be loaded.'}
+              {getReconciliationErrorMessage(error, 'list_error')}
               <div style={{ marginTop: 12 }}>
-                <Button text="Retry" onClick={() => refetch()} />
+                <Button
+                  text={intl.get('banking.reconciliation.retry')}
+                  onClick={() => refetch()}
+                />
               </div>
             </Callout>
           </ContentWrap>
@@ -160,9 +166,12 @@ export function ReconciliationsListPage() {
 
         {!isLoading && meta && !meta.isSupported && (
           <ContentWrap>
-            <Callout intent={Intent.WARNING} title="Reconciliation unavailable">
+            <Callout
+              intent={Intent.WARNING}
+              title={intl.get('banking.reconciliation.unavailable')}
+            >
               {meta.unsupportedReason ||
-                'This account does not support reconciliation yet.'}
+                intl.get('banking.reconciliation.unavailable_hint')}
             </Callout>
           </ContentWrap>
         )}
@@ -171,15 +180,16 @@ export function ReconciliationsListPage() {
           <ContentWrap>
             {reconciliations.length === 0 ? (
               <EmptyState>
-                <EmptyTitle>No reconciliations yet</EmptyTitle>
+                <EmptyTitle>
+                  {intl.get('banking.reconciliation.empty_history')}
+                </EmptyTitle>
                 <EmptyDescription>
-                  Reconcile {meta.accountName} against your bank statement to
-                  keep the books accurate.
+                  {formatReconciliationAccountPrompt(meta.accountName)}
                 </EmptyDescription>
                 <Button
                   intent={Intent.PRIMARY}
                   icon={<Icon icon="plus" iconSize={16} />}
-                  text="Start reconciliation"
+                  text={intl.get('banking.reconciliation.start')}
                   onClick={handleStartClick}
                 />
               </EmptyState>
@@ -188,10 +198,14 @@ export function ReconciliationsListPage() {
                 <Table>
                   <thead>
                     <tr>
-                      <th className="reconciled">Reconciled</th>
-                      <th>Reconciliation Period</th>
-                      <th className="money">Closing Balance</th>
-                      <th className="status">Status</th>
+                      <th className="reconciled">
+                        {intl.get('report.reconciliation_status.reconciled')}
+                      </th>
+                      <th>{intl.get('banking.reconciliation.period_title')}</th>
+                      <th className="money">
+                        {intl.get('banking.reconciliation.closing_balance')}
+                      </th>
+                      <th className="status">{intl.get('status')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -202,8 +216,9 @@ export function ReconciliationsListPage() {
                         data-testId="reconciliation-list-row"
                       >
                         <td className="reconciled">
-                          {formatReconciledDate(reconciliation.reconciledAt) ||
-                            '—'}
+                          {formatReconciliationDate(
+                            reconciliation.reconciledAt,
+                          ) || '—'}
                         </td>
                         <td>
                           {formatReconciliationPeriod(
@@ -219,7 +234,9 @@ export function ReconciliationsListPage() {
                             minimal
                             intent={getStatusIntent(reconciliation.status)}
                           >
-                            {reconciliation.statusLabel}
+                            {getReconciliationStatusLabel(
+                              reconciliation.status,
+                            )}
                           </Tag>
                         </td>
                       </tr>

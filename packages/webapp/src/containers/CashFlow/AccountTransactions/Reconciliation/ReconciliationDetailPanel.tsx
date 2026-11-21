@@ -1,6 +1,11 @@
 import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { ReconciliationWorkspace } from './ReconciliationWorkspace';
+import {
+  formatReconciliationPeriod,
+  getReconciliationErrorMessage,
+} from './utils';
 import type {
   BankReconciliationDetailResponse,
   BankReconciliationResponse,
@@ -55,7 +60,7 @@ export function ReconciliationDetailPanel({
       .then(() => {
         setUndoTarget(null);
         AppToaster.show({
-          message: 'Reconciliation reopened.',
+          message: intl.get('banking.reconciliation.reopened'),
           intent: Intent.SUCCESS,
         });
         onRefresh();
@@ -63,7 +68,7 @@ export function ReconciliationDetailPanel({
       .catch((error: Error) => {
         setUndoTarget(null);
         AppToaster.show({
-          message: error.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(error, 'undo_error'),
           intent: Intent.DANGER,
         });
       });
@@ -77,7 +82,7 @@ export function ReconciliationDetailPanel({
         const deletedId = deleteTarget.id;
         setDeleteTarget(null);
         AppToaster.show({
-          message: 'Reconciliation deleted.',
+          message: intl.get('banking.reconciliation.deleted'),
           intent: Intent.SUCCESS,
         });
         onDeleted?.(deletedId);
@@ -85,7 +90,7 @@ export function ReconciliationDetailPanel({
       .catch((error: Error) => {
         setDeleteTarget(null);
         AppToaster.show({
-          message: error.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(error, 'delete_error'),
           intent: Intent.DANGER,
         });
       });
@@ -110,24 +115,23 @@ export function ReconciliationDetailPanel({
         isOpen={Boolean(undoTarget)}
         intent={Intent.WARNING}
         icon="undo"
-        confirmButtonText="Undo reconciliation"
-        cancelButtonText="Cancel"
+        confirmButtonText={intl.get('banking.reconciliation.undo_action')}
+        cancelButtonText={intl.get('cancel')}
         loading={isUndoing}
         onConfirm={handleConfirmUndo}
         onCancel={() => setUndoTarget(null)}
       >
         <p>
-          Undo the reconciliation for{' '}
-          <strong>
-            {undoTarget?.formattedStartDate} – {undoTarget?.formattedEndDate}
-          </strong>
-          ?
+          {undoTarget &&
+            intl.get('banking.reconciliation.undo_confirm', {
+              period: formatReconciliationPeriod(
+                undoTarget.startDate,
+                undoTarget.endDate,
+              ),
+            })}
         </p>
         {!detail.meta.isLatest && (
-          <p>
-            This is not the latest reconciliation. Later reconciliations will
-            also be voided so the account can be reconciled again.
-          </p>
+          <p>{intl.get('banking.reconciliation.undo_cascade_hint')}</p>
         )}
       </Alert>
 
@@ -135,19 +139,20 @@ export function ReconciliationDetailPanel({
         isOpen={Boolean(deleteTarget)}
         intent={Intent.DANGER}
         icon="trash"
-        confirmButtonText="Delete"
-        cancelButtonText="Cancel"
+        confirmButtonText={intl.get('delete')}
+        cancelButtonText={intl.get('cancel')}
         loading={isDeleting}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteTarget(null)}
       >
         <p>
-          Delete the reconciliation for{' '}
-          <strong>
-            {deleteTarget?.formattedStartDate} –{' '}
-            {deleteTarget?.formattedEndDate}
-          </strong>
-          ? This cannot be undone.
+          {deleteTarget &&
+            intl.get('banking.reconciliation.delete_confirm', {
+              period: formatReconciliationPeriod(
+                deleteTarget.startDate,
+                deleteTarget.endDate,
+              ),
+            })}
         </p>
       </Alert>
     </>
