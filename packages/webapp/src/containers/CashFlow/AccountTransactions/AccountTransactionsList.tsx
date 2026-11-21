@@ -1,6 +1,7 @@
 import { Spinner } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React, { Suspense, lazy } from 'react';
+import { Redirect } from 'react-router-dom';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 import { withBanking } from '../withBanking';
 import { AccountTransactionsActionsBar } from './AccountTransactionsActionsBar';
@@ -12,7 +13,6 @@ import {
   useAccountTransactionsContext,
 } from './AccountTransactionsProvider';
 import { AccountTransactionsLoadingBar } from './components';
-import { ReconciliationTab } from './Reconciliation/ReconciliationTab';
 import type { WithBankingProps } from '../withBanking';
 import { DashboardPageContent } from '@/components';
 import { AppContentShell } from '@/components/AppShell';
@@ -84,10 +84,10 @@ const AccountsTransactionsUncategorized = lazy(() =>
 );
 
 function AccountTransactionsContent() {
-  const { filterTab } = useAccountTransactionsContext();
+  const { accountId, filterTab } = useAccountTransactionsContext();
 
   if (filterTab === 'reconciliation') {
-    return <ReconciliationTab />;
+    return <Redirect to={`/cashflow-accounts/${accountId}/reconciliations`} />;
   }
   return filterTab === 'uncategorized' ? (
     <AccountsTransactionsUncategorized />
