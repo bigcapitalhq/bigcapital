@@ -1,4 +1,3 @@
-import intl from 'react-intl-universal';
 import {
   Button,
   ButtonGroup,
@@ -12,6 +11,7 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import { createPortal } from 'react-dom';
+import intl from 'react-intl-universal';
 import styled, { css } from 'styled-components';
 import { ReconciliationSummary } from './ReconciliationSummary';
 import { ReconciliationTransactionsTable } from './ReconciliationTransactionsTable';

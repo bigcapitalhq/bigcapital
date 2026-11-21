@@ -1,13 +1,13 @@
-import { getReconciliationErrorMessage } from './utils';
-import intl from 'react-intl-universal';
 import { Button, Callout, Intent, Spinner } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { ReconciliationDetailPanel } from './ReconciliationDetailPanel';
 import { ReconciliationHistoryTable } from './ReconciliationHistoryTable';
 import { ReconciliationStartPanel } from './ReconciliationStartPanel';
 import { ReconciliationTheme } from './styles';
+import { getReconciliationErrorMessage } from './utils';
 import { AppToaster } from '@/components';
 import {
   useBankReconciliation,

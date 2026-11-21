@@ -1,5 +1,3 @@
-import { getReconciliationErrorMessage } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
-import intl from 'react-intl-universal';
 import {
   Alignment,
   Button,
@@ -9,11 +7,13 @@ import {
   Spinner,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { DashboardActionsBar, DashboardPageContent, Icon } from '@/components';
 import { ReconciliationDetailPanel } from '@/containers/CashFlow/AccountTransactions/Reconciliation/ReconciliationDetailPanel';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
+import { getReconciliationErrorMessage } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 import {
   useBankReconciliation,
   useBankReconciliations,

@@ -1,5 +1,3 @@
-import { formatReconciliationDate } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
-import intl from 'react-intl-universal';
 import {
   Button,
   Callout,
@@ -10,6 +8,7 @@ import {
   Spinner,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { BankAccountSelect } from './BankAccountSelect';
 import type {
@@ -17,6 +16,7 @@ import type {
   BankReconciliationsListResponse,
 } from '@bigcapital/sdk-ts';
 import { Alert, InputPrependText, MoneyInputGroup } from '@/components';
+import { formatReconciliationDate } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 
 interface ReconcileStatementStepProps {
   accounts: BankingAccountsListResponse;

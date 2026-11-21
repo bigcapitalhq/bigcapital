@@ -1,11 +1,11 @@
+import { Alert, Intent } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { ReconciliationWorkspace } from './ReconciliationWorkspace';
 import {
   formatReconciliationPeriod,
   getReconciliationErrorMessage,
 } from './utils';
-import intl from 'react-intl-universal';
-import { Alert, Intent } from '@blueprintjs/core';
-import React from 'react';
-import { ReconciliationWorkspace } from './ReconciliationWorkspace';
 import type {
   BankReconciliationDetailResponse,
   BankReconciliationResponse,

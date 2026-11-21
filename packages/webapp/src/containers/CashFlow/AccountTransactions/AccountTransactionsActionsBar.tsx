@@ -1,4 +1,3 @@
-import intl from 'react-intl-universal';
 import {
   Button,
   NavbarGroup,
@@ -18,6 +17,7 @@ import {
 import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { withBanking } from '../withBanking';
 import { withBankingActions } from '../withBankingActions';

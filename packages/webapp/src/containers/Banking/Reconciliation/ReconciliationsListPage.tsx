@@ -1,4 +1,3 @@
-import intl from 'react-intl-universal';
 import {
   Alignment,
   Button,
@@ -11,6 +10,7 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import type { BankReconciliationResponse } from '@bigcapital/sdk-ts';

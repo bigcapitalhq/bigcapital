@@ -19,7 +19,6 @@ import {
 import { useApiFetcher } from '../../../useRequest';
 import { financialReportsKeys } from '../../FinancialReports/query-keys';
 import { bankingKeys } from '../query-keys';
-import { useAppIntlContext } from '@/components/AppIntlProvider';
 import type {
   BankReconciliationDetailResponse,
   BankReconciliationsListResponse,
@@ -30,6 +29,7 @@ import type {
   UpdateBankReconciliationBody,
 } from '@bigcapital/sdk-ts';
 import type { QueryClient } from '@tanstack/react-query';
+import { useAppIntlContext } from '@/components/AppIntlProvider';
 
 function useBankReconciliationFetcher() {
   const { currentLocale: locale } = useAppIntlContext();

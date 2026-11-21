@@ -1,6 +1,6 @@
-import intl from 'react-intl-universal';
 import { Button, Tag } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import {
   getStatusIntent,

@@ -1,5 +1,3 @@
-import { formatReconciliationDate } from './utils';
-import intl from 'react-intl-universal';
 import {
   Button,
   Callout,
@@ -9,7 +7,9 @@ import {
   TextArea,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { formatReconciliationDate } from './utils';
 import type { BankReconciliationsListResponse } from '@bigcapital/sdk-ts';
 
 interface ReconciliationStartPanelProps {

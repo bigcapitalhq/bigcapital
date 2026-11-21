@@ -1,6 +1,6 @@
-import intl from 'react-intl-universal';
 import { Checkbox, Tag } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled, { css } from 'styled-components';
 import {
   filterTransactions,

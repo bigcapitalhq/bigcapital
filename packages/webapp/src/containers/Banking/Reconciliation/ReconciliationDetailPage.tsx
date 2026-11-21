@@ -1,4 +1,3 @@
-import intl from 'react-intl-universal';
 import {
   Alert,
   Button,
@@ -10,6 +9,7 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory, useParams } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import {

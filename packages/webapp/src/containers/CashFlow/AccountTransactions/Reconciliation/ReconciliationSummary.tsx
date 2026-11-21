@@ -1,5 +1,5 @@
-import intl from 'react-intl-universal';
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { getReconciliationDifference } from './utils';
 import type { BankReconciliationResponse } from '@bigcapital/sdk-ts';

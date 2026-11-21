@@ -1,5 +1,5 @@
-import intl from 'react-intl-universal';
 import React from 'react';
+import intl from 'react-intl-universal';
 import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
 import type { SelectOptionProps } from '@blueprintjs-formik/select';
 import { BPSelect } from '@/components';
