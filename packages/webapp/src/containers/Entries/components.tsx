@@ -126,6 +126,7 @@ interface BatchEntryCellProps {
   payload: {
     items?: Array<{ id: number; type?: string; name?: string }>;
     batchMode?: 'purchase' | 'sale';
+    warehouseId?: number | string;
     updateRow: (rowIndex: number, patch: Record<string, unknown>) => void;
   };
 }
@@ -159,6 +160,7 @@ export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
     return (
       <SaleBatchAllocationsPopover
         itemId={Number(original.itemId)}
+        warehouseId={payload.warehouseId}
         entryQuantity={original.quantity ?? 0}
         allocations={allocations}
         onApply={(nextAllocations) => {

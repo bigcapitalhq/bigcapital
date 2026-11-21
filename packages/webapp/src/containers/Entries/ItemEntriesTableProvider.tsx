@@ -40,6 +40,7 @@ export interface ItemEntriesTableContextValue {
   landedCost?: boolean;
   /* The batch tracking mode of the table (purchase/sale). */
   batchMode?: 'purchase' | 'sale';
+  warehouseId?: number | string;
 }
 
 const ItemEntriesTableContext = createContext<

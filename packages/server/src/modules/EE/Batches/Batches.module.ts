@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RegisterTenancyModel } from '../../Tenancy/TenancyModels/Tenancy.module';
 import { Batch } from './models/Batch';
+import { BatchWarehouseBalance } from './models/BatchWarehouseBalance';
 import { BatchesController } from './Batches.controller';
 import { BatchDetailsReportController } from './BatchDetailsReport.controller';
 import { BatchesApplication } from './BatchesApplication';
@@ -22,7 +23,10 @@ import { TenancyDatabaseModule } from '../../Tenancy/TenancyDB/TenancyDB.module'
 import { InventoryCostModule } from '../../InventoryCost/InventoryCost.module';
 import { BatchAllocationsModule } from './BatchAllocations.module';
 
-const models = [RegisterTenancyModel(Batch)];
+const models = [
+  RegisterTenancyModel(Batch),
+  RegisterTenancyModel(BatchWarehouseBalance),
+];
 
 @Module({
   imports: [

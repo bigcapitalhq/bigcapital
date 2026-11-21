@@ -36,6 +36,7 @@ interface ItemsEntriesTableProps {
   landedCost?: boolean;
   defaultEntry?: ItemEntry;
   batchMode?: 'purchase' | 'sale';
+  warehouseId?: number | string;
 }
 
 /**
@@ -84,6 +85,7 @@ function ItemEntriesTableRoot() {
     taxRates,
     itemType,
     batchMode,
+    warehouseId,
   } = useItemEntriesTableContext();
 
   // Editiable items entries columns.
@@ -150,6 +152,7 @@ function ItemEntriesTableRoot() {
         autoFocus: ['itemId', 0],
         currencyCode,
         batchMode,
+        warehouseId,
       }}
     />
   );

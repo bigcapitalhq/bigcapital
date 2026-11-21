@@ -56,6 +56,7 @@ export class BatchesSubscriber {
   }: ISaleInvoiceCreatingPaylaod) {
     await this.validators.validateEntriesBatches(saleInvoiceDTO.entries, {
       checkAvailability: true,
+      warehouseId: saleInvoiceDTO.warehouseId,
     });
   }
 
@@ -72,6 +73,7 @@ export class BatchesSubscriber {
       checkAvailability: true,
       referenceType: 'SaleInvoice',
       referenceId: oldSaleInvoice.id,
+      warehouseId: saleInvoiceDTO.warehouseId,
     });
   }
 
@@ -84,6 +86,7 @@ export class BatchesSubscriber {
   }: ISaleInvoiceDeliveringPayload) {
     await this.validators.validateEntriesBatches(oldSaleInvoice.entries, {
       checkAvailability: true,
+      warehouseId: oldSaleInvoice.warehouseId,
     });
   }
 }

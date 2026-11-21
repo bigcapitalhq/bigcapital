@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
 import { Batch } from '../models/Batch';
+import { BatchWarehouseBalance } from '../models/BatchWarehouseBalance';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { batchEvents } from '../Batches.events';
@@ -27,6 +29,14 @@ export class CreateBatchService {
 
     @Inject(Batch.name)
     private readonly batchModel: TenantModelProxy<typeof Batch>,
+
+    @Inject(BatchWarehouseBalance.name)
+    private readonly batchWarehouseBalanceModel: TenantModelProxy<
+      typeof BatchWarehouseBalance
+    >,
+
+    @Inject(Warehouse.name)
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
 
     private readonly validators: BatchesValidators,
   ) {}
@@ -70,6 +80,19 @@ export class CreateBatchService {
           sourceTransactionType: dto.sourceTransactionType || null,
           sourceTransactionId: dto.sourceTransactionId || null,
         });
+
+      if (!dto.sourceTransactionType && quantity > 0) {
+        const primaryWarehouse = await this.warehouseModel()
+          .query(transaction)
+          .findOne({ primary: true });
+        if (primaryWarehouse) {
+          await this.batchWarehouseBalanceModel().query(transaction).insert({
+            batchId: batch.id,
+            warehouseId: primaryWarehouse.id,
+            quantityOnHand: quantity,
+          });
+        }
+      }
 
       // Triggers `onBatchCreated` event.
       await this.eventEmitter.emitAsync(batchEvents.onCreated, {

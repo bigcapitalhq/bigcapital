@@ -43,6 +43,7 @@ export function InvoiceItemsEntriesEditorField() {
           currencyCode={values.currencyCode}
           isInclusiveTax={values.inclusiveExclusiveTax === TaxType.Inclusive}
           batchMode={isBatchTrackingEnabled ? 'sale' : undefined}
+          warehouseId={values.warehouseId}
         />
       )}
     </FastField>
