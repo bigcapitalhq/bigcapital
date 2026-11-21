@@ -14,12 +14,14 @@ import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import type { BankReconciliationResponse } from '@bigcapital/sdk-ts';
 import { DashboardActionsBar, DashboardPageContent, Icon } from '@/components';
+import { AccountDetailsBar } from '@/containers/CashFlow/AccountTransactions/AccountTransactionsDetailsBar';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
 import {
   formatReconciledDate,
   formatReconciliationPeriod,
   getStatusIntent,
 } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
+import { useAccount, useCashflowAccounts } from '@/hooks/query';
 import { useBankReconciliations } from '@/hooks/query/banking';
 
 /**
@@ -29,6 +31,17 @@ export function ReconciliationsListPage() {
   const { accountId: accountIdParam } = useParams<{ accountId: string }>();
   const accountId = Number(accountIdParam);
   const history = useHistory();
+
+  const {
+    data: account,
+    isLoading: isAccountLoading,
+    isFetching: isAccountFetching,
+    refetch: refetchAccount,
+  } = useAccount(accountId);
+  const { data: accounts } = useCashflowAccounts();
+  const supportedAccounts = (accounts ?? []).filter(
+    (account) => account.isReconciliationSupported,
+  );
 
   const {
     data: listResponse,
@@ -46,6 +59,7 @@ export function ReconciliationsListPage() {
   };
 
   const handleRefreshClick = () => {
+    refetchAccount();
     refetch();
   };
 
@@ -81,7 +95,7 @@ export function ReconciliationsListPage() {
             icon={<Icon icon="refresh-16" iconSize={14} />}
             text={'Refresh'}
             onClick={handleRefreshClick}
-            loading={isFetching}
+            loading={isFetching || isAccountFetching}
           />
         </NavbarGroup>
 
@@ -105,6 +119,22 @@ export function ReconciliationsListPage() {
           )}
         </NavbarGroup>
       </DashboardActionsBar>
+
+      <AccountDetailsBar
+        accounts={supportedAccounts}
+        accountId={accountId}
+        accountName={account?.name ?? meta?.accountName}
+        formattedAmount={
+          account?.formattedAmount ?? meta?.formattedAccountAmount
+        }
+        bankBalanceFormatted={
+          account?.bankBalanceFormatted || meta?.formattedBankBalance || '—'
+        }
+        isLoading={isAccountLoading}
+        onAccountSelect={(id) =>
+          history.push(`/cashflow-accounts/${id}/reconciliations`)
+        }
+      />
 
       <DashboardPageContent>
         {isLoading && (

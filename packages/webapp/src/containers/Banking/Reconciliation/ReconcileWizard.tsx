@@ -37,7 +37,8 @@ export function ReconcileWizard() {
     useCashflowAccounts();
 
   const bankAccounts = React.useMemo(
-    () => (accounts ?? []).filter((account) => account.accountType === 'bank'),
+    () =>
+      (accounts ?? []).filter((account) => account.isReconciliationSupported),
     [accounts],
   );
 
@@ -146,9 +147,12 @@ export function ReconcileWizard() {
   if (!bankAccounts.length) {
     return (
       <ReconciliationTheme>
-        <Callout intent={Intent.WARNING} title="No bank accounts">
-          Add a bank account first to start reconciling it against your bank
-          statements.
+        <Callout
+          intent={Intent.WARNING}
+          title="No accounts available for reconciliation"
+        >
+          Add a bank account in your organization’s base currency to start
+          reconciling bank statements.
           <div style={{ marginTop: 12 }}>
             <Button
               intent={Intent.PRIMARY}

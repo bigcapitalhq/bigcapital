@@ -15321,6 +15321,11 @@ export interface components {
              */
             accountType: string;
             /**
+             * @description Whether this account supports bank reconciliation
+             * @example true
+             */
+            isReconciliationSupported: boolean;
+            /**
              * @description The parent account ID
              * @example null
              */

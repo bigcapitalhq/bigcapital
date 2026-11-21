@@ -15,81 +15,80 @@ import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
 
-/**
- * Bank account row surfaced with the per-account uncategorized transactions
- * count, which the SDK type does not declare yet.
- */
-export type CashflowAccountRowWithCount =
-  BankingAccountsListResponse[number] & {
-    uncategorizedTransactionsCount?: number;
-  };
-
-function AccountSwitchButton() {
-  const { currentAccount } = useAccountTransactionsContext();
-
-  return (
-    <AccountSwitchButtonBase
-      minimal={true}
-      rightIcon={<Icon icon={'caret-down-16'} iconSize={16} />}
-    >
-      <AccountSwitchText>{currentAccount?.name}</AccountSwitchText>
-    </AccountSwitchButtonBase>
-  );
+interface AccountDetailsBarProps {
+  accounts: BankingAccountsListResponse;
+  accountId: number;
+  accountName?: string;
+  formattedAmount?: string;
+  bankBalanceFormatted?: string;
+  isLoading: boolean;
+  showBalances?: boolean;
+  onAccountSelect: (accountId: number) => void;
 }
 
-function AccountSwitchItem() {
-  const { push } = useHistory();
-  const { cashflowAccounts, accountId } = useAccountTransactionsContext();
-
-  // Handle item click.
-  const handleItemClick = (account: { id: number }) =>
-    push(`/cashflow-accounts/${account.id}/transactions`);
-
-  const items = cashflowAccounts.map((account: CashflowAccountRowWithCount) => (
-    <AccountSwitchMenuItem
-      key={account.id}
-      name={account.name}
-      balance={account.formattedAmount}
-      uncategorizedTransactionsCount={account.uncategorizedTransactionsCount}
-      onClick={() => handleItemClick(account)}
-      active={account.id === accountId}
-    />
-  ));
-
+export function AccountDetailsBar({
+  accounts,
+  accountId,
+  accountName,
+  formattedAmount,
+  bankBalanceFormatted,
+  isLoading,
+  showBalances = true,
+  onAccountSelect,
+}: AccountDetailsBarProps) {
   return (
-    <Popover
-      content={<AccountSwitchMenu>{items}</AccountSwitchMenu>}
-      position={Position.BOTTOM_LEFT}
-      minimal={true}
-    >
-      <AccountSwitchButton />
-    </Popover>
-  );
-}
-
-function AccountBalanceItem() {
-  const { currentAccount } = useAccountTransactionsContext();
-
-  return (
-    <AccountBalanceItemWrap>
-      {intl.get('cash_flow_transaction.balance_in_bigcapital')} {''}
-      <AccountBalanceAmount>
-        {currentAccount?.formattedAmount}
-      </AccountBalanceAmount>
-    </AccountBalanceItemWrap>
-  );
-}
-
-function AccountBankBalanceItem() {
-  const { currentAccount } = useAccountTransactionsContext();
-
-  return (
-    <AccountBalanceItemWrap>
-      Balance in Bank Account
-      <AccountBalanceAmount>
-        {currentAccount?.bankBalanceFormatted}
-      </AccountBalanceAmount>
-    </AccountBalanceItemWrap>
+    <AccountTransactionDetailsWrap>
+      {isLoading ? (
+        <AccountTransactionsDetailsBarSkeleton />
+      ) : (
+        <>
+          <Popover
+            content={
+              <AccountSwitchMenu>
+                {accounts.map((account) => (
+                  <AccountSwitchMenuItem
+                    key={account.id}
+                    name={account.name}
+                    balance={account.formattedAmount}
+                    uncategorizedTransactionsCount={
+                      account.uncategorizedTransactionsCount
+                    }
+                    onClick={() => onAccountSelect(account.id)}
+                    active={account.id === accountId}
+                  />
+                ))}
+              </AccountSwitchMenu>
+            }
+            position={Position.BOTTOM_LEFT}
+            minimal
+          >
+            <AccountSwitchButtonBase
+              minimal
+              disabled={!accounts.length}
+              rightIcon={<Icon icon="caret-down-16" iconSize={16} />}
+            >
+              <AccountSwitchText>
+                {accountName ?? 'Select account'}
+              </AccountSwitchText>
+            </AccountSwitchButtonBase>
+          </Popover>
+          {showBalances && (
+            <>
+              <AccountBalanceItemWrap>
+                {intl.get('cash_flow_transaction.balance_in_bigcapital')}
+                <AccountBalanceAmount>{formattedAmount}</AccountBalanceAmount>
+              </AccountBalanceItemWrap>
+              <AccountBalanceItemWrap>
+                Balance in Bank Account
+                <AccountBalanceAmount>
+                  {bankBalanceFormatted}
+                </AccountBalanceAmount>
+              </AccountBalanceItemWrap>
+            </>
+          )}
+        </>
+      )}
+    </AccountTransactionDetailsWrap>
   );
 }
 
@@ -106,31 +105,27 @@ function AccountTransactionsDetailsBarSkeleton() {
   );
 }
 
-function AccountTransactionsDetailsContent() {
-  const { hideAside } = useAppShellContext();
-
-  return (
-    <React.Fragment>
-      <AccountSwitchItem />
-
-      {/** Hide some details once the aside opens to preserve space on details bar. */}
-      {hideAside && <AccountBalanceItem />}
-      {hideAside && <AccountBankBalanceItem />}
-    </React.Fragment>
-  );
-}
-
 export function AccountTransactionsDetailsBar() {
-  const { isCurrentAccountLoading } = useAccountTransactionsContext();
+  const { push } = useHistory();
+  const { hideAside } = useAppShellContext();
+  const {
+    cashflowAccounts,
+    accountId,
+    currentAccount,
+    isCurrentAccountLoading,
+  } = useAccountTransactionsContext();
 
   return (
-    <AccountTransactionDetailsWrap>
-      {isCurrentAccountLoading ? (
-        <AccountTransactionsDetailsBarSkeleton />
-      ) : (
-        <AccountTransactionsDetailsContent />
-      )}
-    </AccountTransactionDetailsWrap>
+    <AccountDetailsBar
+      accounts={cashflowAccounts}
+      accountId={accountId}
+      accountName={currentAccount?.name}
+      formattedAmount={currentAccount?.formattedAmount}
+      bankBalanceFormatted={currentAccount?.bankBalanceFormatted}
+      isLoading={isCurrentAccountLoading}
+      showBalances={hideAside}
+      onAccountSelect={(id) => push(`/cashflow-accounts/${id}/transactions`)}
+    />
   );
 }
 

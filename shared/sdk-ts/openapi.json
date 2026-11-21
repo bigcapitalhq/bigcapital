@@ -43177,6 +43177,11 @@
             "description": "The type of the account",
             "example": "bank"
           },
+          "isReconciliationSupported": {
+            "type": "boolean",
+            "description": "Whether this account supports bank reconciliation",
+            "example": true
+          },
           "parentAccountId": {
             "type": "number",
             "description": "The parent account ID",
@@ -43308,6 +43313,7 @@
           "slug",
           "code",
           "accountType",
+          "isReconciliationSupported",
           "parentAccountId",
           "currencyCode",
           "active",

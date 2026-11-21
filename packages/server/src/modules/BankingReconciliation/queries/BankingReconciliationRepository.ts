@@ -9,7 +9,7 @@ import { BankReconciliation } from '../models/BankReconciliation';
 import { BankReconciliationTransaction } from '../models/BankReconciliationTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { ACCOUNT_TYPE } from '@/constants/accounts';
+import { getReconciliationSupport } from '../getReconciliationSupport';
 import { ERRORS } from '../constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import {
@@ -75,52 +75,17 @@ export class BankingReconciliationRepository {
     return account;
   };
 
-  /**
-   * Detarmines whether the account supports reconciliation.
-   */
-  public getAccountSupport = async (
-    account: Account,
-  ): Promise<{ isSupported: boolean; unsupportedReason: string | null }> => {
-    if (account.accountType !== ACCOUNT_TYPE.BANK) {
-      return {
-        isSupported: false,
-        unsupportedReason:
-          'Reconciliation is only available for bank accounts.',
-      };
-    }
+  public getAccountSupport = async (account: Account) => {
     const tenant = await this.tenancyContext.getTenant(true);
-    const baseCurrency = tenant?.metadata?.baseCurrency;
-
-    if (baseCurrency && account.currencyCode !== baseCurrency) {
-      return {
-        isSupported: false,
-        unsupportedReason:
-          'Reconciliation is not supported for foreign currency accounts yet.',
-      };
-    }
-    return { isSupported: true, unsupportedReason: null };
+    return getReconciliationSupport(account, tenant?.metadata?.baseCurrency);
   };
 
-  /**
-   * Validates the account is a bank account in the base currency.
-   */
   public validateAccountSupportsReconciliation = async (
     account: Account,
   ): Promise<void> => {
-    if (account.accountType !== ACCOUNT_TYPE.BANK) {
-      throw new ServiceError(
-        ERRORS.BANK_RECONCILIATION_ACCOUNT_INVALID,
-        'Reconciliation is only available for bank accounts.',
-      );
-    }
-    const tenant = await this.tenancyContext.getTenant(true);
-    const baseCurrency = tenant?.metadata?.baseCurrency;
-
-    if (baseCurrency && account.currencyCode !== baseCurrency) {
-      throw new ServiceError(
-        ERRORS.BANK_RECONCILIATION_FOREIGN_CURRENCY_NOT_SUPPORTED,
-        'Reconciliation is not supported for foreign currency accounts yet.',
-      );
+    const support = await this.getAccountSupport(account);
+    if (!support.isSupported) {
+      throw new ServiceError(support.errorCode, support.unsupportedReason);
     }
   };
 
