@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { Inject, Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import { BankReconciliation } from '../models/BankReconciliation';
 import { BankReconciliationTransaction } from '../models/BankReconciliationTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -28,6 +29,7 @@ export class GetBankReconciliationsService {
     private readonly repository: BankingReconciliationRepository,
     private readonly beginningBalanceService: BankReconciliationBeginningBalanceService,
     private readonly transformer: TransformerInjectable,
+    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -115,7 +117,9 @@ export class GetBankReconciliationsService {
               currencyCode: account.currencyCode,
             }),
       isSupported: support.isSupported,
-      unsupportedReason: support.unsupportedReason,
+      unsupportedReason: support.errorCode
+        ? this.i18n.t(`banking_reconciliation.${support.errorCode}`)
+        : null,
       hasInProgress: Boolean(inProgress),
       inProgressId: inProgress?.id ?? null,
       lastReconciledEndDate: latestReconciled

@@ -1,3 +1,5 @@
+import { getReconciliationErrorMessage } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
+import intl from 'react-intl-universal';
 import { Button, Callout, Intent, Spinner } from '@blueprintjs/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -117,14 +119,14 @@ export function ReconcileWizard() {
     })
       .then((response) => {
         AppToaster.show({
-          message: 'Reconciliation started.',
+          message: intl.get('banking.reconciliation.started'),
           intent: Intent.SUCCESS,
         });
         history.push(`/reconcile/${selectedAccountId}/${response.id}`);
       })
       .catch((error: Error) => {
         AppToaster.show({
-          message: error.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(error, 'start_error'),
           intent: Intent.DANGER,
         });
       });
@@ -149,14 +151,13 @@ export function ReconcileWizard() {
       <ReconciliationTheme>
         <Callout
           intent={Intent.WARNING}
-          title="No accounts available for reconciliation"
+          title={intl.get('banking.reconciliation.no_accounts')}
         >
-          Add a bank account in your organization’s base currency to start
-          reconciling bank statements.
+          {intl.get('banking.reconciliation.no_accounts_hint')}
           <div style={{ marginTop: 12 }}>
             <Button
               intent={Intent.PRIMARY}
-              text="Go to bank accounts"
+              text={intl.get('banking.reconciliation.go_to_accounts')}
               onClick={() => history.push('/cashflow-accounts')}
             />
           </div>

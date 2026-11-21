@@ -9,9 +9,16 @@
   "opening_balance": "Opening balance",
   "closing_balance": "Closing Balance",
   "no_transactions": "No transactions match the selected status and dates.",
-  "from": "From",
-  "to": "To",
   "all_dates": "All dates",
   "reconciled": "Reconciled",
-  "unreconciled": "Unreconciled"
+  "unreconciled": "Unreconciled",
+  "date_range": "From {fromDate} to {toDate}",
+  "from_date": "From {fromDate}",
+  "to_date": "To {toDate}",
+  "pdf_title": "Reconciliation Status ({mode})",
+  "account_heading": "{accountName} ({currencyCode})",
+  "unknown_type": "Unknown transaction type",
+  "filename": "reconciliation-status",
+  "invalid_range": "The end date must be on or after the start date.",
+  "account_not_found": "Bank account not found for reconciliation."
 }

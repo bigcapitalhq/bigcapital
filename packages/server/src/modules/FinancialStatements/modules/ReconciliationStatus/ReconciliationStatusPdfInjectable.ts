@@ -3,11 +3,12 @@ import { escape } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import { TableSheetPdf } from '../../common/TableSheetPdf';
 import { ReconciliationStatusTableInjectable } from './ReconciliationStatusTableInjectable';
+import { ReconciliationStatusQueryDto } from './ReconciliationStatusQuery.dto';
 import {
-  ReconciliationReportStatus,
-  ReconciliationStatusQueryDto,
-} from './ReconciliationStatusQuery.dto';
-import { mapCellValues } from './_utils';
+  getReconciliationReportStatusLabel,
+  localizeReconciliationStatusCell,
+  mapCellValues,
+} from './_utils';
 
 const PDF_TABLE_CSS = `
   table .column--deposit,
@@ -36,19 +37,19 @@ export class ReconciliationStatusPdfInjectable {
    */
   public async pdf(query: ReconciliationStatusQueryDto): Promise<Buffer> {
     const { table, meta } = await this.reconciliationStatusTable.table(query);
-    const mode = this.i18n.t(
-      meta.status === ReconciliationReportStatus.Reconciled
-        ? 'reconciliation_status.reconciled'
-        : 'reconciliation_status.unreconciled',
-    );
+    const mode = getReconciliationReportStatusLabel(this.i18n, meta.status);
 
     // The shared PDF template accepts HTML in cells.
-    const pdfTable = mapCellValues(table, ({ value }) => escape(value));
+    const pdfTable = mapCellValues(table, (cell) =>
+      escape(localizeReconciliationStatusCell(this.i18n, cell)),
+    );
 
     return this.tableSheetPdf.convertToPdf(
       pdfTable,
       meta.organizationName,
-      `${meta.sheetName} (${mode})`,
+      this.i18n.t('reconciliation_status.pdf_title', {
+        args: { mode },
+      }),
       meta.formattedDateRange,
       PDF_TABLE_CSS,
     );

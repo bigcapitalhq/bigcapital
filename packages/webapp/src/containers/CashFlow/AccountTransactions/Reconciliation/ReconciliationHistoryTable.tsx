@@ -1,7 +1,12 @@
+import intl from 'react-intl-universal';
 import { Button, Tag } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
-import { getStatusIntent } from './utils';
+import {
+  getStatusIntent,
+  formatReconciliationPeriod,
+  getReconciliationStatusLabel,
+} from './utils';
 import type { BankReconciliationResponse } from '@bigcapital/sdk-ts';
 
 interface ReconciliationHistoryTableProps {
@@ -26,13 +31,21 @@ export function ReconciliationHistoryTable({
       <Table>
         <thead>
           <tr>
-            <th>Period</th>
-            <th>Status</th>
-            <th className="money">Beginning</th>
-            <th className="money">Cleared</th>
-            <th className="money">Ending</th>
-            <th className="money">Difference</th>
-            <th>Transactions</th>
+            <th>{intl.get('banking.reconciliation.period')}</th>
+            <th>{intl.get('status')}</th>
+            <th className="money">
+              {intl.get('banking.reconciliation.beginning')}
+            </th>
+            <th className="money">
+              {intl.get('banking.reconciliation.cleared')}
+            </th>
+            <th className="money">
+              {intl.get('banking.reconciliation.ending')}
+            </th>
+            <th className="money">
+              {intl.get('banking.reconciliation.difference')}
+            </th>
+            <th>{intl.get('transactions')}</th>
             <th />
           </tr>
         </thead>
@@ -47,12 +60,14 @@ export function ReconciliationHistoryTable({
               data-testId="reconciliation-history-row"
             >
               <td>
-                {reconciliation.formattedStartDate} –{' '}
-                {reconciliation.formattedEndDate}
+                {formatReconciliationPeriod(
+                  reconciliation.startDate,
+                  reconciliation.endDate,
+                )}
               </td>
               <td>
                 <Tag minimal intent={getStatusIntent(reconciliation.status)}>
-                  {reconciliation.statusLabel}
+                  {getReconciliationStatusLabel(reconciliation.status)}
                 </Tag>
               </td>
               <td className="money">
@@ -65,14 +80,18 @@ export function ReconciliationHistoryTable({
                 {reconciliation.formattedEndingBalance || '—'}
               </td>
               <td className="money">{reconciliation.formattedDifference}</td>
-              <td>{reconciliation.transactionsCount}</td>
+              <td>
+                {intl.get('banking.reconciliation.number', {
+                  count: reconciliation.transactionsCount,
+                })}
+              </td>
               <td className="actions">
                 {reconciliation.isInProgress ? (
                   <Button
                     small
                     minimal
                     intent="primary"
-                    text="Resume"
+                    text={intl.get('banking.reconciliation.resume_short')}
                     onClick={(event) => {
                       event.stopPropagation();
                       onResume(reconciliation.id);
@@ -82,7 +101,7 @@ export function ReconciliationHistoryTable({
                   <Button
                     small
                     minimal
-                    text="View"
+                    text={intl.get('banking.reconciliation.view')}
                     onClick={(event) => {
                       event.stopPropagation();
                       onSelect(reconciliation.id);

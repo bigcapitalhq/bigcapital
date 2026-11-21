@@ -19,6 +19,7 @@ import {
 import { useApiFetcher } from '../../../useRequest';
 import { financialReportsKeys } from '../../FinancialReports/query-keys';
 import { bankingKeys } from '../query-keys';
+import { useAppIntlContext } from '@/components/AppIntlProvider';
 import type {
   BankReconciliationDetailResponse,
   BankReconciliationsListResponse,
@@ -29,6 +30,13 @@ import type {
   UpdateBankReconciliationBody,
 } from '@bigcapital/sdk-ts';
 import type { QueryClient } from '@tanstack/react-query';
+
+function useBankReconciliationFetcher() {
+  const { currentLocale: locale } = useAppIntlContext();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true, locale });
+
+  return { fetcher, locale };
+}
 
 const invalidateReconciliation = (
   queryClient: QueryClient,
@@ -51,11 +59,11 @@ export function useBankReconciliations(
   accountId: number,
   options?: UseQueryOptions<BankReconciliationsListResponse, Error>,
 ): UseQueryResult<BankReconciliationsListResponse, Error> {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher, locale } = useBankReconciliationFetcher();
 
   return useQuery({
     ...options,
-    queryKey: bankingKeys.reconciliations(accountId),
+    queryKey: [...bankingKeys.reconciliations(accountId), locale],
     queryFn: () => fetchBankReconciliations(fetcher, { accountId }),
     enabled: Boolean(accountId),
   });
@@ -65,11 +73,14 @@ export function useBankReconciliation(
   reconciliationId: number | null | undefined,
   options?: UseQueryOptions<BankReconciliationDetailResponse, Error>,
 ): UseQueryResult<BankReconciliationDetailResponse, Error> {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher, locale } = useBankReconciliationFetcher();
 
   return useQuery({
     ...options,
-    queryKey: bankingKeys.reconciliation(reconciliationId ?? undefined),
+    queryKey: [
+      ...bankingKeys.reconciliation(reconciliationId ?? undefined),
+      locale,
+    ],
     queryFn: () => fetchBankReconciliation(fetcher, reconciliationId as number),
     enabled: Boolean(reconciliationId),
   });
@@ -87,7 +98,7 @@ export function useCreateBankReconciliation(
   CreateBankReconciliationBody
 > {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher } = useBankReconciliationFetcher();
 
   return useMutation({
     ...options,
@@ -111,7 +122,7 @@ export function useUpdateBankReconciliation(
   { id: number; body: UpdateBankReconciliationBody }
 > {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher } = useBankReconciliationFetcher();
 
   return useMutation({
     ...options,
@@ -139,7 +150,7 @@ export function useFinishBankReconciliation(
   { id: number; body: FinishBankReconciliationBody }
 > {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher } = useBankReconciliationFetcher();
 
   return useMutation({
     ...options,
@@ -170,7 +181,7 @@ export function useUndoBankReconciliation(
   { id: number; body: UndoBankReconciliationBody }
 > {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher } = useBankReconciliationFetcher();
 
   return useMutation({
     ...options,
@@ -193,7 +204,7 @@ export function useDeleteBankReconciliation(
   options?: UseMutationOptions<void, Error, number>,
 ): UseMutationResult<void, Error, number> {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  const { fetcher } = useBankReconciliationFetcher();
 
   return useMutation({
     ...options,

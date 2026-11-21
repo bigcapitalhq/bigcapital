@@ -1300,7 +1300,7 @@ export const getDashboardRoutes = () => [
       })),
     ),
     sidebarExpand: false,
-    pageTitle: 'Reconciliation',
+    pageTitle: intl.get('banking.reconciliation.detail_title'),
   },
   {
     path: `/cashflow-accounts/:accountId/reconciliations`,
@@ -1312,7 +1312,7 @@ export const getDashboardRoutes = () => [
       })),
     ),
     sidebarExpand: false,
-    pageTitle: 'Reconciliations',
+    pageTitle: intl.get('banking.reconciliation.title'),
   },
   {
     path: `/cashflow-accounts/:id/transactions`,

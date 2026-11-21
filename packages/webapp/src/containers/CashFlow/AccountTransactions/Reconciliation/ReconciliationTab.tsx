@@ -1,3 +1,5 @@
+import { getReconciliationErrorMessage } from './utils';
+import intl from 'react-intl-universal';
 import { Button, Callout, Intent, Spinner } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
@@ -78,13 +80,13 @@ export function ReconciliationTab() {
         setIsStartingNew(false);
         setSelectedId(response.id);
         AppToaster.show({
-          message: 'Reconciliation started.',
+          message: intl.get('banking.reconciliation.started'),
           intent: Intent.SUCCESS,
         });
       })
       .catch((error: Error) => {
         AppToaster.show({
-          message: error.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(error, 'start_error'),
           intent: Intent.DANGER,
         });
       });
@@ -115,7 +117,7 @@ export function ReconciliationTab() {
     return (
       <EmptyWrap>
         <Callout intent={Intent.DANGER}>
-          Unable to load the reconciliation details for this account.
+          {intl.get('banking.reconciliation.list_error')}
         </Callout>
       </EmptyWrap>
     );
@@ -127,10 +129,9 @@ export function ReconciliationTab() {
     <TabWrap>
       <Header>
         <div>
-          <Title>Reconciliations</Title>
+          <Title>{intl.get('banking.reconciliation.title')}</Title>
           <Subtitle>
-            Match this bank account against your statement and keep the books
-            accurate.
+            {intl.get('banking.reconciliation.match_statement')}
           </Subtitle>
         </div>
         <HeaderActions>
@@ -142,12 +143,13 @@ export function ReconciliationTab() {
               refetchList();
               if (selectedId) refetchDetail();
             }}
-            title="Refresh"
+            title={intl.get('banking.reconciliation.refresh')}
+            aria-label={intl.get('banking.reconciliation.refresh')}
           />
           {!meta.hasInProgress && (
             <Button
               icon="plus"
-              text="New reconciliation"
+              text={intl.get('banking.reconciliation.new')}
               intent={Intent.PRIMARY}
               onClick={() => {
                 setIsStartingNew(true);
@@ -159,7 +161,7 @@ export function ReconciliationTab() {
           {meta.hasInProgress && meta.inProgressId && (
             <Button
               icon="play"
-              text="Resume reconciliation"
+              text={intl.get('banking.reconciliation.resume')}
               intent={Intent.PRIMARY}
               onClick={() => handleSelect(meta.inProgressId as number)}
             />
@@ -171,17 +173,20 @@ export function ReconciliationTab() {
         <Callout
           intent={Intent.WARNING}
           style={{ margin: '0 15px' }}
-          title="Uncategorized bank transactions"
+          title={intl.get(
+            'banking.reconciliation.uncategorized_bank_transactions',
+          )}
         >
-          {meta.uncategorizedTransactionsCount} bank transaction(s) are still
-          uncategorized. Categorize or match them before reconciling.
+          {intl.get('banking.reconciliation.uncategorized_warning', {
+            count: meta.uncategorizedTransactionsCount,
+          })}
           <Button
             small
             minimal
             intent={Intent.PRIMARY}
-            text="Review transactions"
+            text={intl.get('banking.reconciliation.review_transactions')}
             onClick={() => setFilterTab('uncategorized')}
-            style={{ marginLeft: 8 }}
+            style={{ marginInlineStart: 8 }}
           />
         </Callout>
       )}
@@ -211,7 +216,7 @@ export function ReconciliationTab() {
       {selectedId && detailError && (
         <EmptyWrap>
           <Callout intent={Intent.DANGER}>
-            {detailError.message || 'Unable to load the reconciliation.'}
+            {getReconciliationErrorMessage(detailError, 'load_error')}
           </Callout>
         </EmptyWrap>
       )}

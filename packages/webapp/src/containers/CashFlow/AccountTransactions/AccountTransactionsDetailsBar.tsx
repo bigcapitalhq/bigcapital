@@ -68,7 +68,7 @@ export function AccountDetailsBar({
               rightIcon={<Icon icon="caret-down-16" iconSize={16} />}
             >
               <AccountSwitchText>
-                {accountName ?? 'Select account'}
+                {accountName ?? intl.get('select_account')}
               </AccountSwitchText>
             </AccountSwitchButtonBase>
           </Popover>
@@ -79,7 +79,7 @@ export function AccountDetailsBar({
                 <AccountBalanceAmount>{formattedAmount}</AccountBalanceAmount>
               </AccountBalanceItemWrap>
               <AccountBalanceItemWrap>
-                Balance in Bank Account
+                {intl.get('banking.reconciliation.bank_balance')}
                 <AccountBalanceAmount>
                   {bankBalanceFormatted}
                 </AccountBalanceAmount>

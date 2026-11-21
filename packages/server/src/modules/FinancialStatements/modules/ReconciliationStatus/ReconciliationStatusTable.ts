@@ -39,6 +39,7 @@ export class ReconciliationStatusTable extends FinancialTable(FinancialSheet) {
     accounts: ReconciliationStatusAccountReportDto[],
     dateFormat: string,
     i18n: I18nService,
+    private readonly dateLocale: string,
   ) {
     super();
 
@@ -86,7 +87,9 @@ export class ReconciliationStatusTable extends FinancialTable(FinancialSheet) {
     const transactionRows = transactions.map((transaction) =>
       this.row(`transaction-${transaction.id}`, 'TRANSACTION', {
         date: transaction.date
-          ? moment(transaction.date).format(this.dateFormat)
+          ? moment(transaction.date)
+              .locale(this.dateLocale)
+              .format(this.dateFormat)
           : '—',
         reference: transaction.reference || '—',
         type: transaction.type || '—',
@@ -99,7 +102,9 @@ export class ReconciliationStatusTable extends FinancialTable(FinancialSheet) {
     );
     return [
       this.row(`account-${id}`, 'ACCOUNT', {
-        date: `${account.name} (${currencyCode})`,
+        date: this.i18n.t('reconciliation_status.account_heading', {
+          args: { accountName: account.name, currencyCode },
+        }),
       }),
       this.row(`opening-balance-${id}`, 'OPENING_BALANCE', {
         date: this.i18n.t('reconciliation_status.opening_balance'),

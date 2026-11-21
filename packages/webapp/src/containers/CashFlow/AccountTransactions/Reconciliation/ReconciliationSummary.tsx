@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import React from 'react';
 import styled from 'styled-components';
 import { getReconciliationDifference } from './utils';
@@ -34,29 +35,40 @@ export function ReconciliationSummary({
   return (
     <SummaryWrap>
       <SummaryColumn>
-        <SummaryLabel>Beginning balance</SummaryLabel>
+        <SummaryLabel>
+          {intl.get('banking.reconciliation.beginning_balance')}
+        </SummaryLabel>
         <SummaryValue>
           <Money
             amount={reconciliation.beginningBalance}
             currency={currencyCode}
           />
         </SummaryValue>
-        <SummaryHint>From Bigcapital register</SummaryHint>
+        <SummaryHint>
+          {intl.get('banking.reconciliation.from_register')}
+        </SummaryHint>
       </SummaryColumn>
 
       <SummaryColumn>
-        <SummaryLabel>Cleared balance</SummaryLabel>
+        <SummaryLabel>
+          {intl.get('banking.reconciliation.cleared_balance')}
+        </SummaryLabel>
         <SummaryValue>
           <Money amount={clearedBalance} currency={currencyCode} />
         </SummaryValue>
-        <SummaryHint>Beginning + checked transactions</SummaryHint>
+        <SummaryHint>
+          {intl.get('banking.reconciliation.cleared_balance_hint')}
+        </SummaryHint>
       </SummaryColumn>
 
       <SummaryColumn>
-        <SummaryLabel>Statement ending balance</SummaryLabel>
+        <SummaryLabel>
+          {intl.get('banking.reconciliation.ending_balance')}
+        </SummaryLabel>
         {isEditable ? (
           <MoneyInputGroup
             id="reconciliation-ending-balance"
+            aria-label={intl.get('banking.reconciliation.ending_balance')}
             value={endingBalance}
             onChange={(value) => onEndingBalanceChange?.(value ?? '')}
           />
@@ -69,11 +81,15 @@ export function ReconciliationSummary({
             )}
           </SummaryValue>
         )}
-        <SummaryHint>From your bank statement</SummaryHint>
+        <SummaryHint>
+          {intl.get('banking.reconciliation.from_statement')}
+        </SummaryHint>
       </SummaryColumn>
 
       <SummaryColumn>
-        <SummaryLabel>Difference</SummaryLabel>
+        <SummaryLabel>
+          {intl.get('banking.reconciliation.difference')}
+        </SummaryLabel>
         <SummaryValue>
           {hasEndingBalance ? (
             <Money amount={difference} currency={currencyCode} />
@@ -83,9 +99,9 @@ export function ReconciliationSummary({
         </SummaryValue>
         <SummaryHint>
           {!hasEndingBalance
-            ? 'Enter the statement ending balance'
+            ? intl.get('banking.reconciliation.enter_ending_balance')
             : isBalanced
-              ? 'Ready to reconcile'
+              ? intl.get('banking.reconciliation.ready')
               : 'Check more transactions or update the ending balance'}
         </SummaryHint>
       </SummaryColumn>

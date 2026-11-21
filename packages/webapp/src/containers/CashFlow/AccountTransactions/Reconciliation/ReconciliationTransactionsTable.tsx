@@ -1,7 +1,11 @@
+import intl from 'react-intl-universal';
 import { Checkbox, Tag } from '@blueprintjs/core';
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { filterTransactions } from './utils';
+import {
+  filterTransactions,
+  getReconciliationTransactionStatusLabel,
+} from './utils';
 import type { ReconciliationTransactionFilter } from './utils';
 import type { DataTableColumn } from '@/components/Datatable/types';
 import type { BankReconciliationTransactionResponse } from '@bigcapital/sdk-ts';
@@ -64,22 +68,23 @@ export function ReconciliationTransactionsTable({
     const cols: DataTableColumn<BankReconciliationTransactionResponse>[] = [
       {
         id: 'date',
-        Header: 'Date',
+        Header: intl.get('date'),
         accessor: 'formattedDate',
         width: 110,
         textOverview: true,
       },
       {
         id: 'type',
-        Header: 'Type',
+        Header: intl.get('type'),
         width: 150,
         textOverview: true,
         Cell: ({ row }) => (
           <TypeCell>
-            {row.original.transactionType || '—'}
+            {row.original.transactionTypeLabel ||
+              intl.get('banking.reconciliation.unknown_type')}
             {row.original.isPreviousOutstanding && (
               <Tag minimal intent="warning">
-                Previous period
+                {intl.get('banking.reconciliation.previous_period')}
               </Tag>
             )}
           </TypeCell>
@@ -87,7 +92,7 @@ export function ReconciliationTransactionsTable({
       },
       {
         id: 'reference',
-        Header: 'Reference',
+        Header: intl.get('banking.reconciliation.reference'),
         accessor: (transaction) =>
           transaction.referenceNumber || transaction.transactionNumber || '—',
         width: 160,
@@ -95,14 +100,14 @@ export function ReconciliationTransactionsTable({
       },
       {
         id: 'description',
-        Header: 'Description',
+        Header: intl.get('description'),
         accessor: (transaction) => transaction.note || '—',
         width: 220,
         textOverview: true,
       },
       {
         id: 'payment',
-        Header: 'Payment',
+        Header: intl.get('banking.reconciliation.payment'),
         accessor: (transaction) =>
           transaction.credit ? transaction.formattedCredit : '—',
         width: 120,
@@ -112,7 +117,7 @@ export function ReconciliationTransactionsTable({
       },
       {
         id: 'deposit',
-        Header: 'Deposit',
+        Header: intl.get('banking.label.deposit'),
         accessor: (transaction) =>
           transaction.debit ? transaction.formattedDebit : '—',
         width: 120,
@@ -125,11 +130,11 @@ export function ReconciliationTransactionsTable({
     if (showStatus) {
       cols.push({
         id: 'status',
-        Header: 'Status',
+        Header: intl.get('status'),
         width: 110,
         Cell: ({ row }) => (
           <Tag minimal intent={statusIntent[row.original.status] ?? 'none'}>
-            {row.original.status}
+            {getReconciliationTransactionStatusLabel(row.original.status)}
           </Tag>
         ),
       });
@@ -144,6 +149,7 @@ export function ReconciliationTransactionsTable({
             onClick={(event) => event.stopPropagation()}
           >
             <Checkbox
+              aria-label={intl.get('banking.reconciliation.select_all')}
               checked={allChecked}
               indeterminate={someChecked}
               onChange={(event) =>
@@ -158,6 +164,7 @@ export function ReconciliationTransactionsTable({
         Cell: ({ row }) => (
           <div className="selection-checkbox">
             <Checkbox
+              aria-label={intl.get('banking.reconciliation.select_transaction')}
               checked={selectedSet.has(row.original.key)}
               onChange={() => onToggle?.(row.original.key)}
             />
@@ -195,7 +202,7 @@ export function ReconciliationTransactionsTable({
         selectionColumn={false}
         loading={isLoading}
         rowTestId="reconciliation-transaction-row"
-        noResults="No transactions found for this reconciliation."
+        noResults={intl.get('banking.reconciliation.empty_transactions')}
       />
     </TableWrap>
   );

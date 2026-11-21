@@ -1,3 +1,5 @@
+import { formatReconciliationDate } from './utils';
+import intl from 'react-intl-universal';
 import {
   Button,
   Callout,
@@ -50,14 +52,16 @@ export function ReconciliationStartPanel({
   if (meta.hasInProgress) {
     return (
       <Panel>
-        <Callout intent={Intent.WARNING} title="Reconciliation in progress">
-          You have an unfinished reconciliation for this account. Resume it to
-          keep checking transactions and finish when the difference is zero.
+        <Callout
+          intent={Intent.WARNING}
+          title={intl.get('banking.reconciliation.in_progress')}
+        >
+          {intl.get('banking.reconciliation.resume_hint')}
         </Callout>
         <Actions>
           <Button
             intent={Intent.PRIMARY}
-            text="Resume reconciliation"
+            text={intl.get('banking.reconciliation.resume')}
             onClick={() => onResume(meta.inProgressId as number)}
             data-testId="resume-reconciliation"
           />
@@ -69,9 +73,12 @@ export function ReconciliationStartPanel({
   if (!meta.isSupported) {
     return (
       <Panel>
-        <Callout intent={Intent.DANGER} title="Reconciliation unavailable">
+        <Callout
+          intent={Intent.DANGER}
+          title={intl.get('banking.reconciliation.unavailable')}
+        >
           {meta.unsupportedReason ||
-            'This account does not support reconciliation yet.'}
+            intl.get('banking.reconciliation.unavailable_hint')}
         </Callout>
       </Panel>
     );
@@ -93,33 +100,49 @@ export function ReconciliationStartPanel({
   return (
     <Panel>
       <PanelHeader>
-        <PanelTitle>Start a new reconciliation</PanelTitle>
+        <PanelTitle>
+          {intl.get('banking.reconciliation.start_title')}
+        </PanelTitle>
         <PanelSubtitle>
-          Enter the statement period and the ending balance from your bank
-          statement.
+          {intl.get('banking.reconciliation.start_hint')}
         </PanelSubtitle>
       </PanelHeader>
 
       <BalanceRow>
         <BalanceItem>
-          <BalanceLabel>Balance in Bigcapital</BalanceLabel>
+          <BalanceLabel>
+            {intl.get('banking.reconciliation.book_balance')}
+          </BalanceLabel>
           <BalanceValue>{meta.formattedAccountAmount}</BalanceValue>
         </BalanceItem>
         <BalanceItem>
-          <BalanceLabel>Balance in bank account</BalanceLabel>
+          <BalanceLabel>
+            {intl.get('banking.reconciliation.bank_balance')}
+          </BalanceLabel>
           <BalanceValue>{meta.formattedBankBalance || '—'}</BalanceValue>
         </BalanceItem>
         <BalanceItem>
-          <BalanceLabel>Uncategorized transactions</BalanceLabel>
-          <BalanceValue>{meta.uncategorizedTransactionsCount}</BalanceValue>
+          <BalanceLabel>
+            {intl.get('banking.reconciliation.uncategorized_transactions')}
+          </BalanceLabel>
+          <BalanceValue>
+            {intl.get('banking.reconciliation.number', {
+              count: meta.uncategorizedTransactionsCount,
+            })}
+          </BalanceValue>
         </BalanceItem>
       </BalanceRow>
 
       <form onSubmit={handleSubmit}>
         <FormGrid>
-          <FormGroup label="Start date" labelFor="reconciliation-start-date">
+          <FormGroup
+            label={intl.get('banking.reconciliation.start_date')}
+            labelFor="reconciliation-start-date"
+          >
             {meta.lastReconciledEndDate ? (
-              <ReadOnlyValue>{meta.suggestedStartDate}</ReadOnlyValue>
+              <ReadOnlyValue>
+                {formatReconciliationDate(meta.suggestedStartDate)}
+              </ReadOnlyValue>
             ) : (
               <InputGroup
                 id="reconciliation-start-date"
@@ -131,7 +154,10 @@ export function ReconciliationStartPanel({
             )}
           </FormGroup>
 
-          <FormGroup label="End date" labelFor="reconciliation-end-date">
+          <FormGroup
+            label={intl.get('banking.reconciliation.end_date')}
+            labelFor="reconciliation-end-date"
+          >
             <InputGroup
               id="reconciliation-end-date"
               type="date"
@@ -143,9 +169,9 @@ export function ReconciliationStartPanel({
           </FormGroup>
 
           <FormGroup
-            label="Statement ending balance"
+            label={intl.get('banking.reconciliation.ending_balance')}
             labelFor="reconciliation-ending-balance"
-            helperText="The closing balance shown on your bank statement."
+            helperText={intl.get('banking.reconciliation.ending_balance_hint')}
           >
             <InputGroup
               id="reconciliation-ending-balance"
@@ -158,30 +184,26 @@ export function ReconciliationStartPanel({
           </FormGroup>
         </FormGrid>
 
-        <FormGroup label="Notes" labelFor="reconciliation-notes">
+        <FormGroup label={intl.get('notes')} labelFor="reconciliation-notes">
           <TextArea
             id="reconciliation-notes"
             value={notes}
             onChange={(event) => setNotes(event.currentTarget.value)}
             fill
             rows={2}
-            placeholder="Optional note, e.g. November bank statement"
+            placeholder={intl.get('banking.reconciliation.note_placeholder')}
           />
         </FormGroup>
 
         {!meta.lastReconciledEndDate && meta.firstTransactionDate && (
-          <Hint>
-            The first reconciliation starts from the account&apos;s earliest
-            transaction by default. If you pick a later start date, earlier
-            transactions are treated as the opening balance.
-          </Hint>
+          <Hint>{intl.get('banking.reconciliation.first_period_hint')}</Hint>
         )}
 
         <Actions>
           <Button
             type="submit"
             intent={Intent.PRIMARY}
-            text="Start reconciliation"
+            text={intl.get('banking.reconciliation.start')}
             loading={isSubmitting}
             disabled={!endingBalance}
             data-testId="start-reconciliation"

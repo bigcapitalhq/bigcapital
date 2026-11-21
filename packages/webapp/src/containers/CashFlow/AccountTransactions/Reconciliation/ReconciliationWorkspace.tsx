@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import {
   Button,
   ButtonGroup,
@@ -14,7 +15,13 @@ import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
 import { ReconciliationSummary } from './ReconciliationSummary';
 import { ReconciliationTransactionsTable } from './ReconciliationTransactionsTable';
-import { getReconciliationDifference, isReconciliationBalanced } from './utils';
+import {
+  getReconciliationDifference,
+  isReconciliationBalanced,
+  formatReconciliationPeriod,
+  formatReconciliationDate,
+  getReconciliationErrorMessage,
+} from './utils';
 import type {
   BankReconciliationDetailResponse,
   BankReconciliationTransactionResponse,
@@ -149,14 +156,14 @@ export function ReconciliationWorkspace({
     })
       .then(() => {
         AppToaster.show({
-          message: 'Reconciliation saved.',
+          message: intl.get('banking.reconciliation.saved'),
           intent: Intent.SUCCESS,
         });
         onRefresh();
       })
       .catch((error: Error) => {
         AppToaster.show({
-          message: error.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(error, 'save_error'),
           intent: Intent.DANGER,
         });
       });
@@ -174,14 +181,14 @@ export function ReconciliationWorkspace({
     })
       .then(() => {
         AppToaster.show({
-          message: 'The account has been reconciled.',
+          message: intl.get('banking.reconciliation.finished'),
           intent: Intent.SUCCESS,
         });
         onRefresh();
       })
       .catch((error: Error) => {
         AppToaster.show({
-          message: error.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(error, 'finish_error'),
           intent: Intent.DANGER,
         });
       });
@@ -203,6 +210,11 @@ export function ReconciliationWorkspace({
     });
   };
 
+  const period = formatReconciliationPeriod(
+    reconciliation.startDate,
+    reconciliation.endDate,
+  );
+
   const actionsInBar = actionsContainer !== undefined;
   const showDelete =
     (reconciliation.isInProgress || reconciliation.isVoided) &&
@@ -211,7 +223,7 @@ export function ReconciliationWorkspace({
   const saveButton = (
     <Button
       icon="floppy-disk"
-      text="Save for later"
+      text={intl.get('banking.reconciliation.save_for_later')}
       minimal
       onClick={handleSave}
       loading={isSaving}
@@ -222,7 +234,7 @@ export function ReconciliationWorkspace({
   const reconcileButton = (
     <Button
       icon="tick"
-      text="Reconcile"
+      text={intl.get('banking.reconciliation.finish')}
       minimal={actionsInBar}
       intent={Intent.PRIMARY}
       onClick={handleFinish}
@@ -238,7 +250,8 @@ export function ReconciliationWorkspace({
         icon={<Icon icon="refresh-16" iconSize={16} />}
         minimal
         onClick={onRefresh}
-        title="Refresh transactions"
+        title={intl.get('banking.reconciliation.refresh_transactions')}
+        aria-label={intl.get('banking.reconciliation.refresh_transactions')}
       />
       {saveButton}
       {reconcileButton}
@@ -250,44 +263,48 @@ export function ReconciliationWorkspace({
       minimal
       content={
         <Menu>
-          <MenuDivider title="Money in" />
+          <MenuDivider title={intl.get('cash_flow_money_in')} />
           <MenuItem
-            text="Owner contribution"
+            text={intl.get('banking.owner_contribution')}
             onClick={() => handleMoneyIn('owner_contribution')}
           />
           <MenuItem
-            text="Other income"
+            text={intl.get('banking.other_income')}
             onClick={() => handleMoneyIn('other_income')}
           />
           <MenuItem
-            text="Transfer from account"
+            text={intl.get('cash_flow_transaction.label_transfer_from_account')}
             onClick={() => handleMoneyIn('transfer_from_account')}
           />
-          <MenuDivider title="Money out" />
+          <MenuDivider title={intl.get('cash_flow_money_out')} />
           <MenuItem
-            text="Owner drawings"
+            text={intl.get('banking.owner_drawings')}
             onClick={() => handleMoneyOut('owner_drawing')}
           />
           <MenuItem
-            text="Expense"
+            text={intl.get('expense')}
             onClick={() => handleMoneyOut('other_expense')}
           />
           <MenuItem
-            text="Transfer to account"
+            text={intl.get('cash_flow_transaction.label_transfer_to_account')}
             onClick={() => handleMoneyOut('transfer_to_account')}
           />
         </Menu>
       }
       placement="bottom-end"
     >
-      <Button icon="plus" text="Add transaction" minimal />
+      <Button
+        icon="plus"
+        text={intl.get('banking.reconciliation.add_transaction')}
+        minimal
+      />
     </Popover>
   );
 
   const deleteButton = showDelete && (
     <Button
       icon="trash"
-      text="Delete"
+      text={intl.get('delete')}
       minimal={actionsInBar}
       intent={Intent.DANGER}
       onClick={onDelete}
@@ -295,7 +312,12 @@ export function ReconciliationWorkspace({
   );
 
   const undoButton = reconciliation.isReconciled && (
-    <Button icon="undo" text="Undo" intent={Intent.WARNING} onClick={onUndo} />
+    <Button
+      icon="undo"
+      text={intl.get('banking.reconciliation.undo')}
+      intent={Intent.WARNING}
+      onClick={onUndo}
+    />
   );
 
   const inlineActions = (
@@ -334,17 +356,18 @@ export function ReconciliationWorkspace({
           <div>
             <WorkspaceTitle>
               {reconciliation.isInProgress
-                ? 'Reconciliation in progress'
+                ? intl.get('banking.reconciliation.in_progress')
                 : reconciliation.isReconciled
-                  ? 'Reconciled'
-                  : 'Voided reconciliation'}
+                  ? intl.get('report.reconciliation_status.reconciled')
+                  : intl.get('banking.reconciliation.voided_title')}
             </WorkspaceTitle>
             <WorkspaceSubtitle>
-              {reconciliation.formattedStartDate} –{' '}
-              {reconciliation.formattedEndDate}
               {reconciliation.reconciledAt
-                ? ` · Completed ${reconciliation.reconciledAt}`
-                : ''}
+                ? intl.get('banking.reconciliation.workspace_period', {
+                    period,
+                    date: formatReconciliationDate(reconciliation.reconciledAt),
+                  })
+                : period}
             </WorkspaceSubtitle>
           </div>
 
@@ -370,11 +393,13 @@ export function ReconciliationWorkspace({
         <Callout
           intent={Intent.WARNING}
           style={{ margin: actionsInBar ? '0 0 16px' : '14px 15px 0' }}
-          title="Uncategorized bank transactions"
+          title={intl.get(
+            'banking.reconciliation.uncategorized_bank_transactions',
+          )}
         >
-          You have {detail.meta.uncategorizedTransactionsCount} uncategorized
-          bank transactions. Categorize or match them before reconciling for the
-          best result.
+          {intl.get('banking.reconciliation.uncategorized_warning', {
+            count: detail.meta.uncategorizedTransactionsCount,
+          })}
         </Callout>
       )}
 
@@ -382,11 +407,11 @@ export function ReconciliationWorkspace({
         <Callout
           intent={Intent.WARNING}
           style={{ margin: actionsInBar ? '0 0 16px' : '14px 15px 0' }}
-          title="Previously reconciled transactions changed"
+          title={intl.get('banking.reconciliation.changed_title')}
         >
-          {detail.meta.changedTransactions.length} transaction(s) from a
-          previous reconciliation have changed. Review them or undo the previous
-          reconciliation before continuing.
+          {intl.get('banking.reconciliation.changed_warning', {
+            count: detail.meta.changedTransactions.length,
+          })}
         </Callout>
       )}
 

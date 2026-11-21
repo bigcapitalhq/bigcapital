@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import {
   Alert,
   Button,
@@ -21,9 +22,11 @@ import { CLASSES } from '@/constants';
 import { ReconciliationTransactionsTable } from '@/containers/CashFlow/AccountTransactions/Reconciliation/ReconciliationTransactionsTable';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
 import {
-  formatReconciledDate,
+  formatReconciliationDate,
   formatReconciliationPeriod,
   getStatusIntent,
+  getReconciliationErrorMessage,
+  getReconciliationStatusLabel,
 } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 import {
   useBankReconciliation,
@@ -101,7 +104,7 @@ export function ReconciliationDetailPage() {
       .then(() => {
         setIsUndoOpen(false);
         AppToaster.show({
-          message: 'Reconciliation reopened.',
+          message: intl.get('banking.reconciliation.reopened'),
           intent: Intent.SUCCESS,
         });
         history.push(
@@ -111,7 +114,7 @@ export function ReconciliationDetailPage() {
       .catch((undoError: Error) => {
         setIsUndoOpen(false);
         AppToaster.show({
-          message: undoError.message || 'Something went wrong.',
+          message: getReconciliationErrorMessage(undoError, 'undo_error'),
           intent: Intent.DANGER,
         });
       });
@@ -129,7 +132,7 @@ export function ReconciliationDetailPage() {
           <Button
             minimal
             icon={<Icon icon="arrow-left" iconSize={16} />}
-            text={'Back to reconciliations'}
+            text={intl.get('banking.reconciliation.back_to_history')}
             onClick={handleBackClick}
           />
           <NavbarDivider />
@@ -139,7 +142,7 @@ export function ReconciliationDetailPage() {
               minimal
               icon="undo"
               intent={Intent.WARNING}
-              text={'Undo Reconciliation'}
+              text={intl.get('banking.reconciliation.undo_action')}
               onClick={() => setIsUndoOpen(true)}
               data-testId="undo-reconciliation"
             />
@@ -150,7 +153,7 @@ export function ReconciliationDetailPage() {
               minimal
               icon={<Icon icon="play-16" iconSize={16} />}
               intent={Intent.PRIMARY}
-              text={'Continue reconciliation'}
+              text={intl.get('banking.reconciliation.continue')}
               onClick={handleContinueClick}
             />
           )}
@@ -158,7 +161,7 @@ export function ReconciliationDetailPage() {
           <Button
             minimal
             icon={<Icon icon="print-16" iconSize={16} />}
-            text={'Print'}
+            text={intl.get('print')}
             onClick={handlePrintClick}
             disabled={!detail}
             data-testId="print-reconciliation"
@@ -177,12 +180,14 @@ export function ReconciliationDetailPage() {
           <ContentWrap>
             <Callout
               intent={Intent.DANGER}
-              title="Unable to load the reconciliation"
+              title={intl.get('banking.reconciliation.load_error_title')}
             >
-              {error?.message ||
-                'The reconciliation could not be found for this account.'}
+              {getReconciliationErrorMessage(error, 'not_found')}
               <div style={{ marginTop: 12 }}>
-                <Button text="Retry" onClick={() => refetch()} />
+                <Button
+                  text={intl.get('banking.reconciliation.retry')}
+                  onClick={() => refetch()}
+                />
               </div>
             </Callout>
           </ContentWrap>
@@ -192,26 +197,33 @@ export function ReconciliationDetailPage() {
           <ContentWrap id="reconciliation-print-area">
             <PageHeader>
               <div>
-                <Title>{meta?.accountName || 'Reconciliation'}</Title>
+                <Title>
+                  {meta?.accountName ||
+                    intl.get('banking.reconciliation.detail_title')}
+                </Title>
                 <HeaderDetails className={CLASSES.TEXT_MUTED}>
                   <span>
-                    Reconciliation Period:{' '}
-                    {formatReconciliationPeriod(
-                      reconciliation.startDate,
-                      reconciliation.endDate,
-                    )}
+                    {intl.get('banking.reconciliation.period_value', {
+                      period: formatReconciliationPeriod(
+                        reconciliation.startDate,
+                        reconciliation.endDate,
+                      ),
+                    })}
                   </span>
                   <MetaLine>
                     <Tag
                       minimal
                       intent={getStatusIntent(reconciliation.status)}
                     >
-                      {reconciliation.statusLabel}
+                      {getReconciliationStatusLabel(reconciliation.status)}
                     </Tag>
                     {reconciliation.reconciledAt && (
                       <span>
-                        Reconciled on{' '}
-                        {formatReconciledDate(reconciliation.reconciledAt)}
+                        {intl.get('banking.reconciliation.reconciled_on', {
+                          date: formatReconciliationDate(
+                            reconciliation.reconciledAt,
+                          ),
+                        })}
                       </span>
                     )}
                   </MetaLine>
@@ -220,32 +232,37 @@ export function ReconciliationDetailPage() {
             </PageHeader>
 
             {reconciliation.isVoided && (
-              <Callout intent={Intent.DANGER} title="Reconciliation voided">
-                This reconciliation was voided and its reconciled transaction
-                links have been removed.
+              <Callout
+                intent={Intent.DANGER}
+                title={intl.get('banking.reconciliation.voided')}
+              >
+                {intl.get('banking.reconciliation.voided_hint')}
               </Callout>
             )}
 
             {reconciliation.isInProgress && (
               <Callout
                 intent={Intent.WARNING}
-                title="Reconciliation in progress"
+                title={intl.get('banking.reconciliation.in_progress')}
               >
-                This reconciliation has not been completed yet. The transactions
-                below are the ones currently selected.
+                {intl.get('banking.reconciliation.in_progress_hint')}
               </Callout>
             )}
 
             <SummaryGrid>
               <SummaryCard>
-                <SummaryLabel>Opening Balance</SummaryLabel>
+                <SummaryLabel>
+                  {intl.get('banking.reconciliation.opening_balance')}
+                </SummaryLabel>
                 <SummaryValue>
                   {reconciliation.formattedBeginningBalance}
                 </SummaryValue>
               </SummaryCard>
 
               <SummaryCard>
-                <SummaryLabel>Closing Balance</SummaryLabel>
+                <SummaryLabel>
+                  {intl.get('banking.reconciliation.closing_balance')}
+                </SummaryLabel>
                 <SummaryValue>
                   {reconciliation.formattedEndingBalance || '—'}
                 </SummaryValue>
@@ -253,12 +270,11 @@ export function ReconciliationDetailPage() {
             </SummaryGrid>
 
             <SectionHeader>
-              <SectionTitle>Transactions</SectionTitle>
+              <SectionTitle>{intl.get('transactions')}</SectionTitle>
               <SectionCount>
-                {visibleTransactions.length}{' '}
-                {visibleTransactions.length === 1
-                  ? 'transaction'
-                  : 'transactions'}
+                {intl.get('banking.reconciliation.count', {
+                  count: visibleTransactions.length,
+                })}
               </SectionCount>
             </SectionHeader>
 
@@ -275,7 +291,7 @@ export function ReconciliationDetailPage() {
               />
             ) : (
               <EmptyTransactions>
-                No transactions are linked to this reconciliation.
+                {intl.get('banking.reconciliation.no_linked_transactions')}
               </EmptyTransactions>
             )}
           </ContentWrap>
@@ -286,28 +302,23 @@ export function ReconciliationDetailPage() {
         isOpen={isUndoOpen}
         intent={Intent.WARNING}
         icon="undo"
-        confirmButtonText="Undo reconciliation"
-        cancelButtonText="Cancel"
+        confirmButtonText={intl.get('banking.reconciliation.undo_action')}
+        cancelButtonText={intl.get('cancel')}
         loading={isUndoing}
         onConfirm={handleConfirmUndo}
         onCancel={() => setIsUndoOpen(false)}
       >
         <p>
-          Undo the reconciliation for{' '}
-          <strong>
-            {reconciliation &&
-              formatReconciliationPeriod(
+          {reconciliation &&
+            intl.get('banking.reconciliation.undo_confirm', {
+              period: formatReconciliationPeriod(
                 reconciliation.startDate,
                 reconciliation.endDate,
-              )}
-          </strong>
-          ?
+              ),
+            })}
         </p>
         {!meta?.isLatest && (
-          <p>
-            This is not the latest reconciliation. Later reconciliations will
-            also be voided so the account can be reconciled again.
-          </p>
+          <p>{intl.get('banking.reconciliation.undo_cascade_hint')}</p>
         )}
       </Alert>
     </ReconciliationTheme>

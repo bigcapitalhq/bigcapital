@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import { TableSheet } from '../../common/TableSheet';
 import { ReconciliationStatusTableInjectable } from './ReconciliationStatusTableInjectable';
 import { ReconciliationStatusQueryDto } from './ReconciliationStatusQuery.dto';
-import { mapCellValues } from './_utils';
+import { localizeReconciliationStatusCell, mapCellValues } from './_utils';
 
 @Injectable()
 export class ReconciliationStatusExportInjectable {
   constructor(
     private readonly reconciliationStatusTable: ReconciliationStatusTableInjectable,
+    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -19,13 +21,14 @@ export class ReconciliationStatusExportInjectable {
     const { table } = await this.reconciliationStatusTable.table(query);
 
     // Keep text fields literal when a spreadsheet opens the CSV.
-    const csvTable = mapCellValues(table, ({ key, value }) =>
-      key !== 'deposit' &&
-      key !== 'withdrawal' &&
-      (/^\s*[=+\-@]/.test(value) || /^[\t\r\n]/.test(value))
+    const csvTable = mapCellValues(table, (cell) => {
+      const value = localizeReconciliationStatusCell(this.i18n, cell);
+      return cell.key !== 'deposit' &&
+        cell.key !== 'withdrawal' &&
+        (/^\s*[=+\-@]/.test(value) || /^[\t\r\n]/.test(value))
         ? `'${value}`
-        : value,
-    );
+        : value;
+    });
     return new TableSheet(csvTable).convertToCSV();
   }
 
@@ -35,9 +38,13 @@ export class ReconciliationStatusExportInjectable {
    * @returns {Promise<Buffer>}
    */
   public async xlsx(query: ReconciliationStatusQueryDto): Promise<Buffer> {
-    const { table } = await this.reconciliationStatusTable.table(query);
-    const sheet = new TableSheet(table);
+    const { table, meta } = await this.reconciliationStatusTable.table(query);
+    const sheet = new TableSheet(
+      mapCellValues(table, (cell) =>
+        localizeReconciliationStatusCell(this.i18n, cell),
+      ),
+    );
 
-    return sheet.convertToBuffer(sheet.convertToXLSX(), 'xlsx');
+    return sheet.convertToBuffer(sheet.convertToXLSX(meta.sheetName), 'xlsx');
   }
 }

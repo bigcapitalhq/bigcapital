@@ -61,7 +61,7 @@ export function ReconciliationStatusExportActions({
         content={
           <Menu>
             <MenuItem
-              text="XLSX (Microsoft Excel)"
+              text={<T id="report.reconciliation_status.xlsx" />}
               onClick={() => exportReport('xlsx')}
             />
             <MenuItem text="CSV" onClick={() => exportReport('csv')} />

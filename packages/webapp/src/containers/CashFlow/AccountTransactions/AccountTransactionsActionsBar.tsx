@@ -1,3 +1,4 @@
+import intl from 'react-intl-universal';
 import {
   Button,
   NavbarGroup,
@@ -452,12 +453,12 @@ function AccountTransactionsActionsBarInner({
                   <MenuItem
                     icon={<Icon icon="form" iconSize={16} />}
                     onClick={handleReconcileClick}
-                    text={'Reconcile account'}
+                    text={intl.get('banking.reconciliation.action')}
                   />
                   <MenuItem
                     icon={<Icon icon="time-24" iconSize={16} />}
                     onClick={handleReconciliationsClick}
-                    text={'Reconciliation history'}
+                    text={intl.get('banking.reconciliation.history')}
                   />
                 </Can>
               )}

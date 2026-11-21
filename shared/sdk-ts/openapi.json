@@ -45098,6 +45098,10 @@
             "description": "Transaction type",
             "nullable": true
           },
+          "transactionTypeLabel": {
+            "type": "string",
+            "description": "Localized transaction type label"
+          },
           "transactionNumber": {
             "type": "string",
             "description": "Transaction number",

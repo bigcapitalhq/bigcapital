@@ -1,4 +1,7 @@
 import moment from 'moment';
+import intl from 'react-intl-universal';
+import { unescape } from 'lodash';
+import type { ApiError } from 'openapi-typescript-fetch';
 import type {
   BankReconciliationResponse,
   BankReconciliationTransactionResponse,
@@ -17,21 +20,86 @@ export const formatReconciliationPeriod = (
   startDate: string | Date,
   endDate: string | Date,
 ): string => {
-  return `${moment(startDate).format(RECONCILIATION_DATE_FORMAT)} to ${moment(
-    endDate,
-  ).format(RECONCILIATION_DATE_FORMAT)}`;
+  return intl.get('banking.reconciliation.date_range', {
+    startDate: formatReconciliationDate(startDate),
+    endDate: formatReconciliationDate(endDate),
+  });
 };
 
 /**
- * Formats the date a reconciliation was completed.
+ * Formats a display date using the app's Moment locale.
  */
-export const formatReconciledDate = (
-  reconciledAt: string | Date | null | undefined,
+export const formatReconciliationDate = (
+  date: string | Date | null | undefined,
 ): string => {
-  return reconciledAt
-    ? moment(reconciledAt).format(RECONCILIATION_DATE_FORMAT)
-    : '';
+  return date ? moment(date).format(RECONCILIATION_DATE_FORMAT) : '';
 };
+
+export const formatReconciliationAccountPrompt = (
+  accountName: string,
+): string => {
+  const message = intl.get('banking.reconciliation.empty_history_hint', {
+    accountName,
+  });
+  // Intl escapes variables containing "<". React renders this as plain text.
+  return accountName.includes('<') ? unescape(message) : message;
+};
+
+interface ReconciliationApiError {
+  type?: string;
+  payload?: {
+    required_start_date?: unknown;
+    requiredStartDate?: unknown;
+  };
+}
+
+export const getReconciliationErrorMessage = (
+  error: unknown,
+  fallback: string,
+): string => {
+  const errors: ReconciliationApiError[] | undefined = (
+    error as ApiError | undefined
+  )?.data?.errors;
+  const entry = Array.isArray(errors)
+    ? errors.find(
+        (item) =>
+          typeof item?.type === 'string' &&
+          item.type.startsWith('BANK_RECONCILIATION_'),
+      )
+    : undefined;
+  const requiredStartDate =
+    entry?.payload?.required_start_date ?? entry?.payload?.requiredStartDate;
+
+  let key = entry ? `error.${entry.type}` : fallback;
+  let values: { date: string } | undefined;
+  if (
+    entry?.type === 'BANK_RECONCILIATION_PERIOD_INVALID' &&
+    typeof requiredStartDate === 'string' &&
+    moment(requiredStartDate, 'YYYY-MM-DD', true).isValid()
+  ) {
+    key = 'error.required_start_date';
+    values = { date: formatReconciliationDate(requiredStartDate) };
+  } else if (
+    entry?.type === 'BANK_RECONCILIATION_NOT_IN_PROGRESS' &&
+    fallback === 'undo_error'
+  ) {
+    key = 'error.undo_completed_only';
+  }
+  return (
+    intl.get(`banking.reconciliation.${key}`, values) ||
+    intl.get(`banking.reconciliation.${fallback}`)
+  );
+};
+
+export const getReconciliationStatusLabel = (status: string): string =>
+  intl.get(`banking.reconciliation.status.${status}`) ||
+  intl.get('banking.reconciliation.unknown_status');
+
+export const getReconciliationTransactionStatusLabel = (
+  status: string,
+): string =>
+  intl.get(`banking.reconciliation.transaction_status.${status}`) ||
+  intl.get('banking.reconciliation.unknown_status');
 
 export const getReconciliationDifference = (
   endingBalance: number | null | undefined,

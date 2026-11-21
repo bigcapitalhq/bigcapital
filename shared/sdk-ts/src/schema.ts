@@ -16554,6 +16554,8 @@ export interface components {
             formattedDate: string;
             /** @description Transaction type */
             transactionType: string | null;
+            /** @description Localized transaction type label */
+            transactionTypeLabel?: string;
             /** @description Transaction number */
             transactionNumber: string | null;
             /** @description Reference number */

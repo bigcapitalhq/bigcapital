@@ -40,7 +40,9 @@ export const bankingKeys = {
       uncategorizedTransactionIds,
     ] as const,
   reconciliations: (accountId?: number) =>
-    [BANK_RECONCILIATIONS, accountId] as const,
+    accountId === undefined
+      ? ([BANK_RECONCILIATIONS] as const)
+      : ([BANK_RECONCILIATIONS, accountId] as const),
   reconciliation: (id?: number) => [BANK_RECONCILIATION, id] as const,
 };
 

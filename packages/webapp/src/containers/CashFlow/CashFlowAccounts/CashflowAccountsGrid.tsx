@@ -306,7 +306,7 @@ function CashflowAccountContextMenu({
           />
           <MenuItem
             icon={<Icon icon="reader-18" />}
-            text={'Reconciliation history'}
+            text={intl.get('banking.reconciliation.history')}
             onClick={safeCallback(onReconciliationsClick)}
           />
         </Can>
