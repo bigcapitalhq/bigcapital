@@ -17,6 +17,7 @@ import {
   DashboardPageContent,
   Icon,
 } from '@/components';
+import { CLASSES } from '@/constants';
 import { ReconciliationTransactionsTable } from '@/containers/CashFlow/AccountTransactions/Reconciliation/ReconciliationTransactionsTable';
 import { ReconciliationTheme } from '@/containers/CashFlow/AccountTransactions/Reconciliation/styles';
 import {
@@ -192,24 +193,29 @@ export function ReconciliationDetailPage() {
             <PageHeader>
               <div>
                 <Title>{meta?.accountName || 'Reconciliation'}</Title>
-                <PeriodLine>
-                  <PeriodLabel>Reconciliation Period:</PeriodLabel>{' '}
-                  {formatReconciliationPeriod(
-                    reconciliation.startDate,
-                    reconciliation.endDate,
-                  )}
-                </PeriodLine>
-                <MetaLine>
-                  <Tag minimal intent={getStatusIntent(reconciliation.status)}>
-                    {reconciliation.statusLabel}
-                  </Tag>
-                  {reconciliation.reconciledAt && (
-                    <MetaText>
-                      Reconciled on{' '}
-                      {formatReconciledDate(reconciliation.reconciledAt)}
-                    </MetaText>
-                  )}
-                </MetaLine>
+                <HeaderDetails className={CLASSES.TEXT_MUTED}>
+                  <span>
+                    Reconciliation Period:{' '}
+                    {formatReconciliationPeriod(
+                      reconciliation.startDate,
+                      reconciliation.endDate,
+                    )}
+                  </span>
+                  <MetaLine>
+                    <Tag
+                      minimal
+                      intent={getStatusIntent(reconciliation.status)}
+                    >
+                      {reconciliation.statusLabel}
+                    </Tag>
+                    {reconciliation.reconciledAt && (
+                      <span>
+                        Reconciled on{' '}
+                        {formatReconciledDate(reconciliation.reconciledAt)}
+                      </span>
+                    )}
+                  </MetaLine>
+                </HeaderDetails>
               </div>
             </PageHeader>
 
@@ -390,23 +396,21 @@ const ContentWrap = styled.div`
 `;
 
 const PageHeader = styled.div`
-  margin: 8px 0 16px;
+  margin: 1rem 0 1.4rem;
+  font-size: 12px;
 `;
 
 const Title = styled.h2`
   margin: 0 0 4px;
-  font-size: 20px;
-  font-weight: 600;
-`;
-
-const PeriodLine = styled.div`
   font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 8px;
+  font-weight: 600;
 `;
 
-const PeriodLabel = styled.span`
-  font-weight: 600;
+const HeaderDetails = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 `;
 
 const MetaLine = styled.div`
@@ -414,11 +418,6 @@ const MetaLine = styled.div`
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-`;
-
-const MetaText = styled.span`
-  font-size: 12px;
-  color: var(--x-recon-text-muted);
 `;
 
 const SummaryGrid = styled.div`
@@ -433,21 +432,22 @@ const SummaryCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 14px 16px;
-  border: 1px solid var(--x-recon-border);
-  border-radius: 4px;
-  background: var(--x-recon-surface);
+
+  & + & {
+    border-inline-start: 1px solid var(--x-recon-border);
+    padding-inline-start: 18px;
+  }
 `;
 
 const SummaryLabel = styled.div`
-  font-size: 12px;
+  font-size: 11px;
   color: var(--x-recon-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.085em;
 `;
 
 const SummaryValue = styled.div`
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--x-recon-text);
 `;
@@ -456,13 +456,13 @@ const SectionHeader = styled.div`
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 1rem;
 `;
 
 const SectionTitle = styled.h3`
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const SectionCount = styled.span`
