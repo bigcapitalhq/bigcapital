@@ -133,6 +133,7 @@ $ns: bp4;
   --color-datatable-caret: #b5b5b5;
   --color-datatable-caret-hover: #7d8593;
   --color-datatable-checkbox-border: #C5CBD3;
+  --color-datatable-sticky-background: rgba(255, 255, 255, 0.25);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: #2c3a5d;
@@ -317,6 +318,12 @@ $ns: bp4;
   --color-skeleton-border-start: rgba(206, 217, 224, 0.3);
   --color-skeleton-border-end: rgba(92, 112, 128, 0.3);
   --color-skeleton-border-radius: 2px;
+
+  // Appearance switch (avatar menu)
+  --color-appearance-switch-text: var(--color-gray1);
+  --color-appearance-switch-hover-background: rgba(143, 153, 168, 0.15);
+  --color-appearance-switch-active-background: var(--color-light-gray3);
+  --color-appearance-switch-active-text: #1c2127;
 }
 
 $pt-popover-box-shadow:
@@ -454,6 +461,8 @@ body.bp4-dark  {
   --color-datatable-caret: rgba(255, 255, 255, 0.25);
   --color-datatable-caret-hover: rgba(255, 255, 255, 0.25);
   --color-datatable-checkbox-border: rgba(255, 255, 255, 0.3);
+  // Sticky header and cells: translucent under a blur.
+  --color-datatable-sticky-background: rgba(28, 33, 39, 0.6);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: var(--color-light-gray4);
@@ -654,6 +663,12 @@ body.bp4-dark  {
   --color-skeleton-border-start: rgba(255, 255, 255, 0.1);
   --color-skeleton-border-end: rgba(255, 255, 255, 0.2);
   --color-skeleton-border-radius: 2px;
+
+  // Appearance switch (avatar menu)
+  --color-appearance-switch-text: var(--color-muted-text);
+  --color-appearance-switch-hover-background: rgba(255, 255, 255, 0.06);
+  --color-appearance-switch-active-background: rgba(255, 255, 255, 0.14);
+  --color-appearance-switch-active-text: var(--color-light-gray5);
 }
 
 $pt-popover-box-shadow:
