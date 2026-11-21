@@ -98,6 +98,7 @@ export const transformFormToRequest = (
   type: values.type,
   adjustmentAccountId: toNumber(values.adjustmentAccountId),
   itemId: toNumber(values.itemId),
+  batchId: values.batchId ?? undefined,
   reason: values.reason,
   // SDK requires `description`; form has no field for it. Empty string
   // preserves the original behavior (server-side validation).

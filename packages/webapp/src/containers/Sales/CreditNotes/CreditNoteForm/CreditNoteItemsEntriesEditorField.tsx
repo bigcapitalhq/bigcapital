@@ -34,6 +34,7 @@ export function CreditNoteItemsEntriesEditorField() {
             errors={error}
             linesNumber={4}
             currencyCode={values.currencyCode}
+            batchMode="return"
             enableTaxRates={false}
           />
         )}

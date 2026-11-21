@@ -4,6 +4,7 @@ import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { CreateCreditNoteBody, CreditNote } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -15,6 +16,7 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
@@ -28,6 +30,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type CreditNoteEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -60,6 +64,8 @@ export type CreditNoteFormValues = {
 
 // Default entry object.
 export const defaultCreditNoteEntry: CreditNoteEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -142,7 +148,10 @@ const defaultReqCreditNoteEntry = {
  */
 const transformEntriesToSubmit = (entries: CreditNoteEntry[]) => {
   return orderingLinesIndexes(
-    entries.map((entry) => transformToForm(entry, defaultReqCreditNoteEntry)),
+    entries.map((entry) => ({
+      ...transformToForm(entry, defaultReqCreditNoteEntry),
+      ...getEntryBatchRequest(entry),
+    })),
   );
 };
 

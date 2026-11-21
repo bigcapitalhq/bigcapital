@@ -15,6 +15,7 @@ export interface InventoryAdjustmentFormValues {
   type: 'increment' | 'decrement';
   adjustmentAccountId: string | number;
   itemId: string | number;
+  batchId?: number | null;
   reason: string;
   cost: string | number;
   quantity: string | number;

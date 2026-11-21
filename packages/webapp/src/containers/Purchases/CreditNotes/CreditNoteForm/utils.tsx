@@ -4,6 +4,7 @@ import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { CreateVendorCreditBody, VendorCredit } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -14,6 +15,7 @@ import {
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
@@ -28,6 +30,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type VendorCreditEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -58,6 +62,8 @@ export type VendorCreditFormValues = {
 
 // Default vendor credit entry.
 export const defaultVendorCreditEntry: VendorCreditEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -138,7 +144,10 @@ const defaultReqVendorCreditEntry = {
  */
 const transformEntriesToSubmit = (entries: VendorCreditEntry[]) => {
   return orderingLinesIndexes(
-    entries.map((entry) => transformToForm(entry, defaultReqVendorCreditEntry)),
+    entries.map((entry) => ({
+      ...transformToForm(entry, defaultReqVendorCreditEntry),
+      ...getEntryBatchRequest(entry),
+    })),
   );
 };
 

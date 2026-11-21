@@ -10,7 +10,10 @@ import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 import { events } from '@/common/events/events';
 import { IInventoryTransactionsCreatedPayload } from '../types/InventoryCost.types';
-import { transformItemEntriesToInventory } from '../utils';
+import {
+  groupInventoryTransactionsByTypeId,
+  transformItemEntriesToInventory,
+} from '../utils';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { InventoryStockGuard } from './InventoryStockGuard.service';
 
@@ -52,13 +55,27 @@ export class InventoryTransactionsService {
     // Prevent inventory transactions that would make the items stock negative.
     await this.stockGuard.assertSufficientStock(transactions, override, trx);
 
-    const bulkInsertOpers = [];
-
-    transactions.forEach((transaction: IInventoryTransactionRecord) => {
-      const oper = this.recordInventoryTransaction(transaction, override, trx);
-      bulkInsertOpers.push(oper);
-    });
-    const inventoryTransactions = await Promise.all(bulkInsertOpers);
+    if (override) {
+      const references = groupInventoryTransactionsByTypeId(
+        transactions.map(({ transactionId, transactionType }) => ({
+          transactionId,
+          transactionType,
+        })),
+      );
+      for (const [reference] of references) {
+        await this.deleteInventoryTransactions(
+          reference.transactionId,
+          reference.transactionType,
+          trx,
+          false,
+        );
+      }
+    }
+    const inventoryTransactions = await Promise.all(
+      transactions.map((transaction) =>
+        this.recordInventoryTransaction(transaction, false, trx),
+      ),
+    );
 
     // Triggers `onInventoryTransactionsCreated` event.
     await this.eventEmitter.emitAsync(

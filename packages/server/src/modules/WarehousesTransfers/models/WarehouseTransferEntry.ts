@@ -6,6 +6,7 @@ import { Item } from '@/modules/Items/models/Item';
 export class WarehouseTransferEntry extends TenantBaseModel {
   public warehouseTransferId!: number;
   public itemId!: number;
+  public batchId?: number;
   public quantity!: number;
   public cost!: number;
 

@@ -24,6 +24,7 @@ import {
   assignEntriesTaxAmount,
   aggregateItemEntriesTaxRates,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
@@ -172,16 +173,9 @@ export const transformEntriesToSubmit = (
       entry,
       defaultBillEntry,
     );
-    const normalizedBatches = ((batches ?? []) as ItemEntryBatchAllocation[])
-      .filter((allocation) => allocation.batchId && allocation.quantity > 0)
-      .map((allocation) => ({
-        batchId: allocation.batchId,
-        quantity: allocation.quantity,
-      }));
-
     return {
       ...rest,
-      ...(normalizedBatches.length > 0 ? { batches: normalizedBatches } : {}),
+      ...getEntryBatchRequest(entry),
     };
   };
   return FF.pipe(

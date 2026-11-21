@@ -18,6 +18,7 @@ export interface IWarehouseTransferEntry {
   id?: number;
   index?: number;
   itemId: number;
+  batchId?: number;
   description: string;
   quantity: number;
   cost: number;
@@ -43,6 +44,7 @@ export interface IEditWarehouseDTO {
 export interface IWarehouseTransferEntryDTO {
   index?: number;
   itemId: number;
+  batchId?: number;
   description: string;
   quantity: number;
   cost?: number;

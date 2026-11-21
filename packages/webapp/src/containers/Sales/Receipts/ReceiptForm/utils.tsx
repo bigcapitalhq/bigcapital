@@ -4,6 +4,7 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useReceiptFormContext } from './ReceiptFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { SaleReceipt, CreateSaleReceiptBody } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -15,6 +16,7 @@ import {
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
@@ -27,6 +29,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type ReceiptEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -60,6 +64,8 @@ export type ReceiptFormValues = {
 };
 
 export const defaultReceiptEntry: ReceiptEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -226,6 +232,7 @@ export const transformFormValuesToRequest = (
     }),
     entries: entries.map((entry) => ({
       ...transformToForm(entry, defaultReceiptEntryReq),
+      ...getEntryBatchRequest(entry),
     })),
     closed: false,
     attachments,

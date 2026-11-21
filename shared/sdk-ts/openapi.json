@@ -30326,6 +30326,14 @@
             ],
             "example": "inventory"
           },
+          "inventoryTracking": {
+            "type": "string",
+            "enum": [
+              "none",
+              "batches"
+            ],
+            "default": "none"
+          },
           "typeFormatted": {
             "type": "string",
             "description": "The formatted type of the item",
@@ -30502,6 +30510,7 @@
           "id",
           "name",
           "type",
+          "inventoryTracking",
           "typeFormatted",
           "unit",
           "sellable",
@@ -30529,6 +30538,14 @@
               "inventory"
             ],
             "example": "inventory"
+          },
+          "inventoryTracking": {
+            "type": "string",
+            "enum": [
+              "none",
+              "batches"
+            ],
+            "description": "Inventory tracking mode. New items default to none."
           },
           "code": {
             "type": "string",
@@ -30704,6 +30721,14 @@
             ],
             "example": "inventory"
           },
+          "inventoryTracking": {
+            "type": "string",
+            "enum": [
+              "none",
+              "batches"
+            ],
+            "description": "Inventory tracking mode. New items default to none."
+          },
           "code": {
             "type": "string",
             "description": "Item code/SKU",
@@ -30870,6 +30895,10 @@
             "type": "number",
             "description": "The id of the item",
             "example": 1
+          },
+          "batchId": {
+            "type": "number",
+            "description": "Batch assigned to this inventory movement"
           },
           "quantity": {
             "type": "number",
@@ -31109,6 +31138,10 @@
             "type": "number",
             "description": "ID of the item being adjusted"
           },
+          "batchId": {
+            "type": "number",
+            "description": "Batch assigned to this inventory movement"
+          },
           "quantity": {
             "type": "number",
             "description": "Quantity to adjust"
@@ -31178,6 +31211,10 @@
           "itemId": {
             "type": "number",
             "description": "ID of the item being adjusted"
+          },
+          "batchId": {
+            "type": "number",
+            "description": "Batch assigned to this inventory movement"
           },
           "quantity": {
             "type": "number",
@@ -36404,6 +36441,10 @@
             "description": "The ID of the item being transferred",
             "example": 1
           },
+          "batchId": {
+            "type": "number",
+            "description": "Batch assigned to this inventory movement"
+          },
           "quantity": {
             "type": "number",
             "description": "The quantity of items being transferred",
@@ -36553,6 +36594,35 @@
           "updatedAt"
         ]
       },
+      "WarehouseTransferEntryDto": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "number"
+          },
+          "itemId": {
+            "type": "number"
+          },
+          "batchId": {
+            "type": "number",
+            "description": "Batch assigned to this inventory movement"
+          },
+          "description": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "cost": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "index",
+          "itemId",
+          "quantity"
+        ]
+      },
       "CreateWarehouseTransferDto": {
         "type": "object",
         "properties": {
@@ -36600,7 +36670,7 @@
             ],
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/WarehouseTransferEntryDto"
             }
           }
         },
@@ -36661,7 +36731,7 @@
             ],
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/WarehouseTransferEntryDto"
             }
           }
         },
@@ -39350,12 +39420,14 @@
             "description": "The entries of the sale receipt",
             "example": [
               {
-                "key": "123456"
+                "itemId": 1,
+                "quantity": 1,
+                "rate": 10
               }
             ],
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
           "receiptMessage": {
@@ -39372,7 +39444,9 @@
             "description": "The attachments of the sale receipt",
             "example": [
               {
-                "key": "123456"
+                "itemId": 1,
+                "quantity": 1,
+                "rate": 10
               }
             ],
             "type": "array",
@@ -39474,12 +39548,14 @@
             "description": "The entries of the sale receipt",
             "example": [
               {
-                "key": "123456"
+                "itemId": 1,
+                "quantity": 1,
+                "rate": 10
               }
             ],
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
           "receiptMessage": {
@@ -39496,7 +39572,9 @@
             "description": "The attachments of the sale receipt",
             "example": [
               {
-                "key": "123456"
+                "itemId": 1,
+                "quantity": 1,
+                "rate": 10
               }
             ],
             "type": "array",
@@ -41385,7 +41463,7 @@
             "description": "The credit note entries",
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
           "pdfTemplateId": {
@@ -41504,7 +41582,7 @@
             "description": "The credit note entries",
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
           "pdfTemplateId": {
@@ -42204,7 +42282,7 @@
             ],
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
           "attachments": {
@@ -42315,7 +42393,7 @@
             ],
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
           "attachments": {

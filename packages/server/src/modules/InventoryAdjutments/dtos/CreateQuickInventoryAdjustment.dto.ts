@@ -58,6 +58,16 @@ export class CommandQuickInventoryAdjustmentDto {
   @IsPositive()
   itemId: number;
 
+  @ApiProperty({
+    description: 'Batch assigned to this inventory movement',
+    required: false,
+  })
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @IsPositive()
+  batchId?: number;
+
   @ApiProperty({ description: 'Quantity to adjust' })
   @IsNotEmpty()
   @ToNumber()

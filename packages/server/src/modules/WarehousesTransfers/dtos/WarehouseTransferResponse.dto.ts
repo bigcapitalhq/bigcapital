@@ -15,6 +15,12 @@ export class WarehouseTransferEntryResponseDto {
   itemId: number;
 
   @ApiProperty({
+    description: 'Batch assigned to this inventory movement',
+    required: false,
+  })
+  batchId?: number;
+
+  @ApiProperty({
     description: 'The quantity of items being transferred',
     example: 100,
   })

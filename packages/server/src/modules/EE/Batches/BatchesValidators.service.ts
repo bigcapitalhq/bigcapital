@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { Knex } from 'knex';
 import * as moment from 'moment';
 import { Batch } from './models/Batch';
 import { Item } from '@/modules/Items/models/Item';
@@ -13,6 +14,7 @@ export interface IEntryBatchAllocation {
 }
 
 export interface IEntryBatchReference {
+  index?: number;
   itemId: number;
   batchId?: number | null;
   quantity?: number;
@@ -20,6 +22,7 @@ export interface IEntryBatchReference {
 }
 
 interface IValidateBatchesEntriesOptions {
+  trx?: Knex.Transaction;
   checkAvailability?: boolean;
   referenceType?: string;
   referenceId?: number;
@@ -112,6 +115,32 @@ export class BatchesValidators {
     entries: IEntryBatchReference[],
     options: IValidateBatchesEntriesOptions = {},
   ): Promise<void> {
+    const unassigned = entries
+      .map((entry, position) => ({ entry, index: entry.index ?? position + 1 }))
+      .filter(({ entry }) => !entry.batchId && !entry.batches?.length);
+
+    if (unassigned.length) {
+      const trackedItems = await this.itemModel()
+        .query(options.trx)
+        .select('id')
+        .where({ type: 'inventory', inventoryTracking: 'batches' })
+        .whereIn(
+          'id',
+          unassigned.map(({ entry }) => entry.itemId),
+        );
+      const trackedIds = new Set(trackedItems.map((item) => item.id));
+      const entryIndexes = unassigned
+        .filter(({ entry }) => trackedIds.has(entry.itemId))
+        .map(({ index }) => index);
+
+      if (entryIndexes.length) {
+        throw new ServiceError(
+          BATCHES_ERRORS.BATCH_ALLOCATIONS_REQUIRED,
+          'Make sure you have added batches for the items that have batch tracking enabled.',
+          { entryIndexes },
+        );
+      }
+    }
     const normalizedEntries = entries.map((entry) => {
       const allocations = entry.batches?.length
         ? entry.batches
@@ -120,6 +149,19 @@ export class BatchesValidators {
           : [];
 
       if (entry.batches?.length && entry.quantity !== undefined) {
+        if (
+          allocations.some((allocation) => !(Number(allocation.quantity) > 0))
+        ) {
+          throw new ServiceError(
+            BATCHES_ERRORS.BATCH_ALLOCATION_INVALID_QUANTITY,
+          );
+        }
+        if (
+          new Set(allocations.map((allocation) => allocation.batchId)).size !==
+          allocations.length
+        ) {
+          throw new ServiceError(BATCHES_ERRORS.BATCH_ALLOCATION_DUPLICATE);
+        }
         const allocatedQuantity = allocations.reduce(
           (sum, allocation) => sum + Number(allocation.quantity ?? 0),
           0,
@@ -157,7 +199,11 @@ export class BatchesValidators {
     const batchesIds = [
       ...new Set(batchesEntries.map((entry) => Number(entry.batchId))),
     ];
-    const batches = await this.batchModel().query().whereIn('id', batchesIds);
+    const query = this.batchModel()
+      .query(options.trx)
+      .whereIn('id', batchesIds)
+      .orderBy('id');
+    const batches = await (options.trx ? query.forUpdate() : query);
 
     if (batches.length !== batchesIds.length) {
       throw new ServiceError(BATCHES_ERRORS.BATCH_NOT_FOUND);
@@ -196,6 +242,7 @@ export class BatchesValidators {
       await this.batchesBalance.getAvailableQuantities(
         batches,
         excludeTransaction,
+        options.trx,
       );
 
     for (const [batchId, requestedQuantity] of requestedQuantities.entries()) {

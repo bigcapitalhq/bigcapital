@@ -48,6 +48,7 @@ export function WarehouseTransferFormEntriesTable({
     if (newRowMeta) {
       const newRow: WarehouseTransferEntry = {
         itemId: newRowMeta.itemId,
+        batchId: null,
         warehouses: newRowMeta.warehouses,
         description: '',
         quantity: '',

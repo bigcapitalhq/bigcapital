@@ -57,6 +57,8 @@ export class CommandCreditNoteDTOTransform {
       // Associate the reference type to credit note entries.
       R.map((entry: CreditNoteEntryDto) => ({
         ...entry,
+        batches: entry.batches ?? [],
+        batchId: entry.batchId ?? null,
         referenceType: 'CreditNote',
       })),
     )(creditNoteDTO.entries);

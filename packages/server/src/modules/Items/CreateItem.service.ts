@@ -35,6 +35,7 @@ export class CreateItemService {
    * @param {IItemDTO} itemDTO
    */
   async authorize(itemDTO: CreateItemDto) {
+    await this.validators.validateBatchTrackingEnabled(itemDTO);
     // Validate whether the given item name already exists on the storage.
     await this.validators.validateItemNameUniquiness(itemDTO.name);
 
@@ -84,6 +85,10 @@ export class CreateItemService {
   private transformNewItemDTOToModel(itemDTO: CreateItemDto) {
     return {
       ...itemDTO,
+      inventoryTracking:
+        itemDTO.type === 'inventory'
+          ? (itemDTO.inventoryTracking ?? 'none')
+          : 'none',
       unit: defaultTo(itemDTO.unit, DEFAULT_ITEM_UNIT),
       active: Boolean(defaultTo(itemDTO.active, true)),
       quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
