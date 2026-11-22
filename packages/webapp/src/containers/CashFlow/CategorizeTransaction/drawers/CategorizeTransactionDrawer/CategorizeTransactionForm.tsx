@@ -16,11 +16,11 @@ import type { CategorizeTransactionFormValues } from './_utils';
 import type { WithBankingActionsProps } from '@/containers/CashFlow/withBankingActions';
 import type { CategorizeTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
+import { NS } from '@/constants/classes';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { invalidateBankingQueries } from '@/hooks/query/banking/invalidate-banking';
 import { useApiFetcher } from '@/hooks/useRequest';
-import { NS } from '@/constants/classes';
 
 interface CategorizeTransactionFormRootProps
   extends Pick<WithBankingActionsProps, 'closeMatchingTransactionAside'> {}

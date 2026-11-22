@@ -6,8 +6,8 @@ import { useInventoryValuationColumns } from './dynamicColumns';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
-import { tableRowTypesToClassnames } from '@/utils';
 import { NS } from '@/constants/classes';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface InventoryValuationTableProps {
   companyName: string;

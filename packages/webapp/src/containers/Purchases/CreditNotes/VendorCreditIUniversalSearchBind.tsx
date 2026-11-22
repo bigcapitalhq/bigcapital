@@ -4,13 +4,13 @@ import intl from 'react-intl-universal';
 import type { VendorCredit } from '@bigcapital/sdk-ts';
 import { TextStatus, Icon, Choose, T } from '@/components';
 import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { NS } from '@/constants/classes';
 
 interface VendorCreditUniversalSearchSelectComponentProps
   extends WithDrawerActionsProps {

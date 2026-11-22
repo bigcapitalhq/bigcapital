@@ -26,6 +26,7 @@ import {
   getAddMoneyInOptions,
   getAddMoneyOutOptions,
 } from '@/constants/cashflowOptions';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
@@ -33,7 +34,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { safeCallback } from '@/utils';
-import { NS } from '@/constants/classes';
 
 const CASHFLOW_SKELETON_N = 4;
 

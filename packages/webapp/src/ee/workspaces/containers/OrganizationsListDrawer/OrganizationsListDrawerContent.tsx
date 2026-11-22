@@ -7,6 +7,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { OrganizationsListDrawerHeader } from './OrganizationsListDrawerHeader';
 import OrganizationsListTable from './OrganizationsListTable';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import {
   withDrawerActions,
@@ -19,7 +20,6 @@ import {
 import { useAuthOrganizationId } from '@/hooks/state';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
-import { NS } from '@/constants/classes';
 
 const organizationsDrawerSearchFormGroupCss = css`
   margin: 0 !important;

@@ -3,8 +3,8 @@ import React from 'react';
 import { getUniversalSearchBind } from './utils';
 import type { UniversalSearchItem } from '@/components/UniversalSearch/UniversalSearch';
 import type { ItemRendererProps, ItemRenderer } from '@blueprintjs/select';
-import { highlightText } from '@/utils';
 import { NS } from '@/constants/classes';
+import { highlightText } from '@/utils';
 
 /**
  * Default univesal search item component.

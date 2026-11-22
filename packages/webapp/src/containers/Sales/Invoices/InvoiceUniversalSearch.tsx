@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import type { SaleInvoice } from '@bigcapital/sdk-ts';
 import { T, Choose, Icon, TextStatus } from '@/components';
 import { AbilitySubject, SaleInvoiceAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -11,7 +12,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface InvoiceUniversalSearchSelectProps extends WithDrawerActionsProps {
   resourceType: string;

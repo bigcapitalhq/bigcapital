@@ -8,8 +8,8 @@ import {
   FSelect,
   TotalLinePrimitive,
 } from '@/components';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { NS } from '@/constants/classes';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
   ({

@@ -4,13 +4,13 @@ import { x } from '@xstyled/emotion';
 import { useState, useEffect } from 'react';
 import type { OrganizationCurrent } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withOrganizationActions,
   WithOrganizationActionsProps,
 } from '@/containers/Organization/withOrganizationActions';
 import { useJob, useCurrentOrganization } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { NS } from '@/constants/classes';
 
 /**
  * Setup initializing step form.

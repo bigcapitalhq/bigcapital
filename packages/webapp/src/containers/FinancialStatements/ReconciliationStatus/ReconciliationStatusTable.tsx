@@ -12,8 +12,8 @@ import {
   TableVirtualizedListRows,
 } from '@/components';
 import { Align, TableStyle } from '@/constants';
-import { tableRowTypesToClassnames } from '@/utils';
 import { NS } from '@/constants/classes';
+import { tableRowTypesToClassnames } from '@/utils';
 
 type ReportTable = ReconciliationStatusTableResponse['table'];
 type ReconciliationStatusRow = ReportTable['rows'][number];

@@ -20,8 +20,8 @@ import {
 } from './withCustomersBalanceSummaryActions';
 import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
-import { transformToForm } from '@/utils';
 import { NS } from '@/constants/classes';
+import { transformToForm } from '@/utils';
 
 type CustomerBalanceFormValues = ReturnType<
   typeof getDefaultCustomersBalanceQuery

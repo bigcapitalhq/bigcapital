@@ -18,9 +18,9 @@ import {
 } from './withInventorySummaryActions';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface InventorySummaryFormValues {
   fromDate: Date;

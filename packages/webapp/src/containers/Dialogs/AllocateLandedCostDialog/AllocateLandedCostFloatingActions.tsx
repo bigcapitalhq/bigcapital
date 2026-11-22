@@ -11,8 +11,8 @@ import {
   DialogFooterActions,
   FormattedMessage as T,
 } from '@/components';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { NS } from '@/constants/classes';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 interface AllocateLandedCostFloatingActionsProps
   extends Pick<WithDialogActionsProps, 'closeDialog'> {}

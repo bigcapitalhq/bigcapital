@@ -5,9 +5,9 @@ import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBo
 import { useSalesTaxLiabilitySummaryColumns } from './utils';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useCurrentOrganizationName } from '@/hooks/query';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { NS } from '@/constants/classes';
 
 function SalesTaxLiabilitySummaryTableRoot() {
   const organizationName = useCurrentOrganizationName();

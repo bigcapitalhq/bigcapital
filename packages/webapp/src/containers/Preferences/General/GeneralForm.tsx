@@ -20,11 +20,11 @@ import {
   Group,
 } from '@/components';
 import { SelectButton } from '@/components/Forms/Select';
+import { NS } from '@/constants/classes';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { inputIntent } from '@/utils';
-import { NS } from '@/constants/classes';
 
 const Countries = getAllCountries();
 

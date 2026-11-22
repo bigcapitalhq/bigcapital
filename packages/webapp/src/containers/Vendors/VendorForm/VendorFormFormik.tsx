@@ -20,9 +20,9 @@ import { useVendorFormContext } from './VendorFormProvider';
 import type { VendorFormSubmitPayload } from './VendorFormProvider';
 import { AppToaster } from '@/components';
 import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
+import { NS } from '@/constants/classes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { saveInvoke } from '@/utils';
-import { NS } from '@/constants/classes';
 
 /**
  * Vendor form.

@@ -6,8 +6,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { getPaginationRowRange } from './paginationRowRange';
 import { Icon, FormattedMessage as T } from '@/components';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { NS } from '@/constants/classes';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 const StyledButtonGroup = styled(ButtonGroup)`
   .${NS}-button {

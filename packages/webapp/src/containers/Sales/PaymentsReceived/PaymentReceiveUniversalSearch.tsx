@@ -6,6 +6,7 @@ import {
   AbilitySubject,
   PaymentReceiveAction,
 } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -13,7 +14,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface PaymentReceiveUniversalSearchSelectProps
   extends WithDrawerActionsProps {

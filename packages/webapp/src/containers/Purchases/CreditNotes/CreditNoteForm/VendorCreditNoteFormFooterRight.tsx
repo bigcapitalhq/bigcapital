@@ -9,9 +9,9 @@ import {
   type VendorCreditFormValues,
 } from './utils';
 import { T, TotalLines, TotalLine, TotalLineTextStyle } from '@/components';
+import { NS } from '@/constants/classes';
 import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
 import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/DiscountTotalLine';
-import { NS } from '@/constants/classes';
 
 export function VendorCreditNoteFormFooterRight() {
   const {

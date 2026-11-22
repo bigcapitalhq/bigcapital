@@ -6,10 +6,10 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { FFormGroup, FEditableText, Box, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 import { PaymentOptionsButtonPopver } from '@/containers/PaymentMethods/SelectPaymentMethodPopover';
 import { MastercardIcon } from '@/icons/Mastercard';
 import { VisaIcon } from '@/icons/Visa';
-import { NS } from '@/constants/classes';
 
 export function InvoiceFormFooterLeft() {
   const { paymentServices } = useInvoiceFormContext();

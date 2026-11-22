@@ -3,9 +3,9 @@ import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { NS } from '@/constants/classes';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
-import { NS } from '@/constants/classes';
 
 const organizationsSwitchLabelBpCss = css`
   .${NS}-control.${NS}-switch {

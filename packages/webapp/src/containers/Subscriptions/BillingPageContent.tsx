@@ -7,11 +7,11 @@ import styles from './BillingPageContent.module.scss';
 import { Subscription } from './BillingSubscription';
 import { TrialStatus } from './TrialStatus';
 import { AppToaster, Box, Group } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   subscriptionKeys,
   useSyncStripeCheckoutSession,
 } from '@/hooks/query/subscription';
-import { NS } from '@/constants/classes';
 
 export function BillingPageContent() {
   const { isLoading, mainSubscription } = useBillingPageBoot();

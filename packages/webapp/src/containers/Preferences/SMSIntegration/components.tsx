@@ -4,8 +4,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import type { SMSNotification } from './SMSIntegrationProvider';
 import { SwitchFieldCell } from '@/components/DataTableCells';
-import { safeInvoke } from '@/utils';
 import { NS } from '@/constants/classes';
+import { safeInvoke } from '@/utils';
 
 interface Row {
   row: { original: SMSNotification };

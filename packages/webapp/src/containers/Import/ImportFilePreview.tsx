@@ -11,8 +11,8 @@ import { useImportFileContext } from './ImportFileProvider';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import { SectionCard, Section } from '@/components/Section';
 import { CLASSES } from '@/constants';
-import { useImportFileProcess } from '@/hooks/query/import';
 import { NS } from '@/constants/classes';
+import { useImportFileProcess } from '@/hooks/query/import';
 
 export function ImportFilePreview() {
   const { importId } = useImportFileContext();

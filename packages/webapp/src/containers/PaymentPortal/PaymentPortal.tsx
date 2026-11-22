@@ -4,6 +4,7 @@ import clsx from 'classnames';
 import styles from './PaymentPortal.module.scss';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
 import { AppToaster, Box, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import {
   useCreateStripeCheckoutSession,
@@ -11,7 +12,6 @@ import {
 } from '@/hooks/query/payment-link';
 import { useDrawerActions } from '@/hooks/state';
 import { downloadFile } from '@/hooks/useDownloadFile';
-import { NS } from '@/constants/classes';
 
 export function PaymentPortal() {
   const { openDrawer } = useDrawerActions();

@@ -10,11 +10,11 @@ import { useAccountReadEntriesColumns } from './utils';
 import { Card, DataTable, If } from '@/components';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { NS } from '@/constants/classes';
 
 /**
  * account drawer table.

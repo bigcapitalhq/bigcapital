@@ -19,9 +19,9 @@ import {
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface SalesTaxLiabilitySummaryFormValues {
   fromDate: Date;

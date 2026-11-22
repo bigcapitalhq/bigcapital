@@ -16,8 +16,8 @@ import {
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
 import { FormattedMessage as T } from '@/components';
-import { transformToForm } from '@/utils';
 import { NS } from '@/constants/classes';
+import { transformToForm } from '@/utils';
 
 interface SalesByItemsFormValues {
   fromDate: Date;

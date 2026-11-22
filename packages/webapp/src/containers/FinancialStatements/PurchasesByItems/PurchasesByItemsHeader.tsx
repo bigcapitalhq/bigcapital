@@ -15,9 +15,9 @@ import {
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { transformToForm } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface PurchasesByItemsFormValues {
   fromDate: Date;

@@ -4,8 +4,8 @@ import * as FF from 'fp-ts/function';
 import React from 'react';
 import { CreateWorkspaceDrawerContent } from './CreateWorkspaceDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { NS } from '@/constants/classes';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const CreateWorkspaceDrawerContainer = styled(Drawer)`
   &.${NS}-drawer.${NS}-dark, .${NS}-dark &.${NS}-drawer {

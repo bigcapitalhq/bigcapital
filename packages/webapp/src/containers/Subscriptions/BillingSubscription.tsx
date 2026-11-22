@@ -11,9 +11,9 @@ import styles from './BillingSubscription.module.scss';
 import { useUpgradeToGoCheckout } from './useUpgradeToGoCheckout';
 import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
 import { AppToaster, Can, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 import { useCreateStripePortalSession } from '@/hooks/query/subscription';
 import { useAlertActions } from '@/hooks/state';
-import { NS } from '@/constants/classes';
 
 type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
 

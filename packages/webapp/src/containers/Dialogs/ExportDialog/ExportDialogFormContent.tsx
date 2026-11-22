@@ -6,9 +6,9 @@ import React from 'react';
 import { ExportResources } from './constants';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FFormGroup, FRadioGroup, FSelect, Group } from '@/components';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { NS } from '@/constants/classes';
 
 interface ExportDialogFormContentValues {
   resource: string;

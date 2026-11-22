@@ -16,8 +16,8 @@ import {
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
 import { FormattedMessage as T } from '@/components';
-import { transformToForm } from '@/utils';
 import { NS } from '@/constants/classes';
+import { transformToForm } from '@/utils';
 
 interface CustomersTransactionsHeaderFormValues {
   fromDate: Date;

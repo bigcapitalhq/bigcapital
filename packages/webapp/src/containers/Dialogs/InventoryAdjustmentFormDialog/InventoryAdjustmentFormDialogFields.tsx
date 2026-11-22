@@ -29,11 +29,11 @@ import {
   FAccountsSuggestField,
 } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
 import { toSafeNumber } from '@/utils';
-import { NS } from '@/constants/classes';
 
 export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
   const { featureCan } = useFeatureCan();

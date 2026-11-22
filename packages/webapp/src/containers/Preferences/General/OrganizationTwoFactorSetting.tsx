@@ -3,13 +3,13 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { AppToaster } from '@/components';
+import { NS } from '@/constants/classes';
 import { getTwoFactorErrorMessage } from '@/containers/TwoFactor/utils';
 import {
   useOrganizationTwoFactor,
   useUpdateOrganizationTwoFactor,
 } from '@/hooks/query';
 import { useAbilityContext } from '@/hooks/utils';
-import { NS } from '@/constants/classes';
 
 /**
  * Organization setting: require two-factor authentication for all users.

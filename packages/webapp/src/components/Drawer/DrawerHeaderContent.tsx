@@ -11,11 +11,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrawerContext } from './DrawerProvider';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { NS } from '@/constants/classes';
 
 export interface DrawerHeaderContentProps {
   /** Accepted for convenience; the active drawer name is read from context. */

@@ -25,9 +25,9 @@ import {
   FMoneyInputGroup,
 } from '@/components';
 import { Features, ACCOUNT_TYPE } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { NS } from '@/constants/classes';
 
 /**
  * Quick payment receive form fields.

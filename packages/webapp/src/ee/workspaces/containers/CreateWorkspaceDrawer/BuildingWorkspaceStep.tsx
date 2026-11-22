@@ -3,9 +3,9 @@ import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import React, { useEffect } from 'react';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { useJob } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { NS } from '@/constants/classes';
 
 interface BuildingWorkspaceStepProps {
   jobId?: string;

@@ -3,8 +3,8 @@ import { x } from '@xstyled/emotion';
 import clsx from 'classnames';
 import type { CSSProperties } from 'react';
 import { FFormGroup, FInputGroup, TotalLinePrimitive } from '@/components';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { NS } from '@/constants/classes';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
   ({

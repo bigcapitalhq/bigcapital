@@ -20,13 +20,13 @@ import {
   FormattedMessage as T,
   AppToaster,
 } from '@/components';
+import { NS } from '@/constants/classes';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
-import { NS } from '@/constants/classes';
 
 interface AccountTransactionsDataTableProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,

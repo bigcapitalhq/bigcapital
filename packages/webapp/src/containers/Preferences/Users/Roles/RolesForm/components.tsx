@@ -10,11 +10,11 @@ import {
   handleCheckboxPermissionChange,
 } from './utils';
 import { Card, If, ButtonLink, Choose, T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   getPermissionsSchema,
   ModulePermissionsStyle,
 } from '@/constants/permissionsSchema';
-import { NS } from '@/constants/classes';
 
 interface PermissionItem {
   subject: string;

@@ -13,10 +13,10 @@ import {
   TableVirtualizedListRows,
 } from '@/components';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface GeneralLedgerTableProps extends WithDrawerActionsProps {
   companyName: string;

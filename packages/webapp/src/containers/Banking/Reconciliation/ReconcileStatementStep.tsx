@@ -16,8 +16,8 @@ import type {
   BankReconciliationsListResponse,
 } from '@bigcapital/sdk-ts';
 import { Alert, InputPrependText, MoneyInputGroup } from '@/components';
-import { formatReconciliationDate } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 import { NS } from '@/constants/classes';
+import { formatReconciliationDate } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
 
 interface ReconcileStatementStepProps {
   accounts: BankingAccountsListResponse;

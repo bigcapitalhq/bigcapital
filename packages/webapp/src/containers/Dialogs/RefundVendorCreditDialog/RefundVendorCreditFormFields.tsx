@@ -25,9 +25,9 @@ import {
   FFormGroup,
 } from '@/components';
 import { Features, ACCOUNT_TYPE } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { NS } from '@/constants/classes';
 
 /**
  * Refund Vendor credit form fields.

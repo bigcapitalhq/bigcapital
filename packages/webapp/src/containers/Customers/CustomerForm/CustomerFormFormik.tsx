@@ -16,9 +16,9 @@ import {
 } from './utils';
 import { AppToaster } from '@/components';
 import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
+import { NS } from '@/constants/classes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { saveInvoke } from '@/utils';
-import { NS } from '@/constants/classes';
 
 type CustomerFormSubmitPayload = {
   noRedirect?: boolean;

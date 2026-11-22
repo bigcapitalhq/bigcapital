@@ -10,10 +10,10 @@ import styled from 'styled-components';
 import { SelectPaymentMethodsForm } from './SelectPaymemtMethodsForm';
 import { SelectPaymentMethodsBoot } from './SelectPaymentMethodsBoot';
 import { Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { useDialogActions } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
-import { NS } from '@/constants/classes';
 
 export function SelectPaymentMethodsContent() {
   const { closeDialog } = useDialogActions();

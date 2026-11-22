@@ -6,8 +6,8 @@ import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
-import { tableRowTypesToClassnames } from '@/utils';
 import { NS } from '@/constants/classes';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface APAgingSummaryTableProps {
   organizationName: string;

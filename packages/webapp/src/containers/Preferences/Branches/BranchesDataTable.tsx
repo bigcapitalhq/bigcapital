@@ -9,11 +9,11 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { Branch } from '@bigcapital/sdk-ts';
 import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
+import { NS } from '@/constants/classes';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
 import '@/style/pages/Preferences/branchesList.scss';
-import { NS } from '@/constants/classes';
 
 type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
   Pick<WithAlertActionsProps, 'openAlert'>;

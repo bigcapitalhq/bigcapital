@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import type { Bill } from '@bigcapital/sdk-ts';
 import { T, Icon, Choose, If, TextStatus } from '@/components';
 import { AbilitySubject, BillAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -11,7 +12,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { formattedAmount } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface BillUniversalSearchSelectProps extends WithDrawerActionsProps {
   resourceType: string;

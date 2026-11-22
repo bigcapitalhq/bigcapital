@@ -5,12 +5,12 @@ import * as FF from 'fp-ts/function';
 import { useState } from 'react';
 import { WorkflowIcon } from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withOrganizationActions,
   WithOrganizationActionsProps,
 } from '@/containers/Organization/withOrganizationActions';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { NS } from '@/constants/classes';
 
 /**
  * Setup congrats page.

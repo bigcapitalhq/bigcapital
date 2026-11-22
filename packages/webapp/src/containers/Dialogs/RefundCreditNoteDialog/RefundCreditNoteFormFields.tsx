@@ -26,9 +26,9 @@ import {
 } from '@/components';
 import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { NS } from '@/constants/classes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { NS } from '@/constants/classes';
 
 // FFormGroup / FMoneyInputGroup / FInputGroup (blueprintjs-formik) wrappers
 // don't expose all underlying props (`fill`, `minimal`) in their public type.

@@ -7,8 +7,8 @@ import { useTrialBalanceSheetTableColumns } from './hooks';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
-import { tableRowTypesToClassnames } from '@/utils';
 import { NS } from '@/constants/classes';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface TrialBalanceSheetTableProps {
   companyName: string;

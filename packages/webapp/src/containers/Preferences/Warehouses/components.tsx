@@ -10,8 +10,8 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import type { Warehouse } from '@bigcapital/sdk-ts';
 import { Icon, If } from '@/components';
-import { safeCallback } from '@/utils';
 import { NS } from '@/constants/classes';
+import { safeCallback } from '@/utils';
 
 const WAREHOUSES_SKELETON_N = 4;
 

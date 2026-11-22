@@ -16,8 +16,8 @@ import {
   WithVendorsBalanceSummaryActionsProps,
 } from './withVendorsBalanceSummaryActions';
 import { FormattedMessage as T } from '@/components';
-import { transformToForm } from '@/utils';
 import { NS } from '@/constants/classes';
+import { transformToForm } from '@/utils';
 
 interface VendorsBalanceSummaryHeaderOwnProps {
   pageFilter: Record<string, unknown>;

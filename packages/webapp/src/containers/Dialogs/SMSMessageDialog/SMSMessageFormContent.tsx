@@ -9,8 +9,8 @@ import { SMSMessageFormFields } from './SMSMessageFormFields';
 import { SMSMessageFormFloatingActions } from './SMSMessageFormFloatingActions';
 import type { SMSMessageFormValues } from './types';
 import { SMSMessagePreview } from '@/components';
-import { getSMSUnits } from '@/containers/NotifyViaSMS/utils';
 import { NS } from '@/constants/classes';
+import { getSMSUnits } from '@/containers/NotifyViaSMS/utils';
 
 interface SMSVariable {
   variable: string;

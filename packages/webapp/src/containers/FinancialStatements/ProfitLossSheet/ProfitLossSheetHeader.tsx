@@ -19,8 +19,8 @@ import {
 import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import { NS } from '@/constants/classes';
+import { useFeatureCan } from '@/hooks/state';
 
 type ProfitLossFormValues = ReturnType<typeof getDefaultProfitLossQuery>;
 

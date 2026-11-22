@@ -6,8 +6,8 @@ import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { useARAgingSummaryColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
-import { tableRowTypesToClassnames } from '@/utils';
 import { NS } from '@/constants/classes';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface ARAgingSummaryTableProps {
   organizationName: string;

@@ -11,8 +11,8 @@ import { withJournalActions } from './withJournalActions';
 import type { WithJournalProps } from './withJournal';
 import type { WithJournalActionsProps } from './withJournalActions';
 import { FormattedMessage as T } from '@/components';
-import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { NS } from '@/constants/classes';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 
 interface JournalHeaderFormValues {
   fromDate: Date;

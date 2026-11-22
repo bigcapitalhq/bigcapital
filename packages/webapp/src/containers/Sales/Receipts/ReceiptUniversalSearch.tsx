@@ -5,10 +5,10 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { SaleReceipt } from '@bigcapital/sdk-ts';
 import { Icon, Choose, T, TextStatus } from '@/components';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { NS } from '@/constants/classes';
 
 interface ReceiptUniversalSearchSelectComponentProps
   extends WithDrawerActionsProps {

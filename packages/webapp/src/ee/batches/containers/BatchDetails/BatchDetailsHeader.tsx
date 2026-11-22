@@ -14,10 +14,10 @@ import {
   FormattedMessage as T,
   Row,
 } from '@/components';
+import { NS } from '@/constants/classes';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useItems } from '@/hooks/query';
 import { transformToForm } from '@/utils';
-import { NS } from '@/constants/classes';
 
 interface BatchDetailsFormValues {
   itemsIds: number[];

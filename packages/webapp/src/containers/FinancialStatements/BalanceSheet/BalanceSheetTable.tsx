@@ -7,8 +7,8 @@ import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { useBalanceSheetColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 import { NS } from '@/constants/classes';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface BalanceSheetTableProps {
   companyName: string;

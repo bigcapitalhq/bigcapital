@@ -12,12 +12,12 @@ import {
   TotalLines,
 } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
 import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/DiscountTotalLine';
 import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
 import { formattedAmount } from '@/utils';
-import { NS } from '@/constants/classes';
 
 /**
  * Recurring invoice form footer right section.

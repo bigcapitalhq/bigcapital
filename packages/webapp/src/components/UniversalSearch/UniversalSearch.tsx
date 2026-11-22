@@ -21,8 +21,8 @@ import {
 } from './UniversalSearchProvider';
 import { filterItemsByResourceType } from './utils';
 import { Icon, If, FormattedMessage as T } from '@/components';
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { NS } from '@/constants/classes';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
 // Resource type from RESOURCES_TYPES constant
 type ResourceType = string;

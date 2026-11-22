@@ -21,9 +21,9 @@ import {
   TotalLineTextStyle,
 } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
-import { NS } from '@/constants/classes';
 
 export function InvoiceFormFooterRight() {
   const {

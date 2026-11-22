@@ -5,11 +5,11 @@ import { useHistory } from 'react-router-dom';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { NS } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { getDashboardRoutes } from '@/routes/dashboard';
-import { NS } from '@/constants/classes';
 
 interface GlobalHotkeyRoute {
   path: string;
