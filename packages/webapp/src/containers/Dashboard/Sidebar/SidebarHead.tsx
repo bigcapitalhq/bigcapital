@@ -28,9 +28,10 @@ import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
 import { firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
-const POPOVER_MODIFIERS: import('@blueprintjs/core').PopoverProps['modifiers'] = {
-  offset: { options: { offset: [28, 8] } },
-};
+const POPOVER_MODIFIERS: import('@blueprintjs/core').PopoverProps['modifiers'] =
+  {
+    offset: { options: { offset: [28, 8] } },
+  };
 
 // Minimum number of workspaces required to show the search input.
 const WORKSPACES_SEARCH_MIN_COUNT = 4;

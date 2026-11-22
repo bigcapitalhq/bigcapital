@@ -275,10 +275,7 @@ function TimezoneField() {
     const placeholder = <T id={'select_time_zone'} />;
     if (!value) return placeholder;
     try {
-      const zone = getTimezoneMetadata(
-        value,
-        new Date(),
-      );
+      const zone = getTimezoneMetadata(value, new Date());
       return zone ? `${value} (${zone.shortName}) ${zone.offset}` : value;
     } catch (e) {
       return value; // fallback

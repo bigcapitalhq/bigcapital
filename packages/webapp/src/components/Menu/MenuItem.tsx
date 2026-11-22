@@ -189,9 +189,7 @@ export class MenuItem extends AbstractPureComponent {
         {text}
       </Text>,
       this.maybeRenderLabel(labelElement),
-      hasSubmenu ? (
-        <Icon icon="caret-right" size={caretIconSize} />
-      ) : undefined,
+      hasSubmenu ? <Icon icon="caret-right" size={caretIconSize} /> : undefined,
     );
 
     const liClasses = classNames(

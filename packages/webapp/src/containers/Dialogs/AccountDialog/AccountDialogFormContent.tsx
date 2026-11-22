@@ -151,12 +151,7 @@ export function AccountDialogFormContent({
           inline
           fastField
         >
-          <FTextArea
-            name={'description'}
-            autoResize={true}
-            fill
-            fastField
-          />
+          <FTextArea name={'description'} autoResize={true} fill fastField />
         </FFormGroup>
       </div>
 
