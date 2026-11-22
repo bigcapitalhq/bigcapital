@@ -17,15 +17,27 @@ const expenseAmount = () => faker.number.int({ min: 1000, max: 50000 });
  */
 async function filterExpensesByRef(page: Page, refNo: string) {
   await page.getByRole('button', { name: /filter|filters applied/i }).click();
-  await page.getByPlaceholder('Value').first().fill(refNo);
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.pathname === '/api/expenses' &&
+        Boolean(
+          url.searchParams.get('stringified_filter_roles')?.includes(refNo),
+        ) &&
+        response.ok()
+      );
+    }),
+    page.getByPlaceholder('Value').first().fill(refNo),
+  ]);
 
-  const row = page.getByTestId('expense-row').first();
-  await expect(row).toBeVisible({ timeout: 30_000 });
+  const rows = page.getByTestId('expense-row');
+  await expect(rows).toHaveCount(1);
 
   // Close the filter popover before interacting with the table.
   await page.keyboard.press('Escape');
 
-  return row;
+  return rows.first();
 }
 
 /**

@@ -163,7 +163,7 @@ export function AuditLogHeader({
               title={<T id={'general'} />}
               panel={
                 <div style={{ maxWidth: '400px' }}>
-                  <FFormGroup name="subject" label={'Subject'} fastField>
+                  <FFormGroup name="subject" label={'Subject'}>
                     <FMultiSelect
                       name="subject"
                       items={subjectSelectItems}
@@ -178,11 +178,10 @@ export function AuditLogHeader({
                       }}
                       fill
                       resetOnSelect
-                      fastField
                     />
                   </FFormGroup>
 
-                  <FFormGroup name="action" label={'Action'} fastField>
+                  <FFormGroup name="action" label={'Action'}>
                     <FMultiSelect
                       name="action"
                       items={actionSelectItems}
@@ -197,7 +196,6 @@ export function AuditLogHeader({
                       }}
                       fill
                       resetOnSelect
-                      fastField
                     />
                   </FFormGroup>
 
