@@ -1,4 +1,4 @@
-import { Position } from '@blueprintjs/core';
+import { Position, SegmentedControl } from '@blueprintjs/core';
 import { useTheme } from '@emotion/react';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
@@ -16,12 +16,9 @@ import {
   FFormGroup,
   FInputGroup,
   FDateInput,
-  SegmentedControl,
   Stack,
 } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
-
-type MakeJournalBasisOption = 'general' | 'accrual' | 'cash';
 
 /**
  * Make journal entries header fields.
@@ -99,12 +96,14 @@ export function MakeJournalEntriesHeader() {
         }
         inline
       >
-        <SegmentedControl<MakeJournalBasisOption>
+        <SegmentedControl
+          size="small"
+          aria-label={intl.get('accounting_basis_')}
           value={form.values.basis || 'general'}
-          onChange={(value) => {
+          onValueChange={(value) => {
             form.setFieldValue('basis', value === 'general' ? '' : value);
           }}
-          items={[
+          options={[
             { label: intl.get('general'), value: 'general' },
             { label: intl.get('accrual'), value: 'accrual' },
             { label: intl.get('cash'), value: 'cash' },
