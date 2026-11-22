@@ -1,33 +1,16 @@
 // @ts-nocheck
 import { Button } from '@blueprintjs/core';
-import { Field } from '@blueprintjs-formik/core';
-import { Select, type SelectOptionProps } from '@blueprintjs-formik/select';
+import {
+  FormikSelect,
+  Select,
+  type SelectOptionProps,
+} from '@blueprintjs-formik/select';
 import clsx from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
-import type { FieldProps } from 'formik';
 
-export function FSelect<T extends object = SelectOptionProps>({
-  ...props
-}) {
-  const { name, fastField, shouldUpdate, ...selectProps } = props;
-  return (
-    <Field {...selectProps} name={name} fastField={fastField} shouldUpdate={shouldUpdate}>
-      {({ field, form }: FieldProps) => (
-        <BPSelect<T>
-          selectedValue={field.value}
-          onValueChange={(value) => form.setFieldValue(name, value)}
-          {...selectProps}
-        />
-      )}
-    </Field>
-  );
-}
-
-export function BPSelect<T extends object = SelectOptionProps>({
-  ...props
-}) {
-  const input = ({ activeItem, text, label, value }) => (
+function selectInput(props) {
+  return ({ text }) => (
     <SelectButton
       text={text || props.placeholder || 'Select an item ...'}
       disabled={props.disabled || false}
@@ -35,7 +18,14 @@ export function BPSelect<T extends object = SelectOptionProps>({
       className={clsx({ 'is-selected': !!text }, props.className)}
     />
   );
-  return <Select<T> input={input} fill={true} {...props} />;
+}
+
+export function FSelect<T extends object = SelectOptionProps>(props) {
+  return <FormikSelect<T> input={selectInput(props)} fill {...props} />;
+}
+
+export function BPSelect<T extends object = SelectOptionProps>(props) {
+  return <Select<T> input={selectInput(props)} fill {...props} />;
 }
 
 export const SelectButton = styled(Button)`

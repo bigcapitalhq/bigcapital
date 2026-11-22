@@ -449,11 +449,14 @@ importers:
         specifier: workspace:*
         version: link:../../shared/bigcapital-utils
       '@blueprintjs-formik/core':
-        specifier: ^0.3.8
-        version: 0.3.8(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
+        specifier: ^0.3.9
+        version: 0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
+      '@blueprintjs-formik/datetime-v6':
+        specifier: ^0.1.1
+        version: 0.1.1(@blueprintjs-formik/core@0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(@blueprintjs/datetime@6.3.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react@18.3.1)
       '@blueprintjs-formik/select':
-        specifier: ^0.4.9
-        version: 0.4.9(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^0.4.10
+        version: 0.4.10(@blueprintjs-formik/core@0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/colors':
         specifier: ^5.1.16
         version: 5.1.16
@@ -2207,20 +2210,29 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@blueprintjs-formik/core@0.3.8':
-    resolution: {integrity: sha512-LWd/wo6YrKghfAoNrfE4C21ucj7cHd0sjXPiTOFV5WLiIdVb+/u84TJ5mXFVD5nrpB65Czz52FwFc1nM1LCXhw==}
+  '@blueprintjs-formik/core@0.3.9':
+    resolution: {integrity: sha512-R2wKXlTxN7VUBWvU5o6tNDxC+MtjjxxmHQT5hPmp4h6TCqdypSIiiI6mj7jqDvLmw6rh5gArhY8AS6jvMMr8Sw==}
     peerDependencies:
-      '@blueprintjs/core': ^3.52.0 || 4 || 5
-      '@blueprintjs/select': ^3.18.12 || 4 || 5
+      '@blueprintjs/core': ^3.52.0 || 4 || 5 || 6
+      '@blueprintjs/select': ^3.18.12 || 4 || 5 || 6
       formik: ^2.2.9
       react: 16 || ^17.0.2 || 18
       react-dom: 16 || ^17.0.2 || 18
 
-  '@blueprintjs-formik/select@0.4.9':
-    resolution: {integrity: sha512-tex8DqEVncxFdfy+keiJwUHDX/xDMUEuqlaC8XFZ8Dx74mDqqVFwLCNrffErm4IZ7gtktgJCMiZI7f8/FaN4Hw==}
+  '@blueprintjs-formik/datetime-v6@0.1.1':
+    resolution: {integrity: sha512-hrvgwQev5Co3jO6s/ZUqpQkFcMCCqaYdb2GwQb0LG3uKeaRCWcfzHAbUvLBym1zYGDxvJbZ5W7eaYicdYac2gA==}
     peerDependencies:
-      '@blueprintjs/core': ^3.52.0 || 4 || 5
-      '@blueprintjs/select': ^3.18.12 || 4 || 5
+      '@blueprintjs-formik/core': ^0.3.8
+      '@blueprintjs/datetime': ^6.0.0
+      formik: ^2.2.9
+      react: ^18.2.0
+
+  '@blueprintjs-formik/select@0.4.10':
+    resolution: {integrity: sha512-/fGcmFFzEe04abDsaIpGJfBXeUYe1DMoVh9iUBBgEThb00ayiR3btGA9nIgyPdYrvwxnUIoJvqs8XqJ3TGErWw==}
+    peerDependencies:
+      '@blueprintjs-formik/core': ^0.3.8
+      '@blueprintjs/core': ^3.52.0 || 4 || 5 || 6
+      '@blueprintjs/select': ^3.18.12 || 4 || 5 || 6
       formik: ^2.2.9
       react: 16 || ^17.0.2 || ^18.2.0
       react-dom: 16 || ^17.0.2 || ^18.2.0
@@ -16281,7 +16293,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@blueprintjs-formik/core@0.3.8(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
+  '@blueprintjs-formik/core@0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
     dependencies:
       '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/select': 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -16296,8 +16308,16 @@ snapshots:
       - '@babel/core'
       - react-is
 
-  '@blueprintjs-formik/select@0.4.9(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@blueprintjs-formik/datetime-v6@0.1.1(@blueprintjs-formik/core@0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(@blueprintjs/datetime@6.3.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react@18.3.1)':
     dependencies:
+      '@blueprintjs-formik/core': 0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
+      '@blueprintjs/datetime': 6.3.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      formik: 2.4.6(react@18.3.1)
+      react: 18.3.1
+
+  '@blueprintjs-formik/select@0.4.10(@blueprintjs-formik/core@0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@blueprintjs-formik/core': 0.3.9(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
       '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/select': 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       formik: 2.4.6(react@18.3.1)

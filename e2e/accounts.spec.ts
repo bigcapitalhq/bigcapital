@@ -59,8 +59,9 @@ async function createAccount(
 ) {
   const dialog = await openNewAccountDialog(page);
 
-  await selectAccountType(page, dialog, type);
   await dialog.getByTestId('account-name-input').fill(name);
+  // Opening the picker blurs and validates the name. Its menu must stay open.
+  await selectAccountType(page, dialog, type);
   await dialog.getByTestId('account-code-input').fill(code);
   await dialog.getByRole('button', { name: 'Submit' }).click();
 
