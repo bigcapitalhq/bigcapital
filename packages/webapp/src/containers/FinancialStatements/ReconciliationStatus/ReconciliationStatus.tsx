@@ -1,10 +1,10 @@
 import {
   Alignment,
   Button,
-  ButtonGroup,
   NavbarDivider,
   NavbarGroup,
   NonIdealState,
+  SegmentedControl,
 } from '@blueprintjs/core';
 import moment from 'moment';
 import { useState } from 'react';
@@ -32,7 +32,6 @@ import {
   Icon,
 } from '@/components';
 import { AbilitySubject, ReportsAction } from '@/constants/abilityOption';
-import { NS } from '@/constants/classes';
 import { useReconciliationStatus } from '@/hooks/query/FinancialReports/use-reconciliation-status';
 
 function ReconciliationStatusReport() {
@@ -71,8 +70,8 @@ function ReconciliationStatusReport() {
     }
   };
 
-  const selectMode = (mode: 'R' | 'U') => {
-    if (mode !== status) {
+  const selectMode = (mode: string) => {
+    if ((mode === 'R' || mode === 'U') && mode !== status) {
       applyFilters(filters, mode);
     }
   };
@@ -107,26 +106,29 @@ function ReconciliationStatusReport() {
           />
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-          <ReconciliationModeGroup
+          <div
             id="reconciliation-status-modes"
             role="group"
             aria-label={intl.get('status')}
           >
-            <Button
-              small
-              active={status === 'R'}
-              aria-pressed={status === 'R'}
-              text={<T id="report.reconciliation_status.reconciled" />}
-              onClick={() => selectMode('R')}
+            <SegmentedControl
+              size="small"
+              intent="primary"
+              aria-label={intl.get('status')}
+              value={status}
+              onValueChange={selectMode}
+              options={[
+                {
+                  label: intl.get('report.reconciliation_status.reconciled'),
+                  value: 'R',
+                },
+                {
+                  label: intl.get('report.reconciliation_status.unreconciled'),
+                  value: 'U',
+                },
+              ]}
             />
-            <Button
-              small
-              active={status === 'U'}
-              aria-pressed={status === 'U'}
-              text={<T id="report.reconciliation_status.unreconciled" />}
-              onClick={() => selectMode('U')}
-            />
-          </ReconciliationModeGroup>
+          </div>
         </NavbarGroup>
       </DashboardActionsBar>
       <DashboardPageContent>
@@ -175,12 +177,6 @@ function ReconciliationStatusReport() {
     </FinancialReportPage>
   );
 }
-
-const ReconciliationModeGroup = styled(ButtonGroup)`
-  && > .${NS}-button.${NS}-small {
-    padding: 0 7px;
-  }
-`;
 
 const ReconciliationSheet = styled(FinancialSheet)`
   min-width: 0;

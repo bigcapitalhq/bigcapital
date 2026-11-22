@@ -1,4 +1,4 @@
-import { Position } from '@blueprintjs/core';
+import { Position, SegmentedControl } from '@blueprintjs/core';
 import { useTheme } from '@emotion/react';
 import { useFormikContext } from 'formik';
 import React from 'react';
@@ -13,7 +13,6 @@ import {
   FieldRequiredHint,
   Hint,
   Icon,
-  SegmentedControl,
   Stack,
 } from '@/components';
 import { JournalExchangeRateInputField } from '@/containers/Accounting/MakeJournal/components';
@@ -26,8 +25,6 @@ const FREQUENCY_OPTIONS = [
   { key: 'month', label: intl.get('recurring_journal.frequency.month') },
   { key: 'year', label: intl.get('recurring_journal.frequency.year') },
 ];
-
-type BasisOption = 'general' | 'accrual' | 'cash';
 
 export function RecurringJournalFormFields() {
   const dateInputFormatter = useDateInputFormatter();
@@ -170,12 +167,14 @@ export function RecurringJournalFormFields() {
         }
         inline
       >
-        <SegmentedControl<BasisOption>
-          value={(form.values.basis || 'general') as BasisOption}
-          onChange={(value) => {
+        <SegmentedControl
+          size="small"
+          aria-label={intl.get('accounting_basis_')}
+          value={form.values.basis || 'general'}
+          onValueChange={(value) => {
             form.setFieldValue('basis', value === 'general' ? '' : value);
           }}
-          items={[
+          options={[
             { label: intl.get('general'), value: 'general' },
             { label: intl.get('accrual'), value: 'accrual' },
             { label: intl.get('cash'), value: 'cash' },

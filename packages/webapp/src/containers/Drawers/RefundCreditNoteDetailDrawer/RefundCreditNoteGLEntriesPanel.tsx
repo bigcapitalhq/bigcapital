@@ -1,3 +1,4 @@
+import { SegmentedControl } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -6,7 +7,7 @@ import {
   JournalEntriesTable,
 } from '../../JournalEntriesTable/JournalEntriesTable';
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
-import { Card, SegmentedControl } from '@/components';
+import { Card } from '@/components';
 import {
   useCurrentOrganizationAccountingBasis,
   useTransactionsByReference,
@@ -41,10 +42,16 @@ export function RefundCreditNoteGLEntriesPanel() {
     <RefundCreditNoteGLEntriesRoot>
       <TableHeader>
         <AmountDisplayedBaseCurrencyMessage />
-        <SegmentedControl<AccountingBasis>
+        <SegmentedControl
+          size="small"
+          aria-label={intl.get('accounting_basis_')}
           value={basis}
-          onChange={setSelectedBasis}
-          items={[
+          onValueChange={(value) => {
+            if (value === 'accrual' || value === 'cash') {
+              setSelectedBasis(value);
+            }
+          }}
+          options={[
             { label: intl.get('accrual'), value: 'accrual' },
             { label: intl.get('cash'), value: 'cash' },
           ]}
