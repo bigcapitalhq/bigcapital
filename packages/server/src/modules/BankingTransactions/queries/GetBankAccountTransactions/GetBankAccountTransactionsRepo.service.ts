@@ -10,6 +10,14 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { UncategorizedBankTransaction } from '../../models/UncategorizedBankTransaction';
 import { MatchedBankTransaction } from '@/modules/BankingMatching/models/MatchedBankTransaction';
 
+/**
+ * Manual journals: `Journal` in the ledger, `ManualJournal` in matched bank transactions.
+ */
+export const toMatchedReferenceType = (type: string) =>
+  type === 'Journal' ? 'ManualJournal' : type;
+export const toLedgerReferenceType = (type: string) =>
+  type === 'ManualJournal' ? 'Journal' : type;
+
 @Injectable({ scope: Scope.REQUEST })
 export class GetBankAccountTransactionsRepository {
   public query: ICashflowAccountTransactionsQuery;
@@ -131,11 +139,23 @@ export class GetBankAccountTransactionsRepository {
    * Initialize the matched bank transactions of the bank account.
    */
   async initMatchedTransactions(): Promise<void> {
-    const refs = this.transactions.map((t) => [t.referenceType, t.referenceId]);
+    // Manual journals are recorded as `Journal` in the ledger but as
+    // `ManualJournal` in the matched bank transactions, so look them up by the
+    // matched type and key the results back by the ledger type.
+    const refs = this.transactions.map((t) => [
+      toMatchedReferenceType(t.referenceType),
+      t.referenceId,
+    ]);
 
-    const matchedBankTransactions = await this.matchedBankTransactionModel()
-      .query()
-      .whereIn(['referenceType', 'referenceId'], refs);
+    const matchedBankTransactions = (
+      await this.matchedBankTransactionModel()
+        .query()
+        .whereIn(['referenceType', 'referenceId'], refs)
+    ).map((matched) =>
+      Object.assign(matched, {
+        referenceType: toLedgerReferenceType(matched.referenceType),
+      }),
+    );
     this.matchedBankTransactions = matchedBankTransactions;
     this.matchedBankTransactionsMapByRef = groupMatchedBankTransactions(
       matchedBankTransactions,
