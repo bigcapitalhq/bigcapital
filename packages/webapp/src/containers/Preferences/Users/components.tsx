@@ -11,7 +11,8 @@ import {
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { User } from '@bigcapital/sdk-ts';
-import { FormattedMessage as T, Icon, If } from '@/components';
+import { Can, FormattedMessage as T, Icon, If } from '@/components';
+import { AbilitySubject, UserAction } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs } from '@/utils';
 
 // The SDK User type is narrower than what the runtime exposes; preserve the
@@ -54,42 +55,48 @@ export function ActionsMenu({
   return (
     <Menu>
       <If condition={!!original.inviteAcceptedAt}>
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_user')}
-          onClick={safeCallback(onEdit, original)}
-        />
-        <MenuDivider />
+        <Can I={UserAction.Edit} a={AbilitySubject.User}>
+          <MenuItem
+            icon={<Icon icon="pen-18" />}
+            text={intl.get('edit_user')}
+            onClick={safeCallback(onEdit, original)}
+          />
+          <MenuDivider />
 
-        {original.active ? (
-          <MenuItem
-            text={intl.get('inactivate_user')}
-            onClick={safeCallback(onInactivate, original)}
-            icon={<Icon icon="pause-16" iconSize={16} />}
-          />
-        ) : (
-          <MenuItem
-            text={intl.get('activate_user')}
-            onClick={safeCallback(onActivate, original)}
-            icon={<Icon icon="play-16" iconSize={16} />}
-          />
-        )}
+          {original.active ? (
+            <MenuItem
+              text={intl.get('inactivate_user')}
+              onClick={safeCallback(onInactivate, original)}
+              icon={<Icon icon="pause-16" iconSize={16} />}
+            />
+          ) : (
+            <MenuItem
+              text={intl.get('activate_user')}
+              onClick={safeCallback(onActivate, original)}
+              icon={<Icon icon="play-16" iconSize={16} />}
+            />
+          )}
+        </Can>
       </If>
 
       <If condition={!original.inviteAcceptedAt}>
-        <MenuItem
-          text={'Resend invitation'}
-          onClick={safeCallback(onResendInvitation, original)}
-          icon={<Icon icon="send" iconSize={16} />}
-        />
+        <Can I={UserAction.Create} a={AbilitySubject.User}>
+          <MenuItem
+            text={'Resend invitation'}
+            onClick={safeCallback(onResendInvitation, original)}
+            icon={<Icon icon="send" iconSize={16} />}
+          />
+        </Can>
       </If>
 
-      <MenuItem
-        icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('delete_user')}
-        onClick={safeCallback(onDelete, original)}
-        intent={Intent.DANGER}
-      />
+      <Can I={UserAction.Delete} a={AbilitySubject.User}>
+        <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
+          text={intl.get('delete_user')}
+          onClick={safeCallback(onDelete, original)}
+          intent={Intent.DANGER}
+        />
+      </Can>
     </Menu>
   );
 }

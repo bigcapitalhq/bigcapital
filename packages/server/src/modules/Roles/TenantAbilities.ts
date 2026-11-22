@@ -85,21 +85,23 @@ export function purgeTenantAbilities(organizationId: string): void {
  * @returns
  */
 export function getAbilityForRole(role) {
-  const rules = getAbilitiesRolesConds(role);
+  const rules = getRoleAbilityRules(role);
   return new Ability(rules);
 }
 
 /**
- * Retrieve abilities of the given role.
- * @param {IRole} role
- * @returns {}
+ * Retrieve the CASL rules of the given role.
+ * Predefined `admin` role is granted the `manage all` rule implicitly,
+ * otherwise rules are derived from the enabled role permissions.
+ * @param {Role} role
+ * @returns
  */
-function getAbilitiesRolesConds(role: Role) {
-  switch (role.slug) {
+export function getRoleAbilityRules(role: Role) {
+  switch (role?.slug) {
     case 'admin': // predefined role.
       return getSuperAdminRules();
     default:
-      return getRulesFromRolePermissions(role.permissions || []);
+      return getRulesFromRolePermissions(role?.permissions || []);
   }
 }
 

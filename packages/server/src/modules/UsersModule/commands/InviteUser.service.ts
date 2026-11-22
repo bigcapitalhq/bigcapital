@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus } from '@nestjs/common';
 import * as crypto from 'crypto';
 import * as moment from 'moment';
 import {
@@ -15,6 +15,8 @@ import { Role } from '@/modules/Roles/models/Role.model';
 import { ModelObject } from 'objection';
 import { SendInviteUserDto } from '../dtos/InviteUser.dto';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { getAbilityForRole } from '@/modules/Roles/TenantAbilities';
+import { validateAbilityCanAssignRole } from '../Users.utils';
 
 @Injectable()
 export class InviteTenantUserService {
@@ -38,8 +40,38 @@ export class InviteTenantUserService {
   public async sendInvite(sendInviteDTO: SendInviteUserDto): Promise<{
     invitedUser: TenantUser;
   }> {
+    // Retrieves the authorized user (inviting user).
+    const authorizedUser = await this.tenancyContext.getSystemUser();
+    const invitingUser = await this.tenantUserModel()
+      .query()
+      .findOne({ systemUserId: authorizedUser.id })
+      .withGraphFetched('role.permissions');
+
+    if (!invitingUser) {
+      throw new ServiceError(
+        ERRORS.USER_NOT_FOUND,
+        'The authorized user not found.',
+        null,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     // Get the given role or throw not found service error.
-    const _role = await this.roleModel().query().findById(sendInviteDTO.roleId);
+    const _role = await this.roleModel()
+      .query()
+      .findById(sendInviteDTO.roleId)
+      .withGraphFetched('permissions');
+
+    if (!_role) {
+      throw new ServiceError(
+        ERRORS.ROLE_NOT_FOUND,
+        'The given role not found.',
+        null,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    // Validates the authorized user can assign the selected role.
+    validateAbilityCanAssignRole(getAbilityForRole(invitingUser.role), _role);
 
     // Validates the given email not exists on the storage.
     await this.validateUserEmailNotExists(sendInviteDTO.email);
@@ -54,12 +86,6 @@ export class InviteTenantUserService {
       active: true,
       invitedAt: new Date(),
     });
-
-    // Retrieves the authorized user (inviting user).
-    const authorizedUser = await this.tenancyContext.getSystemUser();
-    const invitingUser = await this.tenantUserModel()
-      .query()
-      .findOne({ systemUserId: authorizedUser.id });
 
     // Triggers `onUserSendInvite` event.
     await this.eventEmitter.emitAsync(events.inviteUser.sendInvite, {
