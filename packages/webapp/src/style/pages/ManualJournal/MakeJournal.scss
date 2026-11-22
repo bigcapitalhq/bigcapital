@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dashboard__insider--make-journal-page {
   padding-bottom: 64px;
 }
@@ -12,17 +13,17 @@
       flex: 1 0 0;
     }
 
-    .bp6-label {
+    .#{$ns}-label {
       min-width: 165px;
     }
-    .bp6-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
 
-    .bp6-form-group {
+    .#{$ns}-form-group {
       margin-bottom: 18px;
 
-      &.bp6-inline {
+      &.#{$ns}-inline {
         max-width: 480px;
       }
     }

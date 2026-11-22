@@ -10,6 +10,7 @@ import {
 } from '@/containers/Organization/withOrganizationActions';
 import { useJob, useCurrentOrganization } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { NS } from '@/constants/classes';
 
 /**
  * Setup initializing step form.
@@ -109,7 +110,7 @@ function SetupInitializingRunning() {
   const isDarkMode = useIsDarkMode();
 
   const progressBarStyles = css`
-    .bp6-progress-bar {
+    .${NS}-progress-bar {
       border-radius: 40px;
       display: block;
       height: 6px;
@@ -118,7 +119,7 @@ function SetupInitializingRunning() {
       width: 80%;
       margin: 0 auto;
 
-      .bp6-progress-meter {
+      .${NS}-progress-meter {
         background-color: #809cb3;
       }
     }

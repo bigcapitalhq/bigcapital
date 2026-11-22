@@ -17,6 +17,7 @@ import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/Disco
 import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
 import { formattedAmount } from '@/utils';
+import { NS } from '@/constants/classes';
 
 /**
  * Recurring invoice form footer right section.
@@ -70,7 +71,7 @@ export function RecurringInvoiceFormFooterRight() {
 const RecurringTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

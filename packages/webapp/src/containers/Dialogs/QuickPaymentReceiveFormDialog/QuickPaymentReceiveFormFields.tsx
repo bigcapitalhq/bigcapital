@@ -27,6 +27,7 @@ import {
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { NS } from '@/constants/classes';
 
 /**
  * Quick payment receive form fields.
@@ -170,7 +171,7 @@ export const BranchRowDivider = styled.div`
   background: #ebf1f6;
   margin-bottom: 15px;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     background: rgba(255, 255, 255, 0.1);
   }
 `;

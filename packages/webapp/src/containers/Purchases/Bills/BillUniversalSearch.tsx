@@ -11,6 +11,7 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { formattedAmount } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface BillUniversalSearchSelectProps extends WithDrawerActionsProps {
   resourceType: string;
@@ -111,7 +112,7 @@ export function BillUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.billNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedBillDate}

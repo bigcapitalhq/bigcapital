@@ -1,23 +1,24 @@
+@import '@/style/_common';
 .dialog--bad-debt {
   max-width: 400px;
 
-  .bp6-dialog-body {
-    .bp6-form-group {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group {
       margin-bottom: 15px;
       margin-top: 15px;
 
-      label.bp6-label {
+      label.#{$ns}-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
 
-    .bp6-callout {
+    .#{$ns}-callout {
       font-size: 13px;
     }
     .form-group {
       &--reason {
-        .bp6-form-content {
+        .#{$ns}-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -28,7 +29,7 @@
     }
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
   }
 }

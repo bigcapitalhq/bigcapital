@@ -13,6 +13,7 @@ import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
 import { AppToaster, Can, Group, Stack } from '@/components';
 import { useCreateStripePortalSession } from '@/hooks/query/subscription';
 import { useAlertActions } from '@/hooks/state';
+import { NS } from '@/constants/classes';
 
 type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
 
@@ -91,7 +92,7 @@ export function Subscription() {
         </Group>
       </Stack>
 
-      <Text className={clsx(styles.description, 'bp6-text-muted')}>
+      <Text className={clsx(styles.description, `${NS}-text-muted`)}>
         Control your business bookkeeping with automated accounting, to run
         intelligent reports for faster decision-making.
       </Text>

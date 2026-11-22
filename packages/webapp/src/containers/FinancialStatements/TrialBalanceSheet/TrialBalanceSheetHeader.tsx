@@ -18,6 +18,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface TrialBalanceFormValues {
   fromDate: Date;
@@ -151,7 +152,7 @@ export const TrialBalanceSheetHeader = FF.pipe(
 );
 
 const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

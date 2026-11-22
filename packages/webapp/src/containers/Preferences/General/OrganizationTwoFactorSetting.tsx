@@ -9,6 +9,7 @@ import {
   useUpdateOrganizationTwoFactor,
 } from '@/hooks/query';
 import { useAbilityContext } from '@/hooks/utils';
+import { NS } from '@/constants/classes';
 
 /**
  * Organization setting: require two-factor authentication for all users.
@@ -61,7 +62,7 @@ export function OrganizationTwoFactorSetting() {
 const Section = styled.div`
   --x-color-border: #e0e7ea;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-border: rgba(255, 255, 255, 0.15);
   }
   margin-top: 30px;

@@ -20,6 +20,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 type GeneralLedgerFormValues = Omit<
   ReturnType<typeof getDefaultGeneralLedgerQuery>,
@@ -141,7 +142,7 @@ export const GeneralLedgerHeader = FF.pipe(
 );
 
 const GeneralLedgerDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 520px;
   }
 `;

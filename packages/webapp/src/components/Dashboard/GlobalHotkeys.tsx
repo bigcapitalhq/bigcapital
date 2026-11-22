@@ -9,6 +9,7 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { getDashboardRoutes } from '@/routes/dashboard';
+import { NS } from '@/constants/classes';
 
 interface GlobalHotkeyRoute {
   path: string;
@@ -16,9 +17,9 @@ interface GlobalHotkeyRoute {
 }
 
 const handleToggleDarkMode = () => {
-  const dark = !document.body.classList.contains('bp6-dark');
-  document.documentElement.classList.toggle('bp6-dark', dark);
-  document.body.classList.toggle('bp6-dark', dark);
+  const dark = !document.body.classList.contains(`${NS}-dark`);
+  document.documentElement.classList.toggle(`${NS}-dark`, dark);
+  document.body.classList.toggle(`${NS}-dark`, dark);
 };
 
 type GlobalHotkeysProps = Pick<

@@ -1,8 +1,9 @@
+@import '@/style/_common';
 .dialog--quick-payment-receive {
-    .bp6-form-group {
+    .#{$ns}-form-group {
       margin-bottom: 15px;
 
-      label.bp6-label {
+      label.#{$ns}-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
@@ -10,7 +11,7 @@
 
     .form-group {
       &--statement {
-        .bp6-form-content {
+        .#{$ns}-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -21,6 +22,6 @@
     }
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
 }

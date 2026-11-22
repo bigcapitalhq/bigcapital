@@ -11,6 +11,7 @@ import {
   handlePreviousPeriodChangeCheckboxChange,
 } from './utils';
 import { Flex, FlexItem, FieldHint, FFormGroup, FCheckbox } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Balance sheet header - Comparison panal - Comparisons fields.
@@ -135,7 +136,7 @@ export function BalanceSheetHeaderComparisonPanal() {
 }
 
 const BalanceSheetComparisonWrap = styled.div`
-  .bp6-form-group {
+  .${NS}-form-group {
     margin-bottom: 3px;
   }
 `;

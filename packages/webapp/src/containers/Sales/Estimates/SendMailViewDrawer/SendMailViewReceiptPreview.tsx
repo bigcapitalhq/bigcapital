@@ -3,6 +3,7 @@ import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import { lighten } from 'polished';
 import { Stack, StackProps } from '@/components';
+import { NS } from '@/constants/classes';
 
 export type SendMailReceiptProps = StackProps;
 
@@ -58,7 +59,7 @@ function SendMailReceiptPrimaryButton({
       large
       intent={Intent.PRIMARY}
       className={css`
-        &.bp6-intent-primary {
+        &.${NS}-intent-primary {
           background-color: ${primaryColor};
 
           &:hover,
@@ -66,7 +67,7 @@ function SendMailReceiptPrimaryButton({
             background-color: ${lighten(0.1, primaryColor || '#000')};
           }
         }
-        &.bp6-large {
+        &.${NS}-large {
           min-height: 38px;
         }
       `}

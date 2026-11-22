@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import { FormattedMessage as T } from '@/components';
 import { useGetItemPaymentTransactionsMenu } from '@/constants/itemPaymentTranactionsOption';
+import { NS } from '@/constants/classes';
 
 interface ItemManuTransactionProps {
   onChange?: (value: string) => void;
@@ -60,10 +61,10 @@ ItemManuTransaction.displayName = 'ItemManuTransaction';
 const ItemSwitchButton = styled(Button)`
   --button-text-color: #727983;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --button-text-color: rgba(255, 255, 255, 0.65);
   }
-  .bp6-button-text {
+  .${NS}-button-text {
     display: flex;
     color: var(--button-text-color);
   }
@@ -72,7 +73,7 @@ const ItemSwitchButton = styled(Button)`
 const ItemSwitchText = styled.span`
   --button-text-color: #33304a;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --button-text-color: rgba(255, 255, 255, 0.85);
   }
   font-weight: 600;

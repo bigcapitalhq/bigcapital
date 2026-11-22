@@ -6,6 +6,7 @@ import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 import { useMoneyInFieldsContext } from './MoneyInFieldsProvider';
 import type { MoneyInFormValues } from './types';
 import type { Account } from '@bigcapital/sdk-ts';
+import { NS } from '@/constants/classes';
 
 interface Branch {
   id: number;
@@ -44,7 +45,7 @@ export const BranchRowDivider = styled.div`
   background: #ebf1f6;
   margin-bottom: 15px;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     background: var(--color-dark-gray5);
   }
 `;

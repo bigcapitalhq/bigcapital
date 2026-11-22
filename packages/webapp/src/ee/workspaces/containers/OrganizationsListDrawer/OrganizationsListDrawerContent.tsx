@@ -19,6 +19,7 @@ import {
 import { useAuthOrganizationId } from '@/hooks/state';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
+import { NS } from '@/constants/classes';
 
 const organizationsDrawerSearchFormGroupCss = css`
   margin: 0 !important;
@@ -39,12 +40,12 @@ const organizationsDrawerInputSearchCss = css`
     color: rgba(255, 255, 255, 0.35);
   }
 
-  .bp6-icon {
+  .${NS}-icon {
     color: rgba(255, 255, 255, 0.35);
   }
 
   &:focus,
-  &.bp6-active {
+  &.${NS}-active {
     border-color: rgba(17, 131, 218, 0.55);
     box-shadow: 0 0 0 1px rgba(17, 131, 218, 0.35);
   }

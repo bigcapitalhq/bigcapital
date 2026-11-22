@@ -24,6 +24,7 @@ import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { inputIntent } from '@/utils';
+import { NS } from '@/constants/classes';
 
 const Countries = getAllCountries();
 
@@ -255,10 +256,10 @@ const CardFooterActions = styled.div`
   border-top: 1px solid var(--x-color-border);
   margin-top: 30px;
 
-  .bp6-button {
+  .${NS}-button {
     min-width: 70px;
 
-    + .bp6-button {
+    + .${NS}-button {
       margin-left: 10px;
     }
   }

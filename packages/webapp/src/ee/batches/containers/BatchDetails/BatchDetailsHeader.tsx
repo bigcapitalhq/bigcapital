@@ -17,6 +17,7 @@ import {
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useItems } from '@/hooks/query';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface BatchDetailsFormValues {
   itemsIds: number[];
@@ -130,7 +131,7 @@ export function BatchDetailsHeader({
 }
 
 const BatchDetailsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

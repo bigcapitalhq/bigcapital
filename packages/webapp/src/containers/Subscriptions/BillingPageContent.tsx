@@ -11,6 +11,7 @@ import {
   subscriptionKeys,
   useSyncStripeCheckoutSession,
 } from '@/hooks/query/subscription';
+import { NS } from '@/constants/classes';
 
 export function BillingPageContent() {
   const { isLoading, mainSubscription } = useBillingPageBoot();
@@ -73,7 +74,7 @@ export function BillingPageContent() {
 
   return (
     <Box className={styles.root}>
-      <Text className="bp6-text-muted" style={{ marginTop: '1rem' }}>
+      <Text className={`${NS}-text-muted`} style={{ marginTop: '1rem' }}>
         Only pay for what you really need. Go comes with 24/7 customer support.
       </Text>
 

@@ -1,3 +1,4 @@
+@import '@/style/_common';
 // Blueprint framework.
 // @import '@blueprintjs/core/src/blueprint.scss';
 
@@ -6,12 +7,12 @@
     .table {
       .tbody {
         .item_type.td {
-          .bp6-tag {
+          .#{$ns}-tag {
             font-size: 13px;
           }
         }
         .tr.inactive .td {
-          &.normal .bp6-icon {
+          &.normal .#{$ns}-icon {
             color: #9eaab6;
           }
         }

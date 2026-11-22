@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .financial-sheet {
   &--sales-by-items,
   &--purchases-by-items,
@@ -20,7 +21,7 @@
 .financial-statement--sales-by-items,
 .financial-statement--purchases-by-items {
   .financial-header-drawer {
-    .bp6-drawer {
+    .#{$ns}-drawer {
       // max-height: 400px;
       max-height: 450px;
     }
@@ -29,7 +30,7 @@
 
 .financial-statement--inventory-valuation {
   .financial-header-drawer {
-    .bp6-drawer {
+    .#{$ns}-drawer {
       max-height: 400px;
     }
   }

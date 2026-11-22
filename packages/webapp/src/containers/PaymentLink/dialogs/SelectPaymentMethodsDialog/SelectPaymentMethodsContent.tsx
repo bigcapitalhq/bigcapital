@@ -13,6 +13,7 @@ import { Group, Stack } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { useDialogActions } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
+import { NS } from '@/constants/classes';
 
 export function SelectPaymentMethodsContent() {
   const { closeDialog } = useDialogActions();
@@ -104,7 +105,7 @@ const PaymentMethodSelectRoot = styled(Group)`
 const PaymentMethodCheckbox = styled(Checkbox)`
   margin: 0;
 
-  &.bp6-control .bp6-control-indicator {
+  &.${NS}-control .${NS}-control-indicator {
     box-shadow: 0 0 0 1px #c5cbd3;
   }
 `;

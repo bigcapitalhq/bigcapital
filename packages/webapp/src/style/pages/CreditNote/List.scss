@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dashboard__insider--credit-note-list {
   .bigcapital-datatable {
     .tbody {
@@ -11,7 +12,7 @@
     }
     .table-size--small {
       .status.td {
-        .bp6-progress-bar {
+        .#{$ns}-progress-bar {
           height: 3px;
         }
       }

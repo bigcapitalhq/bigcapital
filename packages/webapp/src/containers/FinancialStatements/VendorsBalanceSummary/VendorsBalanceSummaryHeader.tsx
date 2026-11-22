@@ -17,6 +17,7 @@ import {
 } from './withVendorsBalanceSummaryActions';
 import { FormattedMessage as T } from '@/components';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface VendorsBalanceSummaryHeaderOwnProps {
   pageFilter: Record<string, unknown>;
@@ -123,7 +124,7 @@ export const VendorsBalanceSummaryHeader = FF.pipe(
 );
 
 const VendorBalanceDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

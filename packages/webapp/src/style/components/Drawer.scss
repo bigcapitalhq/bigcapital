@@ -1,18 +1,18 @@
 @import '../_base.scss';
 
-.bp6-drawer {
+.#{$ns}-drawer {
   
 
-  .bp6-drawer-header {
+  .#{$ns}-drawer-header {
     margin-bottom: 2px;
     background-color: var(--color-drawer-header-background);
     box-shadow: 0 1px 0 var(--color-drawer-header-border);
 
-    .bp6-heading {
+    .#{$ns}-heading {
       font-weight: 500;
     }
-    .bp6-heading,
-    .bp6-icon {
+    .#{$ns}-heading,
+    .#{$ns}-icon {
       color: var(--color-drawer-header-text);
     }
   }
@@ -26,8 +26,8 @@
     flex: 1 0 0;
   }
   // &__main-tabs{
-  //   .bp6-tabs {
-  //     .bp6-tab-list {
+  //   .#{$ns}-tabs {
+  //     .#{$ns}-tab-list {
   //       position: relative;
   //       background-color: var(--color-drawer-tabs-background);
   
@@ -44,7 +44,7 @@
   //         margin-right: 25px;
   //       }
   
-  //       &.bp6-large > .bp6-tab {
+  //       &.#{$ns}-large > .#{$ns}-tab {
   //         font-size: 15px;
   //         color: #555;
   //         margin: 0 0.8rem;
@@ -56,7 +56,7 @@
   //       }
   //     }
   
-  //     .bp6-tab-panel {
+  //     .#{$ns}-tab-panel {
   //       margin-top: 0;
   
   //       .card {

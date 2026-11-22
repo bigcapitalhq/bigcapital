@@ -8,6 +8,7 @@ import { useBalanceSheetColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface BalanceSheetTableProps {
   companyName: string;
@@ -66,7 +67,7 @@ const BalanceSheetDataTable = styled(ReportDataTable)`
   --color-table-text-color: #252a31;
   --color-table-total-text-color: #000;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
   }

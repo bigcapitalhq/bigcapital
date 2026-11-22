@@ -19,6 +19,7 @@ import { Features } from '@/constants';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 type APAgingSummaryFormValues = ReturnType<
   typeof getDefaultAPAgingSummaryQuery
@@ -112,7 +113,7 @@ export const APAgingSummaryHeader = FF.pipe(
 );
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 520px;
   }
 `;

@@ -17,6 +17,7 @@ import type {
 } from '@bigcapital/sdk-ts';
 import { Alert, InputPrependText, MoneyInputGroup } from '@/components';
 import { formatReconciliationDate } from '@/containers/CashFlow/AccountTransactions/Reconciliation/utils';
+import { NS } from '@/constants/classes';
 
 interface ReconcileStatementStepProps {
   accounts: BankingAccountsListResponse;
@@ -235,7 +236,7 @@ const Panel = styled.div`
 `;
 
 const BankAccountFormGroup = styled(FormGroup)`
-  &.bp6-form-group {
+  &.${NS}-form-group {
     margin-bottom: 30px;
   }
 `;

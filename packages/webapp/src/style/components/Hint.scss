@@ -1,16 +1,17 @@
+@import '@/style/_common';
 .hint {
   margin-left: 6px;
   position: relative;
   top: -1px;
 
-  .bp6-icon {
+  .#{$ns}-icon {
     color: #a1b2c5;
   }
 
-  .bp6-popover-target:hover .bp6-icon {
+  .#{$ns}-popover-target:hover .#{$ns}-icon {
     color: #90a1b5;
   }
-  .bp6-icon {
+  .#{$ns}-icon {
     vertical-align: middle;
   }
 }

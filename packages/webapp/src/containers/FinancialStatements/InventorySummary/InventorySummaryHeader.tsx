@@ -20,6 +20,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface InventorySummaryFormValues {
   fromDate: Date;
@@ -147,7 +148,7 @@ export const InventorySummaryHeader = FF.pipe(
 );
 
 const InventorySummaryDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

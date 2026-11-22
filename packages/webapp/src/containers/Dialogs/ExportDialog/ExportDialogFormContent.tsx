@@ -8,6 +8,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { FFormGroup, FRadioGroup, FSelect, Group } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { NS } from '@/constants/classes';
 
 interface ExportDialogFormContentValues {
   resource: string;
@@ -27,7 +28,7 @@ function ExportDialogFormContentRoot({
   return (
     <Form>
       <x.div p="20px">
-        <x.p className="bp6-text-muted" mb="1.2rem">
+        <x.p className={`${NS}-text-muted`} mb="1.2rem">
           You can export data from Bigcapital in CSV or XLSX format
         </x.p>
 

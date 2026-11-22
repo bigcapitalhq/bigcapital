@@ -1,19 +1,20 @@
+@import '@/style/_common';
 .dialog--vendor-opening-balance {
   max-width: 400px;
 
-  .bp6-dialog-body {
-    .bp6-form-group {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group {
       margin-bottom: 15px;
       margin-top: 15px;
 
-      label.bp6-label {
+      label.#{$ns}-label {
         margin-bottom: px;
         font-size: 13px;
       }
     }
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
   }
 }

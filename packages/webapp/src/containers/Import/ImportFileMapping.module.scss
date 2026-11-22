@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .group {
   margin-top: 1.4rem;
 }
@@ -8,7 +9,7 @@
   font-weight: 700;
   padding: 0 11px;
 
-  :global(.bp6-dark) &{
+  :global(.#{$ns}-dark) &{
     color: var(--color-light-gray1);
   }
 }
@@ -29,7 +30,7 @@
       color: #738091;
       font-weight: 500;
 
-      :global(.bp6-dark) &{
+      :global(.#{$ns}-dark) &{
         color: var(--color-light-gray1);
         border-top: 1px solid rgba(255, 255, 255, 0.2);
       }
@@ -42,8 +43,8 @@
     }
 
     tr td{
-      :global(.bp6-popover-target .bp6-button),
-      :global(.bp6-popover-target){
+      :global(.#{$ns}-popover-target .#{$ns}-button),
+      :global(.#{$ns}-popover-target){
         max-width: 250px;
       }
     }

@@ -1,7 +1,8 @@
+@import '@/style/_common';
 .root {
   --x-color-content-primary-border: #e2e2e2;
 
-  :global(.bp6-dark) & {
+  :global(.#{$ns}-dark) & {
     --x-color-content-primary-border: rgba(255, 255, 255, 0.25);
   }
   &_content {

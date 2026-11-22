@@ -2,6 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function WarehouseTransferFormFooterLeft() {
   return (
@@ -23,12 +24,12 @@ export function WarehouseTransferFormFooterLeft() {
 }
 
 const TermsConditsFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
-    .bp6-label {
+  &.${NS}-form-group {
+    .${NS}-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp6-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }

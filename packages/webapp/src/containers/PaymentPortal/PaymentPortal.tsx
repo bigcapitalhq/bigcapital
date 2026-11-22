@@ -11,6 +11,7 @@ import {
 } from '@/hooks/query/payment-link';
 import { useDrawerActions } from '@/hooks/state';
 import { downloadFile } from '@/hooks/useDownloadFile';
+import { NS } from '@/constants/classes';
 
 export function PaymentPortal() {
   const { openDrawer } = useDrawerActions();
@@ -175,7 +176,7 @@ export function PaymentPortal() {
                   styles.footerButton,
                   styles.buyButton,
                   css`
-                    &.bp6-button.bp6-intent-primary {
+                    &.${NS}-button.${NS}-intent-primary {
                       background-color: var(--payment-page-primary-button);
 
                       &:hover,

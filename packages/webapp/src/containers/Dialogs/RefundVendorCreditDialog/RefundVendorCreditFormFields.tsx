@@ -27,6 +27,7 @@ import {
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { NS } from '@/constants/classes';
 
 /**
  * Refund Vendor credit form fields.
@@ -162,7 +163,7 @@ export const RefundVendorCreditFormFields = RefundVendorCreditFormFieldsInner;
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-divider-color: rgba(255, 255, 255, 0.1);
   }
   height: 1px;

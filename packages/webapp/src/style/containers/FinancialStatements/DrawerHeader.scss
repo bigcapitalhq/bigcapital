@@ -1,5 +1,6 @@
+@import '@/style/_common';
 @mixin dark-mode {
-  .bp6-dark & {
+  .#{$ns}-dark & {
     @content;
   }
 }
@@ -43,14 +44,14 @@
   &.is-hidden {
     visibility: hidden;
   }
-  .bp6-drawer {
+  .#{$ns}-drawer {
     box-shadow: 0 0 0 transparent;
     max-height: 550px;
     height: 100%;
     padding-bottom: 49px;
 
     &,
-    .bp6-dark & {
+    .#{$ns}-dark & {
       background-color: var(--x-color-background);
     }
     > form {
@@ -59,26 +60,26 @@
       flex: 1 0 0;
       height: 100%;
     }
-    .bp6-drawer-backdrop {
+    .#{$ns}-drawer-backdrop {
       background-color: var(--x-color-backdrop-background);
     }
   }
 
-  .bp6-button.button--submit-filter {
+  .#{$ns}-button.button--submit-filter {
     min-height: 34px;
     padding-left: 16px;
     padding-right: 16px;
   }
   .radio-group---accounting-basis {
-    .bp6-label {
+    .#{$ns}-label {
       margin-bottom: 12px;
     }
   }
 
-  .bp6-tabs {
+  .#{$ns}-tabs {
     height: 100%;
 
-    &.bp6-vertical > .bp6-tab-panel {
+    &.#{$ns}-vertical > .#{$ns}-tab-panel {
       flex: 1 0 0;
       border-top: 24px solid transparent;
       padding-left: 20px;
@@ -88,10 +89,10 @@
     }
   }
 
-  .bp6-tabs.bp6-vertical {
+  .#{$ns}-tabs.#{$ns}-vertical {
     flex: 1 0 0;
 
-    .bp6-tab-list {
+    .#{$ns}-tab-list {
       width: 220px;
       border-right: 1px solid var(--color-dark-gray2);
       padding-top: 10px;
@@ -99,17 +100,17 @@
       > *:not(:last-child) {
         margin-right: 0;
       }
-      .bp6-tab-indicator-wrapper {
+      .#{$ns}-tab-indicator-wrapper {
         width: 100%;
 
-        .bp6-tab-indicator {
+        .#{$ns}-tab-indicator {
           border-left: 3px solid var(--x-color-tabs-indicator-border);
           background-color: var(--x-color-tabs-indicator-background);
           border-radius: 0;
         }
       }
 
-      .bp6-tab {
+      .#{$ns}-tab {
         color: var(--color-financial-report-drawer-tab-text);
         line-height: 45px;
         border-radius: 0;
@@ -138,8 +139,8 @@
       padding-right: 0.85rem;
     }
   }
-  .bp6-popover-target {
-    .bp6-tag-input {
+  .#{$ns}-popover-target {
+    .#{$ns}-tag-input {
       height: auto;
     }
   }

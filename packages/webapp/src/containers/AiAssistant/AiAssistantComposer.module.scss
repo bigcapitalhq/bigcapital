@@ -1,4 +1,5 @@
 @use './variables' as *;
+@import '@/style/_common';
 
 .composer {
   max-width: 560px;
@@ -43,8 +44,8 @@
   flex: 0 0 auto;
 
   // Send/stop are Blueprint buttons; composing the global button classes
-  // raises specificity above `.bp6-button` / `.bp6-intent-primary`.
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)) {
+  // raises specificity above `.#{$ns}-button` / `.#{$ns}-intent-primary`.
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)) {
     width: 34px;
     height: 34px;
     min-width: 34px;
@@ -55,16 +56,16 @@
     color: #fff;
   }
 
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):hover:not(:disabled) {
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):hover:not(:disabled) {
     background: var(--color-dark-gray6, #485261);
   }
 
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):active:not(:disabled),
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):focus:not(:disabled) {
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):active:not(:disabled),
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):focus:not(:disabled) {
     background: var(--color-dark-gray5, #404854);
   }
 
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):disabled {
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):disabled {
     background: var(--color-dark-gray5, #404854);
     color: #fff;
     opacity: 0.6;
@@ -72,12 +73,12 @@
 }
 
 .sendStop {
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)) {
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)) {
     background: var(--color-dark-gray5, #404854);
     color: #fff;
   }
 
-  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):hover {
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):hover {
     background: var(--color-dark-gray5, #404854);
   }
 }

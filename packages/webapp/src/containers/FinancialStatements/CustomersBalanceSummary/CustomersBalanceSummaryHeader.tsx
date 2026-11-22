@@ -21,6 +21,7 @@ import {
 import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 type CustomerBalanceFormValues = ReturnType<
   typeof getDefaultCustomersBalanceQuery
@@ -117,7 +118,7 @@ export const CustomersBalanceSummaryHeader = FF.pipe(
 );
 
 const CustomerBalanceDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

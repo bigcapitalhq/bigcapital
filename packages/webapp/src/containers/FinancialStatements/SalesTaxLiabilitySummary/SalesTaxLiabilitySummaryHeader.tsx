@@ -21,6 +21,7 @@ import {
 import { FormattedMessage as T } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface SalesTaxLiabilitySummaryFormValues {
   fromDate: Date;
@@ -138,7 +139,7 @@ export const SalesTaxLiabilitySummaryHeader = FF.pipe(
 );
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 320px;
   }
 `;

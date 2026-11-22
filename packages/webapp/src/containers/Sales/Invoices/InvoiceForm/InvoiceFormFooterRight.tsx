@@ -23,6 +23,7 @@ import {
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
+import { NS } from '@/constants/classes';
 
 export function InvoiceFormFooterRight() {
   const {
@@ -90,7 +91,7 @@ export function InvoiceFormFooterRight() {
 const InvoiceTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

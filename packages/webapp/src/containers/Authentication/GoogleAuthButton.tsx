@@ -1,6 +1,7 @@
 import { Button, ButtonProps, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Official Google "G" mark.
@@ -108,7 +109,7 @@ const Divider = styled.div`
     background: rgba(0, 0, 0, 0.12);
   }
 
-  .bp6-dark & {
+  .${NS}-dark & {
     color: rgba(255, 255, 255, 0.55);
 
     &::before,

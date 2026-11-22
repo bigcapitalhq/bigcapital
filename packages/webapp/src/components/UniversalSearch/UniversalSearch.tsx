@@ -22,6 +22,7 @@ import {
 import { filterItemsByResourceType } from './utils';
 import { Icon, If, FormattedMessage as T } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { NS } from '@/constants/classes';
 
 // Resource type from RESOURCES_TYPES constant
 type ResourceType = string;
@@ -44,24 +45,22 @@ export interface UniversalSearchItem {
 
 // CSS styles for complex selectors
 const overlayStyles = css`
-  .bp6-overlay-appear,
-  .bp6-overlay-enter {
+  .${NS}-overlay-appear, .${NS}-overlay-enter {
     filter: blur(20px);
     opacity: 0.2;
   }
-  .bp6-overlay-appear-active,
-  .bp6-overlay-enter-active {
+  .${NS}-overlay-appear-active, .${NS}-overlay-enter-active {
     filter: blur(0);
     opacity: 1;
     transition:
       filter 0.2s cubic-bezier(0.4, 1, 0.75, 0.9),
       opacity 0.2s cubic-bezier(0.4, 1, 0.75, 0.9);
   }
-  .bp6-overlay-exit {
+  .${NS}-overlay-exit {
     filter: blur(0);
     opacity: 1;
   }
-  .bp6-overlay-exit-active {
+  .${NS}-overlay-exit-active {
     filter: blur(20px);
     opacity: 0.2;
     transition:
@@ -85,8 +84,8 @@ const containerStyles = css`
   width: 500px;
   z-index: 20;
 
-  .bp6-input-group {
-    .bp6-icon {
+  .${NS}-input-group {
+    .${NS}-icon {
       margin: 16px;
       color: var(--color-universal-search-icon);
 
@@ -102,39 +101,39 @@ const containerStyles = css`
     }
   }
 
-  .bp6-input-group .bp6-input {
+  .${NS}-input-group .${NS}-input {
     border: 0;
     box-shadow: 0 0 0 0;
     height: 50px;
     line-height: 50px;
     font-size: 20px;
   }
-  .bp6-input-group.bp6-large .bp6-input:not(:first-child) {
+  .${NS}-input-group.${NS}-large .${NS}-input:not(:first-child) {
     padding-left: 50px !important;
   }
-  .bp6-input-group.bp6-large .bp6-input:not(:last-child) {
+  .${NS}-input-group.${NS}-large .${NS}-input:not(:last-child) {
     padding-right: 130px !important;
   }
 
-  .bp6-menu {
+  .${NS}-menu {
     border-top: 1px solid var(--color-universal-search-menu-border);
     max-height: calc(60vh - 20px);
     overflow: auto;
 
-    .bp6-menu-item {
-      .bp6-text-muted {
+    .${NS}-menu-item {
+      .${NS}-text-muted {
         font-size: 12px;
 
-        .bp6-icon {
+        .${NS}-icon {
           color: var(--bp6-gray-600);
         }
       }
-      &.bp6-intent-primary {
-        &.bp6-active {
+      &.${NS}-intent-primary {
+        &.${NS}-active {
           background-color: var(--bp6-blue-100);
           color: var(--bp6-dark-gray-800);
 
-          .bp6-menu-item-label {
+          .${NS}-menu-item-label {
             color: var(--bp6-gray-600);
           }
         }
@@ -147,7 +146,7 @@ const containerStyles = css`
     }
   }
 
-  .bp6-input-action {
+  .${NS}-input-action {
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -159,7 +158,7 @@ const inputRightElementsStyles = css`
   display: flex;
   margin: 10px;
 
-  .bp6-spinner {
+  .${NS}-spinner {
     margin-right: 6px;
   }
 `;
@@ -174,7 +173,7 @@ const actionBaseStyles = css`
     margin-left: 14px;
   }
 
-  .bp6-tag {
+  .${NS}-tag {
     background: var(--color-universal-search-tag-background);
     color: var(--color-universal-search-tag-text);
   }
@@ -185,7 +184,7 @@ const actionArrowsStyles = css`
     margin-left: 14px;
   }
 
-  .bp6-tag {
+  .${NS}-tag {
     background: var(--color-universal-search-tag-background);
     color: var(--color-universal-search-tag-text);
     padding: 0;

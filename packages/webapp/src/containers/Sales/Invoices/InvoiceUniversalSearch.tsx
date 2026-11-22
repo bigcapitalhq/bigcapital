@@ -11,6 +11,7 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface InvoiceUniversalSearchSelectProps extends WithDrawerActionsProps {
   resourceType: string;
@@ -103,7 +104,7 @@ export function InvoiceUniversalSearchItem(
       text={
         <div>
           <div>{highlightText(item.text, query)}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {highlightText(item.reference.invoiceNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.invoiceDateFormatted}

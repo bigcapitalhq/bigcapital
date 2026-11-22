@@ -21,6 +21,7 @@ import { Features } from '@/constants';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 type ARAgingSummaryFormValues = ReturnType<
   typeof getDefaultARAgingSummaryQuery
@@ -122,7 +123,7 @@ export const ARAgingSummaryHeader = FF.pipe(
 );
 
 const ARAgingDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 520px;
   }
 `;

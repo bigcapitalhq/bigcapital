@@ -61,18 +61,18 @@
         outline: 0;
         font-size: 15px;
 
-        &:not([class*="bp6-intent-"]):not(.bp6-minimal) {
+        &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal) {
           color: rgb(255, 255, 255);
         }
 
         &:hover,
         &:focus,
         &:active,
-        &.bp6-active {
+        &.#{$ns}-active {
           background: transparent;
         }
 
-        .bp6-button-text {
+        .#{$ns}-button-text {
           margin-right: 4px;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -85,7 +85,7 @@
         }
       }
 
-      .bp6-popover-target {
+      .#{$ns}-popover-target {
         max-width: 100%;
         display: inline-block;
       }
@@ -125,7 +125,7 @@
   }
 
   &__head-organization {
-    .bp6-button:not([class*=bp6-intent-]):not(.bp6-minimal) {
+    .#{$ns}-button:not([class*=#{$ns}-intent-]):not(.#{$ns}-minimal) {
       background-color: transparent;
       border-color: transparent;
       box-shadow: 0 0 0
@@ -154,7 +154,7 @@
       &:active {
         background: var(--color-sidebar-menu-item-focus-background);
       }
-      &.bp6-active.bp6-intent-primary {
+      &.#{$ns}-active.#{$ns}-intent-primary {
         background: var(--color-sidebar-menu-item-active-background);
         color: var(--color-sidebar-menu-item-active-text);
       }
@@ -186,7 +186,7 @@
         }
       }
 
-      &:hover .bp6-button.menu-item__add-btn {
+      &:hover .#{$ns}-button.menu-item__add-btn {
         display: inline-block;
       }
     }
@@ -205,12 +205,12 @@
           color: $sidebar-submenu-item-color;
 
           &:hover,
-          &.bp6-active {
+          &.#{$ns}-active {
             background: transparent;
             color: $sidebar-submenu-item-hover-color;
           }
 
-          &.bp6-active {
+          &.#{$ns}-active {
             font-weight: 500;
           }
         }
@@ -298,7 +298,7 @@
     }
   }
 
-  .bp6-button.menu-item__add-btn {
+  .#{$ns}-button.menu-item__add-btn {
     width: auto;
     padding: 2px;
     margin-right: 0px;
@@ -308,8 +308,8 @@
     display: none;
     vertical-align: top;
 
-    &:not([class*='bp6-intent-']):not(.bp6-minimal):not(:disabled) {
-      .bp6-icon {
+    &:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal):not(:disabled) {
+      .#{$ns}-icon {
         color: rgba(255, 255, 255, 0.4);
       }
 
@@ -324,13 +324,13 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.12);
 
-        .bp6-icon {
+        .#{$ns}-icon {
           color: rgba(255, 255, 255, 0.6);
         }
       }
     }
 
-    .bp6-icon {
+    .#{$ns}-icon {
       margin: 0;
       display: block;
     }

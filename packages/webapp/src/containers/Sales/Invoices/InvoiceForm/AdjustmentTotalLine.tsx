@@ -4,6 +4,7 @@ import clsx from 'classnames';
 import type { CSSProperties } from 'react';
 import { FFormGroup, FInputGroup, TotalLinePrimitive } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { NS } from '@/constants/classes';
 
 const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
   ({
@@ -13,7 +14,7 @@ const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
   }) as CSSProperties;
 
 const inputGroupCss = css`
-  & .bp6-input {
+  & .${NS}-input {
     max-width: 110px;
     padding-left: 8px;
   }
@@ -58,7 +59,7 @@ export function AdjustmentTotalLine({
               className={clsx(
                 inputGroupCss,
                 css`
-                  & .bp6-input {
+                  & .${NS}-input {
                     border-style: dashed;
                   }
                 `,

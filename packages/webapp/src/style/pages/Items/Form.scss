@@ -1,17 +1,18 @@
+@import '@/style/_common';
 .page-form--item {
   $self: '.page-form';
   padding: 20px;
 
-  .bp6-form-group {
+  .#{$ns}-form-group {
     max-width: 500px;
     margin-bottom: 14px;
 
-    &.bp6-inline {
-      .bp6-label {
+    &.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 140px;
       }
     }
-    .bp6-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
   }
@@ -28,7 +29,7 @@
     }
   }
 
-  .bp6-tooltip-indicator {
+  .#{$ns}-tooltip-indicator {
     border-bottom: 1px dashed #d0d0d0;
   }
 }

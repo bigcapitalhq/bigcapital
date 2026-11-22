@@ -6,21 +6,22 @@ import { useFormikContext } from 'formik';
 import { useMemo, useState } from 'react';
 import { SendMailViewFormValues } from './_types';
 import { FFormGroup, FMultiSelect, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 
 const fieldsWrapStyle = css`
-  > :not(:first-of-type) .bp6-input {
+  > :not(:first-of-type) .${NS}-input {
     border-top-color: transparent;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
   }
-  > :not(:last-of-type) .bp6-input {
+  > :not(:last-of-type) .${NS}-input {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
 `;
 
 const styleEmailButton = css`
-  &.bp6-button.bp6-small {
+  &.${NS}-button.${NS}-small {
     width: auto;
     margin: 0;
     min-height: 26px;

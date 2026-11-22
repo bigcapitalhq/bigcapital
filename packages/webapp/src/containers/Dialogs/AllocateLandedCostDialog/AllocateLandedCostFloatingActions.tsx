@@ -12,6 +12,7 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { NS } from '@/constants/classes';
 
 interface AllocateLandedCostFloatingActionsProps
   extends Pick<WithDialogActionsProps, 'closeDialog'> {}
@@ -76,7 +77,7 @@ const AllocateDialogFooter = styled(DialogFooter)`
 const UnallocatedAmount = styled.div`
   --x-color-text: #3f5278;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray1);
   }
   color: var(--x-color-text);

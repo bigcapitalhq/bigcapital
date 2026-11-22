@@ -21,6 +21,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 type BalanceSheetFormValues = Omit<
   ReturnType<typeof getDefaultBalanceSheetQuery>,
@@ -137,7 +138,7 @@ export const BalanceSheetHeader = FF.pipe(
 );
 
 const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 520px;
   }
 `;

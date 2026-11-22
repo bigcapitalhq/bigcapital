@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 
 .root{
@@ -12,11 +13,11 @@
 .tag{
   min-height: 26px;
 
-  &:global(.bp6-minimal:not([class*='bp6-intent-'])) {
+  &:global(.#{$ns}-minimal:not([class*='#{$ns}-intent-'])) {
     background: #fff;
     border: 1px solid var(--color-minimum-border);
 
-    &:global(.bp6-interactive:hover) {
+    &:global(.#{$ns}-interactive:hover) {
       background-color: rgba(143, 153, 168, 0.05);
     }
   }

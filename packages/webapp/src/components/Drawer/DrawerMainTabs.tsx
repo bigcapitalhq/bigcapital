@@ -1,6 +1,7 @@
 import { Tabs, TabsProps, TabId } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 export interface DrawerMainTabsProps extends Omit<TabsProps, 'id'> {
   id?: TabId;
@@ -23,7 +24,7 @@ export function DrawerMainTabs({
 }
 
 const DrawerMainTabsRoot = styled.div`
-  .bp6-tabs {
+  .${NS}-tabs {
     --x-tab-list-background: #fff;
     --x-tab-list-border: #e1e2e8;
     --x-tab-item-text: #7f8596;
@@ -34,7 +35,7 @@ const DrawerMainTabsRoot = styled.div`
 
     --x-tab-item-height: 36px;
 
-    .bp6-tab-list {
+    .${NS}-tab-list {
       position: relative;
       background-color: var(--x-tab-list-background);
       padding: 0 15px;
@@ -43,11 +44,11 @@ const DrawerMainTabsRoot = styled.div`
       > *:not(:last-child) {
         margin-right: 25px;
       }
-      .bp6-tab {
+      .${NS}-tab {
         color: var(--x-tab-item-text);
         line-height: var(--x-tab-item-height);
       }
-      &.bp6-large > .bp6-tab {
+      &.${NS}-large > .${NS}-tab {
         font-size: 15px;
         margin: 0 1rem;
 
@@ -56,13 +57,13 @@ const DrawerMainTabsRoot = styled.div`
           color: var(--color-primary);
         }
       }
-      .bp6-tab-indicator-wrapper .bp6-tab-indicator {
+      .${NS}-tab-indicator-wrapper .${NS}-tab-indicator {
         height: 2px;
         bottom: -2px;
       }
     }
 
-    .bp6-tab-panel {
+    .${NS}-tab-panel {
       margin-top: 0;
 
       .card {

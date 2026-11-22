@@ -5,10 +5,10 @@ import React from 'react';
 import { CreateWorkspaceDrawerContent } from './CreateWorkspaceDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
+import { NS } from '@/constants/classes';
 
 const CreateWorkspaceDrawerContainer = styled(Drawer)`
-  &.bp6-drawer.bp6-dark,
-  .bp6-dark &.bp6-drawer {
+  &.${NS}-drawer.${NS}-dark, .${NS}-dark &.${NS}-drawer {
     background-color: var(--color-dark-gray1);
   }
 `;

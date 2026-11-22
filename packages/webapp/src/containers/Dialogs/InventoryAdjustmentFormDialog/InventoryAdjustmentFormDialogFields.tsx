@@ -33,6 +33,7 @@ import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
 import { toSafeNumber } from '@/utils';
+import { NS } from '@/constants/classes';
 
 export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
   const { featureCan } = useFeatureCan();
@@ -185,7 +186,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
 
 export const FeatureRowDivider = styled.div`
   --x-color-background: #e9e9e9;
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-background: rgba(255, 255, 255, 0.1);
   }
   height: 2px;

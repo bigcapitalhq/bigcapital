@@ -8,6 +8,7 @@ import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { NS } from '@/constants/classes';
 
 interface EstimateUniversalSearchItemSelectProps
   extends WithDrawerActionsProps {
@@ -102,7 +103,7 @@ export const EstimateUniversalSearchItem: ItemRenderer<
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.estimateNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedEstimateDate}

@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 body.page-payment-made-new,
 body.page-payment-made-edit{
@@ -15,17 +16,17 @@ body.page-payment-made-edit{
   $self: '.page-form';
 
   #{$self}__header{
-    .bp6-label{
+    .#{$ns}-label{
       min-width: 160px;
     }
-    .bp6-form-content{
+    .#{$ns}-form-content{
       width: 100%;
     }
 
-    .bp6-form-group{
+    .#{$ns}-form-group{
       margin-bottom: 18px;
 
-      &.bp6-inline{
+      &.#{$ns}-inline{
         max-width: 470px; 
       }
       button.receive-full-amount{

@@ -17,6 +17,7 @@ import {
 import { FormattedMessage as T } from '@/components';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface PurchasesByItemsFormValues {
   fromDate: Date;
@@ -124,7 +125,7 @@ export const PurchasesByItemsHeader = FF.pipe(
 );
 
 const PurchasesByItemsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

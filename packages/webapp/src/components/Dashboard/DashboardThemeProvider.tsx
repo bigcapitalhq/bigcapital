@@ -9,10 +9,11 @@ import {
 } from 'styled-components';
 import rtlcss from 'stylis-rtlcss';
 import { useAppIntlContext } from '../AppIntlProvider';
+import { NS } from '@/constants/classes';
 
 const theme = {
   ...defaultTheme,
-  bpPrefix: 'bp6',
+  bpPrefix: NS,
 };
 
 interface DashboardThemeProviderProps {

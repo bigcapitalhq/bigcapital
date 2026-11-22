@@ -1,11 +1,12 @@
+@import '@/style/_common';
 .dialog--reconcile-credit-form {
   width: 850px;
 
-  .bp6-callout {
+  .#{$ns}-callout {
     font-size: 14px;
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     display: flex;
     justify-content: flex-start;
     padding-top: 10px;

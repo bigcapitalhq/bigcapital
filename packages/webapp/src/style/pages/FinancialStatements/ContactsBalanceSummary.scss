@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .financial-sheet {
 
   &--customers-balance-summary,
@@ -37,7 +38,7 @@
 
 .financial-statement--balance-summary {
   .financial-header-drawer {
-    .bp6-drawer {
+    .#{$ns}-drawer {
       // max-height: 350px;
       max-height: 415px;
     }

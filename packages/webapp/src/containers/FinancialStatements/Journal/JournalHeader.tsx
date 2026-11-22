@@ -12,6 +12,7 @@ import type { WithJournalProps } from './withJournal';
 import type { WithJournalActionsProps } from './withJournalActions';
 import { FormattedMessage as T } from '@/components';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
+import { NS } from '@/constants/classes';
 
 interface JournalHeaderFormValues {
   fromDate: Date;
@@ -114,7 +115,7 @@ export const JournalHeader = FF.pipe(
 );
 
 const JournalDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 350px;
   }
 `;

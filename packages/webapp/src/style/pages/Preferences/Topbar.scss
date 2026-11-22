@@ -27,7 +27,7 @@
     align-items: center;
     margin-right: 14px;
 
-    .bp6-button:not([class*='bp6-intent-']):not(.bp6-minimal) {
+    .#{$ns}-button:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal) {
       padding: 0;
       background-size: contain;
       background-color: #eed1f2;
@@ -55,10 +55,10 @@
     margin-right: 15px;
     border-right: 1px solid #e5e5e5;
 
-    .bp6-dark &{
+    .#{$ns}-dark &{
       border-right-color: rgba(255, 255, 255, 0.2);
     }
-    .bp6-button + .bp6-button {
+    .#{$ns}-button + .#{$ns}-button {
       margin-left: 10px;
     }
   }

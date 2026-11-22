@@ -11,6 +11,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { ExchangeRateInputGroup, Icon } from '@/components';
+import { NS } from '@/constants/classes';
 
 interface ExchangeRateMutedFieldProps {
   name?: string;
@@ -71,8 +72,8 @@ export function ExchangeRateMutedField({
 }
 
 const ExchangeRateFormGroup = styled(FormGroup)`
-  &.bp6-form-group {
-    label.bp6-label {
+  &.${NS}-form-group {
+    label.${NS}-label {
       font-size: 12px;
       opacity: 0.7;
       line-height: 1;
@@ -90,7 +91,7 @@ const ExchangeRateButton = styled.div`
   position: relative;
   padding-right: 28px;
 
-  .bp6-button {
+  .${NS}-button {
     position: absolute;
     right: 0;
   }
@@ -99,7 +100,7 @@ const ExchangeRateButton = styled.div`
 const ExchangeRateFormGroupContent = styled.div`
   padding: 5px 0;
 
-  .bp6-form-group {
+  .${NS}-form-group {
     padding: 2px;
     margin: 2px 4px !important;
   }

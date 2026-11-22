@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .root {
   --pricing-plan-border: #d8dee4;
   --pricing-plan-featured-background: #f5f6f8;
@@ -8,7 +9,7 @@
   --pricing-plan-muted-text: #738091;
   --pricing-plan-feature-text: #1c2127;
 
-  :global(.bp6-dark) & {
+  :global(.#{$ns}-dark) & {
     --pricing-plan-border: var(--color-dark-gray4);
     --pricing-plan-featured-background: var(--color-dark-gray3);
     --pricing-plan-ribbon-background: var(--color-dark-gray5);
@@ -83,7 +84,7 @@
   color: var(--pricing-plan-feature-text);
 }
 
-.featurePopover :global .bp6-popover-content {
+.featurePopover :global .#{$ns}-popover-content {
   border-radius: 0;
 }
 .featurePopoverContent {

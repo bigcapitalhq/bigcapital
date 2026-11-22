@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import type { TransactionsLockingMeta } from '@bigcapital/sdk-ts';
 import { Hint, Icon, If, FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 
 export interface TransactionLockingHandlers {
   onLock?: (module: string, event: React.MouseEvent) => void;
@@ -405,7 +406,7 @@ const TransLockingItemDesc = styled.p`
 const TransLockingIcon = styled.div`
   --x-text-color: #93a1ba;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   border: 1px solid var(--color-transaction-locking-item-icon-border);
@@ -416,7 +417,7 @@ const TransLockingIcon = styled.div`
   border-radius: 8px;
   color: var(--x-text-color);
 
-  .bp6-icon {
+  .${NS}-icon {
     position: relative;
     top: 1px;
   }
@@ -425,7 +426,7 @@ const TransLockingIcon = styled.div`
 export const TransLockingActions = styled.div`
   display: flex;
 
-  .bp6-divider {
+  .${NS}-divider {
     margin: 2px;
   }
 `;
@@ -441,7 +442,7 @@ export const TransLockingReason = styled.div`
   font-size: 13px;
   --x-text-color: #777;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   strong {
@@ -452,7 +453,7 @@ export const TransLockingReason = styled.div`
 const TransUnlockWrap = styled.div`
   -x-border-color: #ddd;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-border-color: rgba(255, 255, 255, 0.1);
   }
   padding-top: 10px;

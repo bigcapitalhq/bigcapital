@@ -4,6 +4,7 @@ import clsx from 'classnames';
 import { lighten } from 'polished';
 import styles from './PaymentPortal.module.scss';
 import { Box, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 
 export interface PaymentPageProps {
   // # Company name
@@ -219,7 +220,7 @@ export function InvoicePaymentPage({
                 styles.footerButton,
                 styles.buyButton,
                 css`
-                  &.bp6-intent-primary {
+                  &.${NS}-intent-primary {
                     background-color: ${primaryColor};
 
                     &:hover,

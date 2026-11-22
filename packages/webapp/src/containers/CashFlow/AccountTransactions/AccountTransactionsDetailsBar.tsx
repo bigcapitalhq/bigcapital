@@ -14,6 +14,7 @@ import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
+import { NS } from '@/constants/classes';
 
 interface AccountDetailsBarProps {
   accounts: BankingAccountsListResponse;
@@ -216,7 +217,7 @@ const AccountSwitchMenu = styled(Menu)`
 `;
 
 const AccountSwitchButtonBase = styled(Button)`
-  .bp6-button-text {
+  .${NS}-button-text {
     margin-right: 5px;
   }
 `;

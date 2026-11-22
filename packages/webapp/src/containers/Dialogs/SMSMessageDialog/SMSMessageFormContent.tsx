@@ -10,6 +10,7 @@ import { SMSMessageFormFloatingActions } from './SMSMessageFormFloatingActions';
 import type { SMSMessageFormValues } from './types';
 import { SMSMessagePreview } from '@/components';
 import { getSMSUnits } from '@/containers/NotifyViaSMS/utils';
+import { NS } from '@/constants/classes';
 
 interface SMSVariable {
   variable: string;
@@ -112,7 +113,7 @@ const FormPreview = styled.div`
   margin-left: 25px;
   border-left: 1px solid #dcdcdd;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     border-left-color: var(--color-dark-gray5);
   }
 `;

@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Icon } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * SMS Message preview.
@@ -48,7 +49,7 @@ const SMSMessagePreviewBase = styled.div`
     fill: #adadad;
   }
 
-  .bp6-dark & svg {
+  .${NS}-dark & svg {
     fill: var(--color-gray1);
   }
 `;

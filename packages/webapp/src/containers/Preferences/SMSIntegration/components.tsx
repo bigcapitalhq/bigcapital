@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import type { SMSNotification } from './SMSIntegrationProvider';
 import { SwitchFieldCell } from '@/components/DataTableCells';
 import { safeInvoke } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface Row {
   row: { original: SMSNotification };
@@ -158,7 +159,7 @@ const MessageBox = styled.div`
   --x-message-bg: #fbfbfb;
   --x-message-border: #dcdcdc;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-message-bg: var(--color-dark-gray3);
     --x-message-border: rgba(255, 255, 255, 0.2);
   }

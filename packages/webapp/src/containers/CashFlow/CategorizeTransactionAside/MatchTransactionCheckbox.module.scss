@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .root {
   --item-background: #fff;
   --item-border: #d6dbe3;
@@ -6,7 +7,7 @@
   --item-date-text: #5c7080;
   --item-border-hover: #c0c0c0;
   
-  :global(.bp6-dark) & {
+  :global(.#{$ns}-dark) & {
     --item-background: var(--color-dark-gray3);
     --item-border: rgba(255, 255, 255, 0.2);
     --item-date-text: var(--color-light-gray1);
@@ -33,23 +34,23 @@
   }
 }
 
-.checkbox:global(.bp6-control.bp6-checkbox) {
+.checkbox:global(.#{$ns}-control.#{$ns}-checkbox) {
   margin: 0;
 }
-.checkbox:global(.bp6-control.bp6-checkbox) :global .bp6-control-indicator {
+.checkbox:global(.#{$ns}-control.#{$ns}-checkbox) :global .#{$ns}-control-indicator {
   box-shadow: 0 0 0 1px #cbcbcb;
 }
-.checkbox:global(.bp6-control.bp6-checkbox) :global .bp6-control-indicator {
+.checkbox:global(.#{$ns}-control.#{$ns}-checkbox) :global .#{$ns}-control-indicator {
   margin-right: 4px;
   margin-left: 0;
   height: 16px;
   width: 16px;
 }
 
-.checkbox:global(.bp6-control.bp6-checkbox)
+.checkbox:global(.#{$ns}-control.#{$ns}-checkbox)
   :global
   input:checked
-  ~ .bp6-control-indicator {
+  ~ .#{$ns}-control-indicator {
   box-shadow: 0 0 0 1px #0069ff;
 }
 

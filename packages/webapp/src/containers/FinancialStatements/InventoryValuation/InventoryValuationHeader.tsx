@@ -24,6 +24,7 @@ import { Features } from '@/constants';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 type InventoryValuationFormValues = Omit<
   ReturnType<typeof getInventoryValuationQuery>,
@@ -144,7 +145,7 @@ export const InventoryValuationHeader = FF.pipe(
 );
 
 const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

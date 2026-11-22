@@ -10,6 +10,7 @@ import {
   WithOrganizationActionsProps,
 } from '@/containers/Organization/withOrganizationActions';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { NS } from '@/constants/classes';
 
 /**
  * Setup congrats page.
@@ -50,7 +51,7 @@ function SetupCongratsPageInner({
 
         <x.div
           className={css`
-            .bp6-button {
+            .${NS}-button {
               height: 38px;
               padding-left: 25px;
               padding-right: 25px;

@@ -1,13 +1,14 @@
+@import '@/style/_common';
 
-.popover :global .bp6-popover-content{
+.popover :global .#{$ns}-popover-content{
   min-width: 600px;
 }
 
-.attachmentButton:not([class*=bp6-intent-]) {
+.attachmentButton:not([class*=#{$ns}-intent-]) {
   --x-background-color: #fff;
   --x-border-color: rgb(206, 212, 218);
 
-  :global(.bp6-dark) & {
+  :global(.#{$ns}-dark) & {
     --x-border-color: rgba(255, 255, 255, 0.1);
   }
 
@@ -18,7 +19,7 @@
   border: 1px solid var(--x-border-color);
 }
 
-.attachmentField :global .bp6-label{
+.attachmentField :global .#{$ns}-label{
   font-weight: 500;
   font-size: 12px;
 }

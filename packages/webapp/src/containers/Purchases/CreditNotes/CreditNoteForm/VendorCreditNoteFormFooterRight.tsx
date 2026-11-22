@@ -11,6 +11,7 @@ import {
 import { T, TotalLines, TotalLine, TotalLineTextStyle } from '@/components';
 import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
 import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/DiscountTotalLine';
+import { NS } from '@/constants/classes';
 
 export function VendorCreditNoteFormFooterRight() {
   const {
@@ -48,7 +49,7 @@ export function VendorCreditNoteFormFooterRight() {
 const VendorCreditNoteTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

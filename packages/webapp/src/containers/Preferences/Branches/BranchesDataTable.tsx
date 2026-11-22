@@ -13,6 +13,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
 import '@/style/pages/Preferences/branchesList.scss';
+import { NS } from '@/constants/classes';
 
 type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
   Pick<WithAlertActionsProps, 'openAlert'>;
@@ -90,7 +91,7 @@ const BranchesTable = styled(DataTable)`
     min-height: 38px;
 
     .td.td-name {
-      .bp6-icon {
+      .${NS}-icon {
         margin: 0;
         margin-left: 2px;
         vertical-align: top;

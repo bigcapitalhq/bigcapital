@@ -9,6 +9,7 @@ import {
   useIsTaxRateChanged,
 } from './utils';
 import { FCheckbox, FFormGroup, FInputGroup, Hint } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Tax rate form content.
@@ -132,7 +133,7 @@ const EditWarningWrap = styled(`div`)`
   --x-warning-border: #f2eddf;
   --x-warning-title-text: #766f58;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-warning-background: var(--color-dark-gray3);
     --x-warning-border: rgba(255, 255, 255, 0.15);
     --x-warning-title-text: var(--color-light-gray2);

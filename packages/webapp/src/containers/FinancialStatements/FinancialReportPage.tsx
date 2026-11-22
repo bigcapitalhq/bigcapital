@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
 import { DashboardInsider } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { CLASSES, NS } from '@/constants/classes';
 
 interface FinancialReportPageProps {
   name?: string;
@@ -24,7 +24,7 @@ export const FinancialComputeAlert = styled.div`
   --x-text-color: #342515;
   --x-button-text-color: #824400;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-background-color: rgba(200, 118, 25, 0.2);
     --x-text-color: rgba(255, 255, 255, 0.8);
     --x-button-text-color: rgba(255, 255, 255, 0.8);

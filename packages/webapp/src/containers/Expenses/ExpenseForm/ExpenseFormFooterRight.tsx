@@ -8,6 +8,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function ExpenseFormFooterRight() {
   const totalFormatted = useExpenseTotalFormatted();
@@ -32,7 +33,7 @@ export function ExpenseFormFooterRight() {
 const ExpensesTotalLines = styled(TotalLines)`
   --x-color-text: #555555;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

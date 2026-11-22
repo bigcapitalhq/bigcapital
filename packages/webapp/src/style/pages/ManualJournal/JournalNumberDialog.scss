@@ -1,15 +1,16 @@
+@import '@/style/_common';
 
 .dialog--journal-number-settings{
 
   .paragraph {
     margin-bottom: 20px;
   }
-  .bp6-form-group{
+  .#{$ns}-form-group{
     margin-bottom: 10px;
   }
 
-  .bp6-dialog-footer-actions{
-    .bp6-button{
+  .#{$ns}-dialog-footer-actions{
+    .#{$ns}-button{
       min-width: 75px;
     }
   }

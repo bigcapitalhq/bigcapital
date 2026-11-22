@@ -11,6 +11,7 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface PaymentsMadeUniversalSearchSelectProps
   extends WithDrawerActionsProps {
@@ -66,7 +67,7 @@ export function PaymentsMadeUniversalSearchItem(
         <div>
           <div>{highlightText(text, query)}</div>
 
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {reference.paymentNumber && (
               <>
                 {highlightText(reference.paymentNumber, query)}

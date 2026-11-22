@@ -11,6 +11,7 @@ import { FMultiSelect } from '@/components/Forms';
 import { useDateInputFormatter } from '@/hooks';
 import { useAuditLogFilterOptionsQuery } from '@/hooks/query';
 import { saveInvoke, transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface AuditLogHeaderFormValues {
   subject: string[];
@@ -43,7 +44,7 @@ const auditLogSelectItemPredicate = (query: string, item: SelectItem) => {
 };
 
 const AuditLogDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 350px;
   }
 `;

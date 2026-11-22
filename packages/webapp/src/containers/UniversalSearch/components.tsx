@@ -4,6 +4,7 @@ import { getUniversalSearchBind } from './utils';
 import type { UniversalSearchItem } from '@/components/UniversalSearch/UniversalSearch';
 import type { ItemRendererProps, ItemRenderer } from '@blueprintjs/select';
 import { highlightText } from '@/utils';
+import { NS } from '@/constants/classes';
 
 /**
  * Default univesal search item component.
@@ -21,7 +22,7 @@ function UniversalSearchItemDetail(
           <div>{highlightText(item.text, query)}</div>
 
           {item.subText && (
-            <span className="bp6-text-muted">
+            <span className={`${NS}-text-muted`}>
               {highlightText(item.subText, query)}
             </span>
           )}

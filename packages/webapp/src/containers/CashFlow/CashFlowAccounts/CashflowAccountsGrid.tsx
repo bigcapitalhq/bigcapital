@@ -33,6 +33,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { safeCallback } from '@/utils';
+import { NS } from '@/constants/classes';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -393,7 +394,7 @@ const AccountsEmptyStateBase = styled.div`
 const AccountsEmptyStateTitle = styled.h1`
   --x-text-color: #626b76;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   font-size: 18px;

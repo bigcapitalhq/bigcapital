@@ -9,6 +9,7 @@ import { FFormGroup, FEditableText, Box, Group, Stack } from '@/components';
 import { PaymentOptionsButtonPopver } from '@/containers/PaymentMethods/SelectPaymentMethodPopover';
 import { MastercardIcon } from '@/icons/Mastercard';
 import { VisaIcon } from '@/icons/Visa';
+import { NS } from '@/constants/classes';
 
 export function InvoiceFormFooterLeft() {
   const { paymentServices } = useInvoiceFormContext();
@@ -82,32 +83,32 @@ export function InvoiceFormFooterLeft() {
 }
 
 const InvoiceMsgFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
-    .bp6-label {
+  &.${NS}-form-group {
+    .${NS}-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp6-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }
 `;
 
 const TermsConditsFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
-    .bp6-label {
+  &.${NS}-form-group {
+    .${NS}-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp6-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }
 `;
 
 const PaymentOptionsFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
-    .bp6-label {
+  &.${NS}-form-group {
+    .${NS}-label {
       font-weight: 500;
       font-size: 12px;
       margin-bottom: 10px;
@@ -126,7 +127,7 @@ const PaymentOptionsButton = styled(Button)`
   font-size: 13px;
   margin-left: 4px;
 
-  &.bp6-minimal.bp6-intent-primary {
+  &.${NS}-minimal.${NS}-intent-primary {
     color: #0052cc;
   }
 `;

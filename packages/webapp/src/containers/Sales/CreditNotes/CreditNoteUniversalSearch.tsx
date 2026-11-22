@@ -9,6 +9,7 @@ import { AbilitySubject, CreditNoteAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { NS } from '@/constants/classes';
 
 interface CreditNoteUniversalSearchSelectComponentProps
   extends WithDrawerActionsProps {
@@ -93,7 +94,7 @@ export function CreditNoteUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.creditNoteNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedCreditNoteDate}

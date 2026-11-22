@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { useJob } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { NS } from '@/constants/classes';
 
 interface BuildingWorkspaceStepProps {
   jobId?: string;
@@ -34,7 +35,7 @@ export default function BuildingWorkspaceStep({
   }, [isCompleted, onComplete]);
 
   const progressBarStyles = css`
-    .bp6-progress-bar {
+    .${NS}-progress-bar {
       border-radius: 40px;
       display: block;
       height: 6px;
@@ -43,7 +44,7 @@ export default function BuildingWorkspaceStep({
       width: 80%;
       margin: 0 auto;
 
-      .bp6-progress-meter {
+      .${NS}-progress-meter {
         background-color: #809cb3;
       }
     }

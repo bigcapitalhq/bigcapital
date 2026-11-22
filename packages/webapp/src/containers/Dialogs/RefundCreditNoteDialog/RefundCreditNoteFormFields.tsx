@@ -28,6 +28,7 @@ import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { NS } from '@/constants/classes';
 
 // FFormGroup / FMoneyInputGroup / FInputGroup (blueprintjs-formik) wrappers
 // don't expose all underlying props (`fill`, `minimal`) in their public type.
@@ -192,7 +193,7 @@ export const RefundCreditNoteFormFields = RefundCreditNoteFormFieldsInner;
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-divider-color: rgba(255, 255, 255, 0.1);
   }
   height: 1px;

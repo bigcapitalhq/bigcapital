@@ -1,0 +1,6 @@
+// Blueprint variables-only partials (no CSS output).
+// Import this file to get Blueprint's SCSS variables — including the class
+// namespace `$ns` — without pulling in the app's `_variables.scss`, which
+// emits `:root`/dark-mode CSS rules.
+@import '@blueprintjs/colors/lib/scss/colors';
+@import '@blueprintjs/core/src/common/variables';

@@ -2,6 +2,7 @@
 import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 /**
  * Dialog footer actions.
@@ -36,7 +37,7 @@ const DialogFooterActionsRoot = styled.div`
   ${(props) =>
     props.alignment === 'right' ? 'margin-left: auto;' : 'margin-right: auto;'};
 
-  .bp6-button {
+  .${NS}-button {
     margin-left: 5px;
     margin-left: 5px;
   }

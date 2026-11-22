@@ -4,6 +4,7 @@ import { x } from '@xstyled/emotion';
 import { isEmpty } from 'lodash';
 import { lighten } from 'polished';
 import { Group, Stack, StackProps } from '@/components';
+import { NS } from '@/constants/classes';
 
 export interface InvoiceMailReceiptProps extends StackProps {
   // # Company
@@ -153,7 +154,7 @@ export function InvoiceMailReceipt({
           large
           intent={Intent.PRIMARY}
           className={css`
-            &.bp6-intent-primary {
+            &.${NS}-intent-primary {
               background-color: ${primaryColor};
 
               &:hover,
@@ -161,7 +162,7 @@ export function InvoiceMailReceipt({
                 background-color: ${lighten(0.1, primaryColor)};
               }
             }
-            &.bp6-large {
+            &.${NS}-large {
               min-height: 38px;
             }
           `}

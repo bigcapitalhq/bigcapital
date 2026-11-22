@@ -1,5 +1,6 @@
 import { Tabs, TabsProps } from '@blueprintjs/core';
 import { css } from '@emotion/css';
+import { NS } from '@/constants/classes';
 
 interface InvoiceCustomizeTabsProps extends TabsProps {}
 
@@ -12,21 +13,21 @@ export function InvoiceCustomizeTabs(props: InvoiceCustomizeTabsProps) {
         display: flex;
         flex-direction: column;
 
-        .bp6-tab-list {
+        .${NS}-tab-list {
           padding: 0 20px;
           background: var(--color-element-customize-header-tabs-background);
           border-bottom: 1px solid var(--color-element-customize-divider);
         }
-        .bp6-tab {
+        .${NS}-tab {
           line-height: 40px;
         }
-        .bp6-tab:not([aria-selected='true']) {
+        .${NS}-tab:not([aria-selected='true']) {
           color: var(--color-ekement-customize-header-tabs-text);
         }
-        .bp6-tab-indicator-wrapper .bp6-tab-indicator {
+        .${NS}-tab-indicator-wrapper .${NS}-tab-indicator {
           height: 2px;
         }
-        .bp6-tab-panel {
+        .${NS}-tab-panel {
           margin: 0;
           overflow: auto;
         }

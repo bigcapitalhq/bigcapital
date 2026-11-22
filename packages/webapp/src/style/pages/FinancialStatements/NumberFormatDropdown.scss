@@ -1,23 +1,24 @@
+@import '@/style/_common';
 
 
 .number-format-dropdown{
   width: 300px;
   padding: 15px;
 
-  .bp6-form-group{
+  .#{$ns}-form-group{
     margin-bottom: 6px;
 
-    label.bp6-label{
+    label.#{$ns}-label{
       font-size: 13px;
       margin-bottom: 4px;
       font-weight: 500;
     }
-    .bp6-button{
+    .#{$ns}-button{
       min-height: 28px;
       min-width: 28px;
     }
   }
-  .bp6-control.bp6-inline{
+  .#{$ns}-control.#{$ns}-inline{
     margin-bottom: 0;
     margin-top: 0;
   }
@@ -28,15 +29,15 @@
     text-align: right;  
     padding-top: 10px;
 
-    .bp6-button.bp6-small,
-    .bp6-button:not([class*="bp6-intent-"]):not(.bp6-minimal).bp6-small{
+    .#{$ns}-button.#{$ns}-small,
+    .#{$ns}-button:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal).#{$ns}-small{
       min-width: 65px;
       height: 26px;
       min-height: 26px;
     }
   }
 
-  .bp6-control .bp6-control-indicator{
+  .#{$ns}-control .#{$ns}-control-indicator{
     height: 16px;
     width: 16px;
   }

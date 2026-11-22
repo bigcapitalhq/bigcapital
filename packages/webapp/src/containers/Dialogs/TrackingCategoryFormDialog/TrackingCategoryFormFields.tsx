@@ -26,6 +26,7 @@ import {
   TRACKING_CATEGORY_MODULE_LABELS,
   TRACKING_CATEGORY_MODULES,
 } from '@/constants';
+import { NS } from '@/constants/classes';
 
 /**
  * Tracking category form fields.
@@ -201,7 +202,7 @@ const ModulesCheckboxes = styled.div`
   align-items: center;
   gap: 12px;
 
-  .bp6-control {
+  .${NS}-control {
     margin-bottom: 0;
   }
 `;
@@ -229,7 +230,7 @@ const OptionActive = styled.div`
   gap: 6px;
   min-width: 150px;
 
-  .bp6-control {
+  .${NS}-control {
     margin-bottom: 0;
   }
 `;

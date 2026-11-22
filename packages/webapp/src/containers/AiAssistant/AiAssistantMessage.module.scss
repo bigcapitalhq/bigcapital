@@ -1,4 +1,5 @@
 @use './variables' as *;
+@import '@/style/_common';
 
 .message {
   display: flex;
@@ -49,7 +50,7 @@
 .action {
   // Button renders as `bp6-button bp6-small bp6-minimal`; composing those
   // global classes raises specificity above Blueprint's own button rules.
-  &:global(.bp6-button.bp6-small.bp6-minimal) {
+  &:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal) {
     min-width: 24px;
     min-height: 24px;
     padding: 2px;
@@ -63,20 +64,20 @@
     opacity: 0.8;
   }
 
-  &:global(.bp6-button.bp6-small.bp6-minimal):hover {
+  &:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover {
     opacity: 1;
     color: $accent;
   }
 }
 
-.likeActive:global(.bp6-button.bp6-small.bp6-minimal),
-.likeActive:global(.bp6-button.bp6-small.bp6-minimal):hover {
+.likeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal),
+.likeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover {
   opacity: 1;
   color: $accent;
 }
 
-.dislikeActive:global(.bp6-button.bp6-small.bp6-minimal),
-.dislikeActive:global(.bp6-button.bp6-small.bp6-minimal):hover {
+.dislikeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal),
+.dislikeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover {
   opacity: 1;
   color: $danger;
 }

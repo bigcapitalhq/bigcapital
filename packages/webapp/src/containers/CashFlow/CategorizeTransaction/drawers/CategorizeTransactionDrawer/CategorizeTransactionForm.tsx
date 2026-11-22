@@ -20,6 +20,7 @@ import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/Categori
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { invalidateBankingQueries } from '@/hooks/query/banking/invalidate-banking';
 import { useApiFetcher } from '@/hooks/useRequest';
+import { NS } from '@/constants/classes';
 
 interface CategorizeTransactionFormRootProps
   extends Pick<WithBankingActionsProps, 'closeMatchingTransactionAside'> {}
@@ -117,13 +118,13 @@ const FormRoot = styled(Form)`
   flex-direction: column;
   flex: 1 1 auto;
 
-  .bp6-form-group .bp6-form-content {
+  .${NS}-form-group .${NS}-form-content {
     flex: 1 0;
   }
-  .bp6-form-group .bp6-label {
+  .${NS}-form-group .${NS}-label {
     width: 140px;
   }
-  .bp6-form-group {
+  .${NS}-form-group {
     margin-bottom: 18px;
   }
 `;

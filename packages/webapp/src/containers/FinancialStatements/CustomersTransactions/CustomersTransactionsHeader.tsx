@@ -17,6 +17,7 @@ import {
 } from './withCustomersTransactionsActions';
 import { FormattedMessage as T } from '@/components';
 import { transformToForm } from '@/utils';
+import { NS } from '@/constants/classes';
 
 interface CustomersTransactionsHeaderFormValues {
   fromDate: Date;
@@ -126,7 +127,7 @@ export const CustomersTransactionsHeader = FF.pipe(
 );
 
 const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

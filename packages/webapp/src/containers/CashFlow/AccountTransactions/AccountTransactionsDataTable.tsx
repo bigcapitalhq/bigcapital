@@ -26,6 +26,7 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
+import { NS } from '@/constants/classes';
 
 interface AccountTransactionsDataTableProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,
@@ -190,7 +191,7 @@ const DashboardConstrantTable = styled(DataTable)`
 const CashflowTransactionsTable = styled(DashboardConstrantTable)`
   --table-cell-border-color: #e6e6e6;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --table-cell-border-color: rgba(255, 255, 255, 0.15);
   }
 

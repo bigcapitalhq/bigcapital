@@ -1,3 +1,4 @@
+@import '@/style/_common';
 body.page-vendor-credit-note-new,
 body.page-vendor-credit-note-edit {
   .dashboard__footer {
@@ -19,15 +20,15 @@ body.page-vendor-credit-note-edit {
       flex: 1 0 0;
     }
 
-    .bp6-label {
+    .#{$ns}-label {
       min-width: 150px;
     }
-    .bp6-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
 
-    .bp6-form-group {
-      &.bp6-inline {
+    .#{$ns}-form-group {
+      &.#{$ns}-inline {
         max-width: 450px;
       }
     }
