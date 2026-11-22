@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dashboard__insider--vendors-list {
   .bigcapital-datatable {
     tbody {
@@ -12,7 +13,7 @@
         --x-color-background: #adbcc9;
         --x-color-text: #fff;
         
-        .bp6-dark & {
+        .#{$ns}-dark & {
           --x-color-background: rgba(255, 255, 255, 0.2);
           --x-color-text: #fff;
         }

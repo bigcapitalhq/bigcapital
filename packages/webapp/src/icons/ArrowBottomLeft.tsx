@@ -1,4 +1,5 @@
 import React from 'react';
+import { NS } from '@/constants/classes';
 
 interface ArrowBottomLeftProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -9,7 +10,7 @@ export const ArrowBottomLeft: React.FC<ArrowBottomLeftProps> = ({
   ...props
 }) => {
   return (
-    <span className={'bp6-icon bp6-icon-arrow-bottom-left'}>
+    <span className={`${NS}-icon ${NS}-icon-arrow-bottom-left`}>
       <svg
         width={size}
         height={size}

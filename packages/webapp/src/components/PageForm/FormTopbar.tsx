@@ -2,6 +2,7 @@
 import { Navbar } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 /**
  * Form the topbar.
@@ -23,7 +24,7 @@ const FormTopBarRoot = styled(Navbar)`
   --color-form-topbar-border: #c7d5db;
   --color-divider-color: #d2dce2;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-form-topbar-background: var(--color-dark-gray1);
     --color-form-topbar-border: rgba(255, 255, 255, 0.15);
     --color-divider-color: rgba(255, 255, 255, 0.25);
@@ -32,22 +33,22 @@ const FormTopBarRoot = styled(Navbar)`
   padding: 0 20px;
 
   &,
-  .bp6-dark & {
+  .${NS}-dark & {
     border-bottom: 1px solid var(--color-form-topbar-border);
     background-color: var(--color-form-topbar-background);
     box-shadow: 0 0 0;
   }
 
-  .bp6-navbar-group {
+  .${NS}-navbar-group {
     height: 35px;
   }
-  .bp6-navbar-divider {
+  .${NS}-navbar-divider {
     border-left-color: var(--color-divider-color);
   }
-  .bp6-skeleton {
+  .${NS}-skeleton {
     max-height: 10px;
   }
-  .bp6-button {
+  .${NS}-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
       color: #32304a;

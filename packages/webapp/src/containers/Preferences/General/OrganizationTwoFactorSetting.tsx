@@ -3,6 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { AppToaster } from '@/components';
+import { NS } from '@/constants/classes';
 import { getTwoFactorErrorMessage } from '@/containers/TwoFactor/utils';
 import {
   useOrganizationTwoFactor,
@@ -61,7 +62,7 @@ export function OrganizationTwoFactorSetting() {
 const Section = styled.div`
   --x-color-border: #e0e7ea;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-border: rgba(255, 255, 255, 0.15);
   }
   margin-top: 30px;

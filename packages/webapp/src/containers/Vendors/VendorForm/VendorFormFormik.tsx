@@ -20,6 +20,7 @@ import { useVendorFormContext } from './VendorFormProvider';
 import type { VendorFormSubmitPayload } from './VendorFormProvider';
 import { AppToaster } from '@/components';
 import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
+import { NS } from '@/constants/classes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { saveInvoke } from '@/utils';
 
@@ -137,14 +138,13 @@ function VendorFormFormikBase({
 }
 
 const VendorFormFields = styled.div`
-  .bp6-form-content,
-  .bp6-form-content {
+  .${NS}-form-content, .${NS}-form-content {
     min-width: 300px;
   }
-  .bp6-form-group {
+  .${NS}-form-group {
     margin-bottom: 20px;
   }
-  .bp6-form-group.bp6-inline label.bp6-label {
+  .${NS}-form-group.${NS}-inline label.${NS}-label {
     min-width: 140px;
   }
 `;

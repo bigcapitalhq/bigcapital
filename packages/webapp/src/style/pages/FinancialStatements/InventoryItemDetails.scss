@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .financial-sheet {
   &--inventory-item-details {
     width: 100%;
@@ -21,7 +22,7 @@
 
 .number-format-dropdown {
   .toggles-fields {
-    .bp6-form-group:first-child {
+    .#{$ns}-form-group:first-child {
       display: none;
     }
   }
@@ -33,7 +34,7 @@
 
 .financial-statement--inventory-details {
   .financial-header-drawer {
-    .bp6-drawer {
+    .#{$ns}-drawer {
       max-height: 350px;
     }
   }

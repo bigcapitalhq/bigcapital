@@ -10,6 +10,7 @@ import {
   handleCheckboxPermissionChange,
 } from './utils';
 import { Card, If, ButtonLink, Choose, T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   getPermissionsSchema,
   ModulePermissionsStyle,
@@ -456,7 +457,7 @@ export const RolesPermissionList = () => {
 };
 
 const PermissionCheckbox = styled(Checkbox)`
-  &.bp6-control.bp6-checkbox .bp6-control-indicator {
+  &.${NS}-control.${NS}-checkbox .${NS}-control-indicator {
     border-radius: 2px;
     border-color: #555;
 
@@ -480,7 +481,7 @@ const ModulePermissionHead = styled.div`
   padding: 0 15px;
   display: flex;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-role-module-header-border: rgba(255, 255, 255, 0.1);
   }
 `;
@@ -491,7 +492,7 @@ const ModulePermissionTitle = styled.div`
   line-height: 38px;
   color: var(--color-role-module-title, #878787);
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-role-module-title: rgba(255, 255, 255, 0.6);
   }
 `;
@@ -544,7 +545,7 @@ const ModulePermissionsTableRoot = styled.table`
     }
 
     tr td {
-      .bp6-control.bp6-inline {
+      .${NS}-control.${NS}-inline {
         margin: 0;
       }
 
@@ -559,7 +560,7 @@ const ModulePermissionsTableRoot = styled.table`
     }
   }
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-role-table-header-bg: rgba(255, 255, 255, 0.05);
     --color-role-table-border: rgba(255, 255, 255, 0.1);
   }
@@ -606,7 +607,7 @@ const ModulePermissionsVerticalTable = styled.table`
     }
   }
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-role-table-border: rgba(255, 255, 255, 0.1);
     --color-role-service-label: rgba(255, 255, 255, 0.85);
   }

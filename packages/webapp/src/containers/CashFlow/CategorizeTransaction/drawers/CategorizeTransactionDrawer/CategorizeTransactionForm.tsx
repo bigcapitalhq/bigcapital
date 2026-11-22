@@ -16,6 +16,7 @@ import type { CategorizeTransactionFormValues } from './_utils';
 import type { WithBankingActionsProps } from '@/containers/CashFlow/withBankingActions';
 import type { CategorizeTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
+import { NS } from '@/constants/classes';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { invalidateBankingQueries } from '@/hooks/query/banking/invalidate-banking';
@@ -117,13 +118,13 @@ const FormRoot = styled(Form)`
   flex-direction: column;
   flex: 1 1 auto;
 
-  .bp6-form-group .bp6-form-content {
+  .${NS}-form-group .${NS}-form-content {
     flex: 1 0;
   }
-  .bp6-form-group .bp6-label {
+  .${NS}-form-group .${NS}-label {
     width: 140px;
   }
-  .bp6-form-group {
+  .${NS}-form-group {
     margin-bottom: 18px;
   }
 `;

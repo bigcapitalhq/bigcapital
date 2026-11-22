@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import type { VendorCredit } from '@bigcapital/sdk-ts';
 import { TextStatus, Icon, Choose, T } from '@/components';
 import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -102,7 +103,7 @@ export function VendorCreditUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.vendorCreditNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedVendorCreditDate}

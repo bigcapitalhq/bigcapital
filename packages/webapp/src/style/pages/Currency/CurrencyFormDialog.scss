@@ -1,22 +1,23 @@
+@import '@/style/_common';
 .dialog--currency-form {
-  .bp6-dialog-body {
+  .#{$ns}-dialog-body {
     margin-bottom: 30px;
 
-    .bp6-form-group.bp6-inline {
-      .bp6-label {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 140px;
       }
-      .bp6-form-content {
+      .#{$ns}-form-content {
         width: 250px;
       }
     }
-    .bp6-dialog-header {
+    .#{$ns}-dialog-header {
       height: 170px;
     }
   }
 
-  .bp6-dialog-footer{
-    .bp6-button{
+  .#{$ns}-dialog-footer{
+    .#{$ns}-button{
       min-width: 75px;
     }
   }

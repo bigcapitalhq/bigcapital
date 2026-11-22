@@ -10,6 +10,7 @@ import {
 } from './utils';
 import type { EstimateFormValues } from './utils';
 import { T, TotalLines, TotalLine, TotalLineTextStyle } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function EstimateFormFooterRight() {
   const {
@@ -43,7 +44,7 @@ export function EstimateFormFooterRight() {
 const EstimateTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

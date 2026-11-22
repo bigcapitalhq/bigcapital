@@ -16,6 +16,7 @@ import {
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { transformToForm } from '@/utils';
 
 interface CustomersTransactionsHeaderFormValues {
@@ -126,7 +127,7 @@ export const CustomersTransactionsHeader = FF.pipe(
 );
 
 const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

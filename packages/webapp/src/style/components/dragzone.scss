@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dropzone {
   flex: 1 1;
   display: flex;
@@ -58,7 +59,7 @@
     left: -5px;
     visibility: hidden;
 
-    .bp6-icon {
+    .#{$ns}-icon {
       position: relative;
       top: -3px;
       left: 0px;

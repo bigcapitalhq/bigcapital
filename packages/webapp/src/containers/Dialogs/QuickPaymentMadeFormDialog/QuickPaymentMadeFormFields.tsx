@@ -26,6 +26,7 @@ import {
   FMoneyInputGroup,
 } from '@/components';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
@@ -166,7 +167,7 @@ export const BranchRowDivider = styled.div`
   background: #ebf1f6;
   margin-bottom: 15px;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     background: rgba(255, 255, 255, 0.1);
   }
 `;

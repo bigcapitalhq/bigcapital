@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 .root {
   flex: 1;
@@ -15,7 +16,7 @@
   width: 100%;
   flex: 1;
 
-  :global .bp6-tab-list{
+  :global .#{$ns}-tab-list{
     flex: 1;
   }
 }

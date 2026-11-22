@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .root {
   max-width: 500px;
   width: 100%;
@@ -28,10 +29,10 @@
   &_actions {
     margin-top: 26px;
 
-    :global .bp6-button {
+    :global .#{$ns}-button {
       min-height: 36px;
 
-      & + .bp6-button {
+      & + .#{$ns}-button {
         margin-left: 10px;
       }
     }

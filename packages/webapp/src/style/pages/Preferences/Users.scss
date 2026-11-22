@@ -1,10 +1,11 @@
+@import '@/style/_common';
 // Users/Roles List.
 // ---------------------------------
 .preferences-page__inside-content--users {
   --color-avatar-background: #b7bfc6;
   --color-avatar-text: #fff;
 
-  .bp6-dark & {
+  .#{$ns}-dark & {
     --color-avatar-background: rgba(255, 255, 255, 0.2);
     --color-avatar-text: #fff;
   }
@@ -31,8 +32,8 @@
       border-bottom: 0;
     }
   }
-  .bp6-tabs {
-    .bp6-tab-panel {
+  .#{$ns}-tabs {
+    .#{$ns}-tab-panel {
       margin-top: 0;
     }
   }

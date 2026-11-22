@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { DataTable } from './DataTable';
 import type { DataTableProps } from './types';
+import { NS } from '@/constants/classes';
 
 interface DataTableEditableProps extends DataTableProps {
   totalRow?: boolean;
@@ -31,7 +32,7 @@ const DatatableEditableRoot = styled.div`
   --x-color-table-body-input-text: #222;
   --x-color-table-cell-border: #d8d8d8;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-table-background: var(--color-dark-gray1);
     --x-table-border: rgba(255, 255, 255, 0.1);
     --x-table-head-background: var(--color-dark-gray2);
@@ -41,7 +42,7 @@ const DatatableEditableRoot = styled.div`
     --x-color-table-cell-border: rgba(255, 255, 255, 0.1);
   }
 
-  .bp6-form-group {
+  .${NS}-form-group {
     margin-bottom: 0;
   }
   .table {
@@ -88,18 +89,20 @@ const DatatableEditableRoot = styled.div`
       }
       .tr {
         &:hover .td,
-        .bp6-input {
+        .${NS}-input {
           background-color: transparent;
         }
-        .bp6-form-group:not(.bp6-intent-danger) .bp6-input,
-        .form-group--select-list .bp6-button {
+        .${NS}-form-group:not(.${NS}-intent-danger)
+          .${NS}-input,
+          .form-group--select-list
+          .${NS}-button {
           border-color: transparent;
           box-shadow: 0 0 0;
           color: var(--x-color-table-body-input-text);
           border-radius: 3px;
           text-align: inherit;
         }
-        .bp6-form-group:not(.bp6-intent-danger) .bp6-input {
+        .${NS}-form-group:not(.${NS}-intent-danger) .${NS}-input {
           border-radius: 2px;
           padding-left: 14px;
           padding-right: 14px;
@@ -108,7 +111,7 @@ const DatatableEditableRoot = styled.div`
             box-shadow: 0 0 0 2px #116cd0;
           }
         }
-        .form-group--select-list .bp6-button {
+        .form-group--select-list .${NS}-button {
           padding-left: 6px;
           padding-right: 6px;
 
@@ -117,16 +120,16 @@ const DatatableEditableRoot = styled.div`
           }
         }
         .form-group--select-list,
-        .bp6-form-group {
-          &.bp6-intent-danger {
-            .bp6-button:not(.bp6-minimal),
-            .bp6-input {
+        .${NS}-form-group {
+          &.${NS}-intent-danger {
+            .${NS}-button:not(.${NS}-minimal),
+            .${NS}-input {
               border-color: #f7b6b6;
             }
           }
         }
         .td.actions {
-          .bp6-button {
+          .${NS}-button {
             color: #80858f;
           }
         }

@@ -6,7 +6,7 @@
 @import '@blueprintjs/select/src/blueprint-select.scss';
 
 @mixin dark-mode {
-  .bp6-dark & {
+  .#{$ns}-dark & {
     @content;
   }
 }
@@ -58,61 +58,61 @@ body.hide-scrollbar .Pane2 {
   overflow: hidden;
 }
 
-.bp6-fill {
+.#{$ns}-fill {
 
-  .bp6-popover-target {
+  .#{$ns}-popover-target {
     display: block;
     width: 100%;
   }
 
-  .bp6-button {
+  .#{$ns}-button {
     width: 100%;
     justify-content: start;
   }
 }
 
-.bp6-datepicker-caption .bp6-html-select::after {
+.#{$ns}-datepicker-caption .#{$ns}-html-select::after {
   margin-right: 6px;
 }
 
-.bp6-select-popover .bp6-menu,
-.bp6-multi-select-popover .bp6-menu {
+.#{$ns}-select-popover .#{$ns}-menu,
+.#{$ns}-multi-select-popover .#{$ns}-menu {
   max-height: 300px;
   overflow: auto;
 }
 
-.bp6-form-group .bp6-label {
+.#{$ns}-form-group .#{$ns}-label {
   .hint {
-    .bp6-popover-target {
+    .#{$ns}-popover-target {
       display: inline;
     }
   }
 
-  &:not(.bp6-inline) .hint .bp6-popover-target {
+  &:not(.#{$ns}-inline) .hint .#{$ns}-popover-target {
     display: inline;
     margin-left: 0;
   }
 }
 
-.bp6-popover.bp6-tooltip {
+.#{$ns}-popover.#{$ns}-tooltip {
   max-width: 300px;
 }
 
-.bp6-timezone-select {
-  .bp6-button {
+.#{$ns}-timezone-select {
+  .#{$ns}-button {
     [icon='caret-down'] {
       display: none;
     }
   }
 }
 
-.bp6-progress-bar.bp6-intent-primary .bp6-progress-meter {
+.#{$ns}-progress-bar.#{$ns}-intent-primary .#{$ns}-progress-meter {
   background-color: #0066ff;
 }
 
-.bp6-card,
-.bp6-card.bp6-dark,
-.bp6-dark .bp6-card {
+.#{$ns}-card,
+.#{$ns}-card.#{$ns}-dark,
+.#{$ns}-dark .#{$ns}-card {
   box-shadow: 0 0 0;
   border: 1px solid #383e47;
 }
@@ -196,7 +196,7 @@ body.hide-scrollbar .Pane2 {
 
 .ReactVirtualized__List {}
 
-.bp6-drawer {
+.#{$ns}-drawer {
   box-shadow: 0 0 0;
   background-color: #fbfbfb;
 
@@ -207,7 +207,7 @@ body.hide-scrollbar .Pane2 {
 
 // RTL Icons.
 html[dir='rtl'] {
-  .bp6-icon-caret-right {
+  .#{$ns}-icon-caret-right {
     transform: scaleX(-1);
   }
 }
@@ -218,12 +218,12 @@ html[lang^='ar'] {
   }
 }
 
-.bp6-popover {
+.#{$ns}-popover {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
 }
 
-.bp6-tooltip .bp6-popover-arrow:before {
+.#{$ns}-tooltip .#{$ns}-popover-arrow:before {
   box-shadow: 0 0 0;
 }
 
@@ -246,25 +246,25 @@ html[lang^='ar'] {
     gap: 10px;
   }
 
-  .bp6-dialog {
+  .#{$ns}-dialog {
     &-body {
       &:not(.loading) {
         margin: 0;
       }
 
-      >.bp6-spinner {
+      >.#{$ns}-spinner {
         margin: 20px 0;
       }
     }
   }
 }
 
-.bp6-drawer {
+.#{$ns}-drawer {
   border-left: 1px solid var(--color-drawer-border-left);
 }
 
 .drawer-portal {
-  .bp6-overlay-backdrop {
+  .#{$ns}-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
 }
@@ -292,7 +292,7 @@ html[lang^='ar'] {
 a.text-link {
   text-decoration: none;
   &,
-  .bp6-dark &{
+  .#{$ns}-dark &{
     color: inherit;
   }
   &:hover {
@@ -305,7 +305,7 @@ span.table-tooltip-overview-target {
   display: inline;
 }
 
-.bp6-callout .bp6-heading:first-child {
+.#{$ns}-callout .#{$ns}-heading:first-child {
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: 600;

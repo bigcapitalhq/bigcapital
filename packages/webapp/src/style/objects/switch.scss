@@ -1,5 +1,6 @@
-.bp6-control.bp6-switch {
-  .bp6-control-indicator {
+@import '@/style/_common';
+.#{$ns}-control.#{$ns}-switch {
+  .#{$ns}-control-indicator {
 
     &:before {
       box-shadow: none;

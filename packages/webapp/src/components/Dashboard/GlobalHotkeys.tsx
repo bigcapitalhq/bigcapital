@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { NS } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
@@ -16,9 +17,9 @@ interface GlobalHotkeyRoute {
 }
 
 const handleToggleDarkMode = () => {
-  const dark = !document.body.classList.contains('bp6-dark');
-  document.documentElement.classList.toggle('bp6-dark', dark);
-  document.body.classList.toggle('bp6-dark', dark);
+  const dark = !document.body.classList.contains(`${NS}-dark`);
+  document.documentElement.classList.toggle(`${NS}-dark`, dark);
+  document.body.classList.toggle(`${NS}-dark`, dark);
 };
 
 type GlobalHotkeysProps = Pick<

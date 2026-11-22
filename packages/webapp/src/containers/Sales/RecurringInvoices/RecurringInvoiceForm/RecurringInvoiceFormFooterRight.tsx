@@ -12,6 +12,7 @@ import {
   TotalLines,
 } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
 import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/DiscountTotalLine';
 import { useFeatureCan } from '@/hooks/state';
@@ -70,7 +71,7 @@ export function RecurringInvoiceFormFooterRight() {
 const RecurringTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

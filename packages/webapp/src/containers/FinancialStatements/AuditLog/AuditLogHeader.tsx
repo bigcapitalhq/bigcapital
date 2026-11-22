@@ -8,6 +8,7 @@ import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import { getDefaultAuditLogQuery, getAuditLogQuerySchema } from './common';
 import { FormattedMessage as T, FFormGroup, FDateInput } from '@/components';
 import { FMultiSelect } from '@/components/Forms';
+import { NS } from '@/constants/classes';
 import { useDateInputFormatter } from '@/hooks';
 import { useAuditLogFilterOptionsQuery } from '@/hooks/query';
 import { saveInvoke, transformToForm } from '@/utils';
@@ -43,7 +44,7 @@ const auditLogSelectItemPredicate = (query: string, item: SelectItem) => {
 };
 
 const AuditLogDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 350px;
   }
 `;

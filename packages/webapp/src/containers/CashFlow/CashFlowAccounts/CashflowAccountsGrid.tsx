@@ -26,6 +26,7 @@ import {
   getAddMoneyInOptions,
   getAddMoneyOutOptions,
 } from '@/constants/cashflowOptions';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
@@ -393,7 +394,7 @@ const AccountsEmptyStateBase = styled.div`
 const AccountsEmptyStateTitle = styled.h1`
   --x-text-color: #626b76;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   font-size: 18px;

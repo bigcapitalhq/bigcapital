@@ -6,6 +6,7 @@ import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { tableRowTypesToClassnames } from '@/utils';
 
 interface APAgingSummaryTableProps {
@@ -45,7 +46,7 @@ const APAgingSummaryDataTable = styled(ReportDataTable)`
   --color-table-total-text-color: #000;
   --color-table-total-border-top: #bbb;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
     --color-table-total-border-top: var(--color-dark-gray5);

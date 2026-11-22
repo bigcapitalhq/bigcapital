@@ -18,7 +18,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { CLASSES, NS } from '@/constants/classes';
 import { MakeJournalFormFooterLeft } from '@/containers/Accounting/MakeJournal/MakeJournalFormFooterLeft';
 
 export function RecurringJournalFormFooter() {
@@ -76,11 +76,11 @@ function RecurringJournalFormFooterRight() {
 }
 
 const AutoPublishFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
+  &.${NS}-form-group {
     margin-top: 12px;
     margin-bottom: 0;
 
-    .bp6-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }

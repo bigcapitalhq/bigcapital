@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 /**
  * Shared theme tokens for the bank reconciliation UI.
@@ -15,7 +16,7 @@ export const ReconciliationTheme = styled.div`
   --x-recon-success: #3dcc91;
   --x-recon-warning: #ffb366;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-recon-border: var(--color-dark-gray4);
     --x-recon-border-light: var(--color-dark-gray4);
     --x-recon-text: var(--color-light-gray5);

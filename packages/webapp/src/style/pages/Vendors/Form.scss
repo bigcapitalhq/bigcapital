@@ -8,7 +8,7 @@
   --x-color-tabs-border: #f0f0f0;
   --x-color-tabs-tab-item-text: #888;
 
-  .bp6-dark & {
+  .#{$ns}-dark & {
     --x-border: var(--color-dark-gray3);
     --x-color-tabs-border: var(--color-dark-gray3);
     --x-color-tabs-tab-item-text: var(--color-light-gray1);
@@ -25,20 +25,20 @@
     max-width: 1000px;
   }
 
-  .bp6-form-group {
+  .#{$ns}-form-group {
     max-width: 500px;
 
-    .bp6-control {
+    .#{$ns}-control {
       margin-top: 8px;
       margin-bottom: 8px;
     }
 
-    &.bp6-inline {
-      .bp6-label {
+    &.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 150px;
       }
     }
-    .bp6-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
   }
@@ -46,7 +46,7 @@
   .form-group--contact_name {
     max-width: 600px;
 
-    .bp6-control-group > * {
+    .#{$ns}-control-group > * {
       flex-shrink: unset;
 
       &:not(:last-child) {
@@ -62,16 +62,16 @@
     }
   }
 
-  .bp6-form-group {
+  .#{$ns}-form-group {
     margin-bottom: 14px;
   }
 
-  .bp6-tab-panel {
+  .#{$ns}-tab-panel {
     margin-top: 26px;
   }
 
   .form-group--phone-number {
-    .bp6-control-group > * {
+    .#{$ns}-control-group > * {
       flex-shrink: unset;
       padding-right: 5px;
       padding-left: 5px;
@@ -98,20 +98,20 @@
     // Tab panels.
     .tab-panel {
       &--address {
-        .bp6-form-group {
+        .#{$ns}-form-group {
           max-width: 440px;
 
-          &.bp6-inline {
-            .bp6-label {
+          &.#{$ns}-inline {
+            .#{$ns}-label {
               min-width: 145px;
             }
           }
 
-          .bp6-form-content {
+          .#{$ns}-form-content {
             width: 100%;
           }
 
-          textarea.bp6-input {
+          textarea.#{$ns}-input {
             max-width: 100%;
             width: 100%;
             min-height: 50px;
@@ -120,7 +120,7 @@
       }
       &--note {
         .form-group--note {
-          .bp6-form-group {
+          .#{$ns}-form-group {
             max-width: 600px;
           }
           textarea {
@@ -136,8 +136,8 @@
     }
   }
 
-  .bp6-tabs {
-    .bp6-tab-list {
+  .#{$ns}-tabs {
+    .#{$ns}-tab-list {
       position: relative;
 
       &:before {
@@ -153,7 +153,7 @@
         margin-right: 25px;
       }
 
-      &.bp6-large > .bp6-tab {
+      &.#{$ns}-large > .#{$ns}-tab {
         font-size: 15px;
         color: var(--x-color-tabs-tab-item-text);
 

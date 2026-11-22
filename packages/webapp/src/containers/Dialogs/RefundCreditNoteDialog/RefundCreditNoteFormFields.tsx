@@ -26,6 +26,7 @@ import {
 } from '@/components';
 import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { NS } from '@/constants/classes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
@@ -192,7 +193,7 @@ export const RefundCreditNoteFormFields = RefundCreditNoteFormFieldsInner;
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-divider-color: rgba(255, 255, 255, 0.1);
   }
   height: 1px;

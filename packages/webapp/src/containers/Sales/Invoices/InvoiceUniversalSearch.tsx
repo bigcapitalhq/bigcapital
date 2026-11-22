@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import type { SaleInvoice } from '@bigcapital/sdk-ts';
 import { T, Choose, Icon, TextStatus } from '@/components';
 import { AbilitySubject, SaleInvoiceAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -103,7 +104,7 @@ export function InvoiceUniversalSearchItem(
       text={
         <div>
           <div>{highlightText(item.text, query)}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {highlightText(item.reference.invoiceNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.invoiceDateFormatted}

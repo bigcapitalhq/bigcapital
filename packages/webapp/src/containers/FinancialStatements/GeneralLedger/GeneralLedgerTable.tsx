@@ -13,6 +13,7 @@ import {
   TableVirtualizedListRows,
 } from '@/components';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
@@ -94,7 +95,7 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
   --color-table-border-color: #ececec;
   --color-table-total-border-color: #ddd;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
     --color-table-border-color: var(--color-dark-gray4);

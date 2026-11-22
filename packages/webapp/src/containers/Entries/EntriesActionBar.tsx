@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import { Box } from '@/components';
+import { NS } from '@/constants/classes';
 
 export const EntriesActionsBar = styled(Box)`
   padding-bottom: 12px;
   display: flex;
 
-  .bp6-form-group {
+  .${NS}-form-group {
     margin-bottom: 0;
 
-    label.bp6-label {
+    label.${NS}-label {
       opacity: 0.6;
       margin-right: 8px;
     }

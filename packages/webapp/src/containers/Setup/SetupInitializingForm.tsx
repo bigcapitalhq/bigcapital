@@ -4,6 +4,7 @@ import { x } from '@xstyled/emotion';
 import { useState, useEffect } from 'react';
 import type { OrganizationCurrent } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withOrganizationActions,
   WithOrganizationActionsProps,
@@ -109,7 +110,7 @@ function SetupInitializingRunning() {
   const isDarkMode = useIsDarkMode();
 
   const progressBarStyles = css`
-    .bp6-progress-bar {
+    .${NS}-progress-bar {
       border-radius: 40px;
       display: block;
       height: 6px;
@@ -118,7 +119,7 @@ function SetupInitializingRunning() {
       width: 80%;
       margin: 0 auto;
 
-      .bp6-progress-meter {
+      .${NS}-progress-meter {
         background-color: #809cb3;
       }
     }

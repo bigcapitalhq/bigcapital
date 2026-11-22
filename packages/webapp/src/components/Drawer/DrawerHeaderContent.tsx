@@ -11,6 +11,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrawerContext } from './DrawerProvider';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withDrawerActions,
   WithDrawerActionsProps,
@@ -88,7 +89,7 @@ function SubTitle({ children }: SubTitleProps) {
 const SubTitleHead = styled.div`
   --x-color-text: #666;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-text: rgba(255, 255, 255, 0.6);
   }
   color: var(--x-color-text);

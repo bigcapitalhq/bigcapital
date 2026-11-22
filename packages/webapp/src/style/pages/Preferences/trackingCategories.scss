@@ -1,22 +1,23 @@
+@import '@/style/_common';
 .dialog--tracking-category-form {
   width: 640px;
 
-  .bp6-dialog-body {
-    .bp6-form-group {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group {
       margin-bottom: 15px;
     }
-    .bp6-form-group.bp6-inline {
-      .bp6-label {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         font-size: 13px;
         margin-bottom: 3px;
         min-width: 150px;
       }
-      .bp6-form-content {
+      .#{$ns}-form-content {
         width: 100%;
       }
     }
   }
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
   }
 

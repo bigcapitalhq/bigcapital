@@ -3,6 +3,7 @@ import React from 'react';
 import { getUniversalSearchBind } from './utils';
 import type { UniversalSearchItem } from '@/components/UniversalSearch/UniversalSearch';
 import type { ItemRendererProps, ItemRenderer } from '@blueprintjs/select';
+import { NS } from '@/constants/classes';
 import { highlightText } from '@/utils';
 
 /**
@@ -21,7 +22,7 @@ function UniversalSearchItemDetail(
           <div>{highlightText(item.text, query)}</div>
 
           {item.subText && (
-            <span className="bp6-text-muted">
+            <span className={`${NS}-text-muted`}>
               {highlightText(item.subText, query)}
             </span>
           )}

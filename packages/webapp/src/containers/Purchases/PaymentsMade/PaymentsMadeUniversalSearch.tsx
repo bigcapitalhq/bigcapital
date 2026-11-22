@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import type { BillPayment } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { AbilitySubject, PaymentMadeAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -66,7 +67,7 @@ export function PaymentsMadeUniversalSearchItem(
         <div>
           <div>{highlightText(text, query)}</div>
 
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {reference.paymentNumber && (
               <>
                 {highlightText(reference.paymentNumber, query)}

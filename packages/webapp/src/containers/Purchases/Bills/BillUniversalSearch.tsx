@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import type { Bill } from '@bigcapital/sdk-ts';
 import { T, Icon, Choose, If, TextStatus } from '@/components';
 import { AbilitySubject, BillAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -111,7 +112,7 @@ export function BillUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.billNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedBillDate}

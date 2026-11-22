@@ -1,3 +1,4 @@
+@import '@/style/_common';
 // .page-form
 //   > .page-form__header
 //   > .page-form__content
@@ -10,7 +11,7 @@
   --color-page-form-floating-actions-border: rgb(210, 221, 226);
   --color-page-form-floating-actions-shadow: rgba(0, 0, 0, 0.05);
 
-  .bp6-dark & {
+  .#{$ns}-dark & {
     --color-page-form-header-background: var(--color-dark-gray1);
     --color-page-form-header-border: rgba(255, 255, 255, 0.1);
     
@@ -30,15 +31,15 @@
     border-top: 1px solid var(--color-page-form-floating-actions-border);
     box-shadow: 0px -1px 4px 0px var(--color-page-form-floating-actions-shadow);
 
-    .bp6-button-group{
+    .#{$ns}-button-group{
       
-      .bp6-button{
+      .#{$ns}-button{
         &:not(:last-child),
-        &.bp6-popover-target:not(:last-child) {
+        &.#{$ns}-popover-target:not(:last-child) {
           border-right: 1px solid rgba(92, 112, 127, 0.3);
           margin-right: 0;
 
-          &.bp6-intent-primary{
+          &.#{$ns}-intent-primary{
             border-right: 1px solid rgba(255, 255, 255, 0.3);
           }
         }
@@ -49,11 +50,11 @@
     #{$self}__header-fields {
       width: 85%;
 
-      .bp6-form-group{
+      .#{$ns}-form-group{
         margin-bottom: 16px;
       }
 
-      > .bp6-form-group:last-of-type{
+      > .#{$ns}-form-group:last-of-type{
         margin-bottom: 0;
       }
     }
@@ -62,7 +63,7 @@
       border-bottom: 1px solid var(--color-page-form-header-border);
       padding: 25px 32px;
 
-      .bp6-form-group.bp6-inline label.bp6-label {
+      .#{$ns}-form-group.#{$ns}-inline label.#{$ns}-label {
         font-weight: 500;
       }
     }
@@ -77,7 +78,7 @@
       padding-right: 32px;
       padding-bottom: 20px;
 
-      label.bp6-label{
+      label.#{$ns}-label{
         font-weight: 500;
       }
     }

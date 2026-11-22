@@ -14,6 +14,7 @@ import {
   FormattedMessage as T,
   Row,
 } from '@/components';
+import { NS } from '@/constants/classes';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useItems } from '@/hooks/query';
 import { transformToForm } from '@/utils';
@@ -130,7 +131,7 @@ export function BatchDetailsHeader({
 }
 
 const BatchDetailsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

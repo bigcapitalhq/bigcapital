@@ -7,6 +7,7 @@ import { useTrialBalanceSheetTableColumns } from './hooks';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { tableRowTypesToClassnames } from '@/utils';
 
 interface TrialBalanceSheetTableProps {
@@ -64,7 +65,7 @@ const TrialBalanceDataTable = styled(ReportDataTable)`
   --color-table-text-color: #252a31;
   --color-table-total-text-color: #000;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
   }

@@ -4,6 +4,7 @@ import clsx from 'classnames';
 import styles from './PaymentPortal.module.scss';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
 import { AppToaster, Box, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import {
   useCreateStripeCheckoutSession,
@@ -175,7 +176,7 @@ export function PaymentPortal() {
                   styles.footerButton,
                   styles.buyButton,
                   css`
-                    &.bp6-button.bp6-intent-primary {
+                    &.${NS}-button.${NS}-intent-primary {
                       background-color: var(--payment-page-primary-button);
 
                       &:hover,

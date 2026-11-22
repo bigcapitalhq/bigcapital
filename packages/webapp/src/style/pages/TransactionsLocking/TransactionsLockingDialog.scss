@@ -1,11 +1,12 @@
+@import '@/style/_common';
 .dialog--transaction--locking {
   max-width: 450px;
 
-  .bp6-form-group {
+  .#{$ns}-form-group {
     margin-bottom: 10px;
     margin-top: 10px;
 
-    label.bp6-label {
+    label.#{$ns}-label {
       font-size: 13px;
       margin-bottom: 3px;
     }
@@ -13,7 +14,7 @@
 
   .form-group {
     &--reason {
-      .bp6-form-content {
+      .#{$ns}-form-content {
         textarea {
           width: 100%;
           min-height: 85px;
@@ -23,7 +24,7 @@
       }
     }
   }
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     display: flex;
     justify-content: flex-start;
     // padding-top: 10px;

@@ -19,6 +19,7 @@ import {
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
 
@@ -138,7 +139,7 @@ export const SalesTaxLiabilitySummaryHeader = FF.pipe(
 );
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 320px;
   }
 `;

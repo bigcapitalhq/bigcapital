@@ -2,6 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function CreditNoteFormFooterLeft() {
   return (
@@ -37,26 +38,26 @@ export function CreditNoteFormFooterLeft() {
 }
 
 const CreditNoteMsgFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
+  &.${NS}-form-group {
     margin-bottom: 40px;
 
-    .bp6-label {
+    .${NS}-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp6-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }
 `;
 
 const TermsConditsFormGroup = styled(FFormGroup)`
-  &.bp6-form-group {
-    .bp6-label {
+  &.${NS}-form-group {
+    .${NS}-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp6-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }

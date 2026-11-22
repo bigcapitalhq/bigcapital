@@ -16,6 +16,7 @@ import {
 } from './withTrialBalanceActions';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
 
@@ -151,7 +152,7 @@ export const TrialBalanceSheetHeader = FF.pipe(
 );
 
 const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

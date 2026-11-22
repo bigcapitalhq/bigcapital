@@ -4,11 +4,11 @@ import * as FF from 'fp-ts/function';
 import React from 'react';
 import { OrganizationsListDrawerContent } from './OrganizationsListDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
+import { NS } from '@/constants/classes';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const OrganizationsDrawer = styled(Drawer)`
-  &.bp6-drawer.bp6-dark,
-  .bp6-dark &.bp6-drawer {
+  &.${NS}-drawer.${NS}-dark, .${NS}-dark &.${NS}-drawer {
     background-color: var(--color-dark-gray1);
   }
 `;

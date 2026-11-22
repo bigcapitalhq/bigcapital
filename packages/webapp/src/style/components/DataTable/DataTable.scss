@@ -93,7 +93,7 @@
         border-right: 0;
       }
 
-      .bp6-control {
+      .#{$ns}-control {
         margin-bottom: 0;
       }
       .resizer {
@@ -117,7 +117,7 @@
         }
       }
 
-      .bp6-control.bp6-checkbox:not(.bp6-large) .bp6-control-indicator {
+      .#{$ns}-control.#{$ns}-checkbox:not(.#{$ns}-large) .#{$ns}-control-indicator {
         cursor: auto;
 
         &,
@@ -126,7 +126,7 @@
           width: 15px;
         }
       }
-      .bp6-control.bp6-checkbox input:not(:checked):not(:indeterminate) ~ .bp6-control-indicator{
+      .#{$ns}-control.#{$ns}-checkbox input:not(:checked):not(:indeterminate) ~ .#{$ns}-control-indicator{
         box-shadow: inset 0 0 0 1px var(--color-datatable-checkbox-border);
       }
 
@@ -186,7 +186,7 @@
           text-overflow: ellipsis;
         }
 
-        .bp6-form-group {
+        .#{$ns}-form-group {
           width: 100%;
         }
 
@@ -378,7 +378,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    body.bp6-dark & {
+    body.#{$ns}-dark & {
       background: rgba(28, 33, 39, 0.6);
     }
   }
@@ -392,7 +392,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    body.bp6-dark & {
+    body.#{$ns}-dark & {
       background: rgba(28, 33, 39, 0.6);
     }
   }

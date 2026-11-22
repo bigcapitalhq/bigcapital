@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 
 .cloud-spinner{
@@ -13,7 +14,7 @@
     z-index: 999;
   }
 
-  .bp6-spinner{
+  .#{$ns}-spinner{
     position: absolute;
     z-index: 999999;
     left: 50%;
@@ -21,12 +22,12 @@
     margin-top: -20px;
     margin-left: -20px;
   }
-  &:not(.is-loading) .bp6-spinner{
+  &:not(.is-loading) .#{$ns}-spinner{
     display: none;
   }
 }
 
-.bp6-dark .cloud-spinner {
+.#{$ns}-dark .cloud-spinner {
   &.is-loading:before {
     background: rgba(17, 20, 24, 0.8);
   }

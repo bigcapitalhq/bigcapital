@@ -1,12 +1,13 @@
+@import '@/style/_common';
 .dialog--refund-credit-note {
-  .bp6-dialog-body {
-    .bp6-form-group {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group {
       margin-bottom: 13px;
     }
 
     .form-group {
       &--description {
-        .bp6-form-content {
+        .#{$ns}-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -17,7 +18,7 @@
     }
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
   }
 }

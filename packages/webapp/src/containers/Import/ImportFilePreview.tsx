@@ -11,6 +11,7 @@ import { useImportFileContext } from './ImportFileProvider';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import { SectionCard, Section } from '@/components/Section';
 import { CLASSES } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useImportFileProcess } from '@/hooks/query/import';
 
 export function ImportFilePreview() {
@@ -89,7 +90,7 @@ function ImportFilePreviewSkipped() {
       title={`(${importPreview.skippedCount}) Items are skipped`}
     >
       <SectionCard padded={true}>
-        <table className={clsx('bp6-html-table', styles.skippedTable)}>
+        <table className={clsx(`${NS}-html-table`, styles.skippedTable)}>
           <tbody>
             {importPreview?.errors.map((error, key) => (
               <tr key={key}>

@@ -5,6 +5,7 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { ItemRenderer } from '@blueprintjs/select';
 import { Choose, T, Icon, TextStatus } from '@/components';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -102,7 +103,7 @@ export const EstimateUniversalSearchItem: ItemRenderer<
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.estimateNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedEstimateDate}

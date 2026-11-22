@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dialog--money-in,
 .dialog--money-out {
 
@@ -6,12 +7,12 @@
     padding: 0 0px 16px 0px;
     border-bottom: 2px solid #e9e9e9;
 
-    .bp6-form-group{
+    .#{$ns}-form-group{
       margin-bottom: 0;
     }
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
   }
 }

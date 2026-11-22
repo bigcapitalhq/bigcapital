@@ -9,6 +9,7 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { Branch } from '@bigcapital/sdk-ts';
 import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
+import { NS } from '@/constants/classes';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
@@ -90,7 +91,7 @@ const BranchesTable = styled(DataTable)`
     min-height: 38px;
 
     .td.td-name {
-      .bp6-icon {
+      .${NS}-icon {
         margin: 0;
         margin-left: 2px;
         vertical-align: top;

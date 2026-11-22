@@ -1,19 +1,20 @@
+@import '@/style/_common';
 
 
 //  General page
 //---------------------------------
 .preferences-page__inside-content--general {
-  .bp6-form-group {
+  .#{$ns}-form-group {
     max-width: 650px;
     margin-bottom: 24px;
 
-    .bp6-label {
+    .#{$ns}-label {
       min-width: 190px;
       font-weight: 600;
       // color: #38414e;
     }
 
-    .bp6-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
   }

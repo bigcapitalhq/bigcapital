@@ -3,21 +3,21 @@
 // Account Form Dialog.
 // ----------------------------
 .dialog--account-form {
-  &:not(.dialog--loading) .bp6-dialog-body {
+  &:not(.dialog--loading) .#{$ns}-dialog-body {
     margin-bottom: 30px;
   }
 
-  .bp6-dialog-body {
-    .bp6-form-group.bp6-inline {
-      .bp6-label {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 140px;
       }
-      .bp6-form-content {
+      .#{$ns}-form-content {
         width: 250px;
       }
 
       &.form-group--description {
-        .bp6-form-content {
+        .#{$ns}-form-content {
           width: 280px;
         }
         textarea {
@@ -35,7 +35,7 @@
     .form-group--subaccount {
       margin-bottom: 16px;
 
-      .bp6-icon-info-circle {
+      .#{$ns}-icon-info-circle {
         color: #a1b2c5;
         position: relative;
         top: -2px;

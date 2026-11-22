@@ -12,6 +12,7 @@ import {
   TableVirtualizedListRows,
 } from '@/components';
 import { Align, TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { tableRowTypesToClassnames } from '@/utils';
 
 type ReportTable = ReconciliationStatusTableResponse['table'];
@@ -72,7 +73,7 @@ export function ReconciliationStatusTable({ table }: { table: ReportTable }) {
   return (
     <>
       {table.rows.length > 0 && (
-        <p className="bp6-text-muted">
+        <p className={`${NS}-text-muted`}>
           <T id="report.reconciliation_status.balance_description" />
         </p>
       )}
@@ -97,7 +98,7 @@ export function ReconciliationStatusTable({ table }: { table: ReportTable }) {
 const ReconciliationDataTable = styled(ReportDataTable)`
   --color-reconciliation-cell-border: #ececec;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --color-reconciliation-cell-border: var(--color-dark-gray4);
   }
 

@@ -5,6 +5,7 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { SaleReceipt } from '@bigcapital/sdk-ts';
 import { Icon, Choose, T, TextStatus } from '@/components';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -83,7 +84,7 @@ export function ReceiptUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.receiptNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedReceiptDate}

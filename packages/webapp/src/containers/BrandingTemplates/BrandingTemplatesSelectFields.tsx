@@ -1,15 +1,16 @@
 import { Button, ButtonProps } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { FFormGroup, Icon } from '@/components';
+import { NS } from '@/constants/classes';
 
 export const BrandingThemeFormGroup = styled(FFormGroup)`
   margin-bottom: 0;
 
-  .bp6-label {
+  .${NS}-label {
     color: #7a8492;
   }
 
-  &.bp6-inline label.bp6-label {
+  &.${NS}-inline label.${NS}-label {
     margin-right: 0;
   }
 `;

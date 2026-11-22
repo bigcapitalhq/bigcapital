@@ -1,10 +1,11 @@
+@import '@/style/_common';
 .root {
   --color-sample-download-background: #fff;
   --color-sample-download-border: #d3d8de;
   --color-sample-download-title-text: #5f6b7c;
   --color-sample-download-desc-text: #8f99a8;
 
-  :global(.bp6-dark) & {
+  :global(.#{$ns}-dark) & {
     --color-sample-download-background: var(--color-dark-gray3);
     --color-sample-download-border: var(--color-dark-gray5);
     --color-sample-download-title-text: var(--color-light-gray1);

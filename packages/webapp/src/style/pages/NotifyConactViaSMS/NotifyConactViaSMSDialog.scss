@@ -1,12 +1,13 @@
+@import '@/style/_common';
 .dialog--notify-vis-sms {
   width: 800px;
 
-  .bp6-dialog-body {
-    .bp6-form-group {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group {
       margin-bottom: 15px;
       margin-top: 15px;
 
-      label.bp6-label {
+      label.#{$ns}-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
@@ -14,7 +15,7 @@
 
     .form-group {
       &--sms_message {
-        .bp6-form-content {
+        .#{$ns}-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -25,7 +26,7 @@
     }
   }
 
-  .bp6-dialog-footer {
+  .#{$ns}-dialog-footer {
     padding-top: 10px;
   }
 }

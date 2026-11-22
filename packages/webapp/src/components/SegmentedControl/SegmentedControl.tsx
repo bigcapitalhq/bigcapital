@@ -2,6 +2,7 @@ import { Button, ButtonGroup } from '@blueprintjs/core';
 import clsx from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 export interface SegmentedControlItem<T extends string = string> {
   label: React.ReactNode;
@@ -58,18 +59,18 @@ const SegmentedControlGroup = styled(ButtonGroup)`
   --segmented-control-active-background: var(--color-dark-gray2);
   --segmented-control-active-hover-background: var(--color-dark-gray1);
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --segmented-control-active-background: var(--color-dark-gray5);
     --segmented-control-active-hover-background: var(--color-dark-gray4);
   }
 
-  && .bp6-button {
+  && .${NS}-button {
     font-weight: 500;
 
-    & + .bp6-button {
+    & + .${NS}-button {
       margin-left: -1px;
     }
-    &.bp6-active:not(.bp6-disabled) {
+    &.${NS}-active:not(.${NS}-disabled) {
       z-index: 1;
       color: var(--color-white);
       background-color: var(--segmented-control-active-background);

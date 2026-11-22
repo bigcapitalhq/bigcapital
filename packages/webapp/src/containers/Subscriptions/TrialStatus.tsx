@@ -3,6 +3,7 @@ import moment from 'moment';
 import { useBillingPageBoot } from './BillingPageBoot';
 import { useUpgradeToGoCheckout } from './useUpgradeToGoCheckout';
 import { Box, Can, Group } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Go trial summary with an upgrade CTA.
@@ -34,7 +35,7 @@ export function TrialStatus() {
             {isOnTrial ? 'Go trial' : 'Your Go trial has ended'}
           </H4>
           <Text
-            className="bp6-text-muted"
+            className={`${NS}-text-muted`}
             style={{ marginTop: '0.4rem', lineHeight: 1.6 }}
           >
             {isOnTrial

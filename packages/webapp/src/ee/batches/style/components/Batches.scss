@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .batch-form-popover {
   width: min(630px, calc(100vw - 24px));
   max-height: calc(100vh - 24px);
@@ -83,9 +84,9 @@
       font-size: 13px;
     }
 
-    .bp6-input,
-    .bp6-numeric-input input,
-    .bp6-button {
+    .#{$ns}-input,
+    .#{$ns}-numeric-input input,
+    .#{$ns}-button {
       font-size: 13px;
     }
   }
@@ -104,9 +105,9 @@
     padding-right: 0;
   }
 
-  .bp6-input-group,
-  .bp6-input,
-  .bp6-numeric-input {
+  .#{$ns}-input-group,
+  .#{$ns}-input,
+  .#{$ns}-numeric-input {
     width: 100%;
     background-color: transparent !important;
   }
@@ -148,11 +149,11 @@
   .batch-form-table__batch-select {
     width: 100%;
 
-    .bp6-button {
+    .#{$ns}-button {
       width: 100%;
     }
 
-    .bp6-button-text {
+    .#{$ns}-button-text {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -195,12 +196,12 @@
   flex-wrap: wrap;
   gap: 12px;
 
-  .bp6-form-group {
+  .#{$ns}-form-group {
     margin-bottom: 0;
     min-width: 150px;
   }
 
-  .bp6-form-group.bp6-inline .bp6-form-content {
+  .#{$ns}-form-group.#{$ns}-inline .#{$ns}-form-content {
     width: 100%;
   }
 
@@ -303,7 +304,7 @@
 .batch-allocations__batch-popover {
   min-width: 300px;
 
-  .bp6-menu {
+  .#{$ns}-menu {
     max-height: 280px;
     overflow-y: auto;
   }

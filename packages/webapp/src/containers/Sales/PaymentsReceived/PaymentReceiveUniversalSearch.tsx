@@ -6,6 +6,7 @@ import {
   AbilitySubject,
   PaymentReceiveAction,
 } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import {
@@ -74,7 +75,7 @@ export function PaymentReceiveUniversalSearchItem(
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          <span className="bp6-text-muted">
+          <span className={`${NS}-text-muted`}>
             {highlightText(item.reference.paymentReceiveNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {highlightText(item.reference.formattedPaymentDate, query)}

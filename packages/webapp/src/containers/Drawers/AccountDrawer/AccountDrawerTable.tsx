@@ -10,6 +10,7 @@ import { useAccountReadEntriesColumns } from './utils';
 import { Card, DataTable, If } from '@/components';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import {
   withDrawerActions,
   WithDrawerActionsProps,
@@ -73,7 +74,7 @@ export const AccountDrawerTable = FF.pipe(
 const TableFooter = styled.div`
   --x-border-color: #d2dde2;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-border-color: var(--color-dark-gray5);
   }
   padding: 6px 14px;

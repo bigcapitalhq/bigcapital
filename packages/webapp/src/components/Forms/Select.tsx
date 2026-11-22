@@ -8,6 +8,7 @@ import {
 import clsx from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 function selectInput(props) {
   return ({ text }) => (
@@ -33,7 +34,7 @@ export const SelectButton = styled(Button)`
   --x-color-select-border: #ced4da;
   --x-color-select-caret: #8d8d8d;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --x-color-select-background: rgba(17, 20, 24, 0.3);
     --x-color-select-border: rgba(255, 255, 255, 0.15);
     --x-color-select-caret: rgba(255, 255, 255, 0.25);
@@ -44,10 +45,10 @@ export const SelectButton = styled(Button)`
   position: relative;
   padding-right: 30px;
 
-  &.bp6-small {
+  &.${NS}-small {
     padding-right: 24px;
   }
-  &:not(.is-selected):not([class*='bp6-intent-']):not(.bp6-minimal) {
+  &:not(.is-selected):not([class*='${NS}-intent-']):not(.${NS}-minimal) {
     color: #8f99a8;
   }
   &:after {
@@ -66,13 +67,13 @@ export const SelectButton = styled(Button)`
     margin-right: 12px;
     border-radius: 1px;
   }
-  &:not([class*='bp6-intent-']):not(.bp6-disabled) {
+  &:not([class*='${NS}-intent-']):not(.${NS}-disabled) {
     &,
     &:hover {
       background: var(--x-color-select-background);
     }
   }
-  .bp6-intent-danger & {
+  .${NS}-intent-danger & {
     border-color: #db3737;
   }
 `;

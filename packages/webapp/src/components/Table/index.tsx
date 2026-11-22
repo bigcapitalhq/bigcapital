@@ -1,5 +1,6 @@
 // @ts-nocheck
 import styled from 'styled-components';
+import { NS } from '@/constants/classes';
 
 export const Table = styled.table`
   width: 100%;
@@ -25,7 +26,7 @@ export const TRDarkSingleLine = styled(TR)`
   ${TD} {
     border-bottom: 1px solid #000;
 
-    .bp6-dark & {
+    .${NS}-dark & {
       border-bottom-color: var(--color-dark-gray5);
     }
   }
@@ -35,7 +36,7 @@ export const TRDarkDoubleLines = styled(TR)`
   ${TD} {
     border-bottom: 3px double #000;
 
-    .bp6-dark & {
+    .${NS}-dark & {
       border-bottom-color: var(--color-dark-gray5);
     }
   }

@@ -5,6 +5,7 @@ import * as FF from 'fp-ts/function';
 import { useState } from 'react';
 import { WorkflowIcon } from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withOrganizationActions,
   WithOrganizationActionsProps,
@@ -50,7 +51,7 @@ function SetupCongratsPageInner({
 
         <x.div
           className={css`
-            .bp6-button {
+            .${NS}-button {
               height: 38px;
               padding-left: 25px;
               padding-right: 25px;

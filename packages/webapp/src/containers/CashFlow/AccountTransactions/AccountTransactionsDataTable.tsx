@@ -20,6 +20,7 @@ import {
   FormattedMessage as T,
   AppToaster,
 } from '@/components';
+import { NS } from '@/constants/classes';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -190,7 +191,7 @@ const DashboardConstrantTable = styled(DataTable)`
 const CashflowTransactionsTable = styled(DashboardConstrantTable)`
   --table-cell-border-color: #e6e6e6;
 
-  .bp6-dark & {
+  .${NS}-dark & {
     --table-cell-border-color: rgba(255, 255, 255, 0.15);
   }
 

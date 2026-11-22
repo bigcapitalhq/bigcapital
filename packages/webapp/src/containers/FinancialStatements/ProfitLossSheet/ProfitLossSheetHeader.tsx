@@ -19,6 +19,7 @@ import {
 import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 
 type ProfitLossFormValues = ReturnType<typeof getDefaultProfitLossQuery>;
@@ -120,7 +121,7 @@ export const ProfitLossSheetHeader = FF.pipe(
 );
 
 const ProfitLossSheetHeaderStyled = styled(FinancialStatementHeader)`
-  .bp6-drawer {
+  .${NS}-drawer {
     max-height: 520px;
   }
 `;

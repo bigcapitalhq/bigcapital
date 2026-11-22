@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .form {
   &__floating-footer {
     position: fixed;
@@ -14,14 +15,14 @@
 }
 
 // Form form.
-label.bp6-label {
+label.#{$ns}-label {
   color: #353535;
   font-weight: 400;
 
   .required {
     color: red;
   }
-  .bp6-form-group.bp6-inline & {
+  .#{$ns}-form-group.#{$ns}-inline & {
     margin: 0 10px 0 0;
     line-height: 30px;
   }
@@ -36,42 +37,42 @@ label.bp6-label {
   color: #333;
 
   &,
-  .bp6-dark & {
+  .#{$ns}-dark & {
     box-shadow: 0 0 0 transparent;
   }
   &:focus,
-  &.bp6-active {
+  &.#{$ns}-active {
     box-shadow: 0 0 0 1px #116cd0;
     border-color: #116cd0;
   }
 
-  &.bp6-disabled,
+  &.#{$ns}-disabled,
   &:disabled {
     background: #e9ecef;
   }
 
-  &.bp6-intent-danger {
+  &.#{$ns}-intent-danger {
     box-shadow: 0 0 0 transparent;
     border-color: #db3737;
 
     &:focus,
-    &.bp6-active {
+    &.#{$ns}-active {
       box-shadow: 0 0 0 1px #db3737;
       border-color: #db3737;
     }
   }
 }
 
-.bp6-input-group{
+.#{$ns}-input-group{
 
-  &.bp6-intent-danger{
+  &.#{$ns}-intent-danger{
     
-    .bp6-input{
+    .#{$ns}-input{
       box-shadow: 0 0 0 transparent;
       border-color: #db3737;
 
       &:focus,
-      &.bp6-active {
+      &.#{$ns}-active {
         box-shadow: 0 0 0 1px #db3737;
         border-color: #db3737;
       }
@@ -96,7 +97,7 @@ label.bp6-label {
 
   // Blueprint's dark theme overrides the helper text but not the sub-label,
   // which keeps the light theme muted color that's unreadable on dark surfaces.
-  .bp6-dark & {
+  .#{$ns}-dark & {
     .#{$ns}-form-group-sub-label,
     .#{$ns}-form-helper-text {
       color: var(--color-muted-text);
@@ -115,8 +116,8 @@ label.bp6-label {
 
   &,
   &:hover,
-  .bp6-dark &,
-  .bp6-dark &:hover {
+  .#{$ns}-dark &,
+  .#{$ns}-dark &:hover {
     box-shadow: none;
     background-color: var(--color-ui-input-background);
     border: 1px solid var(--color-ui-input-border);
@@ -145,7 +146,7 @@ label.bp6-label {
     border-radius: 0.25rem;
     height: 100%;
 
-    .bp6-form-group & {
+    .#{$ns}-form-group & {
       padding: 0.25rem 0.5rem;
       font-size: 0.875rem;
       line-height: 1.5;
@@ -154,11 +155,11 @@ label.bp6-label {
   }
 }
 
-.bp6-form-group {
-  .bp6-input-group {
+.#{$ns}-form-group {
+  .#{$ns}-input-group {
     flex: 1 1 auto;
   }
-  .bp6-control-group {
+  .#{$ns}-control-group {
     >.input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -167,12 +168,12 @@ label.bp6-label {
 }
 
 .#{$ns}-html-select {
-  .bp6-icon-double-caret-vertical {
+  .#{$ns}-icon-double-caret-vertical {
     display: none;
   }
 }
 
-.bp6-datepicker-caption select {
+.#{$ns}-datepicker-caption select {
 
   &,
   &:hover {
@@ -200,7 +201,7 @@ label.bp6-label {
 
 .form-group--select-list {
 
-  .form-group--select-list.bp6-intent-danger & {
+  .form-group--select-list.#{$ns}-intent-danger & {
     & {
       border-color: #db3737;
     }
@@ -212,7 +213,7 @@ label.bp6-label {
     padding-right: 25px;
     justify-content: start;
 
-    &:not([class*="bp6-intent-"]):not(.bp6-minimal) {
+    &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal) {
 
       &,
       &:hover {
@@ -232,41 +233,41 @@ label.bp6-label {
     }
   }
 
-  &.bp6-fill {
+  &.#{$ns}-fill {
     width: 100%;
   }
 
-  .bp6-popover-target.bp6-popover-open {
+  .#{$ns}-popover-target.#{$ns}-popover-open {
 
     .#{$ns}-button {
 
-      &:not([class*="bp6-intent-"]):not(.bp6-minimal):not(:disabled),
-      &:not([class*="bp6-intent-"]):not(.bp6-minimal):hover:not(:disabled) {
+      &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal):not(:disabled),
+      &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal):hover:not(:disabled) {
         background-color: #fafafa;
       }
     }
   }
 
-  .bp6-popover-target {
-    .bp6-icon {
+  .#{$ns}-popover-target {
+    .#{$ns}-icon {
       position: absolute;
       top: 0;
       left: 0;
       margin: 7px;
 
-      +.bp6-button-text {
+      +.#{$ns}-button-text {
         padding-left: 20px;
       }
     }
 
-    .bp6-button {
+    .#{$ns}-button {
       padding-left: 10px;
       color: #333;
     }
   }
 
-  &.bp6-intent-danger {
-    .bp6-button:not(.bp6-minimal) {
+  &.#{$ns}-intent-danger {
+    .#{$ns}-button:not(.#{$ns}-minimal) {
       border-color: #db3737;
     }
   }
@@ -275,23 +276,23 @@ label.bp6-label {
 .select-list--fill-popover {
   position: relative;
 
-  .bp6-popover-transition-container,
-  .bp6-popover {
+  .#{$ns}-popover-transition-container,
+  .#{$ns}-popover {
     min-width: 100%;
   }
 }
 
-.select-list--tooltip-items .bp6-popover-target {
+.select-list--tooltip-items .#{$ns}-popover-target {
   display: block;
 }
-.bp6-menu-item::before,
-.bp6-menu-item>.bp6-icon {
+.#{$ns}-menu-item::before,
+.#{$ns}-menu-item>.#{$ns}-icon {
   color: #4b5d6b;
 }
 
-.bp6-control-group {
+.#{$ns}-control-group {
   .input-prepend {
-    &:not(.bp6-fixed) {
+    &:not(.#{$ns}-fixed) {
       flex: 0;
     }
 
@@ -312,13 +313,13 @@ label.bp6-label {
       border: 1px solid var(--color-ui-input-group-prepend-border);
       border-radius: 0 3px 3px 0;
 
-      .bp6-icon {
+      .#{$ns}-icon {
         color: #848da0;
       }
     }
   }
 }
 
-.bp6-control.bp6-checkbox .bp6-control-indicator{
+.#{$ns}-control.#{$ns}-checkbox .#{$ns}-control-indicator{
   border-color: #666;
 }

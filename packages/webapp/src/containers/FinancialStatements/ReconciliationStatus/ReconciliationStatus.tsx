@@ -32,6 +32,7 @@ import {
   Icon,
 } from '@/components';
 import { AbilitySubject, ReportsAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { useReconciliationStatus } from '@/hooks/query/FinancialReports/use-reconciliation-status';
 
 function ReconciliationStatusReport() {
@@ -176,7 +177,7 @@ function ReconciliationStatusReport() {
 }
 
 const ReconciliationModeGroup = styled(ButtonGroup)`
-  && > .bp6-button.bp6-small {
+  && > .${NS}-button.${NS}-small {
     padding: 0 7px;
   }
 `;

@@ -1,18 +1,19 @@
+@import '@/style/_common';
 .reference-number-form {
 
-    .bp6-dialog-body {
+    .#{$ns}-dialog-body {
 
         .paragraph {
             margin-bottom: 22px;
         }
 
-        .bp6-control {
+        .#{$ns}-control {
             margin-bottom: 16px;
         }
     }
 
-    .bp6-dialog-footer {
-        .bp6-button[type='submit'] {
+    .#{$ns}-dialog-footer {
+        .#{$ns}-button[type='submit'] {
             min-width: 80px;
         }
     }

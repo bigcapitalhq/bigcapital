@@ -1,8 +1,8 @@
 @import '../../../_base.scss';
 
 .view-detail-drawer {
-  .bp6-tabs {
-    .bp6-tab-list {
+  .#{$ns}-tabs {
+    .#{$ns}-tab-list {
       position: relative;
       background-color: #fff;
 
@@ -19,7 +19,7 @@
         margin-right: 25px;
       }
 
-      &.bp6-large > .bp6-tab {
+      &.#{$ns}-large > .#{$ns}-tab {
         font-size: 15px;
         color: #555;
         margin: 0 0.8rem;
@@ -31,7 +31,7 @@
       }
     }
 
-    .bp6-tab-panel {
+    .#{$ns}-tab-panel {
       margin-top: 0;
 
       .card {
