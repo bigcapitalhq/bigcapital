@@ -119,7 +119,7 @@ export function ItemFormPurchasingSection() {
       >
         <FTextArea
           name={'purchaseDescription'}
-          growVertically={true}
+          autoResize={true}
           disabled={!values.purchasable}
           fill
           shouldUpdate={purchaseDescFieldShouldUpdate}

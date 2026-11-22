@@ -31,7 +31,7 @@ const DatatableEditableRoot = styled.div`
   --x-color-table-body-input-text: #222;
   --x-color-table-cell-border: #d8d8d8;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-table-background: var(--color-dark-gray1);
     --x-table-border: rgba(255, 255, 255, 0.1);
     --x-table-head-background: var(--color-dark-gray2);
@@ -41,7 +41,7 @@ const DatatableEditableRoot = styled.div`
     --x-color-table-cell-border: rgba(255, 255, 255, 0.1);
   }
 
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 0;
   }
   .table {
@@ -88,18 +88,18 @@ const DatatableEditableRoot = styled.div`
       }
       .tr {
         &:hover .td,
-        .bp4-input {
+        .bp6-input {
           background-color: transparent;
         }
-        .bp4-form-group:not(.bp4-intent-danger) .bp4-input,
-        .form-group--select-list .bp4-button {
+        .bp6-form-group:not(.bp6-intent-danger) .bp6-input,
+        .form-group--select-list .bp6-button {
           border-color: transparent;
           box-shadow: 0 0 0;
           color: var(--x-color-table-body-input-text);
           border-radius: 3px;
           text-align: inherit;
         }
-        .bp4-form-group:not(.bp4-intent-danger) .bp4-input {
+        .bp6-form-group:not(.bp6-intent-danger) .bp6-input {
           border-radius: 2px;
           padding-left: 14px;
           padding-right: 14px;
@@ -108,7 +108,7 @@ const DatatableEditableRoot = styled.div`
             box-shadow: 0 0 0 2px #116cd0;
           }
         }
-        .form-group--select-list .bp4-button {
+        .form-group--select-list .bp6-button {
           padding-left: 6px;
           padding-right: 6px;
 
@@ -117,16 +117,16 @@ const DatatableEditableRoot = styled.div`
           }
         }
         .form-group--select-list,
-        .bp4-form-group {
-          &.bp4-intent-danger {
-            .bp4-button:not(.bp4-minimal),
-            .bp4-input {
+        .bp6-form-group {
+          &.bp6-intent-danger {
+            .bp6-button:not(.bp6-minimal),
+            .bp6-input {
               border-color: #f7b6b6;
             }
           }
         }
         .td.actions {
-          .bp4-button {
+          .bp6-button {
             color: #80858f;
           }
         }

@@ -153,7 +153,7 @@ export function InvoiceMailReceipt({
           large
           intent={Intent.PRIMARY}
           className={css`
-            &.bp4-intent-primary {
+            &.bp6-intent-primary {
               background-color: ${primaryColor};
 
               &:hover,
@@ -161,7 +161,7 @@ export function InvoiceMailReceipt({
                 background-color: ${lighten(0.1, primaryColor)};
               }
             }
-            &.bp4-large {
+            &.bp6-large {
               min-height: 38px;
             }
           `}

@@ -278,12 +278,12 @@ async function openPage(page: Page, route: string, title?: string) {
       { timeout: 30_000 },
     );
   }
-  // The webapp hardcodes `bp4-dark` on <body> and only toggles the class when
+  // The webapp hardcodes `bp6-dark` on <body> and only toggles the class when
   // the user switches themes. Force the dark theme so captures are consistent.
   await page.evaluate(() => {
     localStorage.setItem('theme', 'dark');
-    document.documentElement.classList.add('bp4-dark');
-    document.body.classList.add('bp4-dark');
+    document.documentElement.classList.add('bp6-dark');
+    document.body.classList.add('bp6-dark');
   });
   await page.addStyleTag({
     content:

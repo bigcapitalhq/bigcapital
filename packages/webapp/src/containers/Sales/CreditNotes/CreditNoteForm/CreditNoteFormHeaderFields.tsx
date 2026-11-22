@@ -1,5 +1,4 @@
 import { Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
@@ -22,6 +21,7 @@ import {
   Stack,
   FDateInput,
 } from '@/components';
+import { DateInput } from '@/components/Forms/DateInput';
 import { CLASSES } from '@/constants/classes';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { useDateInputFormatter } from '@/hooks';

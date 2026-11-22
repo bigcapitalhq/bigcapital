@@ -4,15 +4,16 @@ import {
   Intent,
   NumericInput,
   Tag,
+  Popover,
+  Tooltip,
 } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import { FormattedMessage as T } from '@/components';
+import { DateInput } from '@/components/Forms/DateInput';
 import { useBulkSaveBatches } from '@/ee/batches/hooks/query';
 import { useDateInputFormatter } from '@/hooks';
 
@@ -235,7 +236,7 @@ export function PurchaseBatchAllocationsPopover({
   };
 
   return (
-    <Popover2
+    <Popover
       isOpen={isOpen}
       // The popover is closed only through its Close button. Ignoring the
       // close interaction avoids accidental dismissal when clicking outside.
@@ -410,7 +411,7 @@ export function PurchaseBatchAllocationsPopover({
         </div>
       }
     >
-      <Tooltip2
+      <Tooltip
         content={intl.get('batch.allocate.purchase_tooltip')}
         placement={'top'}
       >
@@ -421,7 +422,7 @@ export function PurchaseBatchAllocationsPopover({
           intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
           aria-label={intl.get('batch.allocate.purchase_tooltip')}
         />
-      </Tooltip2>
-    </Popover2>
+      </Tooltip>
+    </Popover>
   );
 }

@@ -137,7 +137,7 @@ export const BalanceSheetHeader = FF.pipe(
 );
 
 const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 520px;
   }
 `;

@@ -34,7 +34,7 @@ export function MailNotificationForm({
           <FMultiSelect
             items={fromAddresses}
             name={'from'}
-            popoverProps={{ minimal: true, fill: true }}
+            popoverProps={{ minimal: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
             }}
@@ -47,7 +47,7 @@ export function MailNotificationForm({
           <FMultiSelect
             items={toAddresses}
             name={'to'}
-            popoverProps={{ minimal: true, fill: true }}
+            popoverProps={{ minimal: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
             }}
@@ -86,7 +86,7 @@ const HeaderBox = styled('div')`
   border-bottom: 2px solid #eaeaef;
   padding: 6px 15px;
 
-  .bp4-form-group {
+  .bp6-form-group {
     margin: 0;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -102,29 +102,29 @@ const HeaderBox = styled('div')`
     }
   }
 
-  .bp4-form-content {
+  .bp6-form-content {
     flex: 1 0;
   }
 
-  .bp4-label {
+  .bp6-label {
     min-width: 65px;
     color: #738091;
   }
 
-  .bp4-input {
+  .bp6-input {
     border-color: transparent;
     padding: 0;
 
     &:focus,
-    &.bp4-active {
+    &.bp6-active {
       box-shadow: 0 0 0 0;
     }
   }
 
-  .bp4-input-ghost {
+  .bp6-input-ghost {
     margin-top: 5px;
   }
-  .bp4-tag-input-values {
+  .bp6-tag-input-values {
     margin: 0;
   }
 `;

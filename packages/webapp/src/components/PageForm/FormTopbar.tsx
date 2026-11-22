@@ -23,7 +23,7 @@ const FormTopBarRoot = styled(Navbar)`
   --color-form-topbar-border: #c7d5db;
   --color-divider-color: #d2dce2;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-form-topbar-background: var(--color-dark-gray1);
     --color-form-topbar-border: rgba(255, 255, 255, 0.15);
     --color-divider-color: rgba(255, 255, 255, 0.25);
@@ -32,22 +32,22 @@ const FormTopBarRoot = styled(Navbar)`
   padding: 0 20px;
 
   &,
-  .bp4-dark & {
+  .bp6-dark & {
     border-bottom: 1px solid var(--color-form-topbar-border);
     background-color: var(--color-form-topbar-background);
     box-shadow: 0 0 0;
   }
 
-  .bp4-navbar-group {
+  .bp6-navbar-group {
     height: 35px;
   }
-  .bp4-navbar-divider {
+  .bp6-navbar-divider {
     border-left-color: var(--color-divider-color);
   }
-  .bp4-skeleton {
+  .bp6-skeleton {
     max-height: 10px;
   }
-  .bp4-button {
+  .bp6-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
       color: #32304a;

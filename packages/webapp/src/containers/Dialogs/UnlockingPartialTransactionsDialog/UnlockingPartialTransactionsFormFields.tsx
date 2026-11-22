@@ -71,7 +71,7 @@ export function UnlockingPartialTransactionsFormFields(): React.ReactElement {
       >
         <FTextArea
           name={'reason'}
-          growVertically={true}
+          autoResize={true}
           large={true}
           inputRef={(ref: HTMLTextAreaElement | null) => {
             reasonFieldRef.current = ref;

@@ -1,5 +1,4 @@
-import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import { Button, Intent, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { Batch } from '@/ee/batches/hooks/query/queries';
@@ -103,7 +102,7 @@ function BatchActionsCell({ row: { original } }: { row: { original: Batch } }) {
         buttonText={<span className={'visually-hidden'}>Edit</span>}
         popoverClassName={'batch-form-popover-wrapper'}
       />
-      <Popover2
+      <Popover
         isOpen={isOpen}
         onInteraction={(nextOpenState) => setIsOpen(nextOpenState)}
         placement={'left-start'}
@@ -123,7 +122,7 @@ function BatchActionsCell({ row: { original } }: { row: { original: Batch } }) {
         }
       >
         <Button minimal={true} icon={'trash'} disabled={isPending} />
-      </Popover2>
+      </Popover>
     </div>
   );
 }

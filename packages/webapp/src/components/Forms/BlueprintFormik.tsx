@@ -9,7 +9,7 @@ import {
   TextArea,
   HTMLSelect,
 } from '@blueprintjs-formik/core';
-import { TimezoneSelect } from '@blueprintjs-formik/datetime';
+import { TimezoneSelect } from '@blueprintjs-formik/datetime-v6';
 import {
   MultiSelect,
   Suggest,
@@ -20,7 +20,6 @@ import {
   withFormikSuggest,
   withFormikSelect,
 } from '@blueprintjs-formik/select';
-import React from 'react';
 import { FDateInput } from './FDateInput';
 import { FSelect, BPSelect } from './Select';
 

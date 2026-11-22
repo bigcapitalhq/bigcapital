@@ -49,7 +49,7 @@ export function RoleFormHeader() {
       >
         <FTextArea
           name={'roleDescription'}
-          growVertically={true}
+          autoResize={true}
           placeholder="Max. 500 characters"
           fill
           fastField

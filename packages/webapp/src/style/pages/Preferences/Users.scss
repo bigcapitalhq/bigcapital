@@ -4,7 +4,7 @@
   --color-avatar-background: #b7bfc6;
   --color-avatar-text: #fff;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-avatar-background: rgba(255, 255, 255, 0.2);
     --color-avatar-text: #fff;
   }
@@ -31,8 +31,8 @@
       border-bottom: 0;
     }
   }
-  .bp4-tabs {
-    .bp4-tab-panel {
+  .bp6-tabs {
+    .bp6-tab-panel {
       margin-top: 0;
     }
   }

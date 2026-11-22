@@ -4,7 +4,7 @@
   --billing-muted-text: #5c7080;
   --billing-separator-text: #999;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --billing-card-background: var(--color-dark-gray3);
     --billing-title-text: var(--color-light-gray1);
     --billing-muted-text: var(--color-muted-text);
@@ -43,10 +43,10 @@
       margin-left: 6px;
     }
   }
-  &:global(.bp4-intent-success) {
+  &:global(.bp6-intent-success) {
     color: var(--color-green-500);
   }
-  &:global(.bp4-intent-danger) {
+  &:global(.bp6-intent-danger) {
     color: var(--color-red-500);
   }
 }

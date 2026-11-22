@@ -53,7 +53,7 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
   --color-table-total-border-bottom: #333;
   --color-table-tax-rate-text-color: #444;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-table-total-border-top: var(--color-dark-gray5);
     --color-table-total-border-bottom: var(--color-dark-gray5);
     --color-table-tax-rate-text-color: var(--color-light-gray2);

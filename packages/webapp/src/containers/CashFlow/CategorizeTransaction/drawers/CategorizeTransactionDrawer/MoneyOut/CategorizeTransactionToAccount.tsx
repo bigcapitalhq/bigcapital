@@ -69,7 +69,7 @@ export function CategorizeTransactionToAccount() {
       <FFormGroup name={'description'} label={'Description'} fastField inline>
         <FTextArea
           name={'description'}
-          growVertically={true}
+          autoResize={true}
           large={true}
           fill={true}
         />

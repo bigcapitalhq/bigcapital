@@ -55,7 +55,7 @@ function ImportFileMappingGroup({
     <Box className={styles.group}>
       {groupLabel && <h3 className={styles.groupTitle}>{groupLabel}</h3>}
 
-      <table className={clsx('bp4-html-table', styles.table)}>
+      <table className={clsx('bp6-html-table', styles.table)}>
         <thead>
           <tr>
             <th className={styles.label}>Bigcapital Fields</th>

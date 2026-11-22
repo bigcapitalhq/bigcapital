@@ -71,7 +71,6 @@ export function InvoiceFormHeaderFields() {
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
-            fill: true,
           }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -95,7 +94,6 @@ export function InvoiceFormHeaderFields() {
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
-            fill: true,
           }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

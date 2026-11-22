@@ -1,23 +1,23 @@
 .dialog--bad-debt {
   max-width: 400px;
 
-  .bp4-dialog-body {
-    .bp4-form-group {
+  .bp6-dialog-body {
+    .bp6-form-group {
       margin-bottom: 15px;
       margin-top: 15px;
 
-      label.bp4-label {
+      label.bp6-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
 
-    .bp4-callout {
+    .bp6-callout {
       font-size: 13px;
     }
     .form-group {
       &--reason {
-        .bp4-form-content {
+        .bp6-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -28,7 +28,7 @@
     }
   }
 
-  .bp4-dialog-footer {
+  .bp6-dialog-footer {
     padding-top: 10px;
   }
 }

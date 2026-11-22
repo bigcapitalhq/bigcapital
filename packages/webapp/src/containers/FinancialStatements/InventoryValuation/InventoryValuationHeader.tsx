@@ -144,7 +144,7 @@ export const InventoryValuationHeader = FF.pipe(
 );
 
 const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 450px;
   }
 `;

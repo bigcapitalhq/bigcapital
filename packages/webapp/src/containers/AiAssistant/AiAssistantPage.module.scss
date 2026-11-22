@@ -61,9 +61,9 @@
   margin-bottom: 10px;
 }
 
-.retry:global(.bp4-button.bp4-small.bp4-minimal),
-.retry:global(.bp4-button.bp4-small.bp4-minimal):hover,
-.retry:global(.bp4-button.bp4-small.bp4-minimal):active {
+.retry:global(.bp6-button.bp6-small.bp6-minimal),
+.retry:global(.bp6-button.bp6-small.bp6-minimal):hover,
+.retry:global(.bp6-button.bp6-small.bp6-minimal):active {
   margin-inline-start: auto;
   color: $danger;
 }

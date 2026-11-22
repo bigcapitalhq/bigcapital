@@ -138,7 +138,7 @@ export const SalesTaxLiabilitySummaryHeader = FF.pipe(
 );
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 320px;
   }
 `;

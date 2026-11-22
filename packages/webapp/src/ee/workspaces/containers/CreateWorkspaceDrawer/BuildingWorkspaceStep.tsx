@@ -34,7 +34,7 @@ export default function BuildingWorkspaceStep({
   }, [isCompleted, onComplete]);
 
   const progressBarStyles = css`
-    .bp4-progress-bar {
+    .bp6-progress-bar {
       border-radius: 40px;
       display: block;
       height: 6px;
@@ -43,7 +43,7 @@ export default function BuildingWorkspaceStep({
       width: 80%;
       margin: 0 auto;
 
-      .bp4-progress-meter {
+      .bp6-progress-meter {
         background-color: #809cb3;
       }
     }

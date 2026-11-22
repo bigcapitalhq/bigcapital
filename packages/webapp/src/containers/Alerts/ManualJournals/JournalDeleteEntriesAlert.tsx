@@ -16,7 +16,7 @@ interface JournalDeleteEntriesAlertProps extends WithAlertActionsProps {
   name: string;
   isOpen: boolean;
   payload: JournalDeleteEntriesAlertPayload;
-  onConfirm?: (event: React.SyntheticEvent<HTMLElement>) => void;
+  onConfirm?: (event?: React.SyntheticEvent<HTMLElement>) => void;
 }
 
 /**
@@ -33,7 +33,7 @@ function JournalDeleteEntriesAlertInner({
     closeAlert(name);
   };
 
-  const handleConfirm = (event: React.SyntheticEvent<HTMLElement>) => {
+  const handleConfirm = (event?: React.SyntheticEvent<HTMLElement>) => {
     closeAlert(name);
     saveInvoke(onConfirm, event);
   };

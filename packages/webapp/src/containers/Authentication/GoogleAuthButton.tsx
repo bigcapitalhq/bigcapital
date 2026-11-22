@@ -37,7 +37,7 @@ function GoogleIcon() {
 /**
  * "Continue with Google" button. Kicks off the server-side OAuth redirect.
  */
-export function GoogleAuthButton(props: ButtonProps) {
+export function GoogleAuthButton(props: Omit<ButtonProps, 'ref'>) {
   const handleClick = () => {
     window.location.assign('/api/auth/google');
   };
@@ -108,7 +108,7 @@ const Divider = styled.div`
     background: rgba(0, 0, 0, 0.12);
   }
 
-  .bp4-dark & {
+  .bp6-dark & {
     color: rgba(255, 255, 255, 0.55);
 
     &::before,

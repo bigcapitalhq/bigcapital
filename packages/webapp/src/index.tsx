@@ -1,6 +1,7 @@
 // @ts-nocheck
 import 'regenerator-runtime/runtime';
 import './wdyr';
+import { OverlaysProvider } from '@blueprintjs/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -15,7 +16,9 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <App />
+        <OverlaysProvider>
+          <App />
+        </OverlaysProvider>
       </BrowserRouter>
     </PersistGate>
   </Provider>,

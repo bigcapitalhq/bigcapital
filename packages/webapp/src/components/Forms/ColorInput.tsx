@@ -1,8 +1,8 @@
 import {
   HTMLInputProps,
-  IInputGroupProps,
+  InputGroupProps,
   InputGroup,
-  IPopoverProps,
+  PopoverProps,
   Popover,
   PopoverInteractionKind,
   Position,
@@ -19,8 +19,8 @@ export interface ColorInputProps {
   value?: string;
   initialValue?: string;
   onChange?: (value: string) => void;
-  popoverProps?: Partial<IPopoverProps>;
-  inputProps?: Partial<IInputGroupProps & HTMLInputProps>;
+  popoverProps?: Partial<PopoverProps>;
+  inputProps?: Partial<InputGroupProps & HTMLInputProps>;
   pickerProps?: Partial<BoxProps>;
   pickerWrapProps?: Partial<BoxProps>;
 }
@@ -52,7 +52,7 @@ export function ColorInput({
       position={Position.BOTTOM}
       interactionKind={PopoverInteractionKind.CLICK}
       modifiers={{
-        offset: { offset: '0, 4' },
+        offset: { options: { offset: [0, 4] } },
       }}
       onClose={handleClose}
       isOpen={isOpen}

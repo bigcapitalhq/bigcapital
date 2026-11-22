@@ -39,12 +39,12 @@ const organizationsDrawerInputSearchCss = css`
     color: rgba(255, 255, 255, 0.35);
   }
 
-  .bp4-icon {
+  .bp6-icon {
     color: rgba(255, 255, 255, 0.35);
   }
 
   &:focus,
-  &.bp4-active {
+  &.bp6-active {
     border-color: rgba(17, 131, 218, 0.55);
     box-shadow: 0 0 0 1px rgba(17, 131, 218, 0.35);
   }

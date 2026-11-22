@@ -47,9 +47,9 @@
 }
 
 .action {
-  // Button renders as `bp4-button bp4-small bp4-minimal`; composing those
+  // Button renders as `bp6-button bp6-small bp6-minimal`; composing those
   // global classes raises specificity above Blueprint's own button rules.
-  &:global(.bp4-button.bp4-small.bp4-minimal) {
+  &:global(.bp6-button.bp6-small.bp6-minimal) {
     min-width: 24px;
     min-height: 24px;
     padding: 2px;
@@ -63,20 +63,20 @@
     opacity: 0.8;
   }
 
-  &:global(.bp4-button.bp4-small.bp4-minimal):hover {
+  &:global(.bp6-button.bp6-small.bp6-minimal):hover {
     opacity: 1;
     color: $accent;
   }
 }
 
-.likeActive:global(.bp4-button.bp4-small.bp4-minimal),
-.likeActive:global(.bp4-button.bp4-small.bp4-minimal):hover {
+.likeActive:global(.bp6-button.bp6-small.bp6-minimal),
+.likeActive:global(.bp6-button.bp6-small.bp6-minimal):hover {
   opacity: 1;
   color: $accent;
 }
 
-.dislikeActive:global(.bp4-button.bp4-small.bp4-minimal),
-.dislikeActive:global(.bp4-button.bp4-small.bp4-minimal):hover {
+.dislikeActive:global(.bp6-button.bp6-small.bp6-minimal),
+.dislikeActive:global(.bp6-button.bp6-small.bp6-minimal):hover {
   opacity: 1;
   color: $danger;
 }

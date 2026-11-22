@@ -152,7 +152,7 @@ export function ProfitLossSheetHeaderComparisonPanel() {
 }
 
 const ProfitLossSheetComparisonWrap = styled.div`
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 3px;
   }
 `;

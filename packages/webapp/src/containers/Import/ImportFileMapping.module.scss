@@ -8,7 +8,7 @@
   font-weight: 700;
   padding: 0 11px;
 
-  :global(.bp4-dark) &{
+  :global(.bp6-dark) &{
     color: var(--color-light-gray1);
   }
 }
@@ -29,7 +29,7 @@
       color: #738091;
       font-weight: 500;
 
-      :global(.bp4-dark) &{
+      :global(.bp6-dark) &{
         color: var(--color-light-gray1);
         border-top: 1px solid rgba(255, 255, 255, 0.2);
       }
@@ -42,8 +42,8 @@
     }
 
     tr td{
-      :global(.bp4-popover-target .bp4-button),
-      :global(.bp4-popover-wrapper){
+      :global(.bp6-popover-target .bp6-button),
+      :global(.bp6-popover-target){
         max-width: 250px;
       }
     }

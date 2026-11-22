@@ -16,18 +16,18 @@ body.page-payment-receive-edit{
   $self: '.page-form';
 
   #{$self}__header {
-    .bp4-label {
+    .bp6-label {
       min-width: 160px;
     }
 
-    .bp4-form-content {
+    .bp6-form-content {
       width: 100%;
     }
 
-    .bp4-form-group {
+    .bp6-form-group {
       margin-bottom: 18px;
 
-      &.bp4-inline {
+      &.bp6-inline {
         max-width: 470px;
       }
 

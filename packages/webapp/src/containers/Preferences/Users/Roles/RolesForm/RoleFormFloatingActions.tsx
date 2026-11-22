@@ -42,7 +42,7 @@ const RoleFormFloatingActionsRoot = styled.div`
   --color-role-form-floating-bg: #fff;
   --color-role-form-floating-border: #d2dde2;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-role-form-floating-bg: var(--color-dark-gray1);
     --color-role-form-floating-border: rgba(255, 255, 255, 0.1);
   }
@@ -54,7 +54,7 @@ const RoleFormFloatingActionsRoot = styled.div`
   border-top: 1px solid var(--color-role-form-floating-border);
   box-shadow: 0px -1px 4px 0px rgb(0 0 0 / 5%);
 
-  .bp4-button {
+  .bp6-button {
     margin-right: 10px;
   }
 `;

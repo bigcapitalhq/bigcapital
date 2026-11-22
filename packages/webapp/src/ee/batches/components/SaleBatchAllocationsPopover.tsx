@@ -1,6 +1,13 @@
-import { Button, Intent, MenuItem, NumericInput, Tag } from '@blueprintjs/core';
-import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
-import { Select2 } from '@blueprintjs/select';
+import {
+  Button,
+  Intent,
+  MenuItem,
+  NumericInput,
+  Tag,
+  Popover,
+  Tooltip,
+} from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { BatchStatusTag } from './BatchStatusTag';
@@ -406,7 +413,7 @@ export function SaleBatchAllocationsPopover({
   };
 
   return (
-    <Popover2
+    <Popover
       isOpen={isOpen}
       // The popover is closed only through its Close button. Ignoring the
       // close interaction avoids accidental dismissal when clicking outside.
@@ -521,7 +528,7 @@ export function SaleBatchAllocationsPopover({
                       return (
                         <tr key={row.key}>
                           <td>
-                            <Select2<BatchOption>
+                            <Select<BatchOption>
                               items={rowOptions}
                               itemRenderer={renderBatchOption}
                               itemPredicate={filterBatchOption}
@@ -565,7 +572,7 @@ export function SaleBatchAllocationsPopover({
                                   intl.get('batch.select.placeholder')
                                 }
                               />
-                            </Select2>
+                            </Select>
                           </td>
                           <td className={'batch-form-table__col-status'}>
                             {selectedBatch?.status ? (
@@ -667,7 +674,7 @@ export function SaleBatchAllocationsPopover({
         </div>
       }
     >
-      <Tooltip2 content={intl.get('batch.select.tooltip')} placement={'top'}>
+      <Tooltip content={intl.get('batch.select.tooltip')} placement={'top'}>
         <Button
           small={true}
           minimal={true}
@@ -675,7 +682,7 @@ export function SaleBatchAllocationsPopover({
           intent={allocations?.length ? Intent.SUCCESS : Intent.NONE}
           aria-label={intl.get('batch.select.tooltip')}
         />
-      </Tooltip2>
-    </Popover2>
+      </Tooltip>
+    </Popover>
   );
 }

@@ -53,7 +53,7 @@ const pageFormHeaderStyle = `
   --color-invoice-form-header-background: #fff;
   --color-invoice-form-header-border: #d2dce2;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-invoice-form-header-background: var(--color-dark-gray1);
     --color-invoice-form-header-border: rgba(255, 255, 255, 0.1);
   }    
@@ -77,7 +77,7 @@ const footerActionsStyle = `
   --x-color-background: #fff;
   --x-color-border: rgb(210, 221, 226);
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-background: var(--color-dark-gray1);
     --x-color-border: rgba(255, 255, 255, 0.1);
   }
@@ -87,14 +87,14 @@ const footerActionsStyle = `
   border-top: 1px solid var(--x-color-border);
   box-shadow: 0px -1px 4px 0px rgba(0, 0, 0, 0.05);
 
-  .bp4-button-group{
-    .bp4-button{
+  .bp6-button-group{
+    .bp6-button{
       &:not(:last-child),
-      &.bp4-popover-wrapper:not(:last-child) {
+      &.bp6-popover-target:not(:last-child) {
         border-right: 1px solid rgba(92, 112, 127, 0.3);
         margin-right: 0;
 
-        &.bp4-intent-primary{
+        &.bp6-intent-primary{
           border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
       }

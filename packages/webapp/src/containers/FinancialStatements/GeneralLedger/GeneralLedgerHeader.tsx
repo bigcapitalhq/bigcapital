@@ -141,7 +141,7 @@ export const GeneralLedgerHeader = FF.pipe(
 );
 
 const GeneralLedgerDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 520px;
   }
 `;

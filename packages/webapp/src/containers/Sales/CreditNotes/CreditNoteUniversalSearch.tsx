@@ -93,7 +93,7 @@ export function CreditNoteUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp4-text-muted">
+          <span className="bp6-text-muted">
             {item.reference.creditNoteNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedCreditNoteDate}

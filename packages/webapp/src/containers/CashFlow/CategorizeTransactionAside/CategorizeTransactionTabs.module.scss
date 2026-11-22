@@ -1,18 +1,18 @@
 
-.tabs :global .bp4-tab-panel{
+.tabs :global .bp6-tab-panel{
   margin-top: 0;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   height: calc(100dvh - 144px);
 }
-.tabs :global .bp4-tab-list{
+.tabs :global .bp6-tab-list{
   // background: #fff;
   border-bottom: 1px solid var(--color-aside-divider);
   padding: 0 22px;
 }
 
-.tabs :global .bp4-large > .bp4-tab{
+.tabs :global .bp6-large > .bp6-tab{
   font-size: 14px;
 }
 

@@ -3,7 +3,7 @@ import {
   Tooltip,
   MenuItem,
   Position,
-  PopperModifiers,
+  type PopoverProps,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React from 'react';
@@ -28,10 +28,10 @@ interface FinancialStatementsFilterProps {
   [key: string]: unknown;
 }
 
-const SUBMENU_POPOVER_MODIFIERS: PopperModifiers = {
-  flip: { boundariesElement: 'viewport', padding: 20 },
-  offset: { offset: '0, 10' },
-  preventOverflow: { boundariesElement: 'viewport' },
+const SUBMENU_POPOVER_MODIFIERS: PopoverProps['modifiers'] = {
+  flip: { options: { rootBoundary: 'viewport', padding: 20 } },
+  offset: { options: { offset: [0, 10] } },
+  preventOverflow: { options: { rootBoundary: 'viewport' } },
 };
 
 export function FinancialStatementsFilter({

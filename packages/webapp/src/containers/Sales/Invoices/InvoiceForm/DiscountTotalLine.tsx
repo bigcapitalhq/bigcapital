@@ -18,7 +18,7 @@ const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
   }) as CSSProperties;
 
 const inputGroupCss = css`
-  & .bp4-input {
+  & .bp6-input {
     max-width: 110px;
     padding-left: 8px;
   }
@@ -41,7 +41,7 @@ export function DiscountTotalLine({
       small
       minimal
       className={css`
-        &.bp4-small {
+        &.bp6-small {
           font-size: 12px;
         }
       `}

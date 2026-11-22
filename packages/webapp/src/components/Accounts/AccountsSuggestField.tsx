@@ -171,7 +171,7 @@ function withAccountsSuggestFieldLogic<C extends ComponentType<any>>(
       labelAccessor: 'code' as const,
       inputProps: { placeholder: defaultSelectText },
       resetOnClose: true,
-      popoverProps: { minimal: true, boundary: 'window' as const },
+      popoverProps: { minimal: true, rootBoundary: 'viewport' as const },
       createNewItemRenderer: maybeCreateNewItemRenderer,
       createNewItemFromQuery: maybeCreateNewItemFromQuery,
       ...suggestProps,

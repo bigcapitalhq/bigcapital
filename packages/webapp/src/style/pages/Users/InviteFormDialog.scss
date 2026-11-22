@@ -1,15 +1,15 @@
 .dialog--invite-form {
   width: 450px;
 
-  .bp4-dialog-body {
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+  .bp6-dialog-body {
+    .bp6-form-group.bp6-inline {
+      .bp6-label {
         min-width: 70px;
       }
-      .bp4-form-content {
+      .bp6-form-content {
         width: 250px;
 
-        .bp4-dialog-footer-actions {
+        .bp6-dialog-footer-actions {
           margin-right: 20px;
           display: flex;
           justify-content: flex-end;
@@ -20,12 +20,12 @@
 }
 
 .dialog--invite-user {
-  .bp4-dialog-body {
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+  .bp6-dialog-body {
+    .bp6-form-group.bp6-inline {
+      .bp6-label {
         min-width: 140px;
       }
-      .bp4-form-content {
+      .bp6-form-content {
         width: 250px;
       }
     }

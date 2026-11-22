@@ -37,26 +37,26 @@ export function CreditNoteFormFooterLeft() {
 }
 
 const CreditNoteMsgFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
+  &.bp6-form-group {
     margin-bottom: 40px;
 
-    .bp4-label {
+    .bp6-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp4-form-content {
+    .bp6-form-content {
       margin-left: 10px;
     }
   }
 `;
 
 const TermsConditsFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
-    .bp4-label {
+  &.bp6-form-group {
+    .bp6-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp4-form-content {
+    .bp6-form-content {
       margin-left: 10px;
     }
   }

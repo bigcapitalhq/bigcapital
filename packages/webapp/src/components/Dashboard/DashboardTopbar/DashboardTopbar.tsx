@@ -9,8 +9,8 @@ import {
   MenuItem,
   Menu,
   MenuDivider,
+  Popover,
 } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
 import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import {
@@ -166,7 +166,7 @@ function DashboardTopbar({
               </div>
             </Tooltip>
 
-            <Popover2
+            <Popover
               content={
                 <Menu>
                   <MenuItem
@@ -193,7 +193,7 @@ function DashboardTopbar({
                 icon={<Icon icon={'help-24'} iconSize={20} />}
                 text={<T id={'help'} />}
               />
-            </Popover2>
+            </Popover>
             <NavbarDivider />
           </NavbarGroup>
         </Navbar>

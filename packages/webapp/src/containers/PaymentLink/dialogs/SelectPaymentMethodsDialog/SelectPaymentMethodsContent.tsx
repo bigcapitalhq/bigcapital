@@ -104,7 +104,7 @@ const PaymentMethodSelectRoot = styled(Group)`
 const PaymentMethodCheckbox = styled(Checkbox)`
   margin: 0;
 
-  &.bp4-control .bp4-control-indicator {
+  &.bp6-control .bp6-control-indicator {
     box-shadow: 0 0 0 1px #c5cbd3;
   }
 `;

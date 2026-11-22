@@ -90,7 +90,7 @@ const BranchesTable = styled(DataTable)`
     min-height: 38px;
 
     .td.td-name {
-      .bp4-icon {
+      .bp6-icon {
         margin: 0;
         margin-left: 2px;
         vertical-align: top;

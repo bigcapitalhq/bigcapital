@@ -1,15 +1,15 @@
 .dialog--adjustment-item {
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 15px;
 
-    label.bp4-label {
+    label.bp6-label {
       font-size: 13px;
       margin-bottom: 3px;
     }
   }
   .form-group {
     &--adjustment-reasons {
-      .bp4-form-content {
+      .bp6-form-content {
         textarea {
           width: 100%;
           min-width: 100%;
@@ -29,9 +29,9 @@
     padding-bottom: 12px;
     border-bottom: 2px solid #e9e9e9;
     
-    .bp4-input-group{
+    .bp6-input-group{
 
-      .bp4-input{
+      .bp6-input{
         padding-left: 8px;
         padding-right: 8px;
       }
@@ -47,7 +47,7 @@
         padding-left: 0.3rem;
         padding-right: 0.3rem;
 
-        .bp4-form-group {
+        .bp6-form-group {
           margin-bottom: 0;
         }
         &--quantity-on-hand,
@@ -73,7 +73,7 @@
     }
   }
 
-  .bp4-dialog-footer {
+  .bp6-dialog-footer {
     padding-top: 10px;
   }
 }

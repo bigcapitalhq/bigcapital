@@ -214,7 +214,7 @@ function OrganizationsListTable({
                         workspaceName,
                       )
                     }
-                    icon={<Icon icon="arrow-right" iconSize={18} />}
+                    icon={<Icon icon="arrow-right" size={18} />}
                   />
                 </Tooltip>
               )}
@@ -222,7 +222,7 @@ function OrganizationsListTable({
                 <Popover
                   content={menuContent}
                   position={Position.BOTTOM_RIGHT}
-                  boundary={'window'}
+                  rootBoundary="viewport"
                 >
                   <Button
                     type="button"

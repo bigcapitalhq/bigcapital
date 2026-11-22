@@ -71,7 +71,7 @@ export const AmountAccessor = (r: ManualJournalTableRow) => (
       />
     }
     position={Position.RIGHT_TOP}
-    boundary={'viewport'}
+    rootBoundary="viewport"
   >
     {r.formattedAmount}
   </Tooltip>

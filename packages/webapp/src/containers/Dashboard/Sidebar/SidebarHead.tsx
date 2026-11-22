@@ -28,9 +28,10 @@ import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
 import { firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
-const POPOVER_MODIFIERS = {
-  offset: { offset: '28, 8' },
-};
+const POPOVER_MODIFIERS: import('@blueprintjs/core').PopoverProps['modifiers'] =
+  {
+    offset: { options: { offset: [28, 8] } },
+  };
 
 // Minimum number of workspaces required to show the search input.
 const WORKSPACES_SEARCH_MIN_COUNT = 4;
@@ -50,32 +51,32 @@ const DashboardOrganizationMenu = styled(Menu)`
       background: rgba(255, 255, 255, 0.08);
     }
 
-    &:hover:not(.is-active):not(.bp4-disabled) {
+    &:hover:not(.is-active):not(.bp6-disabled) {
       background: rgba(255, 255, 255, 0.05);
     }
 
-    &.bp4-disabled {
+    &.bp6-disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
   }
 
-  .bp4-menu-divider {
+  .bp6-menu-divider {
     margin: 8px 0;
     border-top-color: rgba(255, 255, 255, 0.1);
   }
 
-  .bp4-menu-item {
+  .bp6-menu-item {
     color: rgba(255, 255, 255, 0.9);
     border-radius: 4px;
     line-height: 20px;
 
-    &:hover:not(.bp4-disabled) {
+    &:hover:not(.bp6-disabled) {
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
     }
 
-    .bp4-icon {
+    .bp6-icon {
       color: rgba(255, 255, 255, 0.6);
     }
   }
@@ -87,7 +88,7 @@ const DashboardSearchInput = styled(InputGroup)`
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 
-  .bp4-input {
+  .bp6-input {
     background: transparent;
     color: #fff;
 
@@ -96,12 +97,12 @@ const DashboardSearchInput = styled(InputGroup)`
     }
   }
 
-  .bp4-icon {
+  .bp6-icon {
     color: rgba(255, 255, 255, 0.35);
   }
 
   &:focus-within,
-  &.bp4-active {
+  &.bp6-active {
     border-color: rgba(17, 131, 218, 0.55);
     box-shadow: 0 0 0 1px rgba(17, 131, 218, 0.35);
   }
@@ -157,7 +158,7 @@ function SidebarHeadJSX({
       <div className="sidebar__head-organization">
         <Popover
           modifiers={POPOVER_MODIFIERS}
-          boundary={'window'}
+          rootBoundary="viewport"
           content={
             <DashboardOrganizationMenu>
               <x.div

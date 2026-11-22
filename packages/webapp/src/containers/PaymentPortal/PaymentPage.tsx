@@ -219,7 +219,7 @@ export function InvoicePaymentPage({
                 styles.footerButton,
                 styles.buyButton,
                 css`
-                  &.bp4-intent-primary {
+                  &.bp6-intent-primary {
                     background-color: ${primaryColor};
 
                     &:hover,

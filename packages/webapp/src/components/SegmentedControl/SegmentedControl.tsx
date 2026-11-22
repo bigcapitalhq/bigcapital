@@ -58,18 +58,18 @@ const SegmentedControlGroup = styled(ButtonGroup)`
   --segmented-control-active-background: var(--color-dark-gray2);
   --segmented-control-active-hover-background: var(--color-dark-gray1);
 
-  .bp4-dark & {
+  .bp6-dark & {
     --segmented-control-active-background: var(--color-dark-gray5);
     --segmented-control-active-hover-background: var(--color-dark-gray4);
   }
 
-  && .bp4-button {
+  && .bp6-button {
     font-weight: 500;
 
-    & + .bp4-button {
+    & + .bp6-button {
       margin-left: -1px;
     }
-    &.bp4-active:not(.bp4-disabled) {
+    &.bp6-active:not(.bp6-disabled) {
       z-index: 1;
       color: var(--color-white);
       background-color: var(--segmented-control-active-background);

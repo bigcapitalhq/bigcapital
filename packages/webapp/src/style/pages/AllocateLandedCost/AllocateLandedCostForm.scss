@@ -2,25 +2,25 @@
 .dialog--allocate-landed-cost-form {
   width: 700px;
 
-  .bp4-dialog-body {
-    .bp4-form-group{
+  .bp6-dialog-body {
+    .bp6-form-group{
       margin-bottom: 18px;
     }
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+    .bp6-form-group.bp6-inline {
+      .bp6-label {
         min-width: 165px;
       }
-      .bp4-form-content {
+      .bp6-form-content {
         width: 300px;
       }
 
-      &:not(.dialog--loading) .bp4-dialog-body {
+      &:not(.dialog--loading) .bp6-dialog-body {
         margin-bottom: 30px;
       }
     }
   }
 
-  .bp4-dialog-footer{
+  .bp6-dialog-footer{
     // padding-top: 10px;
   }
 
@@ -30,7 +30,7 @@
       border: 1px solid #d1dee2;
       min-width: auto;
 
-      .bp4-dark & {
+      .bp6-dark & {
         border-color: var(--color-dark-gray5);
       }
 
@@ -48,18 +48,18 @@
           margin-left: -1px;
           border-left: 1px solid #ececec;
 
-          .bp4-dark & {
+          .bp6-dark & {
             border-left-color: var(--color-dark-gray5);
           }
         }
 
-        .bp4-form-group{
+        .bp6-form-group{
           margin-bottom: 0;
 
-          &:not(.bp4-intent-danger) .bp4-input{
+          &:not(.bp6-intent-danger) .bp6-input{
             border: 1px solid #d0dfe2;
 
-            .bp4-dark & {
+            .bp6-dark & {
               border-color: var(--color-dark-gray5);
             }
 

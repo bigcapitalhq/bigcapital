@@ -56,7 +56,7 @@ export function DashboardRowsHeightButton({
       }
       placement="bottom-start"
       modifiers={{
-        offset: { offset: '0, 4' },
+        offset: { options: { offset: [0, 4] } },
       }}
       interactionKind={PopoverInteractionKind.CLICK}
     >

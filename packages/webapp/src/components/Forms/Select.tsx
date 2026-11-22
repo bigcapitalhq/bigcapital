@@ -1,14 +1,16 @@
 // @ts-nocheck
 import { Button } from '@blueprintjs/core';
-import { FormikSelect, Select } from '@blueprintjs-formik/select';
+import {
+  FormikSelect,
+  Select,
+  type SelectOptionProps,
+} from '@blueprintjs-formik/select';
 import clsx from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
 
-export function FSelect<T extends SelectOptionProps = SelectOptionProps>({
-  ...props
-}) {
-  const input = ({ activeItem, text, label, value }) => (
+function selectInput(props) {
+  return ({ text }) => (
     <SelectButton
       text={text || props.placeholder || 'Select an item ...'}
       disabled={props.disabled || false}
@@ -16,21 +18,14 @@ export function FSelect<T extends SelectOptionProps = SelectOptionProps>({
       className={clsx({ 'is-selected': !!text }, props.className)}
     />
   );
-  return <FormikSelect<T> input={input} fill={true} {...props} />;
 }
 
-export function BPSelect<T extends SelectOptionProps = SelectOptionProps>({
-  ...props
-}) {
-  const input = ({ activeItem, text, label, value }) => (
-    <SelectButton
-      text={text || props.placeholder || 'Select an item ...'}
-      disabled={props.disabled || false}
-      {...props.buttonProps}
-      className={clsx({ 'is-selected': !!text }, props.className)}
-    />
-  );
-  return <Select<T> input={input} fill={true} {...props} />;
+export function FSelect<T extends object = SelectOptionProps>(props) {
+  return <FormikSelect<T> input={selectInput(props)} fill {...props} />;
+}
+
+export function BPSelect<T extends object = SelectOptionProps>(props) {
+  return <Select<T> input={selectInput(props)} fill {...props} />;
 }
 
 export const SelectButton = styled(Button)`
@@ -38,7 +33,7 @@ export const SelectButton = styled(Button)`
   --x-color-select-border: #ced4da;
   --x-color-select-caret: #8d8d8d;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-select-background: rgba(17, 20, 24, 0.3);
     --x-color-select-border: rgba(255, 255, 255, 0.15);
     --x-color-select-caret: rgba(255, 255, 255, 0.25);
@@ -49,10 +44,10 @@ export const SelectButton = styled(Button)`
   position: relative;
   padding-right: 30px;
 
-  &.bp4-small {
+  &.bp6-small {
     padding-right: 24px;
   }
-  &:not(.is-selected):not([class*='bp4-intent-']):not(.bp4-minimal) {
+  &:not(.is-selected):not([class*='bp6-intent-']):not(.bp6-minimal) {
     color: #8f99a8;
   }
   &:after {
@@ -71,13 +66,13 @@ export const SelectButton = styled(Button)`
     margin-right: 12px;
     border-radius: 1px;
   }
-  &:not([class*='bp4-intent-']):not(.bp4-disabled) {
+  &:not([class*='bp6-intent-']):not(.bp6-disabled) {
     &,
     &:hover {
       background: var(--x-color-select-background);
     }
   }
-  .bp4-intent-danger & {
+  .bp6-intent-danger & {
     border-color: #db3737;
   }
 `;

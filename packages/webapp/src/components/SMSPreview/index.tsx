@@ -48,7 +48,7 @@ const SMSMessagePreviewBase = styled.div`
     fill: #adadad;
   }
 
-  .bp4-dark & svg {
+  .bp6-dark & svg {
     fill: var(--color-gray1);
   }
 `;

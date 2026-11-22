@@ -82,32 +82,32 @@ export function InvoiceFormFooterLeft() {
 }
 
 const InvoiceMsgFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
-    .bp4-label {
+  &.bp6-form-group {
+    .bp6-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp4-form-content {
+    .bp6-form-content {
       margin-left: 10px;
     }
   }
 `;
 
 const TermsConditsFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
-    .bp4-label {
+  &.bp6-form-group {
+    .bp6-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp4-form-content {
+    .bp6-form-content {
       margin-left: 10px;
     }
   }
 `;
 
 const PaymentOptionsFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
-    .bp4-label {
+  &.bp6-form-group {
+    .bp6-label {
       font-weight: 500;
       font-size: 12px;
       margin-bottom: 10px;
@@ -126,7 +126,7 @@ const PaymentOptionsButton = styled(Button)`
   font-size: 13px;
   margin-left: 4px;
 
-  &.bp4-minimal.bp4-intent-primary {
+  &.bp6-minimal.bp6-intent-primary {
     color: #0052cc;
   }
 `;

@@ -72,7 +72,7 @@ export function ReconciliationStatusTable({ table }: { table: ReportTable }) {
   return (
     <>
       {table.rows.length > 0 && (
-        <p className="bp4-text-muted">
+        <p className="bp6-text-muted">
           <T id="report.reconciliation_status.balance_description" />
         </p>
       )}
@@ -97,7 +97,7 @@ export function ReconciliationStatusTable({ table }: { table: ReportTable }) {
 const ReconciliationDataTable = styled(ReportDataTable)`
   --color-reconciliation-cell-border: #ececec;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-reconciliation-cell-border: var(--color-dark-gray4);
   }
 

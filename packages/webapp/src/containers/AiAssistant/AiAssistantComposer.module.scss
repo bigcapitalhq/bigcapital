@@ -43,8 +43,8 @@
   flex: 0 0 auto;
 
   // Send/stop are Blueprint buttons; composing the global button classes
-  // raises specificity above `.bp4-button` / `.bp4-intent-primary`.
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)) {
+  // raises specificity above `.bp6-button` / `.bp6-intent-primary`.
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)) {
     width: 34px;
     height: 34px;
     min-width: 34px;
@@ -55,16 +55,16 @@
     color: #fff;
   }
 
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)):hover:not(:disabled) {
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):hover:not(:disabled) {
     background: var(--color-dark-gray6, #485261);
   }
 
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)):active:not(:disabled),
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)):focus:not(:disabled) {
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):active:not(:disabled),
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):focus:not(:disabled) {
     background: var(--color-dark-gray5, #404854);
   }
 
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)):disabled {
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):disabled {
     background: var(--color-dark-gray5, #404854);
     color: #fff;
     opacity: 0.6;
@@ -72,12 +72,12 @@
 }
 
 .sendStop {
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)) {
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)) {
     background: var(--color-dark-gray5, #404854);
     color: #fff;
   }
 
-  &:global(.bp4-button:not(.bp4-minimal):not(.bp4-outlined)):hover {
+  &:global(.bp6-button:not(.bp6-minimal):not(.bp6-outlined)):hover {
     background: var(--color-dark-gray5, #404854);
   }
 }

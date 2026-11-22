@@ -8,7 +8,7 @@
 }
 .fieldGroup {
 
-  :global .bp4-form-content{
+  :global .bp6-form-content{
     margin-left: auto;
   }
 }
@@ -19,6 +19,6 @@
   flex-flow: row-reverse;
 }
 
-.showCompanyLogoField:global(.bp4-large){
+.showCompanyLogoField:global(.bp6-large){
   font-size: 14px;
 }

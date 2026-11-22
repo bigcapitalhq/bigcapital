@@ -66,7 +66,7 @@ export function PaymentsMadeUniversalSearchItem(
         <div>
           <div>{highlightText(text, query)}</div>
 
-          <span className="bp4-text-muted">
+          <span className="bp6-text-muted">
             {reference.paymentNumber && (
               <>
                 {highlightText(reference.paymentNumber, query)}

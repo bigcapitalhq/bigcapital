@@ -58,7 +58,7 @@ function SendMailReceiptPrimaryButton({
       large
       intent={Intent.PRIMARY}
       className={css`
-        &.bp4-intent-primary {
+        &.bp6-intent-primary {
           background-color: ${primaryColor};
 
           &:hover,
@@ -66,7 +66,7 @@ function SendMailReceiptPrimaryButton({
             background-color: ${lighten(0.1, primaryColor || '#000')};
           }
         }
-        &.bp4-large {
+        &.bp6-large {
           min-height: 38px;
         }
       `}

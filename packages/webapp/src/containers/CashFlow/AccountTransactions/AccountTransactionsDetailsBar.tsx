@@ -216,7 +216,7 @@ const AccountSwitchMenu = styled(Menu)`
 `;
 
 const AccountSwitchButtonBase = styled(Button)`
-  .bp4-button-text {
+  .bp6-button-text {
     margin-right: 5px;
   }
 `;

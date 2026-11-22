@@ -17,13 +17,13 @@
         }
 
         .account_name {
-          .bp4-popover-wrapper--inactive-semafro {
+          .bp6-popover-target--inactive-semafro {
             margin-left: 8px;
             margin-right: 6px;
             float: right;
             border: 0;
           }
-          .bp4-popover-wrapper--account-desc {
+          .bp6-popover-target--account-desc {
             border-bottom-color: #bbb;
           }
           .inactive-semafro {
@@ -43,10 +43,10 @@
           display: block;
         }
         .normal {
-          .bp4-popover-wrapper {
+          .bp6-popover-target {
             width: 100%;
           }
-          .bp4-tooltip-indicator {
+          .bp6-tooltip-indicator {
             cursor: initial;
             border-bottom: 0;
           }

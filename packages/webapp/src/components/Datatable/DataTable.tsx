@@ -1,5 +1,6 @@
 // @ts-nocheck
-import React, { useEffect, useRef } from 'react';
+import { ContextMenuPopover } from '@blueprintjs/core';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   useTable,
   useExpanded,
@@ -88,6 +89,11 @@ export function DataTable(props) {
 
     ...restProps
   } = props;
+
+  // Keep the open menu attached to the table when filtering or scrolling
+  // replaces the virtual row that opened it.
+  const [rowMenu, setRowMenu] = useState(null);
+  const ContextMenuContent = props.ContextMenu;
 
   const selectionColumnObj = {
     id: 'selection',
@@ -210,7 +216,7 @@ export function DataTable(props) {
   });
 
   return (
-    <TableContext.Provider value={{ table, props }}>
+    <TableContext.Provider value={{ table, props, openRowMenu: setRowMenu }}>
       <TableWrapperRenderer>
         <TableHeaderRenderer />
 
@@ -222,6 +228,14 @@ export function DataTable(props) {
       </TableWrapperRenderer>
 
       <TablePaginationRenderer />
+      {ContextMenuContent && rowMenu && (
+        <ContextMenuPopover
+          isOpen
+          targetOffset={rowMenu.offset}
+          content={<ContextMenuContent {...table} row={rowMenu.row} />}
+          onClose={() => setRowMenu(null)}
+        />
+      )}
     </TableContext.Provider>
   );
 }

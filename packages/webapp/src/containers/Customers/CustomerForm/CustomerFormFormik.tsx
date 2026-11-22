@@ -136,14 +136,14 @@ function CustomerFormFormikRoot({
 }
 
 const CustomerFormFields = styled.div`
-  .bp4-form-content,
+  .bp6-form-content,
   .bp6-form-content {
     min-width: 300px;
   }
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 20px;
   }
-  .bp4-form-group.bp4-inline label.bp4-label {
+  .bp6-form-group.bp6-inline label.bp6-label {
     min-width: 140px;
   }
 `;

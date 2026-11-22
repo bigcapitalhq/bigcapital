@@ -172,7 +172,7 @@ function OptionsFieldArray({ options }: OptionsFieldArrayProps) {
 
               <Button
                 minimal={true}
-                icon={<Icon icon="trash" iconSize={16} />}
+                icon={<Icon icon="trash" size={16} />}
                 intent={Intent.DANGER}
                 onClick={() => arrayHelpers.remove(index)}
                 aria-label={intl.get(
@@ -184,7 +184,7 @@ function OptionsFieldArray({ options }: OptionsFieldArrayProps) {
 
           <Button
             minimal={true}
-            icon={<Icon icon="plus" iconSize={12} />}
+            icon={<Icon icon="plus" size={12} />}
             onClick={() => arrayHelpers.push({ name: '', active: true })}
           >
             {intl.get('tracking_categories.action.add_option')}
@@ -201,7 +201,7 @@ const ModulesCheckboxes = styled.div`
   align-items: center;
   gap: 12px;
 
-  .bp4-control {
+  .bp6-control {
     margin-bottom: 0;
   }
 `;
@@ -229,7 +229,7 @@ const OptionActive = styled.div`
   gap: 6px;
   min-width: 150px;
 
-  .bp4-control {
+  .bp6-control {
     margin-bottom: 0;
   }
 `;

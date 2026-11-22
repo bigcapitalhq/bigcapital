@@ -309,5 +309,21 @@ test.describe('financial reports', () => {
     await expect(page.getByTestId('audit-log-row').first()).toBeVisible({
       timeout: 30_000,
     });
+
+    await page.getByRole('button', { name: 'Filter', exact: true }).click();
+    const action = page.locator('.bp6-form-group').filter({
+      has: page.getByText('Action', { exact: true }),
+    });
+    await action.getByPlaceholder('All').click();
+    const option = page
+      .getByRole('menuitem')
+      .filter({ hasNotText: 'No results' })
+      .first();
+    const label = (await option.innerText()).trim();
+    await option.click();
+    const tag = action.locator('.bp6-tag');
+    await expect(tag).toHaveText(label);
+    await tag.getByRole('button').click();
+    await expect(tag).toHaveCount(0);
   });
 });

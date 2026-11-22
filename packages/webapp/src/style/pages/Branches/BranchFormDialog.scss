@@ -1,20 +1,20 @@
 .dialog--branch-form {
   width: 650px;
 
-  .bp4-dialog-body {
-    .bp4-form-group {
+  .bp6-dialog-body {
+    .bp6-form-group {
       margin-bottom: 15px;
     }
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+    .bp6-form-group.bp6-inline {
+      .bp6-label {
         font-size: 13px;
         margin-bottom: 3px;
         min-width: 150px;
       }
-      .bp4-form-content {
+      .bp6-form-content {
         width: 278px;
       }
-      .bp4-control-group > * {
+      .bp6-control-group > * {
         flex-shrink: unset;
         padding-right: 5px;
         padding-left: 5px;
@@ -28,13 +28,13 @@
       }
 
       &.form-group--branch_address {
-        .bp4-form-content {
+        .bp6-form-content {
           width: 388px;
         }
       }
     }
   }
-  .bp4-dialog-footer {
+  .bp6-dialog-footer {
     padding-top: 10px;
   }
 }

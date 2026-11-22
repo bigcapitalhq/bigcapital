@@ -3,7 +3,7 @@
   --color-border: #e1e2e8;
   --color-text: var(--color-dark-gray1);
   
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --color-background: #c5cbd3;
     --color-border: rgba(255, 255, 255, 0.2);
   }
@@ -12,12 +12,12 @@
   font-size: 13px;
   padding: 0 10px;
 
-  &:global(.bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal)) {
+  &:global(.bp6-button:not([class*='bp6-intent-']):not(.bp6-minimal)) {
     background: var(--color-background);
     color: var(--color-text);
     border: 1px solid var(--color-border);
 
-    & :global(.bp4-icon) {
+    & :global(.bp6-icon) {
       color: var(--color-text);
     }
   }

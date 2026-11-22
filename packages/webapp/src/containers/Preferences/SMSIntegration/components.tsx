@@ -158,7 +158,7 @@ const MessageBox = styled.div`
   --x-message-bg: #fbfbfb;
   --x-message-border: #dcdcdc;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-message-bg: var(--color-dark-gray3);
     --x-message-border: rgba(255, 255, 255, 0.2);
   }

@@ -1,11 +1,16 @@
-import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import {
+  MenuItem,
+  Menu,
+  Button,
+  Position,
+  Intent,
+  Popover,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
-import type { Tooltip2Props } from '@blueprintjs/popover2';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
 import {
   InputGroupCell,
@@ -34,9 +39,7 @@ export function ItemHeaderCell() {
       <Hint
         content={<T id={'item_entries.products_services.hint'} />}
         tooltipProps={{
-          // The `boundary: 'window'` value predates the popper v2 boundary
-          // renames; the cast keeps the same runtime value.
-          boundary: 'window' as unknown as Tooltip2Props['boundary'],
+          rootBoundary: 'viewport',
           position: Position.RIGHT,
         }}
       />
@@ -54,7 +57,7 @@ export function AccountHeaderCell() {
       <Hint
         content={<T id={'item_entries.account.hint'} />}
         tooltipProps={{
-          boundary: 'window' as unknown as Tooltip2Props['boundary'],
+          rootBoundary: 'viewport',
           position: Position.RIGHT,
         }}
       />
@@ -97,9 +100,9 @@ export function ActionsCellRenderer({
   } as React.ComponentProps<typeof Button>;
 
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button {...buttonProps} />
-    </Popover2>
+    </Popover>
   );
 }
 ActionsCellRenderer.cellType = CellType.Button;

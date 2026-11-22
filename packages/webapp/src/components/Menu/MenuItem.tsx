@@ -23,7 +23,7 @@ import {
   Menu,
   Classes,
   Position,
-  AbstractPureComponent2,
+  AbstractPureComponent,
   DISPLAYNAME_PREFIX,
   Collapse,
 } from '@blueprintjs/core';
@@ -86,7 +86,7 @@ import React from 'react';
 //      * changed and `usePortal` defaults to `false` so all submenus will live in
 //      * the same container.
 //      */
-//     popoverProps?: Partial<IPopoverProps>;
+//     popoverProps?: Partial<PopoverProps>;
 
 //     /**
 //      * Whether an enabled item without a submenu should automatically close its parent popover when clicked.
@@ -106,7 +106,7 @@ import React from 'react';
 //     textClassName?: string;
 // }
 
-export class MenuItem extends AbstractPureComponent2 {
+export class MenuItem extends AbstractPureComponent {
   static get defaultProps() {
     return {
       disabled: false,
@@ -189,9 +189,7 @@ export class MenuItem extends AbstractPureComponent2 {
         {text}
       </Text>,
       this.maybeRenderLabel(labelElement),
-      hasSubmenu ? (
-        <Icon icon="caret-right" iconSize={caretIconSize} />
-      ) : undefined,
+      hasSubmenu ? <Icon icon="caret-right" size={caretIconSize} /> : undefined,
     );
 
     const liClasses = classNames(
@@ -267,18 +265,19 @@ export class MenuItem extends AbstractPureComponent2 {
           Classes.MENU_SUBMENU,
           popoverProps.popoverClassName,
         )}
-        target={target}
-      />
+      >
+        {target}
+      </Popover>
     );
   }
 }
 
 const SUBMENU_POPOVER_MODIFIERS = {
   // 20px padding - scrollbar width + a bit
-  flip: { boundariesElement: 'viewport', padding: 20 },
+  flip: { options: { rootBoundary: 'viewport', padding: 20 } },
   // shift popover up 5px so MenuItems align
-  offset: { offset: -5 },
-  preventOverflow: { boundariesElement: 'viewport', padding: 20 },
+  offset: { options: { offset: [-5, 0] } },
+  preventOverflow: { options: { rootBoundary: 'viewport', padding: 20 } },
 };
 
 // props to ignore when disabled

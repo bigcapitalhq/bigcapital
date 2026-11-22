@@ -114,7 +114,7 @@ export const JournalHeader = FF.pipe(
 );
 
 const JournalDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 350px;
   }
 `;

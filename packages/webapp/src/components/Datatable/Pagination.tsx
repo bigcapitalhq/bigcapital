@@ -9,7 +9,7 @@ import { Icon, FormattedMessage as T } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 const StyledButtonGroup = styled(ButtonGroup)`
-  .bp4-button {
+  .bp6-button {
     background: transparent;
     padding: 5px;
   }
@@ -22,7 +22,7 @@ const StyledPaginationButton = styled(Button)`
   --x-button-active-background: #e6effb;
   --x-button-active-disabled-background: #e6effb;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-button-text-color: rgba(255, 255, 255, 0.8);
     --x-button-hover-background: var(--color-dark-gray3);
     --x-button-active-text-color: var(--color-light-gray2);
@@ -33,23 +33,23 @@ const StyledPaginationButton = styled(Button)`
   min-height: 24px;
   border-radius: 5px;
 
-  &:not([class*='bp4-intent-']).bp4-minimal {
+  &:not([class*='bp6-intent-']).bp6-minimal {
     color: var(--x-button-text-color);
 
     &:hover {
       background-color: var(--x-button-hover-background);
     }
-    .bp4-icon {
+    .bp6-icon {
       margin-right: 4px;
       color: var(--x-button-text-color);
     }
   }
   &.is-active {
-    &.bp4-intent-primary.bp4-minimal:disabled,
-    &.bp4-intent-primary.bp4-minimal.bp4-disabled {
+    &.bp6-intent-primary.bp6-minimal:disabled,
+    &.bp6-intent-primary.bp6-minimal.bp6-disabled {
       background-color: var(--x-button-active-disabled-background);
 
-      .bp4-button-text {
+      .bp6-button-text {
         color: var(--x-button-active-text-color);
       }
     }
@@ -60,7 +60,7 @@ const StyledPreviousButton = styled(StyledPaginationButton)`
   padding-left: 10px;
   padding-right: 10px;
 
-  .bp4-icon {
+  .bp6-icon {
     [dir='rtl'] & {
       transform: scale(-1);
     }
@@ -71,7 +71,7 @@ const StyledNextButton = styled(StyledPaginationButton)`
   padding-left: 10px;
   padding-right: 10px;
 
-  .bp4-icon {
+  .bp6-icon {
     order: 1;
     margin-right: 0;
     margin-left: 4px;
@@ -82,11 +82,11 @@ const StyledHTMLSelect = styled(HTMLSelect)`
   --x-html-select-text-color: #666;
   --x-html-select-border-color: #e8e8e8;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-html-select-text-color: rgba(255, 255, 255, 0.8);
     --x-html-select-border-color: rgba(255, 255, 255, 0.15);
   }
-  &.bp4-html-select.bp4-minimal {
+  &.bp6-html-select.bp6-minimal {
     margin-left: 6px;
 
     select {

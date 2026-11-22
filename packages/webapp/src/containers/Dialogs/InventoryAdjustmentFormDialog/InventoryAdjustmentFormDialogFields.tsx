@@ -177,7 +177,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
         labelInfo={<FieldRequiredHint />}
         fastField
       >
-        <FTextArea name={'reason'} growVertically large fastField fill />
+        <FTextArea name={'reason'} autoResize large fastField fill />
       </FFormGroup>
     </div>
   );
@@ -185,7 +185,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
 
 export const FeatureRowDivider = styled.div`
   --x-color-background: #e9e9e9;
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-background: rgba(255, 255, 255, 0.1);
   }
   height: 2px;

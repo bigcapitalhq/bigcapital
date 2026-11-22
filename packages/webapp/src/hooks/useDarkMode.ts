@@ -7,8 +7,8 @@ export const useIsDarkMode = () => {
     if (typeof window === 'undefined') return false;
 
     return (
-      document.documentElement.classList.contains('bp4-dark') ||
-      document.body.classList.contains('bp4-dark')
+      document.documentElement.classList.contains('bp6-dark') ||
+      document.body.classList.contains('bp6-dark')
     );
   });
 
@@ -17,8 +17,8 @@ export const useIsDarkMode = () => {
 
     const checkDarkMode = () => {
       const hasDarkClass =
-        document.documentElement.classList.contains('bp4-dark') ||
-        document.body.classList.contains('bp4-dark');
+        document.documentElement.classList.contains('bp6-dark') ||
+        document.body.classList.contains('bp6-dark');
       setIsDarkMode(hasDarkClass);
     };
 
@@ -58,7 +58,7 @@ export const useIsDarkMode = () => {
 };
 
 export const darkMode = (styles: string) => css`
-  .bp4-dark & {
+  .bp6-dark & {
     ${styles}
   }
 `;

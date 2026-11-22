@@ -120,7 +120,7 @@ export const ProfitLossSheetHeader = FF.pipe(
 );
 
 const ProfitLossSheetHeaderStyled = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 520px;
   }
 `;

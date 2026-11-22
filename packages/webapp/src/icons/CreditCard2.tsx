@@ -8,7 +8,7 @@ export const CreditCard2Icon: React.FC<CreditCard2IconProps> = ({
   size = 16,
   ...props
 }) => (
-  <span className={'bp4-icon bp4-icon-credit-card-2'}>
+  <span className={'bp6-icon bp6-icon-credit-card-2'}>
     <svg
       width={size}
       height={size}

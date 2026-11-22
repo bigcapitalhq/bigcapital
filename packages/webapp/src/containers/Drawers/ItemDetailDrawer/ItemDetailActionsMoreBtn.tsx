@@ -40,7 +40,7 @@ const ItemDetailActionsMoreBtnInner = ({
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}
       modifiers={{
-        offset: { offset: '0, 4' },
+        offset: { options: { offset: [0, 4] } },
       }}
       content={
         <Menu>
