@@ -7,6 +7,7 @@ const buildQuery = () => {
     where: jest.fn(() => query),
     delete: jest.fn().mockResolvedValue(1),
     insert: jest.fn().mockResolvedValue([1, 2]),
+    insertGraph: jest.fn().mockResolvedValue([{ id: 1 }, { id: 2 }]),
     patchAndFetchById: jest.fn().mockResolvedValue({ id: 1 }),
   };
   return query;
@@ -84,7 +85,7 @@ describe('FinishBankReconciliationService', () => {
     return { service, query };
   };
 
-  it('records the reconciled journal entries in one batch insert', async () => {
+  it('records the reconciled journal entries with insertGraph (works on MySQL/MariaDB, not only PostgreSQL)', async () => {
     const { service, query } = setup();
     await service.finishBankReconciliation(1, {
       endingBalance: 130,
@@ -102,8 +103,10 @@ describe('FinishBankReconciliationService', () => {
       ],
     } as any);
 
-    expect(query.insert).toHaveBeenCalledTimes(1);
-    expect(query.insert).toHaveBeenCalledWith([
+    // An array `insert` throws "batch insert only works with Postgresql" on MySQL/MariaDB.
+    expect(query.insert).not.toHaveBeenCalled();
+    expect(query.insertGraph).toHaveBeenCalledTimes(1);
+    expect(query.insertGraph).toHaveBeenCalledWith([
       {
         reconciliationId: 1,
         accountId: 5,
@@ -144,7 +147,7 @@ describe('FinishBankReconciliationService', () => {
         payload: { difference: 20, clearedBalance: 120, endingBalance: 140 },
       });
       expect(query.delete).not.toHaveBeenCalled();
-      expect(query.insert).not.toHaveBeenCalled();
+      expect(query.insertGraph).not.toHaveBeenCalled();
       expect(query.patchAndFetchById).not.toHaveBeenCalled();
     },
   );
@@ -162,7 +165,7 @@ describe('FinishBankReconciliationService', () => {
       ],
     });
 
-    expect(query.insert).toHaveBeenCalledWith([
+    expect(query.insertGraph).toHaveBeenCalledWith([
       expect.objectContaining({ accountTransactionId: 1002 }),
     ]);
     expect(query.patchAndFetchById).toHaveBeenCalledWith(

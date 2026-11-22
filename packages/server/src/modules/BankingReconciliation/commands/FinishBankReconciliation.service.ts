@@ -249,7 +249,10 @@ export class FinishBankReconciliationService {
     }));
 
     try {
-      await this.reconciliationTransactionModel().query(trx).insert(links);
+      // Objection runs an array `insert` only on PostgreSQL ("batch insert only
+      // works with Postgresql"); `insertGraph` accepts an array on every
+      // database (one INSERT per row on MySQL/MariaDB).
+      await this.reconciliationTransactionModel().query(trx).insertGraph(links);
     } catch (error) {
       if (isDuplicateEntryError(error)) {
         throw new ServiceError(
