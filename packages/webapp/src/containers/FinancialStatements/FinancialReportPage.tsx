@@ -24,7 +24,7 @@ export const FinancialComputeAlert = styled.div`
   --x-text-color: #342515;
   --x-button-text-color: #824400;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-background-color: rgba(200, 118, 25, 0.2);
     --x-text-color: rgba(255, 255, 255, 0.8);
     --x-button-text-color: rgba(255, 255, 255, 0.8);

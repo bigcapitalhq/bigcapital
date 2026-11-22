@@ -1,6 +1,6 @@
 import { Classes } from '@blueprintjs/core';
 
-export const NS = 'bp4';
+export const NS = 'bp6';
 
 export const SECTION = `${NS}-section`;
 export const SECTION_COLLAPSED = `${SECTION}-collapsed`;

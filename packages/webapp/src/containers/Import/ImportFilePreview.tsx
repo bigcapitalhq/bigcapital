@@ -89,7 +89,7 @@ function ImportFilePreviewSkipped() {
       title={`(${importPreview.skippedCount}) Items are skipped`}
     >
       <SectionCard padded={true}>
-        <table className={clsx('bp4-html-table', styles.skippedTable)}>
+        <table className={clsx('bp6-html-table', styles.skippedTable)}>
           <tbody>
             {importPreview?.errors.map((error, key) => (
               <tr key={key}>

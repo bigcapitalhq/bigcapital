@@ -67,7 +67,7 @@ export function CategorizeTransactionOwnerContribution() {
       </FFormGroup>
 
       <FFormGroup name={'description'} label={'Description'} fastField inline>
-        <FTextArea name={'description'} growVertically large fill />
+        <FTextArea name={'description'} autoResize large fill />
       </FFormGroup>
 
       <CategorizeTransactionBranchField />

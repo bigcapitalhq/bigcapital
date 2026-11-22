@@ -132,7 +132,7 @@ const EditWarningWrap = styled(`div`)`
   --x-warning-border: #f2eddf;
   --x-warning-title-text: #766f58;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-warning-background: var(--color-dark-gray3);
     --x-warning-border: rgba(255, 255, 255, 0.15);
     --x-warning-title-text: var(--color-light-gray2);

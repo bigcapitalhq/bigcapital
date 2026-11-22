@@ -5,11 +5,11 @@ import { FFormGroup, Icon } from '@/components';
 export const BrandingThemeFormGroup = styled(FFormGroup)`
   margin-bottom: 0;
 
-  .bp4-label {
+  .bp6-label {
     color: #7a8492;
   }
 
-  &.bp4-inline label.bp4-label {
+  &.bp6-inline label.bp6-label {
     margin-right: 0;
   }
 `;

@@ -2,7 +2,7 @@
 
 .dialog--payment-via-voucher{
   
-  .bp4-dialog-body{
+  .bp6-dialog-body{
     p{
       margin-bottom: 20px;
     }
@@ -11,11 +11,11 @@
     }
   }
 
-  .bp4-dialog-footer-actions{ 
+  .bp6-dialog-footer-actions{
     button{
       min-width: 80px;
 
-      &.bp4-intent-primary{
+      &.bp6-intent-primary{
         min-width: 90px;
       }
     }

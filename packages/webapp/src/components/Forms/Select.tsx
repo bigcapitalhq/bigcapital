@@ -1,25 +1,30 @@
 // @ts-nocheck
 import { Button } from '@blueprintjs/core';
-import { FormikSelect, Select } from '@blueprintjs-formik/select';
+import { Field } from '@blueprintjs-formik/core';
+import { Select, type SelectOptionProps } from '@blueprintjs-formik/select';
 import clsx from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
+import type { FieldProps } from 'formik';
 
-export function FSelect<T extends SelectOptionProps = SelectOptionProps>({
+export function FSelect<T extends object = SelectOptionProps>({
   ...props
 }) {
-  const input = ({ activeItem, text, label, value }) => (
-    <SelectButton
-      text={text || props.placeholder || 'Select an item ...'}
-      disabled={props.disabled || false}
-      {...props.buttonProps}
-      className={clsx({ 'is-selected': !!text }, props.className)}
-    />
+  const { name, fastField, shouldUpdate, ...selectProps } = props;
+  return (
+    <Field {...selectProps} name={name} fastField={fastField} shouldUpdate={shouldUpdate}>
+      {({ field, form }: FieldProps) => (
+        <BPSelect<T>
+          selectedValue={field.value}
+          onValueChange={(value) => form.setFieldValue(name, value)}
+          {...selectProps}
+        />
+      )}
+    </Field>
   );
-  return <FormikSelect<T> input={input} fill={true} {...props} />;
 }
 
-export function BPSelect<T extends SelectOptionProps = SelectOptionProps>({
+export function BPSelect<T extends object = SelectOptionProps>({
   ...props
 }) {
   const input = ({ activeItem, text, label, value }) => (
@@ -38,7 +43,7 @@ export const SelectButton = styled(Button)`
   --x-color-select-border: #ced4da;
   --x-color-select-caret: #8d8d8d;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-select-background: rgba(17, 20, 24, 0.3);
     --x-color-select-border: rgba(255, 255, 255, 0.15);
     --x-color-select-caret: rgba(255, 255, 255, 0.25);
@@ -49,10 +54,10 @@ export const SelectButton = styled(Button)`
   position: relative;
   padding-right: 30px;
 
-  &.bp4-small {
+  &.bp6-small {
     padding-right: 24px;
   }
-  &:not(.is-selected):not([class*='bp4-intent-']):not(.bp4-minimal) {
+  &:not(.is-selected):not([class*='bp6-intent-']):not(.bp6-minimal) {
     color: #8f99a8;
   }
   &:after {
@@ -71,13 +76,13 @@ export const SelectButton = styled(Button)`
     margin-right: 12px;
     border-radius: 1px;
   }
-  &:not([class*='bp4-intent-']):not(.bp4-disabled) {
+  &:not([class*='bp6-intent-']):not(.bp6-disabled) {
     &,
     &:hover {
       background: var(--x-color-select-background);
     }
   }
-  .bp4-intent-danger & {
+  .bp6-intent-danger & {
     border-color: #db3737;
   }
 `;

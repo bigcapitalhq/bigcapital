@@ -8,21 +8,21 @@ import React from 'react';
  */
 export function TextOverviewTooltipCell({ cell: { value } }) {
   const SUBMENU_POPOVER_MODIFIERS = {
-    flip: { boundariesElement: 'viewport', padding: 20 },
-    offset: { offset: '0, 10' },
-    preventOverflow: { boundariesElement: 'viewport', padding: 40 },
+    flip: { options: { rootBoundary: 'viewport', padding: 20 } },
+    offset: { options: { offset: [0, 10] } },
+    preventOverflow: { options: { rootBoundary: 'viewport', padding: 40 } },
   };
 
   return (
     <Tooltip
       content={value}
       position={Position.BOTTOM_LEFT}
-      boundary={'viewport'}
+      rootBoundary="viewport"
       minimal={true}
       modifiers={SUBMENU_POPOVER_MODIFIERS}
-      targetClassName={'table-tooltip-overview-target'}
+      className={'table-tooltip-overview-target'}
     >
-      {value}
+      <span>{value}</span>
     </Tooltip>
   );
 }

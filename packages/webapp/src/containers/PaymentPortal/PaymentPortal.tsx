@@ -175,7 +175,7 @@ export function PaymentPortal() {
                   styles.footerButton,
                   styles.buyButton,
                   css`
-                    &.bp4-button.bp4-intent-primary {
+                    &.bp6-button.bp6-intent-primary {
                       background-color: var(--payment-page-primary-button);
 
                       &:hover,

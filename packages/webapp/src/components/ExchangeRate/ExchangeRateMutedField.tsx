@@ -51,12 +51,11 @@ export function ExchangeRateMutedField({
         interactionKind={PopoverInteractionKind.CLICK}
         position={Position.RIGHT_TOP}
         modifiers={{
-          offset: { offset: '0, 4' },
+          offset: { options: { offset: [0, 4] } },
         }}
         {...popoverProps}
         minimal={true}
         usePortal={false}
-        target={<div />}
       >
         <ExchangeRateButton>
           1 {fromCurrency} = {exchangeRate} {toCurrency}
@@ -72,8 +71,8 @@ export function ExchangeRateMutedField({
 }
 
 const ExchangeRateFormGroup = styled(FormGroup)`
-  &.bp4-form-group {
-    label.bp4-label {
+  &.bp6-form-group {
+    label.bp6-label {
       font-size: 12px;
       opacity: 0.7;
       line-height: 1;
@@ -91,7 +90,7 @@ const ExchangeRateButton = styled.div`
   position: relative;
   padding-right: 28px;
 
-  .bp4-button {
+  .bp6-button {
     position: absolute;
     right: 0;
   }
@@ -100,7 +99,7 @@ const ExchangeRateButton = styled.div`
 const ExchangeRateFormGroupContent = styled.div`
   padding: 5px 0;
 
-  .bp4-form-group {
+  .bp6-form-group {
     padding: 2px;
     margin: 2px 4px !important;
   }

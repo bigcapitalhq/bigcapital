@@ -1,56 +1,8 @@
 import classNames from 'classnames';
-import React, { useCallback, useContext } from 'react';
-import useContextMenu from 'react-use-context-menu';
+import React, { useContext } from 'react';
 import TableContext from './TableContext';
 import type { Row } from 'react-table';
-import { ContextMenu } from '@/components';
-import { saveInvoke, ConditionalWrapper } from '@/utils';
-
-interface TableRowContextMenuProps {
-  children?: React.ReactNode;
-  row: Row<any>;
-}
-
-function TableRowContextMenu({ children, row }: TableRowContextMenuProps) {
-  const {
-    props: { ContextMenu: ContextMenuContent },
-    table,
-  } = useContext(TableContext);
-
-  const [
-    bindMenu,
-    bindMenuItem,
-    useContextTrigger,
-    { coords, setVisible, isVisible },
-  ] = useContextMenu();
-
-  const [bindTrigger] = useContextTrigger({
-    collect: () => 'Title',
-  });
-
-  const handleClose = useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
-
-  if (!ContextMenuContent) {
-    return <>{children}</>;
-  }
-
-  return (
-    <div className="tr-context" {...bindTrigger}>
-      {children}
-
-      <ContextMenu
-        bindMenu={bindMenu}
-        isOpen={isVisible}
-        coords={coords}
-        onClosed={handleClose}
-      >
-        <ContextMenuContent {...table} row={row} />
-      </ContextMenu>
-    </div>
-  );
-}
+import { saveInvoke } from '@/utils';
 
 interface TableRowProps {
   row: Row<any>;
@@ -61,6 +13,7 @@ interface TableRowProps {
 
 export default function TableRow({ row, className, style }: TableRowProps) {
   const {
+    openRowMenu,
     props: {
       TableCellRenderer,
       rowClassNames,
@@ -71,6 +24,10 @@ export default function TableRow({ row, className, style }: TableRowProps) {
 
   const rowTestIdValue =
     typeof rowTestId === 'function' ? saveInvoke(rowTestId, row) : rowTestId;
+
+  const cells = row.cells.map((cell, index) => (
+    <TableCellRenderer key={index} cell={cell} row={row} index={index + 1} />
+  ));
 
   return (
     <div
@@ -85,20 +42,25 @@ export default function TableRow({ row, className, style }: TableRowProps) {
         ...(rowTestIdValue ? { 'data-testId': rowTestIdValue } : {}),
       })}
     >
-      <ConditionalWrapper
-        condition={ContextMenuContent}
-        wrapper={TableRowContextMenu}
-        row={row}
-      >
-        {row.cells.map((cell, index) => (
-          <TableCellRenderer
-            key={index}
-            cell={cell}
-            row={row}
-            index={index + 1}
-          />
-        ))}
-      </ConditionalWrapper>
+      {ContextMenuContent ? (
+        <div
+          className="tr-context"
+          onContextMenu={(event) => {
+            if (event.defaultPrevented) {
+              return;
+            }
+            event.preventDefault();
+            openRowMenu({
+              row,
+              offset: { left: event.clientX, top: event.clientY },
+            });
+          }}
+        >
+          {cells}
+        </div>
+      ) : (
+        cells
+      )}
     </div>
   );
 }

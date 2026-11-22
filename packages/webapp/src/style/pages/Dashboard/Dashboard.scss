@@ -45,9 +45,9 @@ $dashboard-views-bar-height: 44px;
       align-items: center;
       margin-left: 2px;
 
-      .bp4-button.bp4-minimal {
+      .bp6-button.bp6-minimal {
         &,
-        .bp4-dark & {
+        .bp6-dark & {
           color: var(--color-sidebar-toggle);
 
         &,
@@ -68,7 +68,7 @@ $dashboard-views-bar-height: 44px;
       margin-right: 4px;
 
       &,
-      .bp4-dark & {
+      .bp6-dark & {
         box-shadow: 0 0 0;
         border: 0;
         background: transparent;
@@ -94,16 +94,16 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp4-navbar-divider {
+      .bp6-navbar-divider {
         margin: 0 8px;
       }
 
       .form-group-quick-new-downDrop {
-        .bp4-popover-target .bp4-button {
+        .bp6-popover-target .bp6-button {
           color: #1552c8;
         }
 
-        .bp4-button::after {
+        .bp6-button::after {
           content: none;
         }
       }
@@ -114,7 +114,7 @@ $dashboard-views-bar-height: 44px;
       align-items: center;
       margin-right: 14px;
 
-      .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
+      .bp6-button:not([class*='bp6-intent-']):not(.bp6-minimal) {
         padding: 0;
         background-size: contain;
         border-radius: 50%;
@@ -161,7 +161,7 @@ $dashboard-views-bar-height: 44px;
         background: $light-gray2;
       }
 
-      .bp4-dark & {
+      .bp6-dark & {
         background: var(--color-dark-gray4);
 
         &:hover {
@@ -199,7 +199,7 @@ $dashboard-views-bar-height: 44px;
   &__actions-bar {
     border-bottom: 2px solid var(--color-dashboard-actionsbar-border);
 
-    .bp4-navbar-divider {
+    .bp6-navbar-divider {
       border-left-color: var(--color-dashboard-actionsbar-divider);
     }
 
@@ -227,22 +227,22 @@ $dashboard-views-bar-height: 44px;
           background: var(--color-dashboard-navbar-item-hover-background);
           color: var(--color-dashboard-navbar-item-hover-text);
         }
-        &.bp4-minimal:active,
-        &.bp4-minimal.bp4-active {
+        &.bp6-minimal:active,
+        &.bp6-minimal.bp6-active {
           background: var(--color-dashboard-navbar-item-active-background);
           color: var(--color-dashboard-navbar-item-active-text);
         }
-        &.bp4-disabled {
+        &.bp6-disabled {
           background: transparent;
           color: rgba(50, 48, 74, 0.4);
         }
         &.has-active-filters {
           &,
-          &.bp4-active,
+          &.bp6-active,
           &:active {
             background: var(--color-dark-gray1);
           }
-          .bp4-dark & {
+          .bp6-dark & {
             background: rgba(52, 152, 219, 0.1);
           }
         }
@@ -254,11 +254,11 @@ $dashboard-views-bar-height: 44px;
         &.#{$ns}-minimal.#{$ns}-intent-danger {
           color: rgb(194, 48, 48);
 
-          &:not(.bp4-disabled) &:hover,
+          &:not(.bp6-disabled) &:hover,
           &:focus {
             background: rgba(219, 55, 55, 0.1);
           }
-          &.bp4-disabled {
+          &.bp6-disabled {
             color: rgb(194, 48, 48, 0.6);
           }
         }
@@ -311,25 +311,25 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp4-control.bp4-switch {
+      .bp6-control.bp6-switch {
         margin-bottom: 0;
         margin-left: 8px;
         color: var(--color-dashboard-navbar-item-text);
 
-        .bp4-control-indicator {
+        .bp6-control-indicator {
           height: 16px;
           min-width: 1.8em;
         }
 
-        .bp4-control-indicator::before {
+        .bp6-control-indicator::before {
           box-shadow: 0 0 0;
         }
 
-        input ~ .bp4-control-indicator {
+        input ~ .bp6-control-indicator {
           background: rgba(167, 182, 194, 0.55);
         }
 
-        input:checked ~ .bp4-control-indicator {
+        input:checked ~ .bp6-control-indicator {
           background: #0069ff;
         }
       }
@@ -434,7 +434,7 @@ $dashboard-views-bar-height: 44px;
     background-color: var(--color-dashboard-fallback-loading-background);
     height: 100%;
 
-    .bp4-spinner {
+    .bp6-spinner {
       margin: auto;
     }
   }
@@ -555,7 +555,7 @@ $dashboard-views-bar-height: 44px;
       color: var(--color-dashboard-error-boundary-description-text);
       opacity: 0.8;
     }
-    .bp4-icon {
+    .bp6-icon {
       margin-top: 6px;
 
       path {
@@ -619,15 +619,15 @@ $dashboard-views-bar-height: 44px;
   height: $dashboard-views-bar-height;
   padding: 0 20px;
 
-  .bp4-navbar-group {
+  .bp6-navbar-group {
     height: $dashboard-views-bar-height;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .bp6-tab[aria-selected='true'] {
     box-shadow: inset 0 -2px 0 #0052cc;
   }
 
-  .bp4-button {
+  .bp6-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
       color: #32304a;
@@ -650,7 +650,7 @@ $dashboard-views-bar-height: 44px;
   background-color: #fff;
   width: 600px;
 
-  .bp4-input {
+  .bp6-input {
     padding-left: 40px !important;
   }
 }

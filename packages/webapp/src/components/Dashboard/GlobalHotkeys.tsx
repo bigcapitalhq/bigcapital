@@ -15,15 +15,10 @@ interface GlobalHotkeyRoute {
   hotkey?: string;
 }
 
-// Toggle dark/light mode by toggling 'bp4-dark' class on body
 const handleToggleDarkMode = () => {
-  const body = document.body;
-
-  if (body.classList.contains('bp4-dark')) {
-    body.classList.remove('bp4-dark');
-  } else {
-    body.classList.add('bp4-dark');
-  }
+  const dark = !document.body.classList.contains('bp6-dark');
+  document.documentElement.classList.toggle('bp6-dark', dark);
+  document.body.classList.toggle('bp6-dark', dark);
 };
 
 type GlobalHotkeysProps = Pick<

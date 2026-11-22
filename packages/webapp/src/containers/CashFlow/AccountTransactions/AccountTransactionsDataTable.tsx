@@ -190,7 +190,7 @@ const DashboardConstrantTable = styled(DataTable)`
 const CashflowTransactionsTable = styled(DashboardConstrantTable)`
   --table-cell-border-color: #e6e6e6;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --table-cell-border-color: rgba(255, 255, 255, 0.15);
   }
 

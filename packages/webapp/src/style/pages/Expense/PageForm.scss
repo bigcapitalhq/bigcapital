@@ -22,18 +22,18 @@
       flex: 1 0 0;
     }
 
-    .bp4-label {
+    .bp6-label {
       min-width: 140px;
     }
 
-    .bp4-form-content {
+    .bp6-form-content {
       width: 100%;
     }
 
-    .bp4-form-group {
+    .bp6-form-group {
       margin-bottom: 18px;
 
-      &.bp4-inline {
+      &.bp6-inline {
         max-width: 440px;
       }
     }
@@ -50,12 +50,12 @@
 
           &.landed-cost {
 
-            .bp4-control {
+            .bp6-control {
               margin-top: 0;
               margin-left: 34px;
             }
 
-            .bp4-control-indicator {
+            .bp6-control-indicator {
               height: 18px;
               width: 18px;
               border-color: #e0e0e0;

@@ -113,7 +113,7 @@ export function BranchSuggestField({
       inputProps={{ placeholder: defaultSelectText }}
       resetOnClose={true}
       fill={true}
-      popoverProps={{ minimal: true, boundary: 'window' }}
+      popoverProps={{ minimal: true, rootBoundary: 'viewport' }}
       inputValueRenderer={branchInputValueRenderer}
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,

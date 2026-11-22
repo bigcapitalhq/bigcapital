@@ -1,4 +1,4 @@
-import { IPopoverProps } from '@blueprintjs/core';
+import { PopoverProps } from '@blueprintjs/core';
 import { ArrayHelpers, FormikContextType } from 'formik';
 
 export type IResourceFieldType =
@@ -113,7 +113,7 @@ export interface IConditionOption {
 }
 
 export interface IAdvancedFilterPopover {
-  popoverProps?: IPopoverProps;
+  popoverProps?: PopoverProps;
   advancedFilterProps: IAdvancedFilterDropdown;
   children?: React.ReactNode;
 }

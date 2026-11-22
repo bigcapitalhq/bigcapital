@@ -1,9 +1,4 @@
-import {
-  CollapsibleList,
-  MenuItem,
-  Classes,
-  Boundary,
-} from '@blueprintjs/core';
+import { Menu, Popover, MenuItem, Classes } from '@blueprintjs/core';
 import React from 'react';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 import { useHistory } from 'react-router-dom';
@@ -21,25 +16,31 @@ function DashboardBreadcrumbs({
   const history = useHistory();
 
   return (
-    <CollapsibleList
-      className={Classes.BREADCRUMBS}
-      dropdownTarget={<span className={Classes.BREADCRUMBS_COLLAPSED} />}
-      collapseFrom={Boundary.START}
-      visibleItemCount={0}
+    <Popover
+      placement="bottom-start"
+      content={
+        <Menu>
+          {breadcrumbs.map((crumb) => {
+            const { breadcrumb, match } =
+              crumb as unknown as DashboardBreadcrumbItem;
+            return (
+              <MenuItem
+                key={match.url}
+                icon={'folder-close'}
+                text={breadcrumb}
+                onClick={() => history.push(match.url)}
+              />
+            );
+          })}
+        </Menu>
+      }
     >
-      {breadcrumbs.map((crumb) => {
-        const { breadcrumb, match } =
-          crumb as unknown as DashboardBreadcrumbItem;
-        return (
-          <MenuItem
-            key={match.url}
-            icon={'folder-close'}
-            text={breadcrumb}
-            onClick={() => history.push(match.url)}
-          />
-        );
-      })}
-    </CollapsibleList>
+      <button
+        type="button"
+        aria-label="Breadcrumbs"
+        className={Classes.BREADCRUMBS_COLLAPSED}
+      />
+    </Popover>
   );
 }
 

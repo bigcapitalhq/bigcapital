@@ -7,10 +7,10 @@ import intl from 'react-intl-universal';
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
 
 const organizationsSwitchLabelBpCss = css`
-  .bp4-control.bp4-switch {
+  .bp6-control.bp6-switch {
     margin: 0;
   }
-  .bp4-control.bp4-switch input:checked ~ .bp4-control-indicator {
+  .bp6-control.bp6-switch input:checked ~ .bp6-control-indicator {
     background: rgb(0, 82, 204);
     box-shadow: none;
   }

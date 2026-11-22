@@ -38,7 +38,7 @@ async function deleteExpenseViaRow(page: Page, row: Locator) {
 
   await expect(page.getByTestId('expense-delete-alert')).toBeVisible();
   await page
-    .getByRole('dialog')
+    .getByRole('alertdialog')
     .filter({ has: page.getByTestId('expense-delete-alert') })
     .getByRole('button', { name: 'Delete' })
     .click();

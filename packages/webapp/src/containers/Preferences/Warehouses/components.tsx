@@ -130,7 +130,7 @@ export const WarehouseBoxRoot = styled.div`
   --x-box-background-color: #fff;
   --x-box-hover-border-color: #0153cc;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-box-border-color: rgba(255, 255, 255, 0.2);
     --x-box-background-color: var(--color-dark-gray3);
     --x-box-hover-border-color: #0153cc;
@@ -163,7 +163,7 @@ export const WarehouseTitle = styled.div`
   --x-title-color: #000;
   --x-title-icon-color: #e1b31d;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-title-color: var(--color-light-gray5);
     --x-title-icon-color: #e1b31d;
   }
@@ -174,7 +174,7 @@ export const WarehouseTitle = styled.div`
   font-weight: 500;
   line-height: 1;
 
-  .bp4-icon {
+  .bp6-icon {
     margin: 0;
     margin-left: 2px;
     vertical-align: top;
@@ -185,7 +185,7 @@ export const WarehouseTitle = styled.div`
 const WarehouseCode = styled.div`
   --x-code-color: #6b7176;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-code-color: var(--color-muted-text);
   }
   display: block;
@@ -209,7 +209,7 @@ const WarehouseContent = styled.div`
 const WarehouseItem = styled.div`
   --x-item-color: #000;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-item-color: var(--color-light-gray1);
   }
   font-size: 11px;

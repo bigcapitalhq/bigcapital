@@ -193,7 +193,7 @@ function VendorsCreditNoteActionsBarInner({
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_RIGHT}
           modifiers={{
-            offset: { offset: '0, 4' },
+            offset: { options: { offset: [0, 4] } },
           }}
           content={
             <Menu>

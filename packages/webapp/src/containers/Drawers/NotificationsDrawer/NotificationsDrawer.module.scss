@@ -17,7 +17,7 @@
 
   --x-notifications-unread-indicator: #2b95d6;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --x-notifications-toolbar-border: rgba(255, 255, 255, 0.12);
     --x-notifications-item-border: rgba(255, 255, 255, 0.08);
     --x-notifications-item-hover-background: rgba(255, 255, 255, 0.06);
@@ -57,7 +57,7 @@
   padding: 12px 16px;
   border-bottom: 1px solid var(--x-notifications-toolbar-border);
 
-  :global(.bp4-tabs) {
+  :global(.bp6-tabs) {
     flex: 1;
   }
 }

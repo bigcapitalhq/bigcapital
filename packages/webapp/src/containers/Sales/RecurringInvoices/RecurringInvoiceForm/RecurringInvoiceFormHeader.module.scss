@@ -2,7 +2,7 @@
   --color-recurring-invoice-form-header-background: #fff;
   --color-recurring-invoice-form-header-border: #d2dce2;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --color-recurring-invoice-form-header-background: var(--color-dark-gray1);
     --color-recurring-invoice-form-header-border: rgba(255, 255, 255, 0.1);
   }

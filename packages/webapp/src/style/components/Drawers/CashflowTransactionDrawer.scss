@@ -56,14 +56,14 @@
       &--subtotal {
         border-bottom: 1px solid #000;
 
-        .bp4-dark & {
+        .bp6-dark & {
           border-bottom-color: var(--color-dark-gray5);
         }
       }
       &--total {
         border-bottom: 3px double #000;
 
-        .bp4-dark & {
+        .bp6-dark & {
           border-bottom-color: var(--color-dark-gray5);
         }
       }

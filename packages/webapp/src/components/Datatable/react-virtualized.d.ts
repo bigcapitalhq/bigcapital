@@ -43,24 +43,3 @@ declare module 'react-virtualized' {
   }
   export const List: ComponentType<ListProps>;
 }
-
-declare module 'react-use-context-menu' {
-  import type { Dispatch, SetStateAction } from 'react';
-
-  type PropsGetter = (props?: Record<string, any>) => Record<string, any>;
-
-  export type ContextMenuState = {
-    coords: { x: number; y: number };
-    setVisible: Dispatch<SetStateAction<boolean>>;
-    isVisible: boolean;
-  };
-
-  export type ContextMenuResult = [
-    PropsGetter,
-    (props?: { className?: string }) => PropsGetter,
-    (options?: { collect?: () => unknown }) => [PropsGetter, ContextMenuState],
-    ContextMenuState,
-  ];
-
-  export default function useContextMenu(): ContextMenuResult;
-}

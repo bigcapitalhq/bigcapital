@@ -43,7 +43,7 @@ const auditLogSelectItemPredicate = (query: string, item: SelectItem) => {
 };
 
 const AuditLogDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 350px;
   }
 `;
@@ -217,7 +217,6 @@ export function AuditLogHeader({
                   <FFormGroup name="toDate" label={'To'} fastField>
                     <FDateInput
                       name="toDate"
-                      type="date"
                       popoverProps={{
                         position: Position.BOTTOM,
                         minimal: true,

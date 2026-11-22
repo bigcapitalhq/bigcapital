@@ -37,40 +37,13 @@ async function openNewAccountDialog(page: Page) {
 }
 
 /**
- * Selects the given account type inside the account form dialog.
- *
- * The account type Select cannot be opened with a mouse click (the popover
- * only responds to keyboard input), and opening it is intermittent. Retry by
- * focusing the button, pressing Enter to open the popover, then immediately
- * clicking the matching menu item before the popover collapses.
+ * Select the account type through the dialog's dropdown.
  */
 async function selectAccountType(page: Page, dialog: Locator, type: string) {
   const button = dialog.getByTestId('account-type-select');
-
-  for (let attempt = 0; attempt < 8; attempt++) {
-    await button.focus();
-    await page.keyboard.press('Enter');
-
-    const clicked = await page.evaluate((type) => {
-      const items = Array.from(
-        document.querySelectorAll('[data-testId="account-type-option"]'),
-      );
-      for (const item of items) {
-        if ((item as HTMLElement).innerText.trim().startsWith(type)) {
-          (item as HTMLElement).click();
-          return true;
-        }
-      }
-      return false;
-    }, type);
-
-    if (clicked) {
-      await expect(button).toContainText(type, { timeout: 5_000 });
-      return;
-    }
-    await page.keyboard.press('Escape');
-  }
-  throw new Error(`Failed to select the ${type} account type.`);
+  await button.click();
+  await page.getByTestId('account-type-option').getByText(type, { exact: true }).first().click();
+  await expect(button).toContainText(type);
 }
 
 /**
@@ -125,7 +98,7 @@ async function deleteAccountViaRow(page: Page, row: Locator) {
 
   await expect(page.getByTestId('account-delete-alert')).toBeVisible();
   await page
-    .getByRole('dialog')
+    .getByRole('alertdialog')
     .filter({ hasText: 'Once you delete this account' })
     .getByRole('button', { name: 'Delete' })
     .click();

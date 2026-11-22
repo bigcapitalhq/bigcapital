@@ -18,7 +18,7 @@
     background: #fbfafa;
     margin-bottom: 22px;
 
-    .bp4-form-group.bp4-inline{
+    .bp6-form-group.bp6-inline{
       margin-bottom: 0;
     }
   }
@@ -71,7 +71,7 @@
   .dragable-columns{
     &__column{
 
-      .bp4-input-group .bp4-input{
+      .bp6-input-group .bp6-input{
         border-radius: 3px 3px 0 0;
       }
 
@@ -91,7 +91,7 @@
   &__role-conditional{
     margin-top: 1rem;
 
-    .bp4-form-group{
+    .bp6-form-group{
       margin-bottom: 0;
     }
   }

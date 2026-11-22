@@ -1,6 +1,5 @@
 // @ts-nocheck
 import AvatarCell from './AvatarCell';
-import ContextMenu from './ContextMenu';
 import MODIFIER from './modifiers';
 
 export * from './Money/Money';
@@ -65,4 +64,4 @@ export * from './Layout';
 export * from './SegmentedControl';
 export * from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
 
-export { MODIFIER, ContextMenu, AvatarCell };
+export { MODIFIER, AvatarCell };

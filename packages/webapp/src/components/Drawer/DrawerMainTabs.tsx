@@ -23,7 +23,7 @@ export function DrawerMainTabs({
 }
 
 const DrawerMainTabsRoot = styled.div`
-  .bp4-tabs {
+  .bp6-tabs {
     --x-tab-list-background: #fff;
     --x-tab-list-border: #e1e2e8;
     --x-tab-item-text: #7f8596;
@@ -34,7 +34,7 @@ const DrawerMainTabsRoot = styled.div`
 
     --x-tab-item-height: 36px;
 
-    .bp4-tab-list {
+    .bp6-tab-list {
       position: relative;
       background-color: var(--x-tab-list-background);
       padding: 0 15px;
@@ -43,11 +43,11 @@ const DrawerMainTabsRoot = styled.div`
       > *:not(:last-child) {
         margin-right: 25px;
       }
-      .bp4-tab {
+      .bp6-tab {
         color: var(--x-tab-item-text);
         line-height: var(--x-tab-item-height);
       }
-      &.bp4-large > .bp4-tab {
+      &.bp6-large > .bp6-tab {
         font-size: 15px;
         margin: 0 1rem;
 
@@ -56,13 +56,13 @@ const DrawerMainTabsRoot = styled.div`
           color: var(--color-primary);
         }
       }
-      .bp4-tab-indicator-wrapper .bp4-tab-indicator {
+      .bp6-tab-indicator-wrapper .bp6-tab-indicator {
         height: 2px;
         bottom: -2px;
       }
     }
 
-    .bp4-tab-panel {
+    .bp6-tab-panel {
       margin-top: 0;
 
       .card {

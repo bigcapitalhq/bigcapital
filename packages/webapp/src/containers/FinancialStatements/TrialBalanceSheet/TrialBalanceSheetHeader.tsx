@@ -151,7 +151,7 @@ export const TrialBalanceSheetHeader = FF.pipe(
 );
 
 const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 450px;
   }
 `;

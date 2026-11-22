@@ -1,5 +1,4 @@
-import { Button, Menu, MenuItem } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import { Button, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { find, get } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -57,13 +56,13 @@ export function ActionsCellRenderer({
   );
 
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
         className="m12"
         minimal={true}
       />
-    </Popover2>
+    </Popover>
   );
 }
 ActionsCellRenderer.cellType = CellType.Button;

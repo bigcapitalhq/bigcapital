@@ -92,7 +92,7 @@ export function BadDebtFormFields(): React.ReactElement {
         label={intl.get('reason')}
         labelInfo={<FieldRequiredHint />}
       >
-        <FTextArea name={'reason'} growVertically={true} large={true} fill />
+        <FTextArea name={'reason'} autoResize={true} large={true} fill />
       </FFormGroup>
     </div>
   );

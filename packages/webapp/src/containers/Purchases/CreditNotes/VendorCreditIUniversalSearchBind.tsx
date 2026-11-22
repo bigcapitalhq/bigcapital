@@ -102,7 +102,7 @@ export function VendorCreditUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp4-text-muted">
+          <span className="bp6-text-muted">
             {item.reference.vendorCreditNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedVendorCreditDate}

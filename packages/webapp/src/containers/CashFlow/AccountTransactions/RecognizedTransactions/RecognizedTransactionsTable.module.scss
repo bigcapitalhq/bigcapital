@@ -1,7 +1,7 @@
 .emptyState{
   --x-color-text: #738091;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
       --x-color-text: rgba(255, 255, 255, 0.6);
   }
   text-align: center;

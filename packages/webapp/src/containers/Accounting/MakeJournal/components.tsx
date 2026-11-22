@@ -1,5 +1,11 @@
-import { Menu, MenuItem, Position, Button, Intent } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import {
+  Menu,
+  MenuItem,
+  Position,
+  Button,
+  Intent,
+  Popover,
+} from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -103,13 +109,13 @@ export const ActionsCellRenderer = ({
     </Menu>
   );
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
         className="m12"
         minimal={true}
       />
-    </Popover2>
+    </Popover>
   );
 };
 ActionsCellRenderer.cellType = CellType.Button;

@@ -59,7 +59,7 @@ function PreferencesCreditNotesBoot({
 const PreferencesCreditNotesCard = styled(Card)`
   padding: 25px;
 
-  .bp4-form-group {
+  .bp6-form-group {
     max-width: 600px;
   }
 `;

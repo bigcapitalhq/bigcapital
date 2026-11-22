@@ -38,12 +38,12 @@ const createWorkspaceStepperContentCss = css`
   margin-top: 16px;
   margin-bottom: 0;
 
-  > .bp4-drawer-body {
+  > .bp6-drawer-body {
     flex: 1;
     min-height: 0;
     overflow: auto;
   }
-  > .bp4-navbar {
+  > .bp6-navbar {
     flex-shrink: 0;
   }
 `;

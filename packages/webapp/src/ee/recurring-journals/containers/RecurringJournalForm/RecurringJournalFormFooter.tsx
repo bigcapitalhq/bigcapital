@@ -76,11 +76,11 @@ function RecurringJournalFormFooterRight() {
 }
 
 const AutoPublishFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
+  &.bp6-form-group {
     margin-top: 12px;
     margin-bottom: 0;
 
-    .bp4-form-content {
+    .bp6-form-content {
       margin-left: 10px;
     }
   }

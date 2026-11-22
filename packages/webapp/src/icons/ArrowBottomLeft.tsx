@@ -9,7 +9,7 @@ export const ArrowBottomLeft: React.FC<ArrowBottomLeftProps> = ({
   ...props
 }) => {
   return (
-    <span className={'bp4-icon bp4-icon-arrow-bottom-left'}>
+    <span className={'bp6-icon bp6-icon-arrow-bottom-left'}>
       <svg
         width={size}
         height={size}

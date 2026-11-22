@@ -50,7 +50,7 @@ function SetupCongratsPageInner({
 
         <x.div
           className={css`
-            .bp4-button {
+            .bp6-button {
               height: 38px;
               padding-left: 25px;
               padding-right: 25px;

@@ -12,11 +12,11 @@
 .tag{
   min-height: 26px;
 
-  &:global(.bp4-minimal:not([class*='bp4-intent-'])) {
+  &:global(.bp6-minimal:not([class*='bp6-intent-'])) {
     background: #fff;
     border: 1px solid var(--color-minimum-border);
 
-    &:global(.bp4-interactive:hover) {
+    &:global(.bp6-interactive:hover) {
       background-color: rgba(143, 153, 168, 0.05);
     }
   }

@@ -39,7 +39,7 @@ export function ItemCategoryFormFields(): React.ReactElement {
       >
         <FTextArea
           name={'description'}
-          growVertically={true}
+          autoResize={true}
           large={true}
           data-testId={'category-description-input'}
           fastField

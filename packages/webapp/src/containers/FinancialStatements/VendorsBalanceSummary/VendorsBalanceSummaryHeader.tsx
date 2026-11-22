@@ -123,7 +123,7 @@ export const VendorsBalanceSummaryHeader = FF.pipe(
 );
 
 const VendorBalanceDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 450px;
   }
 `;

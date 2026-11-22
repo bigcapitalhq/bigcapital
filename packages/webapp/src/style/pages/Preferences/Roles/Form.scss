@@ -11,30 +11,30 @@
       border-top: 1px solid var(--color-role-form-footer-border, #e0e7ea);
       margin-top: 30px;
 
-      .bp4-dark & {
+      .bp6-dark & {
         --color-role-form-footer-border: rgba(255, 255, 255, 0.1);
       }
 
-      .bp4-button {
+      .bp6-button {
         min-width: 65px;
 
-        + .bp4-button {
+        + .bp6-button {
           margin-left: 10px;
         }
       }
     }
   }
 
-  .bp4-form-group {
+  .bp6-form-group {
     max-width: 600px;
     margin-bottom: 14px;
 
-    &.bp4-inline {
-      .bp4-label {
+    &.bp6-inline {
+      .bp6-label {
         min-width: 150px;
       }
     }
-    .bp4-form-content {
+    .bp6-form-content {
       width: 100%;
     }
 

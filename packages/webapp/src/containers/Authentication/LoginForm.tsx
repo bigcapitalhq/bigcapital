@@ -1,5 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
-import { Tooltip2 } from '@blueprintjs/popover2';
+import { Button, Intent, Tooltip } from '@blueprintjs/core';
 import { Form } from 'formik';
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
@@ -18,7 +17,7 @@ export function LoginForm({ isSubmitting }: { isSubmitting: boolean }) {
   };
 
   const lockButton = (
-    <Tooltip2 content={`${showPassword ? 'Hide' : 'Show'} Password`}>
+    <Tooltip content={`${showPassword ? 'Hide' : 'Show'} Password`}>
       <Button
         icon={showPassword ? 'unlock' : 'lock'}
         intent={Intent.WARNING}
@@ -26,7 +25,7 @@ export function LoginForm({ isSubmitting }: { isSubmitting: boolean }) {
         onClick={handleLockClick}
         small={true}
       />
-    </Tooltip2>
+    </Tooltip>
   );
 
   return (

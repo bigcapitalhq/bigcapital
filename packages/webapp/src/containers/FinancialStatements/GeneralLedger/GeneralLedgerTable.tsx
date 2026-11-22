@@ -94,7 +94,7 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
   --color-table-border-color: #ececec;
   --color-table-total-border-color: #ddd;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
     --color-table-border-color: var(--color-dark-gray4);

@@ -135,7 +135,7 @@ export function BalanceSheetHeaderComparisonPanal() {
 }
 
 const BalanceSheetComparisonWrap = styled.div`
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 3px;
   }
 `;

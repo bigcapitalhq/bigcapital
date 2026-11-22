@@ -12,7 +12,7 @@ import { useAppIntlContext } from '../AppIntlProvider';
 
 const theme = {
   ...defaultTheme,
-  bpPrefix: 'bp4',
+  bpPrefix: 'bp6',
 };
 
 interface DashboardThemeProviderProps {

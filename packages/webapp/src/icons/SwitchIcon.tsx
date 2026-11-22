@@ -8,7 +8,7 @@ export const SwitchIcon: React.FC<SwitchIconProps> = ({
   size = 16,
   ...props
 }) => (
-  <span className={'bp4-icon bp4-icon-arrow-bottom-left'}>
+  <span className={'bp6-icon bp6-icon-arrow-bottom-left'}>
     <svg
       width={size}
       height={size}

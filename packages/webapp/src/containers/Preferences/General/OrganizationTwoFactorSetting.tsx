@@ -61,7 +61,7 @@ export function OrganizationTwoFactorSetting() {
 const Section = styled.div`
   --x-color-border: #e0e7ea;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-border: rgba(255, 255, 255, 0.15);
   }
   margin-top: 30px;

@@ -14,14 +14,14 @@
 }
 
 // Form form.
-label.bp4-label {
+label.bp6-label {
   color: #353535;
   font-weight: 400;
 
   .required {
     color: red;
   }
-  .bp4-form-group.bp4-inline & {
+  .bp6-form-group.bp6-inline & {
     margin: 0 10px 0 0;
     line-height: 30px;
   }
@@ -36,42 +36,42 @@ label.bp4-label {
   color: #333;
 
   &,
-  .bp4-dark & {
+  .bp6-dark & {
     box-shadow: 0 0 0 transparent;
   }
   &:focus,
-  &.bp4-active {
+  &.bp6-active {
     box-shadow: 0 0 0 1px #116cd0;
     border-color: #116cd0;
   }
 
-  &.bp4-disabled,
+  &.bp6-disabled,
   &:disabled {
     background: #e9ecef;
   }
 
-  &.bp4-intent-danger {
+  &.bp6-intent-danger {
     box-shadow: 0 0 0 transparent;
     border-color: #db3737;
 
     &:focus,
-    &.bp4-active {
+    &.bp6-active {
       box-shadow: 0 0 0 1px #db3737;
       border-color: #db3737;
     }
   }
 }
 
-.bp4-input-group{
+.bp6-input-group{
 
-  &.bp4-intent-danger{
+  &.bp6-intent-danger{
     
-    .bp4-input{
+    .bp6-input{
       box-shadow: 0 0 0 transparent;
       border-color: #db3737;
 
       &:focus,
-      &.bp4-active {
+      &.bp6-active {
         box-shadow: 0 0 0 1px #db3737;
         border-color: #db3737;
       }
@@ -96,7 +96,7 @@ label.bp4-label {
 
   // Blueprint's dark theme overrides the helper text but not the sub-label,
   // which keeps the light theme muted color that's unreadable on dark surfaces.
-  .bp4-dark & {
+  .bp6-dark & {
     .#{$ns}-form-group-sub-label,
     .#{$ns}-form-helper-text {
       color: var(--color-muted-text);
@@ -115,8 +115,8 @@ label.bp4-label {
 
   &,
   &:hover,
-  .bp4-dark &,
-  .bp4-dark &:hover {
+  .bp6-dark &,
+  .bp6-dark &:hover {
     box-shadow: none;
     background-color: var(--color-ui-input-background);
     border: 1px solid var(--color-ui-input-border);
@@ -145,7 +145,7 @@ label.bp4-label {
     border-radius: 0.25rem;
     height: 100%;
 
-    .bp4-form-group & {
+    .bp6-form-group & {
       padding: 0.25rem 0.5rem;
       font-size: 0.875rem;
       line-height: 1.5;
@@ -154,11 +154,11 @@ label.bp4-label {
   }
 }
 
-.bp4-form-group {
-  .bp4-input-group {
+.bp6-form-group {
+  .bp6-input-group {
     flex: 1 1 auto;
   }
-  .bp4-control-group {
+  .bp6-control-group {
     >.input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -167,12 +167,12 @@ label.bp4-label {
 }
 
 .#{$ns}-html-select {
-  .bp4-icon-double-caret-vertical {
+  .bp6-icon-double-caret-vertical {
     display: none;
   }
 }
 
-.bp4-datepicker-caption select {
+.bp6-datepicker-caption select {
 
   &,
   &:hover {
@@ -200,7 +200,7 @@ label.bp4-label {
 
 .form-group--select-list {
 
-  .form-group--select-list.bp4-intent-danger & {
+  .form-group--select-list.bp6-intent-danger & {
     & {
       border-color: #db3737;
     }
@@ -212,7 +212,7 @@ label.bp4-label {
     padding-right: 25px;
     justify-content: start;
 
-    &:not([class*="bp4-intent-"]):not(.bp4-minimal) {
+    &:not([class*="bp6-intent-"]):not(.bp6-minimal) {
 
       &,
       &:hover {
@@ -232,41 +232,41 @@ label.bp4-label {
     }
   }
 
-  &.bp4-fill {
+  &.bp6-fill {
     width: 100%;
   }
 
-  .bp4-popover-target.bp4-popover-open {
+  .bp6-popover-target.bp6-popover-open {
 
     .#{$ns}-button {
 
-      &:not([class*="bp4-intent-"]):not(.bp4-minimal):not(:disabled),
-      &:not([class*="bp4-intent-"]):not(.bp4-minimal):hover:not(:disabled) {
+      &:not([class*="bp6-intent-"]):not(.bp6-minimal):not(:disabled),
+      &:not([class*="bp6-intent-"]):not(.bp6-minimal):hover:not(:disabled) {
         background-color: #fafafa;
       }
     }
   }
 
-  .bp4-popover-target {
-    .bp4-icon {
+  .bp6-popover-target {
+    .bp6-icon {
       position: absolute;
       top: 0;
       left: 0;
       margin: 7px;
 
-      +.bp4-button-text {
+      +.bp6-button-text {
         padding-left: 20px;
       }
     }
 
-    .bp4-button {
+    .bp6-button {
       padding-left: 10px;
       color: #333;
     }
   }
 
-  &.bp4-intent-danger {
-    .bp4-button:not(.bp4-minimal) {
+  &.bp6-intent-danger {
+    .bp6-button:not(.bp6-minimal) {
       border-color: #db3737;
     }
   }
@@ -275,23 +275,23 @@ label.bp4-label {
 .select-list--fill-popover {
   position: relative;
 
-  .bp4-transition-container,
-  .bp4-popover {
+  .bp6-popover-transition-container,
+  .bp6-popover {
     min-width: 100%;
   }
 }
 
-.select-list--tooltip-items .bp4-popover-target {
+.select-list--tooltip-items .bp6-popover-target {
   display: block;
 }
-.bp4-menu-item::before,
-.bp4-menu-item>.bp4-icon {
+.bp6-menu-item::before,
+.bp6-menu-item>.bp6-icon {
   color: #4b5d6b;
 }
 
-.bp4-control-group {
+.bp6-control-group {
   .input-prepend {
-    &:not(.bp4-fixed) {
+    &:not(.bp6-fixed) {
       flex: 0;
     }
 
@@ -312,13 +312,13 @@ label.bp4-label {
       border: 1px solid var(--color-ui-input-group-prepend-border);
       border-radius: 0 3px 3px 0;
 
-      .bp4-icon {
+      .bp6-icon {
         color: #848da0;
       }
     }
   }
 }
 
-.bp4-control.bp4-checkbox .bp4-control-indicator{
+.bp6-control.bp6-checkbox .bp6-control-indicator{
   border-color: #666;
 }

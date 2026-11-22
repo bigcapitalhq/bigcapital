@@ -110,7 +110,7 @@ export function ItemFormSellingSection() {
       >
         <FTextArea
           name={'sellDescription'}
-          growVertically={true}
+          autoResize={true}
           disabled={!values.sellable}
           fill
           fastField

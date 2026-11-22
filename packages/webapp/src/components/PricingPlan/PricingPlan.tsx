@@ -141,7 +141,7 @@ PricingPlan.FeatureLine = ({
       }
       position={Position.TOP_LEFT}
       popoverClassName={styles.featurePopover}
-      modifiers={{ offset: { enabled: true, offset: '0,10' } }}
+      modifiers={{ offset: { options: { offset: [0, 10] } } }}
       minimal
     >
       <Group noWrap spacing={8} style={{ cursor: 'help' }}>

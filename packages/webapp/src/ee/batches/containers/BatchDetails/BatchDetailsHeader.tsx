@@ -130,7 +130,7 @@ export function BatchDetailsHeader({
 }
 
 const BatchDetailsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 450px;
   }
 `;

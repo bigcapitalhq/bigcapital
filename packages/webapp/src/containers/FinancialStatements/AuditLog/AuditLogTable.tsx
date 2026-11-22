@@ -73,7 +73,7 @@ const AuditLogDataTable = styled(ReportDataTable)`
   --color-table-text-color: #252a31;
   --color-table-border-color: #ececec;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-border-color: var(--color-dark-gray4);
   }

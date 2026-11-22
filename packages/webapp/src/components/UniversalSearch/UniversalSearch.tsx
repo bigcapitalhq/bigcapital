@@ -44,24 +44,24 @@ export interface UniversalSearchItem {
 
 // CSS styles for complex selectors
 const overlayStyles = css`
-  .bp4-overlay-appear,
-  .bp4-overlay-enter {
+  .bp6-overlay-appear,
+  .bp6-overlay-enter {
     filter: blur(20px);
     opacity: 0.2;
   }
-  .bp4-overlay-appear-active,
-  .bp4-overlay-enter-active {
+  .bp6-overlay-appear-active,
+  .bp6-overlay-enter-active {
     filter: blur(0);
     opacity: 1;
     transition:
       filter 0.2s cubic-bezier(0.4, 1, 0.75, 0.9),
       opacity 0.2s cubic-bezier(0.4, 1, 0.75, 0.9);
   }
-  .bp4-overlay-exit {
+  .bp6-overlay-exit {
     filter: blur(0);
     opacity: 1;
   }
-  .bp4-overlay-exit-active {
+  .bp6-overlay-exit-active {
     filter: blur(20px);
     opacity: 0.2;
     transition:
@@ -85,8 +85,8 @@ const containerStyles = css`
   width: 500px;
   z-index: 20;
 
-  .bp4-input-group {
-    .bp4-icon {
+  .bp6-input-group {
+    .bp6-icon {
       margin: 16px;
       color: var(--color-universal-search-icon);
 
@@ -102,40 +102,40 @@ const containerStyles = css`
     }
   }
 
-  .bp4-input-group .bp4-input {
+  .bp6-input-group .bp6-input {
     border: 0;
     box-shadow: 0 0 0 0;
     height: 50px;
     line-height: 50px;
     font-size: 20px;
   }
-  .bp4-input-group.bp4-large .bp4-input:not(:first-child) {
+  .bp6-input-group.bp6-large .bp6-input:not(:first-child) {
     padding-left: 50px !important;
   }
-  .bp4-input-group.bp4-large .bp4-input:not(:last-child) {
+  .bp6-input-group.bp6-large .bp6-input:not(:last-child) {
     padding-right: 130px !important;
   }
 
-  .bp4-menu {
+  .bp6-menu {
     border-top: 1px solid var(--color-universal-search-menu-border);
     max-height: calc(60vh - 20px);
     overflow: auto;
 
-    .bp4-menu-item {
-      .bp4-text-muted {
+    .bp6-menu-item {
+      .bp6-text-muted {
         font-size: 12px;
 
-        .bp4-icon {
-          color: var(--bp4-gray-600);
+        .bp6-icon {
+          color: var(--bp6-gray-600);
         }
       }
-      &.bp4-intent-primary {
-        &.bp4-active {
-          background-color: var(--bp4-blue-100);
-          color: var(--bp4-dark-gray-800);
+      &.bp6-intent-primary {
+        &.bp6-active {
+          background-color: var(--bp6-blue-100);
+          color: var(--bp6-dark-gray-800);
 
-          .bp4-menu-item-label {
-            color: var(--bp4-gray-600);
+          .bp6-menu-item-label {
+            color: var(--bp6-gray-600);
           }
         }
       }
@@ -147,7 +147,7 @@ const containerStyles = css`
     }
   }
 
-  .bp4-input-action {
+  .bp6-input-action {
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -159,7 +159,7 @@ const inputRightElementsStyles = css`
   display: flex;
   margin: 10px;
 
-  .bp4-spinner {
+  .bp6-spinner {
     margin-right: 6px;
   }
 `;
@@ -174,7 +174,7 @@ const actionBaseStyles = css`
     margin-left: 14px;
   }
 
-  .bp4-tag {
+  .bp6-tag {
     background: var(--color-universal-search-tag-background);
     color: var(--color-universal-search-tag-text);
   }
@@ -185,7 +185,7 @@ const actionArrowsStyles = css`
     margin-left: 14px;
   }
 
-  .bp4-tag {
+  .bp6-tag {
     background: var(--color-universal-search-tag-background);
     color: var(--color-universal-search-tag-text);
     padding: 0;
@@ -469,17 +469,17 @@ export function UniversalSearch({
   const filteredItems = filterItemsByResourceType(items, searchType);
 
   return (
-    <Overlay
-      hasBackdrop={true}
-      isOpen={isOpen}
-      className={overlayStyles}
-      {...overlayProps}
+    <UniversalSearchProvider
+      isLoading={isLoading}
+      searchType={searchType}
+      defaultSearchResource={defaultSearchResource}
+      searchTypeOptions={searchTypeOptions}
     >
-      <UniversalSearchProvider
-        isLoading={isLoading}
-        searchType={searchType}
-        defaultSearchResource={defaultSearchResource}
-        searchTypeOptions={searchTypeOptions}
+      <Overlay
+        hasBackdrop={true}
+        isOpen={isOpen}
+        className={overlayStyles}
+        {...overlayProps}
       >
         <x.div className={containerStyles}>
           <UniversalSearchQueryList
@@ -494,7 +494,7 @@ export function UniversalSearch({
             <UniversalQuerySearchActions />
           </x.div>
         </x.div>
-      </UniversalSearchProvider>
-    </Overlay>
+      </Overlay>
+    </UniversalSearchProvider>
   );
 }

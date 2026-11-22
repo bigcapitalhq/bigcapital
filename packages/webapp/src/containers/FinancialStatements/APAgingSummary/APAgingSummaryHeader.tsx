@@ -112,7 +112,7 @@ export const APAgingSummaryHeader = FF.pipe(
 );
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 520px;
   }
 `;

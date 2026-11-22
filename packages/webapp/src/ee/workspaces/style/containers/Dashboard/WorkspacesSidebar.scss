@@ -99,13 +99,13 @@
       }
     }
 
-    .bp4-spinner {
-      .bp4-spinner-head {
+    .bp6-spinner {
+      .bp6-spinner-head {
         stroke: rgba(255, 255, 255, 0.8);
       }
     }
 
-    &.is-active .bp4-spinner .bp4-spinner-head {
+    &.is-active .bp6-spinner .bp6-spinner-head {
       stroke: $sidebar-background;
     }
   }
@@ -148,7 +148,7 @@
     justify-content: center;
     padding-top: 20px;
 
-    .bp4-spinner .bp4-spinner-head {
+    .bp6-spinner .bp6-spinner-head {
       stroke: rgba(255, 255, 255, 0.8);
     }
   }

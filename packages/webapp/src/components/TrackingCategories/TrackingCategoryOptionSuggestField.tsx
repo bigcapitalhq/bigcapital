@@ -85,10 +85,11 @@ export function TrackingCategoryOptionSuggestField({
       labelAccessor={'label'}
       itemRenderer={itemRenderer}
       onItemSelect={handleItemSelect}
-      inputProps={{ disabled, placeholder }}
+      disabled={disabled}
+      inputProps={{ placeholder }}
       openOnKeyDown={!disabled}
       resetOnClose={true}
-      popoverProps={{ minimal: true, boundary: 'window' }}
+      popoverProps={{ minimal: true, rootBoundary: 'viewport' }}
     />
   );
 }

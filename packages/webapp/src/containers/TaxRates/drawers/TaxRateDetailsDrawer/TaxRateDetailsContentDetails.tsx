@@ -76,7 +76,7 @@ const TaxRateAmount = styled('div')`
   display: inline-block;
   color: var(--x-color-amount-text, #565b71);
 
-  .bp4-dark & {
+  .bp6-dark & {
     color: rgba(255, 255, 255, 0.9);
   }
 `;

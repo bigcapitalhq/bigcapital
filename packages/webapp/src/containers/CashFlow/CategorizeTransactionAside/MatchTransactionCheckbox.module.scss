@@ -6,7 +6,7 @@
   --item-date-text: #5c7080;
   --item-border-hover: #c0c0c0;
   
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --item-background: var(--color-dark-gray3);
     --item-border: rgba(255, 255, 255, 0.2);
     --item-date-text: var(--color-light-gray1);
@@ -33,23 +33,23 @@
   }
 }
 
-.checkbox:global(.bp4-control.bp4-checkbox) {
+.checkbox:global(.bp6-control.bp6-checkbox) {
   margin: 0;
 }
-.checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator {
+.checkbox:global(.bp6-control.bp6-checkbox) :global .bp6-control-indicator {
   box-shadow: 0 0 0 1px #cbcbcb;
 }
-.checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator {
+.checkbox:global(.bp6-control.bp6-checkbox) :global .bp6-control-indicator {
   margin-right: 4px;
   margin-left: 0;
   height: 16px;
   width: 16px;
 }
 
-.checkbox:global(.bp4-control.bp4-checkbox)
+.checkbox:global(.bp6-control.bp6-checkbox)
   :global
   input:checked
-  ~ .bp4-control-indicator {
+  ~ .bp6-control-indicator {
   box-shadow: 0 0 0 1px #0069ff;
 }
 

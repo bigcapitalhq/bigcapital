@@ -79,11 +79,11 @@
   }
 }
 
-.downloadInvoiceButton:global(.bp4-button.bp4-minimal){
+.downloadInvoiceButton:global(.bp6-button.bp6-minimal){
   box-shadow: 0 0 0 1px #DCE0E5;
 }
 
-.viewInvoiceButton:global(.bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal)){
+.viewInvoiceButton:global(.bp6-button:not([class*=bp6-intent-]):not(.bp6-minimal)){
   background-color: #EDEFF2;
 }
 

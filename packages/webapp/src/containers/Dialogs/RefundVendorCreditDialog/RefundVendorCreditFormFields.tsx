@@ -151,7 +151,7 @@ function RefundVendorCreditFormFieldsInner(): React.ReactElement {
         label={intl.get('refund_vendor_credit.dialog.description')}
         fastField
       >
-        <FTextArea name={'description'} growVertically fill fastField />
+        <FTextArea name={'description'} autoResize fill fastField />
       </FFormGroup>
     </div>
   );
@@ -162,7 +162,7 @@ export const RefundVendorCreditFormFields = RefundVendorCreditFormFieldsInner;
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-divider-color: rgba(255, 255, 255, 0.1);
   }
   height: 1px;

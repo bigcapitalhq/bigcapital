@@ -178,33 +178,35 @@ function ModuleExtraPermissionsPopover() {
   const extraPermissions = getServiceExtraPermissions(service);
 
   return (
-    <Popover>
+    <Popover
+      content={
+        <ExtraPermissionsRoot>
+          {extraPermissions.map((permission) => (
+            <Field
+              key={`${service.subject}/${permission.key}`}
+              name={`permissions.${service.subject}/${permission.key}`}
+              type="checkbox"
+            >
+              {({ form, field }: FieldProps) => (
+                <PermissionCheckbox
+                  inline={true}
+                  label={permission.label}
+                  {...field}
+                  onChange={handleCheckboxPermissionChange(
+                    form as FormState,
+                    permission,
+                    service,
+                  )}
+                />
+              )}
+            </Field>
+          ))}
+        </ExtraPermissionsRoot>
+      }
+    >
       <MorePermissionsLink>
         <T id={'permissions.more_permissions'} />
       </MorePermissionsLink>
-
-      <ExtraPermissionsRoot>
-        {extraPermissions.map((permission) => (
-          <Field
-            key={`${service.subject}/${permission.key}`}
-            name={`permissions.${service.subject}/${permission.key}`}
-            type="checkbox"
-          >
-            {({ form, field }: FieldProps) => (
-              <PermissionCheckbox
-                inline={true}
-                label={permission.label}
-                {...field}
-                onChange={handleCheckboxPermissionChange(
-                  form as FormState,
-                  permission,
-                  service,
-                )}
-              />
-            )}
-          </Field>
-        ))}
-      </ExtraPermissionsRoot>
     </Popover>
   );
 }
@@ -454,7 +456,7 @@ export const RolesPermissionList = () => {
 };
 
 const PermissionCheckbox = styled(Checkbox)`
-  &.bp4-control.bp4-checkbox .bp4-control-indicator {
+  &.bp6-control.bp6-checkbox .bp6-control-indicator {
     border-radius: 2px;
     border-color: #555;
 
@@ -478,7 +480,7 @@ const ModulePermissionHead = styled.div`
   padding: 0 15px;
   display: flex;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-role-module-header-border: rgba(255, 255, 255, 0.1);
   }
 `;
@@ -489,7 +491,7 @@ const ModulePermissionTitle = styled.div`
   line-height: 38px;
   color: var(--color-role-module-title, #878787);
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-role-module-title: rgba(255, 255, 255, 0.6);
   }
 `;
@@ -542,7 +544,7 @@ const ModulePermissionsTableRoot = styled.table`
     }
 
     tr td {
-      .bp4-control.bp4-inline {
+      .bp6-control.bp6-inline {
         margin: 0;
       }
 
@@ -557,7 +559,7 @@ const ModulePermissionsTableRoot = styled.table`
     }
   }
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-role-table-header-bg: rgba(255, 255, 255, 0.05);
     --color-role-table-border: rgba(255, 255, 255, 0.1);
   }
@@ -604,7 +606,7 @@ const ModulePermissionsVerticalTable = styled.table`
     }
   }
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-role-table-border: rgba(255, 255, 255, 0.1);
     --color-role-service-label: rgba(255, 255, 255, 0.85);
   }

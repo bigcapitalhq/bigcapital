@@ -3,7 +3,7 @@
   --x-color-amount-text: #343463;
   --x-color-label-text: #5d6f90;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --x-color-label-text: rgba(255, 255, 255, 0.7);
     --x-color-amount-text: rgba(255, 255, 255, 0.9);
   }

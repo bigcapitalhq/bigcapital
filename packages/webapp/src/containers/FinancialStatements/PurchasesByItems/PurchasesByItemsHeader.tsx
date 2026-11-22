@@ -124,7 +124,7 @@ export const PurchasesByItemsHeader = FF.pipe(
 );
 
 const PurchasesByItemsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 450px;
   }
 `;

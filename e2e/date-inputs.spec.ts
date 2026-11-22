@@ -19,21 +19,6 @@ const API_BASE = process.env.PLAYWRIGHT_TEST_API_URL || 'http://localhost:3000';
 // Unique name so the invoice form's item picker resolves a single item.
 const ITEM_NAME = `E2E Date Item ${faker.string.alphanumeric(6)}`;
 
-const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-
 // West of UTC, where UTC midnight is still the previous day. Date inputs
 // showed stored dates a day early here and saved picked days a day late.
 test.use({ timezoneId: 'America/Los_Angeles' });
@@ -51,13 +36,13 @@ async function seedCustomer() {
 }
 
 /**
- * Converts a calendar day's label (`Tue Sep 15 2026`) to `YYYY-MM-DD`.
+ * Read the displayed calendar month and year alongside the day button.
  */
-function labelToDate(label: string | null): string {
-  const [, month, day, year] = (label ?? '').split(' ');
-  const monthNumber = String(MONTHS.indexOf(month) + 1).padStart(2, '0');
-
-  return `${year}-${monthNumber}-${day}`;
+async function calendarDate(page: Page, day: Locator): Promise<string> {
+  const calendar = page.locator('.bp6-datepicker');
+  const month = Number(await calendar.locator('select[name="months"]').inputValue()) + 1;
+  const year = await calendar.locator('select[name="years"]').inputValue();
+  return [year, String(month).padStart(2, '0'), (await day.innerText()).padStart(2, '0')].join('-');
 }
 
 /**
@@ -65,7 +50,7 @@ function labelToDate(label: string | null): string {
  */
 function invoiceDateInput(page: Page): Locator {
   return page
-    .locator('.bp4-form-group')
+    .locator('.bp6-form-group')
     .filter({ hasText: 'Invoice Date' })
     .locator('input');
 }
@@ -78,10 +63,10 @@ function invoiceDateInput(page: Page): Locator {
 async function openCalendarSelectedDay(page: Page, input: Locator) {
   await input.click();
 
-  const selected = page.locator('.DayPicker-Day--selected');
+  const selected = page.locator('.rdp-day_selected');
   await expect(selected).toBeVisible({ timeout: 10_000 });
 
-  return labelToDate(await selected.getAttribute('aria-label'));
+  return calendarDate(page, selected);
 }
 
 test.describe('date inputs', () => {
@@ -120,10 +105,10 @@ test.describe('date inputs', () => {
     // Picks another day of the month shown in the calendar.
     const day = page
       .locator(
-        '.DayPicker-Day:not(.DayPicker-Day--outside):not(.DayPicker-Day--selected):not(.DayPicker-Day--disabled)',
+        '.rdp-day:not(.rdp-day_outside):not(.rdp-day_selected):not(:disabled)',
       )
       .first();
-    const pickedDate = labelToDate(await day.getAttribute('aria-label'));
+    const pickedDate = await calendarDate(page, day);
     await day.click();
 
     const createRequest = page.waitForRequest(

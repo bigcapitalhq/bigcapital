@@ -8,7 +8,7 @@ export const DollarIcon: React.FC<DollarIconProps> = ({
   size = 16,
   ...props
 }) => (
-  <span className={'bp4-icon bp4-icon-arrow-bottom-left'}>
+  <span className={'bp6-icon bp6-icon-arrow-bottom-left'}>
     <svg
       version="1.1"
       id="Layer_1"

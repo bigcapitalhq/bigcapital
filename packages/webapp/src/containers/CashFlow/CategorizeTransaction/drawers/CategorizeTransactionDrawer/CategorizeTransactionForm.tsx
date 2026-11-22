@@ -117,13 +117,13 @@ const FormRoot = styled(Form)`
   flex-direction: column;
   flex: 1 1 auto;
 
-  .bp4-form-group .bp4-form-content {
+  .bp6-form-group .bp6-form-content {
     flex: 1 0;
   }
-  .bp4-form-group .bp4-label {
+  .bp6-form-group .bp6-label {
     width: 140px;
   }
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 18px;
   }
 `;

@@ -195,7 +195,7 @@ function CreateReconcileTransactionContent() {
             modifiers: {
               preventOverflow: { enabled: true },
             },
-            boundary: 'viewport',
+            rootBoundary: 'viewport',
           }}
           inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
           fill
@@ -243,7 +243,7 @@ function CreateReconcileTransactionContent() {
               modifiers: {
                 preventOverflow: { enabled: true },
               },
-              boundary: 'viewport',
+              rootBoundary: 'viewport',
             }}
             fastField
           />
@@ -275,7 +275,7 @@ function MatchingReconcileCategoryField() {
           modifiers: {
             preventOverflow: { enabled: true },
           },
-          boundary: 'viewport',
+          rootBoundary: 'viewport',
         }}
         filterByRootTypes={values.type === 'deposit' ? ['income'] : ['expense']}
         fastField

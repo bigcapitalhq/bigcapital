@@ -3,10 +3,10 @@
 
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
-@import '@blueprintjs/popover2/src/blueprint-popover2.scss';
+@import '@blueprintjs/select/src/blueprint-select.scss';
 
 @mixin dark-mode {
-  .bp4-dark & {
+  .bp6-dark & {
     @content;
   }
 }
@@ -58,62 +58,61 @@ body.hide-scrollbar .Pane2 {
   overflow: hidden;
 }
 
-.bp4-fill {
+.bp6-fill {
 
-  .bp4-popover-wrapper,
-  .bp4-popover-target {
+  .bp6-popover-target {
     display: block;
     width: 100%;
   }
 
-  .bp4-button {
+  .bp6-button {
     width: 100%;
     justify-content: start;
   }
 }
 
-.bp4-datepicker-caption .bp4-html-select::after {
+.bp6-datepicker-caption .bp6-html-select::after {
   margin-right: 6px;
 }
 
-.bp4-select-popover .bp4-menu,
-.bp4-multi-select-popover .bp4-menu {
+.bp6-select-popover .bp6-menu,
+.bp6-multi-select-popover .bp6-menu {
   max-height: 300px;
   overflow: auto;
 }
 
-.bp4-form-group .bp4-label {
+.bp6-form-group .bp6-label {
   .hint {
-    .bp4-popover-wrapper {
+    .bp6-popover-target {
       display: inline;
     }
   }
 
-  &:not(.bp4-inline) .hint .bp4-popover-target {
+  &:not(.bp6-inline) .hint .bp6-popover-target {
     display: inline;
     margin-left: 0;
   }
 }
 
-.bp4-popover.bp4-tooltip {
+.bp6-popover.bp6-tooltip {
   max-width: 300px;
 }
 
-.bp4-timezone-picker {
-  .bp4-button {
+.bp6-timezone-select {
+  .bp6-button {
     [icon='caret-down'] {
       display: none;
     }
   }
 }
 
-.bp4-progress-bar.bp4-intent-primary .bp4-progress-meter {
+.bp6-progress-bar.bp6-intent-primary .bp6-progress-meter {
   background-color: #0066ff;
 }
 
-.bp4-card,
-.bp4-card.bp4-dark,
-.bp4-dark .bp4-card {
+.bp6-card,
+.bp6-card.bp6-dark,
+.bp6-dark .bp6-card {
   box-shadow: 0 0 0;
   border: 1px solid #383e47;
 }
@@ -197,7 +196,7 @@ body.hide-scrollbar .Pane2 {
 
 .ReactVirtualized__List {}
 
-.bp4-drawer {
+.bp6-drawer {
   box-shadow: 0 0 0;
   background-color: #fbfbfb;
 
@@ -208,7 +207,7 @@ body.hide-scrollbar .Pane2 {
 
 // RTL Icons.
 html[dir='rtl'] {
-  .bp4-icon-caret-right {
+  .bp6-icon-caret-right {
     transform: scaleX(-1);
   }
 }
@@ -219,12 +218,12 @@ html[lang^='ar'] {
   }
 }
 
-.bp4-popover2 {
+.bp6-popover {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
 }
 
-.bp4-tooltip2 .bp4-popover2-arrow:before {
+.bp6-tooltip .bp6-popover-arrow:before {
   box-shadow: 0 0 0;
 }
 
@@ -247,25 +246,25 @@ html[lang^='ar'] {
     gap: 10px;
   }
 
-  .bp4-dialog {
+  .bp6-dialog {
     &-body {
       &:not(.loading) {
         margin: 0;
       }
 
-      >.bp4-spinner {
+      >.bp6-spinner {
         margin: 20px 0;
       }
     }
   }
 }
 
-.bp4-drawer {
+.bp6-drawer {
   border-left: 1px solid var(--color-drawer-border-left);
 }
 
 .drawer-portal {
-  .bp4-overlay-backdrop {
+  .bp6-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
 }
@@ -293,7 +292,7 @@ html[lang^='ar'] {
 a.text-link {
   text-decoration: none;
   &,
-  .bp4-dark &{
+  .bp6-dark &{
     color: inherit;
   }
   &:hover {
@@ -306,7 +305,7 @@ span.table-tooltip-overview-target {
   display: inline;
 }
 
-.bp4-callout .bp4-heading:first-child {
+.bp6-callout .bp6-heading:first-child {
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: 600;

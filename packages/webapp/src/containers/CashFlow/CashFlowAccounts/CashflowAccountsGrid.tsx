@@ -1,5 +1,10 @@
-import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
-import { ContextMenu2 } from '@blueprintjs/popover2';
+import {
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Intent,
+  ContextMenu,
+} from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
@@ -138,7 +143,7 @@ function CashflowBankAccount({
   };
 
   return (
-    <ContextMenu2
+    <ContextMenu
       content={
         <CashflowAccountContextMenu
           account={account}
@@ -171,7 +176,7 @@ function CashflowBankAccount({
           uncategorizedTransactionsCount={undefined}
         />
       </CashflowAccountAnchor>
-    </ContextMenu2>
+    </ContextMenu>
   );
 }
 
@@ -388,7 +393,7 @@ const AccountsEmptyStateBase = styled.div`
 const AccountsEmptyStateTitle = styled.h1`
   --x-text-color: #626b76;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   font-size: 18px;

@@ -29,12 +29,12 @@ export function MakeJournalFormFooterLeft({
 }
 
 const DescriptionFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
-    .bp4-label {
+  &.bp6-form-group {
+    .bp6-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp4-form-content {
+    .bp6-form-content {
       margin-left: 10px;
     }
   }

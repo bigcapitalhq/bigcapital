@@ -166,7 +166,7 @@ async function assertNumberFormatFields(page: Page) {
 
   for (const label of ['Negative format', 'Decimal places', 'Money format']) {
     await expect(
-      dropdown.locator('.bp4-form-group').filter({ hasText: label }),
+      dropdown.locator('.bp6-form-group').filter({ hasText: label }),
     ).toBeVisible();
   }
   for (const label of [
@@ -194,7 +194,7 @@ async function selectOptionInDropdown(
 ) {
   const dropdown = page.locator('.number-format-dropdown');
   const group = dropdown
-    .locator('.bp4-form-group')
+    .locator('.bp6-form-group')
     .filter({ hasText: fieldLabel });
 
   await group.locator('button').evaluate((el) => (el as HTMLElement).click());
@@ -291,7 +291,7 @@ function parseFormattedAmount(text: string): number {
 
 // --color-financial-sheet-negative-amount-text resolves to --color-red-500
 // (#fa999c) in the dark theme the webapp starts in (index.html sets
-// bp4-dark on <body>), and to --color-red-400 (#ac2f33) in the light theme.
+// bp6-dark on <body>), and to --color-red-400 (#ac2f33) in the light theme.
 const NEGATIVE_RED_DARK = 'rgb(250, 153, 156)';
 const NEGATIVE_RED_LIGHT = 'rgb(172, 47, 51)';
 
@@ -675,7 +675,7 @@ test.describe('number format', () => {
     await waitForReportRows(page, 'balance-sheet');
 
     // Switch to the light theme the way the theme hotkey does.
-    await page.evaluate(() => document.body.classList.remove('bp4-dark'));
+    await page.evaluate(() => document.body.classList.remove('bp6-dark'));
     await expect(
       accountCell(page, 'balance-sheet', 'Petty Cash', 'total'),
     ).toHaveCSS('color', NEGATIVE_RED_LIGHT, { timeout: 30_000 });

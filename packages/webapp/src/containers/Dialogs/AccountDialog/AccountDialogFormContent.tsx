@@ -153,7 +153,7 @@ export function AccountDialogFormContent({
         >
           <FTextArea
             name={'description'}
-            growVertically={true}
+            autoResize={true}
             fill
             fastField
           />

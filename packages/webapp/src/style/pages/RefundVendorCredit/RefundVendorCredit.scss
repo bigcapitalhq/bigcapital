@@ -1,14 +1,14 @@
 .dialog--refund-vendor-credit {
   max-width: 450px;
 
-  .bp4-dialog-body {
-    .bp4-form-group {
+  .bp6-dialog-body {
+    .bp6-form-group {
       margin-bottom: 13px;
     }
 
     .form-group {
       &--description {
-        .bp4-form-content {
+        .bp6-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -18,7 +18,7 @@
       }
     }
   }
-  .bp4-dialog-footer {
+  .bp6-dialog-footer {
     padding-top: 10px;
   }
 }

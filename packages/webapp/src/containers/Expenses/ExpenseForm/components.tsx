@@ -1,5 +1,4 @@
-import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import { Button, Intent, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -59,15 +58,13 @@ const ActionsCellRenderer: React.FC<ActionsCellRendererProps> & {
     </Menu>
   );
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
-        // @ts-expect-error BP4 Button does not declare `iconSize`; runtime accepts it
-        iconSize={14}
         className="m12"
         minimal={true}
       />
-    </Popover2>
+    </Popover>
   );
 };
 ActionsCellRenderer.cellType = CellType.Button;

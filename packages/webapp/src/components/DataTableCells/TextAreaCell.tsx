@@ -30,7 +30,7 @@ const TextAreaEditableCell = ({
       className={classNames(Classes.FILL)}
     >
       <TextArea
-        growVertically={true}
+        autoResize={true}
         large={true}
         value={value}
         onChange={onChange}

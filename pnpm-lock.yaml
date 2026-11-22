@@ -450,37 +450,22 @@ importers:
         version: link:../../shared/bigcapital-utils
       '@blueprintjs-formik/core':
         specifier: ^0.3.8
-        version: 0.3.8(@babel/core@7.26.0)(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
-      '@blueprintjs-formik/datetime':
-        specifier: ^0.4.1
-        version: 0.4.1(@babel/core@7.26.0)(@blueprintjs-formik/core@0.3.8(@babel/core@7.26.0)(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/datetime2@0.9.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/datetime@4.4.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
+        version: 0.3.8(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
       '@blueprintjs-formik/select':
         specifier: ^0.4.9
-        version: 0.4.9(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.4.9(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/colors':
-        specifier: 4.1.19
-        version: 4.1.19
+        specifier: ^5.1.16
+        version: 5.1.16
       '@blueprintjs/core':
-        specifier: ^4.20.2
-        version: 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^6.23.2
+        version: 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/datetime':
-        specifier: ^4.4.37
-        version: 4.4.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/datetime2':
-        specifier: ^0.9.0
-        version: 0.9.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/popover2':
-        specifier: ^1.14.11
-        version: 1.14.11(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^6.3.4
+        version: 6.3.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/select':
-        specifier: ^4.9.24
-        version: 4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/table':
-        specifier: ^4.10.12
-        version: 4.10.12(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/timezone':
-        specifier: ^4.5.43
-        version: 4.5.43(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^6.4.4
+        version: 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@casl/ability':
         specifier: ^5.4.3
         version: 5.4.4
@@ -769,9 +754,6 @@ importers:
       react-use:
         specifier: ^13.26.1
         version: 13.27.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-use-context-menu:
-        specifier: ^0.1.4
-        version: 0.1.4(react@18.3.1)
       react-virtualized:
         specifier: ^9.22.3
         version: 9.22.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2234,18 +2216,6 @@ packages:
       react: 16 || ^17.0.2 || 18
       react-dom: 16 || ^17.0.2 || 18
 
-  '@blueprintjs-formik/datetime@0.4.1':
-    resolution: {integrity: sha512-JzCZtM6h6qXRH16btyg/zFmEe8/g6eYL91azf5QGk001qigVwaRL2gnDPuATyTQ5wp99uxV6Z6wv1NVsqja7Gw==}
-    peerDependencies:
-      '@blueprintjs-formik/core': ^0.3.2 || 4 || 5
-      '@blueprintjs/core': ^3.52.0 || 4 || 5
-      '@blueprintjs/datetime': ^3.21.0 || 4 || 5
-      '@blueprintjs/datetime2': ^0.9.0
-      '@blueprintjs/select': ^3.18.12 || 4 || 5
-      formik: ^2.2.9
-      react: 16 || ^17.0.2 || ^18.2.0
-      react-dom: 16 || ^17.0.2 || ^18.2.0
-
   '@blueprintjs-formik/select@0.4.9':
     resolution: {integrity: sha512-tex8DqEVncxFdfy+keiJwUHDX/xDMUEuqlaC8XFZ8Dx74mDqqVFwLCNrffErm4IZ7gtktgJCMiZI7f8/FaN4Hw==}
     peerDependencies:
@@ -2255,82 +2225,46 @@ packages:
       react: 16 || ^17.0.2 || ^18.2.0
       react-dom: 16 || ^17.0.2 || ^18.2.0
 
-  '@blueprintjs/colors@4.1.19':
-    resolution: {integrity: sha512-x5mDo4Ue9rAdbMHvOm0dNru9MSZqgs9Dd/l/2rgjzottthjsq1XjkiVae6evX4EGNM0I/bZKjTT8ccvqCqn4yw==}
+  '@blueprintjs/colors@5.1.16':
+    resolution: {integrity: sha512-P9uX0Aj2TP9+6aUcori1iPl4snxM/Vgq0LZbhUl1l5bHTgNxxwm/0+IoS/SlQg93HBRl8KTAM1evEqtPbwV10A==}
 
-  '@blueprintjs/colors@4.2.1':
-    resolution: {integrity: sha512-Cx7J2YnUuxn+fi+y5XtXnBB7+cFHN4xBrRkaAetp78i3VTCXjUk+d1omrOr8TqbRucUXTdrhbZOUHpzRLFcJpQ==}
-
-  '@blueprintjs/core@4.20.2':
-    resolution: {integrity: sha512-5v4Nr0jozfAjiOkjY4zvt1XSpt4ldnrSaxtwo506S2cxJYfwFeMTmDshXNPFcc8L1fjZMxi0IWI2WABXzZXS6w==}
+  '@blueprintjs/core@6.23.2':
+    resolution: {integrity: sha512-lQO3E+1sZU15eaVlKsxpxz5VqfJYxKas/Mh809JWNMntv/9gfm+Pd7cTJXT8SZrYIjKpXOYRc91xw5wKOCYJWg==}
     hasBin: true
     peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
+      '@types/react': 18 || 19
+      react: 18 || 19
+      react-dom: 18 || 19
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  '@blueprintjs/datetime2@0.9.37':
-    resolution: {integrity: sha512-eCoQbQK1IO5uegmYugj/K5helj6oA7s/4ZkA7dweBHBHXQ3KmZLh2Zj+O0ESOq/qqvlvCfiNCfsObk309EIbKQ==}
+  '@blueprintjs/datetime@6.3.4':
+    resolution: {integrity: sha512-OvAgXnZZYk2vm8wMQwYmKER8NhRZCBgMapsbHRz2UL20jKHZqvDoELhHE+Tt1td+a/SjDF4MujntMCmjSoi4nw==}
     peerDependencies:
-      '@types/react': ^16.14.32 || 17
-      react: ^16.8 || 17
-      react-dom: ^16.8 || 17
+      '@types/react': 18 || 19
+      react: 18 || 19
+      react-dom: 18 || 19
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  '@blueprintjs/datetime@4.4.37':
-    resolution: {integrity: sha512-YJiWzUH1eefCMvvvdsLimrLZNk5XW1yTMK4OmX6BP+gAt/u7cNKyv+42XO4tlymeWRqT0K7HbQOPP4ybt/xzEw==}
+  '@blueprintjs/icons@6.17.0':
+    resolution: {integrity: sha512-ShU4mGOuH1OObvQpcshwh+vUnoMncg6oVrKufUQGTfva3rvUbXGJgopG6cAXDWr9jWx4VoQ+8uQLxFLnnw2yqA==}
     peerDependencies:
-      '@types/react': ^16.14.32 || 17
-      react: ^16.8 || 17
-      react-dom: ^16.8 || 17
+      '@types/react': 18 || 19
+      react: 18 || 19
+      react-dom: 18 || 19
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  '@blueprintjs/icons@4.16.0':
-    resolution: {integrity: sha512-cyfgjUZcZCtQrXWUV8FwqYTFEzduV4a0N7yhOU38jY+cBRCLu/sDrD0Osvfk4DGRvNe4YjY7pohVLFSxpg68Uw==}
-
-  '@blueprintjs/popover2@1.14.11':
-    resolution: {integrity: sha512-5XAjeb2mlWjYXC0pqrNDLzHSsX85Zaiv8jixxUN9abarMUUFKGATgGF8MRsWTLAW94Gli6CB1lzVkrYkRHHf6Q==}
+  '@blueprintjs/select@6.4.4':
+    resolution: {integrity: sha512-lK1nsjXedr5yFQylwN1pQQKc82zH2ImIjewcK1HrNzsdk9zxiFBufmau/jxZigD9ZtRYXKQIyun054uYMvGekQ==}
     peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@blueprintjs/select@4.9.24':
-    resolution: {integrity: sha512-OTjesxH/7UZvM7yAdHJ5u3sIjX1N8Rs4CQQ22AfqNl82SIROqkuXI31XEl6YNX1GsYfmAMiw0K7XohEKOMXR5g==}
-    peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@blueprintjs/table@4.10.12':
-    resolution: {integrity: sha512-f5NbjuHQ/1vb5hkT+WsCnjIU3Vp2OCWdyDUopVmgj4qHIgzgX38vP2sLS8aUFlbsEQr/xAU9mfkpp4FT+65mXA==}
-    peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@blueprintjs/timezone@4.5.43':
-    resolution: {integrity: sha512-MX9RgcU5VbrTTfKYnA1n0mrIGEWu1EI/aDU3RL4r2EdaxJ/7sJFR1A+ICSLtK7UnPmHXTkosD6snfeyVaiPfhw==}
-    peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
+      '@types/react': 18 || 19
+      react: 18 || 19
+      react-dom: 18 || 19
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -3047,14 +2981,35 @@ packages:
   '@floating-ui/core@1.6.8':
     resolution: {integrity: sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==}
 
+  '@floating-ui/core@1.8.0':
+    resolution: {integrity: sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==}
+
   '@floating-ui/dom@1.6.11':
     resolution: {integrity: sha512-qkMCxSR24v2vGkhYDo/UzxfJN3D4syqSjyuTFz6C7XcpU1pASPRieNI0Kj5VP3/503mOfYiGY891ugBX1GlABQ==}
+
+  '@floating-ui/dom@1.8.0':
+    resolution: {integrity: sha512-yXSrzeHZBTZadLOlfyhCkJHNeLJnHRnRInwdZ40L7ZiaAtrBwoYlsDrX3v5zB1Utk7CLfzcOVnVVWoXEky7Ceg==}
 
   '@floating-ui/react-dom@2.1.2':
     resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  '@floating-ui/react-dom@2.1.9':
+    resolution: {integrity: sha512-JDjEFGCpImxDCA7JJKviA0M9+RtmJdj0m/NVU5IMgBK+AmZouAQQ7/+2GLH0GXXY0YMw9oXPB8hKdbPYg5QLYg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+
+  '@floating-ui/react@0.27.20':
+    resolution: {integrity: sha512-CMqMy7OaXl9W0eq1Uy7L7i2Y/anPvHmFmESd2CEw0t5YvZhcVCeo4MBevAmswRllX7Y2dEidA4ozGPunLSTQpw==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+
+  '@floating-ui/utils@0.2.12':
+    resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
@@ -3101,12 +3056,6 @@ packages:
   '@hutson/parse-repository-url@3.0.2':
     resolution: {integrity: sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==}
     engines: {node: '>=6.9.0'}
-
-  '@hypnosphi/create-react-context@0.3.1':
-    resolution: {integrity: sha512-V1klUed202XahrWJLLOT3EXNeCpFHCcJntdFGI15ntCwau+jfT386w7OFTMaCqOgXUH1fa0w/I1oZs+i/Rfr0A==}
-    peerDependencies:
-      prop-types: ^15.0.0
-      react: '>=0.14.0'
 
   '@inquirer/external-editor@1.0.2':
     resolution: {integrity: sha512-yy9cOoBnx58TlsPrIxauKIFQTiyH+0MK4e97y4sV9ERbI+zDxw7i2hxHLCIEGIE/8PPvDxGhgzIOTSOWcs6/MQ==}
@@ -5509,9 +5458,6 @@ packages:
   '@types/doctrine@0.0.3':
     resolution: {integrity: sha512-w5jZ0ee+HaPOaX25X2/2oGR/7rgAQSYII7X7pp0m9KgBfMP7uKfMfTvcpl5Dj+eDBbpxKGiqE+flqDr6XTd2RA==}
 
-  '@types/dom4@2.0.4':
-    resolution: {integrity: sha512-PD+wqNhrjWFjAlSVd18jvChZvOXB2SOwAILBmuYev5zswBats5qmzs/QFoooLKd2omj9BT05a8MeSeRmXLGY+Q==}
-
   '@types/ejs@3.1.5':
     resolution: {integrity: sha512-nv+GSx77ZtXiJzwKdsASqi+YQ5Z7vwHsTP0JY2SiQgjGckkBRKZnk8nIM+7oUZ1VCtuTz0+By4qVR7fqzp/Dfg==}
 
@@ -7493,10 +7439,10 @@ packages:
     resolution: {integrity: sha512-t/Ygsytq+R995EJ5PZlD4Cu56sWa8InXySaViRzw9apusqsOO2bQP+SbYzAhR0pFKoB+43lYy8rWban9JSuXnA==}
     engines: {node: '>= 0.4'}
 
-  date-fns-tz@1.3.8:
-    resolution: {integrity: sha512-qwNXUFtMHTTU6CFSFjoJ80W8Fzzp24LntbjFFBgL/faqds4e5mo9mftoRLgr3Vi1trISsg4awSpYVsOQCRnapQ==}
+  date-fns-tz@2.0.1:
+    resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
     peerDependencies:
-      date-fns: '>=2.0.0'
+      date-fns: 2.x
 
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
@@ -7591,10 +7537,6 @@ packages:
   deep-eql@5.0.2:
     resolution: {integrity: sha512-h5k/5U50IJJFpzfL6nO9jaaumfjO/f2NjK/oYB2Djzm4p9L+3T9qWpZqZ2hAbLPuuYq9wrU08WQyBTL5GbPk5Q==}
     engines: {node: '>=6'}
-
-  deep-equal@1.1.2:
-    resolution: {integrity: sha512-5tdhKF6DbU7iIzrIOa1AOUt39ZRm13cmL1cGEh//aqR8x9+tNfbywRf0n5FD/18OKMdo7DNEtrX2t22ZAkI+eg==}
-    engines: {node: '>= 0.4'}
 
   deep-equal@2.2.3:
     resolution: {integrity: sha512-ZIwpnevOurS8bpT4192sqAowWM76JDKSHYzMLty3BZGSswgq6pBaH3DhCSW5xVAZICZyKdOBPjwww5wfgT/6PA==}
@@ -7751,9 +7693,6 @@ packages:
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
-
-  dom4@2.1.6:
-    resolution: {integrity: sha512-JkCVGnN4ofKGbjf5Uvc8mmxaATIErKQKSgACdBXpsQ3fY6DlIpAyWfiBSrGkttATssbDCp3psiAKWXk5gmjycA==}
 
   domelementtype@2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
@@ -8827,9 +8766,6 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
-
-  gud@1.0.0:
-    resolution: {integrity: sha512-zGEOVKFM5sVPPrYs7J5/hYEw2Pof8KCyOwyhG8sAF26mCAeUFAcYPu1mwB7hhpIP29zOIBaDqwuHdLp0jvZXjw==}
 
   gunzip-maybe@1.4.2:
     resolution: {integrity: sha512-4haO1M4mLO91PW57BMsDFf75UmwoRX0GkdD+Faw+Lr+r/OZrOCS0pIBwOL1xCKQqnQzbNFGgK2V2CpBUPeFNTw==}
@@ -11236,10 +11172,6 @@ packages:
     resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
     engines: {node: '>=10'}
 
-  popper.js@1.16.1:
-    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
-    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
-
   possible-typed-array-names@1.0.0:
     resolution: {integrity: sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==}
     engines: {node: '>= 0.4'}
@@ -11655,10 +11587,11 @@ packages:
     peerDependencies:
       react: '>=16.0.0'
 
-  react-day-picker@7.4.9:
-    resolution: {integrity: sha512-CcXf0p7p6gTYnG0+n/4wNGljZuQDXl4HhgcxsXB0nX+8D4LnRho9EclPA/aLz4WlvvVpfY+AEgj2ylgPj4nm/g==}
+  react-day-picker@8.10.2:
+    resolution: {integrity: sha512-LK68OTbHB3oJNhl9cA0qVizzp3o26w61YSjAFkYi67N86iro32wx86kSNeFU/hq+gI8m1yzWhnomMLfZ041RzQ==}
     peerDependencies:
-      react: ~0.13.x || ~0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0
+      date-fns: ^2.28.0 || ^3.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   react-docgen-typescript@2.2.2:
     resolution: {integrity: sha512-tvg2ZtOpOi6QDwsb3GZhOjDkkX0h8Z2gipvTg6OVMUyoYoURhEiRNePT8NZItTVCDh39JJHnLdfCOkzoLbFnTg==}
@@ -11781,11 +11714,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  react-popper@1.3.11:
-    resolution: {integrity: sha512-VSA/bS+pSndSF2fiasHK/PTEEAyOpX60+H5EPAjoArr8JGm+oihu4UbrqcEBpQibJxBVCpYyjAX7abJ+7DoYVg==}
-    peerDependencies:
-      react: 0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0
 
   react-popper@2.3.0:
     resolution: {integrity: sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==}
@@ -11927,12 +11855,6 @@ packages:
     peerDependencies:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
-
-  react-use-context-menu@0.1.4:
-    resolution: {integrity: sha512-3/IC2CTUErMrtcv1IU1Nt9NL2J4YHBiiSBV66wGdPsZzeFK4qhUwQmLg8hUk58Pi5oa8ts3+M3kVKl10HW4o4w==}
-    engines: {node: '> 4', npm: '> 3'}
-    peerDependencies:
-      react: '>=16.8'
 
   react-use@13.27.1:
     resolution: {integrity: sha512-bAwdqDMXs5lovEanXnL1izledfrPEUUv1afoTVB59eUiYcDyKul+M/dT/2WcgHjoY/R6QlrTcZoW4R7ifwvBfw==}
@@ -12880,6 +12802,9 @@ packages:
   systemjs@6.15.1:
     resolution: {integrity: sha512-Nk8c4lXvMB98MtbmjX7JwJRgJOL8fluecYCfCeYBznwmpOs8Bf15hLM6z4z71EDAhQVrQrI+wt1aLWSXZq+hXA==}
 
+  tabbable@6.5.2:
+    resolution: {integrity: sha512-XgdnB1nGU6KU4VgMnZPaZCx7M1hBrLyEiZYau2G2gq9UT0d7d4FUBlNX7vvPlm/B1vk1PjrzJBx9Lbv4fsqS9g==}
+
   tailwindcss@3.4.14:
     resolution: {integrity: sha512-IcSvOcTRcUtQQ7ILQL5quRDg7Xs93PdJEk1ZLbhhvJc7uj/OAhYOnruEiwnGgBvUtaUAJ8/mhSw1o8L2jCiENA==}
     engines: {node: '>=14.0.0'}
@@ -13170,9 +13095,6 @@ packages:
   tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
 
-  tslib@2.5.3:
-    resolution: {integrity: sha512-mSxlJJwl3BMEQCUNnxXBU9jP4JBktcEGhURcPR6VQVlnP0FdDEsIaz0C35dXNGLyRfrATNofF0F5p2KPxQgB+w==}
-
   tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
@@ -13296,9 +13218,6 @@ packages:
   typed-function@2.1.0:
     resolution: {integrity: sha512-bctQIOqx2iVbWGDGPWwIm18QScpu2XRmkC19D8rQGFsjKSgteq/o1hTZvIG/wuDq8fanpBDrLkLq+aEN/6y5XQ==}
     engines: {node: '>= 10'}
-
-  typed-styles@0.0.7:
-    resolution: {integrity: sha512-pzP0PWoZUhsECYjABgCGQlRGL1n7tOHsgwYv3oIiEpJwGhFTuty/YNeduxQYzXXa3Ge5BdT6sHYIQYpl4uJ+5Q==}
 
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
@@ -16362,10 +16281,10 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@blueprintjs-formik/core@0.3.8(@babel/core@7.26.0)(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
+  '@blueprintjs-formik/core@0.3.8(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/select': 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       formik: 2.4.6(react@18.3.1)
       lodash.get: 4.4.2
       lodash.keyby: 4.6.0
@@ -16377,28 +16296,10 @@ snapshots:
       - '@babel/core'
       - react-is
 
-  '@blueprintjs-formik/datetime@0.4.1(@babel/core@7.26.0)(@blueprintjs-formik/core@0.3.8(@babel/core@7.26.0)(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/datetime2@0.9.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/datetime@4.4.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
+  '@blueprintjs-formik/select@0.4.9(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@blueprintjs-formik/core': 0.3.8(@babel/core@7.26.0)(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/datetime': 4.4.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/datetime2': 0.9.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      formik: 2.4.6(react@18.3.1)
-      lodash.get: 4.4.2
-      lodash.keyby: 4.6.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      styled-components: 5.3.11(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
-      web-vitals: 2.1.4
-    transitivePeerDependencies:
-      - '@babel/core'
-      - react-is
-
-  '@blueprintjs-formik/select@0.4.9(@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/select': 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       formik: 2.4.6(react@18.3.1)
       lodash.get: 4.4.2
       lodash.keyby: 4.6.0
@@ -16406,111 +16307,61 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       web-vitals: 2.1.4
 
-  '@blueprintjs/colors@4.1.19': {}
-
-  '@blueprintjs/colors@4.2.1':
+  '@blueprintjs/colors@5.1.16':
     dependencies:
-      tslib: 2.5.3
+      tslib: 2.6.2
 
-  '@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@blueprintjs/colors': 4.2.1
-      '@blueprintjs/icons': 4.16.0
-      '@juggle/resize-observer': 3.4.0
-      '@types/dom4': 2.0.4
-      classnames: 2.5.1
-      dom4: 2.1.6
-      normalize.css: 8.0.1
-      popper.js: 1.16.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-popper: 1.3.11(react@18.3.1)
-      react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      tslib: 2.5.3
-    optionalDependencies:
-      '@types/react': 18.3.4
-
-  '@blueprintjs/datetime2@0.9.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/datetime': 4.4.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/popover2': 1.14.11(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      classnames: 2.5.1
-      date-fns: 2.30.0
-      date-fns-tz: 1.3.8(date-fns@2.30.0)
-      lodash: 4.17.21
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.5.3
-    optionalDependencies:
-      '@types/react': 18.3.4
-
-  '@blueprintjs/datetime@4.4.37(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      classnames: 2.5.1
-      react: 18.3.1
-      react-day-picker: 7.4.9(react@18.3.1)
-      react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.5.3
-    optionalDependencies:
-      '@types/react': 18.3.4
-
-  '@blueprintjs/icons@4.16.0':
-    dependencies:
-      change-case: 4.1.2
-      classnames: 2.5.1
-      tslib: 2.5.3
-
-  '@blueprintjs/popover2@1.14.11(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@juggle/resize-observer': 3.4.0
+      '@blueprintjs/colors': 5.1.16
+      '@blueprintjs/icons': 6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@floating-ui/react': 0.27.20(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@popperjs/core': 2.11.8
       classnames: 2.5.1
-      dom4: 2.1.6
+      normalize.css: 8.0.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      tslib: 2.5.3
+      react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      tslib: 2.6.2
     optionalDependencies:
       '@types/react': 18.3.4
 
-  '@blueprintjs/select@4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@blueprintjs/datetime@6.3.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/popover2': 1.14.11(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/icons': 6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/select': 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       classnames: 2.5.1
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.5.3
-    optionalDependencies:
-      '@types/react': 18.3.4
-
-  '@blueprintjs/table@4.10.12(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/popover2': 1.14.11(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      classnames: 2.5.1
-      prop-types: 15.8.1
-      react: 18.3.1
+      react-day-picker: 8.10.2(date-fns@2.30.0)(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
       react-innertext: 1.1.5(@types/react@18.3.4)(react@18.3.1)
-      tslib: 2.5.3
+      tslib: 2.6.2
     optionalDependencies:
       '@types/react': 18.3.4
 
-  '@blueprintjs/timezone@4.5.43(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      change-case: 4.1.2
       classnames: 2.5.1
-      moment: 2.30.1
-      moment-timezone: 0.5.45
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.5.3
+      tslib: 2.6.2
+    optionalDependencies:
+      '@types/react': 18.3.4
+
+  '@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@blueprintjs/colors': 5.1.16
+      '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/icons': 6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      classnames: 2.5.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      tslib: 2.6.2
     optionalDependencies:
       '@types/react': 18.3.4
 
@@ -17134,16 +16985,41 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.8
 
+  '@floating-ui/core@1.8.0':
+    dependencies:
+      '@floating-ui/utils': 0.2.12
+
   '@floating-ui/dom@1.6.11':
     dependencies:
       '@floating-ui/core': 1.6.8
       '@floating-ui/utils': 0.2.8
+
+  '@floating-ui/dom@1.8.0':
+    dependencies:
+      '@floating-ui/core': 1.8.0
+      '@floating-ui/utils': 0.2.12
 
   '@floating-ui/react-dom@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@floating-ui/dom': 1.6.11
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@floating-ui/react-dom@2.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@floating-ui/dom': 1.8.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@floating-ui/react@0.27.20(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@floating-ui/utils': 0.2.12
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      tabbable: 6.5.2
+
+  '@floating-ui/utils@0.2.12': {}
 
   '@floating-ui/utils@0.2.8': {}
 
@@ -17181,13 +17057,6 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@hutson/parse-repository-url@3.0.2': {}
-
-  '@hypnosphi/create-react-context@0.3.1(prop-types@15.8.1)(react@18.3.1)':
-    dependencies:
-      gud: 1.0.0
-      prop-types: 15.8.1
-      react: 18.3.1
-      warning: 4.0.3
 
   '@inquirer/external-editor@1.0.2(@types/node@20.5.1)':
     dependencies:
@@ -20629,8 +20498,6 @@ snapshots:
 
   '@types/doctrine@0.0.3': {}
 
-  '@types/dom4@2.0.4': {}
-
   '@types/ejs@3.1.5': {}
 
   '@types/emscripten@1.39.13': {}
@@ -23042,7 +22909,7 @@ snapshots:
       es-errors: 1.3.0
       is-data-view: 1.0.1
 
-  date-fns-tz@1.3.8(date-fns@2.30.0):
+  date-fns-tz@2.0.1(date-fns@2.30.0):
     dependencies:
       date-fns: 2.30.0
 
@@ -23112,15 +22979,6 @@ snapshots:
       babel-plugin-macros: 3.1.0
 
   deep-eql@5.0.2: {}
-
-  deep-equal@1.1.2:
-    dependencies:
-      is-arguments: 1.1.1
-      is-date-object: 1.0.5
-      is-regex: 1.1.4
-      object-is: 1.1.6
-      object-keys: 1.1.1
-      regexp.prototype.flags: 1.5.2
 
   deep-equal@2.2.3:
     dependencies:
@@ -23276,8 +23134,6 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.5.0
-
-  dom4@2.1.6: {}
 
   domelementtype@2.3.0: {}
 
@@ -24737,8 +24593,6 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
-
-  gud@1.0.0: {}
 
   gunzip-maybe@1.4.2:
     dependencies:
@@ -27903,8 +27757,6 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.5
 
-  popper.js@1.16.1: {}
-
   possible-typed-array-names@1.0.0: {}
 
   postcss-import@15.1.0(postcss@8.4.47):
@@ -28426,9 +28278,9 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  react-day-picker@7.4.9(react@18.3.1):
+  react-day-picker@8.10.2(date-fns@2.30.0)(react@18.3.1):
     dependencies:
-      prop-types: 15.8.1
+      date-fns: 2.30.0
       react: 18.3.1
 
   react-docgen-typescript@2.2.2(typescript@5.6.3):
@@ -28578,17 +28430,6 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-script-hook: 1.7.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
-  react-popper@1.3.11(react@18.3.1):
-    dependencies:
-      '@babel/runtime': 7.24.5
-      '@hypnosphi/create-react-context': 0.3.1(prop-types@15.8.1)(react@18.3.1)
-      deep-equal: 1.1.2
-      popper.js: 1.16.1
-      prop-types: 15.8.1
-      react: 18.3.1
-      typed-styles: 0.0.7
-      warning: 4.0.3
 
   react-popper@2.3.0(@popperjs/core@2.11.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -28755,10 +28596,6 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-
-  react-use-context-menu@0.1.4(react@18.3.1):
-    dependencies:
-      react: 18.3.1
 
   react-use@13.27.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -29924,6 +29761,8 @@ snapshots:
 
   systemjs@6.15.1: {}
 
+  tabbable@6.5.2: {}
+
   tailwindcss@3.4.14(ts-node@10.9.2(@types/node@20.19.25)(typescript@5.6.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
@@ -30272,8 +30111,6 @@ snapshots:
 
   tslib@2.4.0: {}
 
-  tslib@2.5.3: {}
-
   tslib@2.6.2: {}
 
   tslib@2.7.0: {}
@@ -30438,8 +30275,6 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   typed-function@2.1.0: {}
-
-  typed-styles@0.0.7: {}
 
   typedarray-to-buffer@3.1.5:
     dependencies:

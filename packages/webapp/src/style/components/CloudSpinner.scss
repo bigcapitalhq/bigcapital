@@ -13,7 +13,7 @@
     z-index: 999;
   }
 
-  .bp4-spinner{
+  .bp6-spinner{
     position: absolute;
     z-index: 999999;
     left: 50%;
@@ -21,12 +21,12 @@
     margin-top: -20px;
     margin-left: -20px;
   }
-  &:not(.is-loading) .bp4-spinner{
+  &:not(.is-loading) .bp6-spinner{
     display: none;
   }
 }
 
-.bp4-dark .cloud-spinner {
+.bp6-dark .cloud-spinner {
   &.is-loading:before {
     background: rgba(17, 20, 24, 0.8);
   }

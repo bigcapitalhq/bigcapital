@@ -62,7 +62,7 @@ const InventoryValuationDataTable = styled(ReportDataTable)`
   --color-table-total-text-color: #000;
   --color-table-total-border: #bbb;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
     --color-table-total-border: var(--color-dark-gray5);

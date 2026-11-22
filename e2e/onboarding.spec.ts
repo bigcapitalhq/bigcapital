@@ -1,5 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
+import { ORGANIZATION_BUILD_TIMEOUT_MS } from './_auth';
 import { newUnauthenticatedPage } from './_utils';
 
 // This spec exercises the onboarding UI itself with its own freshly
@@ -76,10 +77,13 @@ test.describe('onboarding', () => {
       await authPage.getByRole('button', { name: 'Save & Continue' }).click();
     });
     test('should onboarding process success', async () => {
+      // Tenant provisioning runs migrations and seeds in a background job.
+      // Allow the same two minutes as the API onboarding helper.
+      test.setTimeout(ORGANIZATION_BUILD_TIMEOUT_MS + 15_000);
       await expect(authPage.locator('body')).toContainText(
         'Congrats! You are ready to go',
         {
-          timeout: 30000,
+          timeout: ORGANIZATION_BUILD_TIMEOUT_MS,
         }
       );
     });

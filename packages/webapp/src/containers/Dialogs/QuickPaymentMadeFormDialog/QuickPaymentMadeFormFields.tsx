@@ -153,7 +153,7 @@ function QuickPaymentMadeFormFieldsInner(): React.ReactElement {
 
       {/* --------- Statement --------- */}
       <FFormGroup name={'statement'} label={intl.get('statement')}>
-        <FTextArea name={'statement'} growVertically={true} fill={true} />
+        <FTextArea name={'statement'} autoResize={true} fill={true} />
       </FFormGroup>
     </div>
   );
@@ -166,7 +166,7 @@ export const BranchRowDivider = styled.div`
   background: #ebf1f6;
   margin-bottom: 15px;
 
-  .bp4-dark & {
+  .bp6-dark & {
     background: rgba(255, 255, 255, 0.1);
   }
 `;

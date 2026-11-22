@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import {
   authCookies,
   createOnboardedUser,
+  ORGANIZATION_BUILD_TIMEOUT_MS,
   type OnboardedSession,
 } from "./_auth";
 
@@ -109,7 +110,7 @@ async function deleteWarehouseViaItem(page: Page, item: Locator) {
 
   await expect(page.getByTestId("warehouse-delete-alert")).toBeVisible();
   await page
-    .getByRole("dialog")
+    .getByRole("alertdialog")
     .filter({ has: page.getByTestId("warehouse-delete-alert") })
     .getByRole("button", { name: "Delete" })
     .click();
@@ -126,6 +127,7 @@ test.describe("warehouses", () => {
   let session: OnboardedSession;
 
   test.beforeAll(async () => {
+    test.setTimeout(ORGANIZATION_BUILD_TIMEOUT_MS + 15_000);
     session = await createOnboardedUser(API_BASE);
   });
 

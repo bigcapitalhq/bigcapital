@@ -45,7 +45,7 @@ const APAgingSummaryDataTable = styled(ReportDataTable)`
   --color-table-total-text-color: #000;
   --color-table-total-border-top: #bbb;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
     --color-table-total-border-top: var(--color-dark-gray5);

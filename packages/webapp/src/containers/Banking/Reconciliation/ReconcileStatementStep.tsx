@@ -235,7 +235,7 @@ const Panel = styled.div`
 `;
 
 const BankAccountFormGroup = styled(FormGroup)`
-  &.bp4-form-group {
+  &.bp6-form-group {
     margin-bottom: 30px;
   }
 `;

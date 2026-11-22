@@ -1,5 +1,10 @@
-import { Button, ButtonProps, Intent, Position } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import {
+  Button,
+  ButtonProps,
+  Intent,
+  Position,
+  Popover,
+} from '@blueprintjs/core';
 import { ErrorMessage, Form, Formik, useFormikContext } from 'formik';
 import moment from 'moment';
 import React from 'react';
@@ -333,7 +338,7 @@ export function BatchFormPopover({
       validationSchema={batchFormSchema}
       onSubmit={handleSubmit}
     >
-      <Popover2
+      <Popover
         isOpen={isOpen}
         // The popover is closed only through its Close button. Ignoring the
         // close interaction avoids accidental dismissal when clicking outside.
@@ -372,7 +377,7 @@ export function BatchFormPopover({
         >
           {buttonText ?? (batch ? batch.batchNumber : intl.get('batch.add'))}
         </Button>
-      </Popover2>
+      </Popover>
     </Formik>
   );
 }

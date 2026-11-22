@@ -1,7 +1,7 @@
 .root {
   --x-color-content-primary-border: #e2e2e2;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --x-color-content-primary-border: rgba(255, 255, 255, 0.25);
   }
   &_content {

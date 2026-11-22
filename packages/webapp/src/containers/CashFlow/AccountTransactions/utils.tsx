@@ -50,7 +50,7 @@ export const CashFlowMenuItems = ({
         position: Position.BOTTOM_LEFT,
         interactionKind: PopoverInteractionKind.CLICK,
         modifiers: {
-          offset: { offset: '0, 4' },
+          offset: { options: { offset: [0, 4] } },
         },
       }}
       filterable={false}

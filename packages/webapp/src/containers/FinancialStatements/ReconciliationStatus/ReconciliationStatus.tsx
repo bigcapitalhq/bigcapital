@@ -176,7 +176,7 @@ function ReconciliationStatusReport() {
 }
 
 const ReconciliationModeGroup = styled(ButtonGroup)`
-  && > .bp4-button.bp4-small {
+  && > .bp6-button.bp6-small {
     padding: 0 7px;
   }
 `;

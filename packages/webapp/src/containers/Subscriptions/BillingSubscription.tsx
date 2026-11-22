@@ -91,7 +91,7 @@ export function Subscription() {
         </Group>
       </Stack>
 
-      <Text className={clsx(styles.description, 'bp4-text-muted')}>
+      <Text className={clsx(styles.description, 'bp6-text-muted')}>
         Control your business bookkeeping with automated accounting, to run
         intelligent reports for faster decision-making.
       </Text>

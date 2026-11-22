@@ -184,7 +184,7 @@ const SMSPreviewSectionRoot = styled.div`
   margin-left: 25px;
   border-left: 1px solid #dcdcdd;
 
-  .bp4-dark & {
+  .bp6-dark & {
     border-left-color: var(--color-dark-gray5);
   }
 `;

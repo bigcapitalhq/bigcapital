@@ -34,7 +34,7 @@ export function TrialStatus() {
             {isOnTrial ? 'Go trial' : 'Your Go trial has ended'}
           </H4>
           <Text
-            className="bp4-text-muted"
+            className="bp6-text-muted"
             style={{ marginTop: '0.4rem', lineHeight: 1.6 }}
           >
             {isOnTrial

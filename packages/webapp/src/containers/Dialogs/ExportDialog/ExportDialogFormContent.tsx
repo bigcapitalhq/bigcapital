@@ -27,7 +27,7 @@ function ExportDialogFormContentRoot({
   return (
     <Form>
       <x.div p="20px">
-        <x.p className="bp4-text-muted" mb="1.2rem">
+        <x.p className="bp6-text-muted" mb="1.2rem">
           You can export data from Bigcapital in CSV or XLSX format
         </x.p>
 

@@ -13,7 +13,7 @@ export function AuthenticationLoadingOverlay() {
 const AuthOverlayRoot = styled.div`
   --x-color-background: rgba(252, 253, 255, 0.5);
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-background: rgba(37, 42, 49, 0.6);
   }
   position: absolute;
@@ -33,7 +33,7 @@ export const AuthInsiderCard = styled.div<{ textAlign?: string }>`
   --x-color-background: #fff;
   --x-color-border: #d5d5d5;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-background: var(--color-dark-gray2);
     --x-color-border: rgba(255, 255, 255, 0.1);
   }
@@ -51,7 +51,7 @@ export const AuthInsiderCopyright = styled.div`
   color: #666;
   margin-top: 1.2rem;
 
-  .bp4-icon-bigcapital {
+  .bp6-icon-bigcapital {
     svg {
       path {
         fill: #a3a3a3;
@@ -72,7 +72,7 @@ export const AuthFooterLinks = styled.div`
 export const AuthFooterLink = styled.p`
   --x-color-text: #666;
 
-  .bp4-dark & {
+  .bp6-dark & {
     --x-color-text: rgba(255, 255, 255, 0.75);
   }
   color: var(--x-color-text);
@@ -82,11 +82,11 @@ export const AuthFooterLink = styled.p`
 export const AuthSubmitButton = styled(Button)`
   margin-top: 20px;
 
-  &.bp4-intent-primary {
+  &.bp6-intent-primary {
     // background-color: #0052cc;
 
     &:disabled,
-    &.bp4-disabled {
+    &.bp6-disabled {
       // background-color: rgba(0, 82, 204, 0.4);
     }
   }

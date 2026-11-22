@@ -126,7 +126,7 @@ export const CustomersTransactionsHeader = FF.pipe(
 );
 
 const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .bp6-drawer {
     max-height: 450px;
   }
 `;

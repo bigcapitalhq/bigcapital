@@ -8,7 +8,7 @@
   --pricing-plan-muted-text: #738091;
   --pricing-plan-feature-text: #1c2127;
 
-  :global(.bp4-dark) & {
+  :global(.bp6-dark) & {
     --pricing-plan-border: var(--color-dark-gray4);
     --pricing-plan-featured-background: var(--color-dark-gray3);
     --pricing-plan-ribbon-background: var(--color-dark-gray5);
@@ -83,7 +83,7 @@
   color: var(--pricing-plan-feature-text);
 }
 
-.featurePopover :global .bp4-popover-content {
+.featurePopover :global .bp6-popover-content {
   border-radius: 0;
 }
 .featurePopoverContent {
