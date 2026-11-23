@@ -86,3 +86,41 @@ for (const list of lists) {
     await expect(checkbox).toBeChecked();
   });
 }
+
+test('tax rates sort by numeric rate and keep the status action with the record', async ({
+  page,
+}) => {
+  await page.route(
+    (url) => url.pathname === '/api/tax-rates',
+    (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: 1,
+            name: 'Standard',
+            rate: 20,
+            rate_formatted: '20%',
+            active: true,
+          },
+          {
+            id: 2,
+            name: 'Reduced',
+            rate: 5,
+            rate_formatted: '5%',
+            active: false,
+          },
+        ],
+      }),
+  );
+  await page.goto('/tax-rates');
+  const header = page.getByTitle('Rate', { exact: true });
+  await header.hover();
+  await header.locator('[data-icon="chevron-down"]').click();
+  await page.getByRole('menuitem', { name: 'Sort Asc' }).click();
+  const first = page.getByTestId('tax-rate-row').first();
+  await expect(first).toHaveText('Reduced');
+  await first.click({ button: 'right' });
+  await expect(
+    page.getByRole('menuitem', { name: 'Activate Tax Rate', exact: true }),
+  ).toBeVisible();
+});

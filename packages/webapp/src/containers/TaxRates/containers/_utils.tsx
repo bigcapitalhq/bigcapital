@@ -1,7 +1,9 @@
 import { Intent, Tag, Classes } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'classnames';
+import { useMemo } from 'react';
 import type { TaxRate } from '@bigcapital/sdk-ts';
-import { Align } from '@/constants';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 
 const codeAccessor = (taxRate: TaxRate) => {
   return (
@@ -40,37 +42,44 @@ const DescriptionAccessor = (taxRate: TaxRate) => {
   );
 };
 
-/**
- * Retrieves the tax rates table columns.
- */
-export const useTaxRatesTableColumns = () => {
-  return [
-    {
-      Header: 'Name',
-      accessor: nameAccessor,
-      width: 60,
-    },
-    {
-      Header: 'Code',
-      accessor: codeAccessor,
-      width: 40,
-    },
-    {
-      Header: 'Rate',
-      accessor: 'rateFormatted',
-      align: Align.Right,
-      width: 30,
-    },
-    {
-      Header: 'Description',
-      accessor: DescriptionAccessor,
-      width: 100,
-    },
-    {
-      Header: 'Status',
-      accessor: statusAccessor,
-      width: 30,
-      align: Align.Right,
-    },
-  ];
-};
+const column = createColumnHelper<BP_TableFeatures, TaxRate>();
+
+export function useTaxRatesTableColumns() {
+  return useMemo(
+    () =>
+      column.columns([
+        column.accessor('name', {
+          id: 'name',
+          header: 'Name',
+          size: 200,
+          cell: ({ row }) => nameAccessor(row.original),
+        }),
+        column.accessor('code', {
+          id: 'code',
+          header: 'Code',
+          size: 120,
+          cell: ({ row }) => codeAccessor(row.original),
+        }),
+        column.accessor('rate', {
+          id: 'rate',
+          header: 'Rate',
+          size: 100,
+          cell: ({ row }) => row.original.rateFormatted,
+          meta: { bodyCellClassName: 'numeric-cell' },
+        }),
+        column.accessor('description', {
+          id: 'description',
+          header: 'Description',
+          size: 240,
+          cell: ({ row }) => DescriptionAccessor(row.original),
+        }),
+        column.accessor('active', {
+          id: 'status',
+          header: 'Status',
+          size: 110,
+          cell: ({ row }) => statusAccessor(row.original),
+        }),
+      ]),
+    [],
+  );
+}

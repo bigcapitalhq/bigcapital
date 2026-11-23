@@ -1,4 +1,6 @@
+import { BP_Table as BlueprintTable } from '@bigcapitalhq/blueprintjs-react-table';
 import { Intent } from '@blueprintjs/core';
+import '@bigcapitalhq/blueprintjs-react-table/styles.css';
 import * as FF from 'fp-ts/function';
 import { TaxRatesTableActionsMenu } from './_components';
 import { useTaxRatesTableColumns } from './_utils';
@@ -6,12 +8,15 @@ import { TaxRatesLandingEmptyState } from './TaxRatesLandingEmptyState';
 import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
 import type { TaxRate } from '@bigcapital/sdk-ts';
 import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonHeader,
-  TableSkeletonRows,
   AppToaster,
+  DashboardContentTable,
+  MaterialProgressBar,
 } from '@/components';
+import {
+  getDashboardTableSizing,
+  getRowId,
+  TABLE_LOADING_OPTIONS,
+} from '@/components/Datatable/blueprintTable';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import {
@@ -32,24 +37,26 @@ import {
   useInactivateTaxRate,
 } from '@/hooks/query/tax-rates';
 
+const EMPTY_ROWS: TaxRate[] = [];
+
 interface TaxRatesDataTableProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,
     Pick<WithDrawerActionsProps, 'openDrawer'>,
     Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
- * Invoices datatable.
+ * Tax rates table.
  */
 function TaxRatesDataTable({
   openAlert,
   openDrawer,
   openDialog,
 }: TaxRatesDataTableProps) {
-  // Invoices list context.
-  const { taxRates, isTaxRatesLoading, isEmptyStatus } =
+  // Tax rates list context.
+  const { taxRates, isTaxRatesLoading, isTaxRatesFetching, isEmptyStatus } =
     useTaxRatesLandingContext();
 
-  // Invoices table columns.
+  // Tax rates table columns.
   const columns = useTaxRatesTableColumns();
 
   const { mutateAsync: activateTaxRateMutate } = useActivateTaxRate();
@@ -66,13 +73,6 @@ function TaxRatesDataTable({
   // Handle view details tax rate.
   const handleViewDetails = (taxRate: TaxRate) => {
     openDrawer(DRAWERS.TAX_RATE_DETAILS, { taxRateId: taxRate.id });
-  };
-  // Handle table cell click.
-  const handleCellClick = (
-    cell: { row: { original: TaxRate } },
-    event: unknown,
-  ) => {
-    openDrawer(DRAWERS.TAX_RATE_DETAILS, { taxRateId: cell.row.original.id });
   };
   // Handles activating the given tax rate.
   const handleActivateTaxRate = (taxRate: TaxRate) => {
@@ -106,38 +106,40 @@ function TaxRatesDataTable({
         });
       });
   };
-  // Display invoice empty status instead of the table.
+  const payload = {
+    onViewDetails: handleViewDetails,
+    onDelete: handleDeleteTaxRate,
+    onEdit: handleEditTaxRate,
+    onActivate: handleActivateTaxRate,
+    onInactivate: handleInactivateTaxRate,
+  };
   if (isEmptyStatus) {
     return <TaxRatesLandingEmptyState />;
   }
 
   return (
     <DashboardContentTable>
-      <DataTable
+      {isTaxRatesFetching && !isTaxRatesLoading && <MaterialProgressBar />}
+      <BlueprintTable
         columns={columns}
-        data={taxRates ?? []}
-        loading={isTaxRatesLoading}
-        headerLoading={isTaxRatesLoading}
-        progressBarLoading={isTaxRatesLoading}
-        manualSortBy={false}
-        selectionColumn={false}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={false}
-        manualPagination={false}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={TaxRatesTableActionsMenu}
-        onCellClick={handleCellClick}
-        size={'medium'}
-        payload={{
-          onViewDetails: handleViewDetails,
-          onDelete: handleDeleteTaxRate,
-          onEdit: handleEditTaxRate,
-          onActivate: handleActivateTaxRate,
-          onInactivate: handleInactivateTaxRate,
+        data={taxRates ?? EMPTY_ROWS}
+        getRowId={getRowId}
+        enableRowHeader={false}
+        {...getDashboardTableSizing(false)}
+        enableSorting
+        getCellProps={({ row, column }) => ({
+          'data-testId': column.id === 'name' ? 'tax-rate-row' : undefined,
+          tabIndex: 0,
+          onClick: () => handleViewDetails(row.original),
+        })}
+        enableGhostCells={isTaxRatesLoading}
+        loadingOptions={isTaxRatesLoading ? TABLE_LOADING_OPTIONS : undefined}
+        enableBodyContextMenu={!isTaxRatesFetching}
+        bodyContextMenuRenderer={(context) => {
+          const row = context.getTargetRow();
+          return (
+            row && <TaxRatesTableActionsMenu row={row} payload={payload} />
+          );
         }}
       />
     </DashboardContentTable>
