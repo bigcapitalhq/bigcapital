@@ -37,7 +37,7 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 interface CustomerActionsBarInnerProps
   extends WithCustomersActionsProps,
     WithDialogActionsProps {
-  customersSelectedRows: unknown[];
+  customersSelectedRows: number[];
   customersFilterConditions: IFilterRole[];
   customersInactiveMode: boolean | undefined;
 }
@@ -87,7 +87,7 @@ function CustomerActionsBar({
 
   // Handle Customers bulk delete button click.,
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(customersSelectedRows as number[]);
+    openBulkDeleteDialog(customersSelectedRows);
   };
 
   const handleTabChange = (view?: { slug?: string }) => {

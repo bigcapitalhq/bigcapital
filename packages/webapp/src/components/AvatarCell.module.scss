@@ -1,0 +1,25 @@
+@import '@/style/_common';
+
+.avatar {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #adbcc9;
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 30px;
+  text-align: center;
+
+  &[data-size='small'] {
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    line-height: 25px;
+  }
+
+  :global(.#{$ns}-dark) & {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}

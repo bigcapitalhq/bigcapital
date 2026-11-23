@@ -103,7 +103,19 @@ async function createCustomer(
  */
 async function filterCustomersBy(page: Page, displayName: string) {
   await page.getByRole('button', { name: /filter|filters applied/i }).click();
-  await page.getByPlaceholder('Value').first().fill(displayName);
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.pathname === '/api/customers' &&
+        !!url.searchParams
+          .get('stringified_filter_roles')
+          ?.includes(displayName) &&
+        response.ok()
+      );
+    }),
+    page.getByPlaceholder('Value').first().fill(displayName),
+  ]);
 
   const row = page
     .getByTestId('customer-row')
@@ -194,7 +206,12 @@ test.describe('customers', () => {
     await waitForCustomersList(page);
 
     const editedRow = await filterCustomersBy(page, displayName);
-    await expect(editedRow).toContainText(newCompanyName, {
+    const id = await editedRow.getAttribute('data-customer-id');
+    await expect(
+      page
+        .locator(`[data-customer-id="${id}"]`)
+        .filter({ hasText: newCompanyName }),
+    ).toBeVisible({
       timeout: 15_000,
     });
   });

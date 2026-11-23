@@ -41,6 +41,14 @@ const lists = [
     fields: { formatted_amount: '$42.25', categories: [] },
     cell: '$42.25',
   },
+  {
+    path: '/customers',
+    endpoint: '/api/customers',
+    rowTestId: 'customer-row',
+    identifier: 'display_name',
+    fields: { company_name: 'Example company' },
+    cell: 'Example company',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({
