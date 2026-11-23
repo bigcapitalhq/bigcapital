@@ -1,4 +1,4 @@
-import { Button, Intent, Tag } from '@blueprintjs/core';
+import { Button, Classes, Intent, Tag } from '@blueprintjs/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -101,11 +101,15 @@ export function useAccountsTableColumns() {
           id: 'currency',
           header: intl.get('currency'),
           size: 75,
+          cell: ({ getValue }) => (
+            <span className={Classes.TEXT_MUTED}>{getValue()}</span>
+          ),
         }),
         column.accessor('bankBalanceFormatted', {
           id: 'bank_balance',
           header: 'Bank Balance',
           size: 150,
+          meta: { textAlign: 'right' },
           cell: ({ row, getValue }) => (
             <BalanceCell
               value={row.original.amount === null ? null : getValue()}
@@ -116,6 +120,7 @@ export function useAccountsTableColumns() {
           id: 'balance',
           header: intl.get('balance'),
           size: 150,
+          meta: { textAlign: 'right' },
           cell: ({ row, getValue }) => (
             <BalanceCell
               value={getValue() === null ? null : row.original.formattedAmount}

@@ -166,7 +166,7 @@ function AccountsDataTableInner({
         getCellProps={getCellProps}
         enableBodyContextMenu={!isAccountsFetching}
         bodyContextMenuRenderer={bodyContextMenuRenderer}
-        enableGhostCells={isAccountsLoading}
+        enableGhostCells
         loadingOptions={loadingOptions}
       />
       {isEmpty && (

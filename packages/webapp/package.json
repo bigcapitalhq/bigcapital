@@ -8,7 +8,7 @@
     "@bigcapital/pdf-templates": "workspace:*",
     "@bigcapital/sdk-ts": "workspace:*",
     "@bigcapital/utils": "workspace:*",
-    "@bigcapitalhq/blueprintjs-react-table": "0.3.1",
+    "@bigcapitalhq/blueprintjs-react-table": "0.3.2",
     "@blueprintjs-formik/core": "^0.3.9",
     "@blueprintjs-formik/datetime-v6": "^0.1.1",
     "@blueprintjs-formik/select": "^0.4.10",

@@ -104,7 +104,7 @@ function ItemsCategoryTable({
         showRowSelectionCheckboxes
         rowSelection={rowSelection}
         onRowSelectionChange={onRowSelectionChange}
-        enableGhostCells={isCategoriesLoading}
+        enableGhostCells
         loadingOptions={isCategoriesLoading ? TABLE_LOADING_OPTIONS : undefined}
         enableBodyContextMenu={!isCategoriesFetching}
         bodyContextMenuRenderer={(context) => {

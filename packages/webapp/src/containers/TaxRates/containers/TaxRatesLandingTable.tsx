@@ -132,7 +132,7 @@ function TaxRatesDataTable({
           tabIndex: 0,
           onClick: () => handleViewDetails(row.original),
         })}
-        enableGhostCells={isTaxRatesLoading}
+        enableGhostCells
         loadingOptions={isTaxRatesLoading ? TABLE_LOADING_OPTIONS : undefined}
         enableBodyContextMenu={!isTaxRatesFetching}
         bodyContextMenuRenderer={(context) => {

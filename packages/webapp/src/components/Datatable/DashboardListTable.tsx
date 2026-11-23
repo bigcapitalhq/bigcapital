@@ -25,6 +25,7 @@ import {
 import { useMemorizedColumnsWidths } from '@/hooks';
 
 const PAGE_SIZE_OPTIONS = [20, 30, 50, 75, 100, 150];
+const PAGINATION_BUTTON_PROPS = { small: true };
 
 interface DashboardListTableConfig<TRecord, TActions> {
   tableName: string;
@@ -134,6 +135,8 @@ export function createDashboardListTable<
           autoResetPageIndex={false}
           rowCount={total}
           pageSizeOptions={PAGE_SIZE_OPTIONS}
+          paginationButtonProps={PAGINATION_BUTTON_PROPS}
+          pageSizeButtonProps={PAGINATION_BUTTON_PROPS}
           showPaginationBar={hasRows}
           onPaginationChange={onPaginationChange}
           state={state}
@@ -144,7 +147,7 @@ export function createDashboardListTable<
           getCellProps={getCellProps}
           bodyContextMenuRenderer={bodyContextMenuRenderer}
           enableBodyContextMenu={!fetching}
-          enableGhostCells={loading}
+          enableGhostCells
           loadingOptions={loadingOptions}
         />
         {!loading && !hasRows && (
