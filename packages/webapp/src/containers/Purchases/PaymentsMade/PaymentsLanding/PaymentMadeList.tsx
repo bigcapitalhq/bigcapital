@@ -1,6 +1,5 @@
 import * as FF from 'fp-ts/function';
 import React from 'react';
-import '@/style/pages/PaymentMade/List.scss';
 import { PaymentMadeActionsBar } from './PaymentMadeActionsBar';
 import { PaymentMadeListDialogs } from './PaymentMadeListDialogs';
 import { PaymentMadeListDrawers } from './PaymentMadeListDrawers';
@@ -14,6 +13,7 @@ import { transformTableStateToQuery } from '@/utils';
 
 interface WithPaymentMadeActionsProps {
   resetPaymentMadesTableState: () => void;
+  resetPaymentMadesSelectedRows: () => void;
 }
 
 interface PaymentMadeListProps
@@ -27,12 +27,14 @@ function PaymentMadeListInner({
   paymentMadesTableState,
   paymentsTableStateChanged,
   resetPaymentMadesTableState,
+  resetPaymentMadesSelectedRows,
 }: PaymentMadeListProps) {
   React.useEffect(
     () => () => {
       resetPaymentMadesTableState();
+      resetPaymentMadesSelectedRows();
     },
-    [resetPaymentMadesTableState],
+    [resetPaymentMadesTableState, resetPaymentMadesSelectedRows],
   );
 
   return (

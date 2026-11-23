@@ -11,7 +11,7 @@ import {
 
 interface PaymentMadesState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery = {
@@ -40,7 +40,7 @@ const reducerInstance = createReducer(initialState, {
 
   [PAYMENT_MADES_SET_SELECTED_ROWS]: (
     state: PaymentMadesState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

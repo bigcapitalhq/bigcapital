@@ -9,6 +9,14 @@ const lists = [
     fields: { due_date: '2026-02-10', is_open: false },
     cell: 'Draft',
   },
+  {
+    path: '/payments-made',
+    endpoint: '/api/bill-payments',
+    rowTestId: 'payment-made-row',
+    identifier: 'payment_number',
+    fields: { payment_account: { name: 'Checking' }, amount: 42 },
+    cell: 'Checking',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({

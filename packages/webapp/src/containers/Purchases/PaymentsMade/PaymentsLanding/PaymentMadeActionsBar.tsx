@@ -92,7 +92,7 @@ function PaymentMadeActionsBarInner({
 
   if (!isEmpty(paymentMadesSelectedRows)) {
     const handleBulkDelete = () => {
-      openBulkDeleteDialog(paymentMadesSelectedRows as number[]);
+      openBulkDeleteDialog(paymentMadesSelectedRows);
     };
     return (
       <DashboardActionsBar>
