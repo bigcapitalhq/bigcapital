@@ -32,6 +32,7 @@ export * from './organization';
 export * from './subscription';
 export * from './currencies';
 export * from './tax-rates';
+export * from './budgets';
 export * from './attachments';
 export * from './pdf-templates';
 export * from './invite';

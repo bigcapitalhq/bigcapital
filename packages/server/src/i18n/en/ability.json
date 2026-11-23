@@ -1,6 +1,7 @@
 {
   "accounts": "Chart of accounts",
   "manual_journal": "Manual journals",
+  "budgets": "Budgets",
   "cashflow": "Cash flow",
   "inventory_adjustment": "Inventory adjustments",
   "customers": "Customers",
@@ -47,5 +48,6 @@
   "inventory_items_details": "Inventory items details",
   "batch_details": "Batch details",
   "cashflow_account_transactions": "Cashflow account transactions",
-  "sales_tax_liability_summary_report": "Sales tax liability summary"
+  "sales_tax_liability_summary_report": "Sales tax liability summary",
+  "budget_vs_actual_report": "Budget vs actual report"
 }
