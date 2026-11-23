@@ -90,7 +90,7 @@ function BillActionsBar({
     useBulkDeleteBillsDialog();
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(billsSelectedRows as number[]);
+    openBulkDeleteDialog(billsSelectedRows);
   };
 
   if (!isEmpty(billsSelectedRows)) {

@@ -14,7 +14,7 @@ import {
 export interface WithBillsActionsProps {
   setBillsTableState: (queries: Partial<TableQuery>) => void;
   resetBillsTableState: () => void;
-  setBillsSelectedRows: (selectedRows: Array<unknown>) => void;
+  setBillsSelectedRows: (selectedRows: number[]) => void;
   resetBillsSelectedRows: () => void;
 }
 

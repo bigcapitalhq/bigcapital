@@ -380,7 +380,7 @@ test.describe('app screenshots', () => {
   test('captures the bills list', async ({ page }) => {
     await capture(page, '/bills', 'bills.png', {
       title: 'Bills',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'bill-row',
     });
   });
 

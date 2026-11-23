@@ -6,7 +6,6 @@ import { functionalUpdate } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
 import '@bigcapitalhq/blueprintjs-react-table/styles.css';
-import './SalesListTable.scss';
 import type { TableQuery } from '@/store/store.types';
 import type {
   BP_BodyElementProps,
@@ -27,7 +26,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 
 const PAGE_SIZE_OPTIONS = [20, 30, 50, 75, 100, 150];
 
-interface SalesListTableConfig<TRecord, TActions> {
+interface DashboardListTableConfig<TRecord, TActions> {
   tableName: string;
   rowName: string;
   identifierColumn: string;
@@ -37,13 +36,14 @@ interface SalesListTableConfig<TRecord, TActions> {
   }>;
 }
 
-interface SalesListTableProps<TRecord extends { id: number }, TActions> {
+interface DashboardListTableProps<TRecord extends { id: number }, TActions> {
   columns: BP_PaginatedTableProps<TRecord>['columns'];
   data: TRecord[] | undefined;
   /** An unknown total keeps the current page while its request is in flight. */
   total: number | undefined;
   loading: boolean;
   fetching: boolean;
+  emptyMessage?: string;
   compact: boolean;
   query: Partial<TableQuery>;
   setQuery: (query: Partial<TableQuery>) => void;
@@ -52,7 +52,7 @@ interface SalesListTableProps<TRecord extends { id: number }, TActions> {
   actions: TActions;
 }
 
-export function createSalesListTable<
+export function createDashboardListTable<
   TRecord extends { id: number },
   TActions extends { onViewDetails: (record: TRecord) => void },
 >({
@@ -60,25 +60,26 @@ export function createSalesListTable<
   rowName,
   identifierColumn,
   ActionsMenu,
-}: SalesListTableConfig<TRecord, TActions>) {
+}: DashboardListTableConfig<TRecord, TActions>) {
   type TableProps = BP_PaginatedTableProps<TRecord>;
   const PaginatedTable = withPagination<TRecord>(BP_Table);
   const rowIdAttribute = `data-${rowName}-id` as const;
   const emptyRows: TRecord[] = [];
 
-  return function SalesListTable({
+  return function DashboardListTable({
     columns,
     data = emptyRows,
     total,
     loading,
     fetching,
+    emptyMessage,
     compact,
     query,
     setQuery,
     selectedIds,
     setSelectedIds,
     actions,
-  }: SalesListTableProps<TRecord, TActions>) {
+  }: DashboardListTableProps<TRecord, TActions>) {
     const [columnSizing, setColumnSizing] =
       useMemorizedColumnsWidths(tableName);
     const { rowSelection, onRowSelectionChange } = useTableRowSelection(
@@ -147,7 +148,9 @@ export function createSalesListTable<
           loadingOptions={loadingOptions}
         />
         {!loading && !hasRows && (
-          <EmptyStatus title={intl.get('there_is_no_results_in_the_table')} />
+          <EmptyStatus
+            title={emptyMessage ?? intl.get('there_is_no_results_in_the_table')}
+          />
         )}
       </DashboardContentTable>
     );

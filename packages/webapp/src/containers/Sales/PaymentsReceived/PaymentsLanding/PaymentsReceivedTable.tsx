@@ -12,14 +12,14 @@ import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedAct
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { createSalesListTable } from '@/containers/Sales/SalesListTable';
 
-const Table = createSalesListTable({
+const Table = createDashboardListTable({
   tableName: TABLES.PAYMENT_RECEIVES,
   rowName: 'payment-received',
   identifierColumn: 'payment_receive_no',

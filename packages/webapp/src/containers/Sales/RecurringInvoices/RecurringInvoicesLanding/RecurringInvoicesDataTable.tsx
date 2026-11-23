@@ -12,10 +12,10 @@ import type { WithRecurringInvoicesProps } from './withRecurringInvoices';
 import type { WithRecurringInvoiceActionsProps } from './withRecurringInvoicesActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { AppToaster } from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { createSalesListTable } from '@/containers/Sales/SalesListTable';
 import {
   useDeleteRecurringInvoice,
   useGenerateRecurringInvoiceNow,
@@ -23,7 +23,7 @@ import {
   useResumeRecurringInvoice,
 } from '@/hooks/query';
 
-const Table = createSalesListTable({
+const Table = createDashboardListTable({
   tableName: TABLES.RECURRING_INVOICES,
   rowName: 'recurring-invoice',
   identifierColumn: 'profile_name',

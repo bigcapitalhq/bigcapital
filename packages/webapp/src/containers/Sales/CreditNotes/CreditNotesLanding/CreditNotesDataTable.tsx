@@ -12,15 +12,15 @@ import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { createSalesListTable } from '@/containers/Sales/SalesListTable';
 
-const Table = createSalesListTable({
+const Table = createDashboardListTable({
   tableName: TABLES.CREDIT_NOTES,
   rowName: 'credit-note',
   identifierColumn: 'credit_number',

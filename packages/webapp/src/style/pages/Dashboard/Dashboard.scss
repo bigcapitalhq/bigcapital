@@ -473,6 +473,16 @@ $dashboard-views-bar-height: 44px;
     }
   }
 
+  &__insider:has(.dashboard__datatable > :is(.#{$ns}-table-container, .#{$ns}-table-pagination-layout)) {
+    min-height: 0;
+
+    .dashboard__page-content,
+    .dashboard__datatable {
+      min-height: 0;
+      min-width: 0;
+    }
+  }
+
   &__datatable {
     display: flex;
     flex: 1 0 0;
@@ -480,6 +490,16 @@ $dashboard-views-bar-height: 44px;
     background: var(--color-dashboard-datatable-background);
     margin: 22px 32px;
     border: 1px solid var(--color-dashboard-datatable-border);
+
+    // Leave room for an empty-state message below the table.
+    > :is(.#{$ns}-table-container, .#{$ns}-table-pagination-layout):not(:last-child) {
+      height: auto;
+    }
+
+    .numeric-cell {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
 
     .#{$ns}-dark & .#{$ns}-table-pagination-bar {
       background-color: $dark-gray1;

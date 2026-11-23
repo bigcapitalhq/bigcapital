@@ -1,11 +1,12 @@
 import { Intent, Menu, MenuItem, MenuDivider, Tag } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { BillsListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import {
-  FormatDateCell,
+  FormatDate,
   FormattedMessage as T,
   Icon,
   If,
@@ -152,71 +153,51 @@ export function StatusAccessor(bill: BillTableRow) {
   );
 }
 
-export function useBillsTableColumns(): DataTableColumn<BillTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, BillTableRow>();
+
+export function useBillsTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedBillDate', {
           id: 'bill_date',
-          Header: intl.get('bill_date'),
-          accessor: 'formattedBillDate',
-          width: 110,
-          className: 'bill_date',
-          clickable: true,
-        },
-        {
+          header: intl.get('bill_date'),
+          size: 110,
+        }),
+        column.accessor((row) => row.vendor?.displayName, {
           id: 'vendor',
-          Header: intl.get('vendor_name'),
-          accessor: 'vendor.displayName',
-          width: 180,
-          className: 'vendor',
-          clickable: true,
-        },
-        {
+          header: intl.get('vendor_name'),
+          size: 180,
+        }),
+        column.accessor('billNumber', {
           id: 'bill_number',
-          Header: intl.get('bill_number'),
-          accessor: (row: BillTableRow) =>
-            row.billNumber ? `${row.billNumber}` : null,
-          width: 100,
-          className: 'bill_number',
-          clickable: true,
-        },
-        {
+          header: intl.get('bill_number'),
+          size: 100,
+        }),
+        column.accessor('totalFormatted', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: 'totalFormatted',
-          width: 120,
-          align: 'right',
-          clickable: true,
-          money: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('amount'),
+          size: 120,
+          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+        }),
+        column.accessor((row) => row, {
           id: 'status',
-          Header: intl.get('status'),
-          accessor: StatusAccessor,
-          width: 160,
-          className: 'status',
-          clickable: true,
-        },
-        {
+          header: intl.get('status'),
+          size: 160,
+          cell: ({ row }) => StatusAccessor(row.original),
+        }),
+        column.accessor('dueDate', {
           id: 'due_date',
-          Header: intl.get('due_date'),
-          accessor: 'dueDate',
-          Cell: FormatDateCell,
-          width: 110,
-          className: 'due_date',
-          clickable: true,
-        },
-        {
+          header: intl.get('due_date'),
+          size: 110,
+          cell: ({ getValue }) => <FormatDate value={getValue()} />,
+        }),
+        column.accessor('referenceNo', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'referenceNo',
-          width: 90,
-          className: 'reference_no',
-          clickable: true,
-        },
-      ] as DataTableColumn<BillTableRow>[],
+          header: intl.get('reference_no'),
+          size: 90,
+        }),
+      ]),
     [],
   );
 }
