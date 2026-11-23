@@ -49,6 +49,14 @@ const lists = [
     fields: { company_name: 'Example company' },
     cell: 'Example company',
   },
+  {
+    path: '/vendors',
+    endpoint: '/api/vendors',
+    rowTestId: 'vendor-row',
+    identifier: 'display_name',
+    fields: { company_name: 'Example company' },
+    cell: 'Example company',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({

@@ -394,7 +394,7 @@ test.describe('app screenshots', () => {
   test('captures the vendors list', async ({ page }) => {
     await capture(page, '/vendors', 'vendors.png', {
       title: 'Vendors',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'vendor-row',
     });
   });
 

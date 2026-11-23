@@ -103,7 +103,19 @@ async function createVendor(
  */
 async function filterVendorsBy(page: Page, displayName: string) {
   await page.getByRole('button', { name: /filter|filters applied/i }).click();
-  await page.getByPlaceholder('Value').first().fill(displayName);
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.pathname === '/api/vendors' &&
+        !!url.searchParams
+          .get('stringified_filter_roles')
+          ?.includes(displayName) &&
+        response.ok()
+      );
+    }),
+    page.getByPlaceholder('Value').first().fill(displayName),
+  ]);
 
   const row = page
     .getByTestId('vendor-row')
@@ -180,9 +192,10 @@ test.describe('vendors', () => {
     await page.getByRole('menuitem', { name: 'Edit Vendor' }).click();
 
     await waitForVendorForm(page, 'Edit Vendor');
-    await expect(
-      page.getByTestId('vendor-display-name-select'),
-    ).toContainText(displayName, { timeout: 30_000 });
+    await expect(page.getByTestId('vendor-display-name-select')).toContainText(
+      displayName,
+      { timeout: 30_000 },
+    );
 
     await page.getByTestId('vendor-company-name-input').fill(newCompanyName);
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
@@ -194,7 +207,12 @@ test.describe('vendors', () => {
     await waitForVendorsList(page);
 
     const editedRow = await filterVendorsBy(page, displayName);
-    await expect(editedRow).toContainText(newCompanyName, {
+    const id = await editedRow.getAttribute('data-vendor-id');
+    await expect(
+      page
+        .locator(`[data-vendor-id="${id}"]`)
+        .filter({ hasText: newCompanyName }),
+    ).toBeVisible({
       timeout: 15_000,
     });
   });

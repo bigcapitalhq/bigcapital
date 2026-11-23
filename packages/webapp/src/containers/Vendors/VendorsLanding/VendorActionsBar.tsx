@@ -37,7 +37,7 @@ import { useRefreshVendors } from '@/hooks/query/vendors';
 interface VendorActionsBarInnerProps
   extends WithVendorsActionsProps,
     WithDialogActionsProps {
-  vendorsSelectedRows: unknown[];
+  vendorsSelectedRows: number[];
   vendorsFilterConditions: IFilterRole[];
   vendorsInactiveMode: boolean | undefined;
 }
@@ -116,7 +116,7 @@ function VendorActionsBarInner({
   };
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(vendorsSelectedRows as number[]);
+    openBulkDeleteDialog(vendorsSelectedRows);
   };
 
   if (!isEmpty(vendorsSelectedRows)) {
