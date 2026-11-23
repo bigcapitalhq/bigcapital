@@ -13,11 +13,13 @@ export const flatToNestedArray = (
   data.forEach((item) => {
     const parentItemId = item[config.parentId];
 
-    if (!item[config.parentId]) {
-      nestedArray.push(item);
-    }
-    if (parentItemId) {
+    // An item whose parent is not in the list (for example a search that
+    // matches a sub-account but not its parent) is shown at the top level
+    // instead of crashing.
+    if (parentItemId && map[parentItemId]) {
       map[parentItemId].children.push(item);
+    } else {
+      nestedArray.push(item);
     }
   });
   return nestedArray;
