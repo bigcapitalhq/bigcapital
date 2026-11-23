@@ -23,6 +23,8 @@ const CLASSES = {
   DASHBOARD_CARD: 'dashboard__card',
   DASHBOARD_CARD_PAGE: 'dashboard__card--page',
 
+  TABLE_CONSTRANT: 'TABLE_CONSTRANT',
+
   DATATABLE_EDITOR: 'datatable-editor',
   DATATABLE_EDITOR_ACTIONS: 'datatable-editor__actions',
   DATATABLE_EDITOR_ITEMS_ENTRIES: 'items-entries-table',

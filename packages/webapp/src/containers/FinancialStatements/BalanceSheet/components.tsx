@@ -12,7 +12,6 @@ import React from 'react';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-import { dynamicColumns } from './dynamicColumns';
 import type {
   BalanceSheetXlsxQuery,
   BalanceSheetCsvQuery,
@@ -71,22 +70,6 @@ export function BalanceSheetLoadingBar() {
     </If>
   );
 }
-
-/**
- * Retrieve balance sheet columns.
- */
-export const useBalanceSheetColumns = () => {
-  const { balanceSheet } = useBalanceSheetContext();
-
-  return React.useMemo(
-    () =>
-      dynamicColumns(
-        balanceSheet?.table?.columns ?? [],
-        balanceSheet?.table?.rows ?? [],
-      ),
-    [balanceSheet?.table],
-  );
-};
 
 /**
  * Retrieves the balance sheet export menu.

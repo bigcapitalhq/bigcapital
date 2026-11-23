@@ -1,34 +1,41 @@
-import React from 'react';
+import { BP_Table as BlueprintTable } from '@bigcapitalhq/blueprintjs-react-table';
+import { functionalUpdate } from '@tanstack/react-table';
+import clsx from 'classnames';
+import React, { useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
-import { getReportCellTestId, getReportRowTestId } from '../reportTestIds';
+import '@bigcapitalhq/blueprintjs-react-table/styles.css';
+import { getReportRowTestId } from '../reportTestIds';
 import { useFinancialReportSorting } from '../useReportSorting';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-import { useBalanceSheetColumns } from './components';
-import { ReportDataTable, FinancialSheet } from '@/components';
-import { TableStyle } from '@/constants';
-import { NS } from '@/constants/classes';
+import { dynamicColumns } from './dynamicColumns';
+import type { BalanceSheetRow } from './dynamicColumns';
+import { FinancialSheet } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import '@/style/components/DataTable/TableConstrant.scss';
 
-interface BalanceSheetTableProps {
-  companyName: string;
-}
+const EMPTY_ROWS: BalanceSheetRow[] = [];
+const getSubRows = (row: BalanceSheetRow) => row.children;
+const rowTestId = getReportRowTestId('balance-sheet');
+const expanderProps = {
+  className: 'expand-toggle',
+  'data-testId': 'expand-toggle',
+};
 
-export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
-  // Balance sheet context.
+export function BalanceSheetTable({ companyName }: { companyName: string }) {
   const { balanceSheet, pageQuery, setPageQuery } = useBalanceSheetContext();
-
-  // Retrieve the database columns.
-  const tableColumns = useBalanceSheetColumns();
-
-  // Retrieve default expanded rows of balance sheet.
-  const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(balanceSheet?.table?.rows ?? [], 3),
-    [balanceSheet?.table],
+  const table = balanceSheet?.table;
+  const rows = table?.rows ?? EMPTY_ROWS;
+  const [hoveredRow, setHoveredRow] = useState<string>();
+  const columns = useMemo(
+    () => dynamicColumns(table?.columns ?? [], rows),
+    [table, rows],
   );
-
-  // Balance sheet backend columns sorting.
-  const { sortableTableProps } = useFinancialReportSorting({
+  const expanded = useMemo(
+    () => Object.fromEntries(Object.entries(defaultExpanderReducer(rows, 3))),
+    [rows],
+  );
+  const { initialSortBy, handleFetchData } = useFinancialReportSorting({
     pageQuery,
     setPageQuery,
   });
@@ -43,67 +50,42 @@ export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
       }
       basis={balanceSheet?.query.basis}
     >
-      <BalanceSheetDataTable
-        columns={tableColumns}
-        data={balanceSheet?.table?.rows ?? []}
-        rowClassNames={tableRowTypesToClassnames}
-        rowTestId={getReportRowTestId('balance-sheet')}
-        cellTestId={getReportCellTestId('balance-sheet')}
-        noInitialFetch={true}
-        expandable={true}
-        expanded={expandedRows}
-        expandToggleColumn={1}
-        expandColumnSpace={0.8}
-        headerLoading={true}
-        sticky={true}
-        {...sortableTableProps}
-        styleName={TableStyle.Constrant}
+      <BlueprintTable<BalanceSheetRow>
+        htmlProps={{ className: CLASSES.TABLE_CONSTRANT }}
+        data={rows}
+        columns={columns}
+        getSubRows={getSubRows}
+        initialExpandedRows={expanded}
+        rowExpanderButtonProps={expanderProps}
+        rowHeight={28}
+        enableRowHeader={false}
+        numFrozenColumns={1}
+        selectionModes={[]}
+        enableSorting
+        manualSorting
+        sortDescFirst={false}
+        enableMultiSort={false}
+        state={{ sorting: initialSortBy }}
+        onSortingChange={(update) =>
+          handleFetchData({ sortBy: functionalUpdate(update, initialSortBy) })
+        }
+        getCellProps={({ row, column }) => ({
+          className: clsx(tableRowTypesToClassnames(row), {
+            'is-expanded': row.getCanExpand() && row.getIsExpanded(),
+            'is-hovered': row.id === hoveredRow,
+          }),
+          style: { '--row-depth': row.depth } as React.CSSProperties,
+          'data-testId': column.id === 'name' ? rowTestId(row) : undefined,
+          tabIndex: 0,
+          onMouseEnter: () => setHoveredRow(row.id),
+          onMouseLeave: () => setHoveredRow(undefined),
+        })}
       />
+      {rows.length === 0 && (
+        <div className="no-results">
+          {intl.get('there_is_no_results_in_the_table')}
+        </div>
+      )}
     </FinancialSheet>
   );
 }
-
-const BalanceSheetDataTable = styled(ReportDataTable)`
-  --color-table-text-color: #252a31;
-  --color-table-total-text-color: #000;
-
-  .${NS}-dark & {
-    --color-table-text-color: var(--color-light-gray1);
-    --color-table-total-text-color: var(--color-light-gray4);
-  }
-  .table {
-    .tbody .tr {
-      .td {
-        border-bottom-width: 0;
-        padding-top: 0.32rem;
-        padding-bottom: 0.32rem;
-        color: var(--color-table-text-color);
-      }
-      &.is-expanded {
-        .td:not(.name) .cell-inner {
-          opacity: 0;
-        }
-      }
-      &.row_type--TOTAL {
-        .td {
-          color: var(--color-table-total-text-color);
-          font-weight: 500;
-          border-top-width: 1px;
-          border-top-style: solid;
-        }
-      }
-      &:last-of-type .td {
-        border-bottom-width: 1px;
-        border-bottom-style: solid;
-      }
-      &.row_type--TOTAL.row-id--ASSETS,
-      &.row_type--TOTAL.row-id--LIABILITY_EQUITY {
-        .td {
-          color: var(--color-table-total-text-color);
-          border-bottom-width: 3px;
-          border-bottom-style: double;
-        }
-      }
-    }
-  }
-`;
