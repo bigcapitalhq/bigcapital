@@ -17,6 +17,7 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { BP_TableProps } from '@bigcapitalhq/blueprintjs-react-table';
 import { EmptyStatus, MaterialProgressBar } from '@/components';
 import {
+  getDashboardTableSizing,
   getRowId,
   TABLE_LOADING_OPTIONS,
   useTableRowSelection,
@@ -66,7 +67,7 @@ function AccountsDataTableInner({
     useAccountsChartContext();
   const data = accounts ?? EMPTY_ACCOUNTS;
   const isEmpty = !isAccountsLoading && data.length === 0;
-  const rowHeight = accountsSettings?.tableSize === 'small' ? 18 : undefined;
+  const isSmall = accountsSettings?.tableSize === 'small';
   const loadingOptions = isAccountsLoading ? TABLE_LOADING_OPTIONS : undefined;
 
   const columns = useAccountsTableColumns();
@@ -153,7 +154,8 @@ function AccountsDataTableInner({
         rowExpanderButtonProps={rowExpanderButtonProps}
         enableRowHeader={false}
         enableRowVirtualization
-        rowHeight={rowHeight}
+        htmlProps={{ className: isSmall ? 'table-size--small' : undefined }}
+        {...getDashboardTableSizing(isSmall)}
         enableSorting
         state={tableState}
         onColumnSizingChange={setColumnSizing}

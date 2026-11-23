@@ -9,6 +9,19 @@
     min-width: 0;
   }
 
+  .account-normal-arrow {
+    display: inline-block;
+    width: 100%;
+    padding-left: 15px;
+    color: #7f91a2;
+    cursor: default;
+  }
+
+  .table-size--small .account-normal-arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
   // Leave room for the empty-state message that follows the table.
   .dashboard__datatable > .#{$ns}-table-container:not(:last-child) {
     height: auto;

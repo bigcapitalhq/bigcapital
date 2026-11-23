@@ -26,6 +26,7 @@ import {
   MaterialProgressBar,
 } from '@/components';
 import {
+  getDashboardTableSizing,
   getRowId,
   TABLE_LOADING_OPTIONS,
   useTableRowSelection,
@@ -73,7 +74,7 @@ function InvoicesDataTableInner({
     invoiceSettings,
   } = useInvoicesListContext();
   const data = invoices ?? EMPTY_INVOICES;
-  const rowHeight = invoiceSettings?.tableSize === 'small' ? 18 : undefined;
+  const compact = invoiceSettings?.tableSize === 'small';
   const loadingOptions = isInvoicesLoading ? TABLE_LOADING_OPTIONS : undefined;
   const hasNoResults = !isInvoicesLoading && data.length === 0;
   const showPaginationBar = data.length > 0;
@@ -172,7 +173,7 @@ function InvoicesDataTableInner({
         data={data}
         getRowId={getRowId}
         enableRowHeader={false}
-        rowHeight={rowHeight}
+        {...getDashboardTableSizing(compact)}
         enableSorting
         manualSorting
         onSortingChange={onSortingChange}

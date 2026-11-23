@@ -1,6 +1,5 @@
 import {
   Position,
-  Classes,
   Tooltip,
   MenuItem,
   Menu,
@@ -108,7 +107,7 @@ export function NormalCell({ value }: { value: string }) {
   }
   return (
     <Tooltip
-      className={Classes.TOOLTIP_INDICATOR}
+      className="account-normal-arrow"
       content={intl.get(value)}
       position={Position.RIGHT}
       hoverOpenDelay={100}

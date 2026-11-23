@@ -12,6 +12,11 @@ export const TABLE_LOADING_OPTIONS = [
 
 export const getRowId = (record: { id: number }) => String(record.id);
 
+export const getDashboardTableSizing = (compact: boolean) => ({
+  rowHeight: compact ? 40 : 48,
+  rowSelectionColumnWidth: 42,
+});
+
 export function useTableRowSelection(
   selectedIds: readonly number[],
   setSelectedIds: (ids: number[]) => void,

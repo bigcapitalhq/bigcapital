@@ -481,6 +481,53 @@ $dashboard-views-bar-height: 44px;
     margin: 22px 32px;
     border: 1px solid var(--color-dashboard-datatable-border);
 
+    .#{$ns}-dark & .#{$ns}-table-pagination-bar {
+      background-color: $dark-gray1;
+    }
+
+    .#{$ns}-table-container {
+      &,
+      .#{$ns}-dark & {
+        box-shadow: 0 0 0 1px var(--color-dashboard-datatable-border);
+      }
+
+      .#{$ns}-table-column-headers {
+        background-color: var(--color-datatable-head-background);
+      }
+
+      .#{$ns}-table-column-headers .#{$ns}-table-column-header-cell {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 40px;
+      }
+
+      .#{$ns}-dark & {
+        .#{$ns}-table-cell-client,
+        .#{$ns}-table-row-headers {
+          background-color: $dark-gray1;
+        }
+
+        .#{$ns}-table-quadrant {
+          background-color: $dark-gray2;
+        }
+      }
+
+      .#{$ns}-table-cell-client .#{$ns}-table-cell {
+        font-size: 14px;
+        padding: 8px 6px;
+      }
+
+      .#{$ns}-table-cell-client .#{$ns}-table-cell,
+      .#{$ns}-table-row-headers .#{$ns}-table-header {
+        box-shadow: inset 0 -1px var(--color-dark-gray4);
+      }
+
+      .#{$ns}-table-row-selection-checkbox input:not(:checked):not(:indeterminate) ~ .#{$ns}-control-indicator {
+        box-shadow: inset 0 0 0 1px var(--color-datatable-checkbox-border);
+      }
+    }
+
     .bigcapital-datatable {
       display: flex;
       flex-direction: column;
