@@ -1,5 +1,3 @@
-import '@/style/pages/ManualJournal/List.scss';
-
 import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import { ManualJournalActionsBar as ManualJournalsActionsBar } from './ManualJournalActionsBar';

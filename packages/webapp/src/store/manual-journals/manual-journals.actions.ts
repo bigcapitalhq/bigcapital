@@ -12,7 +12,7 @@ export const setManualJournalsTableState = (queries: Partial<TableQuery>) => {
   };
 };
 
-export const setManualJournalsSelectedRows = (selectedRows: Array<unknown>) => {
+export const setManualJournalsSelectedRows = (selectedRows: number[]) => {
   return {
     type: MANUAL_JOURNALS_SET_SELECTED_ROWS,
     payload: selectedRows,

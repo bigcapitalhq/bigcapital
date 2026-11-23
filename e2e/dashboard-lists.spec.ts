@@ -25,6 +25,14 @@ const lists = [
     fields: { formatted_credits_remaining: '$42.25', is_draft: true },
     cell: '$42.25',
   },
+  {
+    path: '/manual-journals',
+    endpoint: '/api/manual-journals',
+    rowTestId: 'manual-journal-row',
+    identifier: 'journal_number',
+    fields: { journal_type: 'Accrual', entries: [] },
+    cell: 'Accrual',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({
