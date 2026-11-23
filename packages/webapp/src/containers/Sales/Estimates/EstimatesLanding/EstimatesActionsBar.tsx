@@ -100,7 +100,7 @@ function EstimateActionsBar({
     useBulkDeleteEstimatesDialog();
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(estimatesSelectedRows as number[]);
+    openBulkDeleteDialog(estimatesSelectedRows);
   };
 
   if (!isEmpty(estimatesSelectedRows)) {

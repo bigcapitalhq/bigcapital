@@ -8,15 +8,21 @@ import {
   Tag,
   Button,
 } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { SaleReceiptsListResponse } from '@bigcapital/sdk-ts';
-import { FormattedMessage as T } from '@/components';
-import { FormatDateCell, Choose, Money, Icon, If, Can } from '@/components';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
+import {
+  FormattedMessage as T,
+  Choose,
+  Money,
+  Icon,
+  If,
+  Can,
+} from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
-import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type ReceiptTableRow = NonNullable<
@@ -128,80 +134,54 @@ export function StatusAccessor(receipt: ReceiptTableRow) {
   );
 }
 
-/**
- * Retrieve receipts table columns.
- */
-export function useReceiptsTableColumns(): DataTableColumn<ReceiptTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, ReceiptTableRow>();
+
+export function useReceiptsTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedReceiptDate', {
           id: 'receipt_date',
-          Header: intl.get('receipt_date'),
-          accessor: 'formattedReceiptDate',
-          width: 140,
-          className: 'receipt_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('receipt_date'),
+          size: 140,
+        }),
+        column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
-          Header: intl.get('customer_name'),
-          accessor: 'customer.displayName',
-          width: 140,
-          className: 'customer_id',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('customer_name'),
+          size: 140,
+        }),
+        column.accessor('receiptNumber', {
           id: 'receipt_number',
-          Header: intl.get('receipt_number'),
-          accessor: 'receiptNumber',
-          width: 140,
-          className: 'receipt_number',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('receipt_number'),
+          size: 140,
+        }),
+        column.accessor((row) => row.depositAccount?.name, {
           id: 'deposit_account',
-          Header: intl.get('deposit_account'),
-          accessor: 'depositAccount.name',
-          width: 140,
-          className: 'deposit_account',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('deposit_account'),
+          size: 140,
+        }),
+        column.accessor('total', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: (r: ReceiptTableRow) => (
-            <Money amount={r.total} currency={r.currencyCode} />
+          header: intl.get('amount'),
+          size: 140,
+          cell: ({ getValue, row }) => (
+            <MoneyDisplay>
+              <Money amount={getValue()} currency={row.original.currencyCode} />
+            </MoneyDisplay>
           ),
-          width: 140,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          money: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+        }),
+        column.accessor((row) => row, {
           id: 'status',
-          Header: intl.get('status'),
-          accessor: StatusAccessor,
-          width: 140,
-          className: 'status',
-          clickable: true,
-        },
-        {
+          header: intl.get('status'),
+          size: 140,
+          cell: ({ getValue }) => StatusAccessor(getValue()),
+        }),
+        column.accessor('referenceNo', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'referenceNo',
-          width: 140,
-          className: 'reference_no',
-          clickable: true,
-          textOverview: true,
-        },
-      ] as DataTableColumn<ReceiptTableRow>[],
+          header: intl.get('reference_no'),
+          size: 140,
+        }),
+      ]),
     [],
   );
 }

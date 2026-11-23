@@ -1,11 +1,11 @@
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { SaleEstimatesListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import {
-  FormatDateCell,
+  FormatDate,
   FormattedMessage as T,
   Money,
   Choose,
@@ -13,8 +13,8 @@ import {
   If,
   Can,
 } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
-import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type EstimateTableRow = NonNullable<
@@ -27,7 +27,6 @@ interface EstimateActionsPayload {
   onReject: (estimate: EstimateTableRow) => void;
   onApprove: (estimate: EstimateTableRow) => void;
   onDelete: (estimate: EstimateTableRow) => void;
-  onDrawer: (estimate: EstimateTableRow) => void;
   onConvert: (estimate: EstimateTableRow) => void;
   onViewDetails: (estimate: EstimateTableRow) => void;
   onPrint: (estimate: EstimateTableRow) => void;
@@ -174,80 +173,55 @@ export function ActionsMenu({
   );
 }
 
-function AmountAccessor({ amount, currencyCode }: EstimateTableRow) {
-  return <Money amount={amount} currency={currencyCode} />;
-}
+const column = createColumnHelper<BP_TableFeatures, EstimateTableRow>();
 
-export function useEstiamtesTableColumns(): DataTableColumn<EstimateTableRow>[] {
+export function useEstimatesTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedEstimateDate', {
           id: 'estimate_date',
-          Header: intl.get('estimate_date'),
-          accessor: 'formattedEstimateDate',
-          width: 140,
-          className: 'estimate_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('estimate_date'),
+          size: 140,
+        }),
+        column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
-          Header: intl.get('customer_name'),
-          accessor: 'customer.displayName',
-          width: 140,
-          className: 'customer_id',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('customer_name'),
+          size: 140,
+        }),
+        column.accessor('expirationDate', {
           id: 'expiration_date',
-          Header: intl.get('expiration_date'),
-          accessor: 'expirationDate',
-          Cell: FormatDateCell,
-          width: 140,
-          className: 'expiration_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('expiration_date'),
+          size: 140,
+          cell: ({ getValue }) => <FormatDate value={getValue()} />,
+        }),
+        column.accessor('estimateNumber', {
           id: 'estimate_number',
-          Header: intl.get('estimate_number'),
-          accessor: (row: EstimateTableRow) =>
-            row.estimateNumber ? `${row.estimateNumber}` : null,
-          width: 140,
-          className: 'estimate_number',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('estimate_number'),
+          size: 140,
+        }),
+        column.accessor('amount', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: AmountAccessor,
-          width: 140,
-          align: 'right',
-          clickable: true,
-          className: clsx(CLASSES.FONT_BOLD),
-          money: true,
-        },
-        {
+          header: intl.get('amount'),
+          size: 140,
+          cell: ({ getValue, row }) => (
+            <MoneyDisplay>
+              <Money amount={getValue()} currency={row.original.currencyCode} />
+            </MoneyDisplay>
+          ),
+        }),
+        column.accessor((row) => row, {
           id: 'status',
-          Header: intl.get('status'),
-          accessor: (row: EstimateTableRow) => statusAccessor(row),
-          width: 140,
-          className: 'status',
-          clickable: true,
-        },
-        {
+          header: intl.get('status'),
+          size: 140,
+          cell: ({ getValue }) => statusAccessor(getValue()),
+        }),
+        column.accessor('reference', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'reference',
-          width: 90,
-          className: 'reference',
-          clickable: true,
-          textOverview: true,
-        },
-      ] as DataTableColumn<EstimateTableRow>[],
+          header: intl.get('reference_no'),
+          size: 90,
+        }),
+      ]),
     [],
   );
 }

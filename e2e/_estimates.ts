@@ -37,9 +37,7 @@ function formatDateToInputFormat(date: Date, format: string): string {
  * Sets the estimate expiration date to the day before the estimate date, so the
  * form shows the "expiration date must be later than estimate date" error.
  */
-export async function setEstimateExpirationDateBeforeEstimateDate(
-  page: Page,
-) {
+export async function setEstimateExpirationDateBeforeEstimateDate(page: Page) {
   const expirationInput = page.locator('input.estimate-expiration-date-input');
   const format =
     (await expirationInput.getAttribute('placeholder')) || 'DD MMM YYYY';
@@ -177,7 +175,18 @@ export async function filterEstimatesByNumber(
   estimateNumber: string,
 ): Promise<Locator> {
   await page.getByRole('button', { name: /filter|filters applied/i }).click();
-  await page.getByPlaceholder('Value').first().fill(estimateNumber);
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.pathname === '/api/sale-estimates' &&
+        !!url.searchParams
+          .get('stringified_filter_roles')
+          ?.includes(estimateNumber)
+      );
+    }),
+    page.getByPlaceholder('Value').first().fill(estimateNumber),
+  ]);
 
   const row = page
     .getByTestId('estimate-row')

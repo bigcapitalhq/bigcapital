@@ -1,6 +1,11 @@
 @import '@/style/_common';
 
-.dashboard__insider--sales-invoices-list {
+.dashboard__insider--sales-invoices-list,
+.dashboard__insider--sale_estimate,
+.dashboard__insider--recurring-invoices-list,
+.dashboard__insider--sales_receipts,
+.dashboard__insider--credit-notes-list,
+.dashboard__insider--payment-receives-list {
   min-height: 0;
 
   .dashboard__page-content,

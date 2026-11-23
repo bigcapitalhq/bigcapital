@@ -19,7 +19,7 @@ export const resetCreditNoteTableState = () => {
   };
 };
 
-export const setCreditNotesSelectedRows = (selectedRows: Array<unknown>) => {
+export const setCreditNotesSelectedRows = (selectedRows: number[]) => {
   return {
     type: CREDIT_NOTES_SET_SELECTED_ROWS,
     payload: selectedRows,

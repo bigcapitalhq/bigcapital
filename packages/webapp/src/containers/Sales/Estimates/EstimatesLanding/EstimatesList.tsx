@@ -10,7 +10,6 @@ import { withEstimatesActions } from './withEstimatesActions';
 import type { WithEstimatesProps } from './withEstimates';
 import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import { DashboardPageContent } from '@/components';
-import '@/style/pages/SaleEstimate/List.scss';
 import { transformTableStateToQuery } from '@/utils';
 
 interface EstimatesListProps

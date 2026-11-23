@@ -1,6 +1,5 @@
 import * as FF from 'fp-ts/function';
 import React from 'react';
-import '@/style/pages/PaymentReceive/List.scss';
 import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
 import { PaymentsReceivedListDialogs } from './PaymentsReceivedListDialogs';
 import { PaymentsReceivedListDrawers } from './PaymentsReceivedListDrawers';

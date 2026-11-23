@@ -130,7 +130,7 @@ function ReceiptActionsBarInner({
 
   if (!isEmpty(receiptSelectedRows)) {
     const handleBulkDelete = () => {
-      openBulkDeleteDialog(receiptSelectedRows as number[]);
+      openBulkDeleteDialog(receiptSelectedRows);
     };
     return (
       <DashboardActionsBar>

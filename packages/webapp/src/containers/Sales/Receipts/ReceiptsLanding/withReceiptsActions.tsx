@@ -12,7 +12,7 @@ import {
 export interface WithReceiptsActionsProps {
   setReceiptsTableState: (queries: Partial<TableQuery>) => void;
   resetReceiptsTableState: () => void;
-  setReceiptsSelectedRows: (selectedRows: Array<unknown>) => void;
+  setReceiptsSelectedRows: (selectedRows: number[]) => void;
   resetReceiptsSelectedRows: () => void;
 }
 
@@ -22,7 +22,7 @@ export const mapDispatchToProps = (
   setReceiptsTableState: (queries: Partial<TableQuery>) =>
     dispatch(setReceiptsTableState(queries)),
   resetReceiptsTableState: () => dispatch(resetReceiptsTableState()),
-  setReceiptsSelectedRows: (selectedRows: Array<unknown>) =>
+  setReceiptsSelectedRows: (selectedRows: number[]) =>
     dispatch(setReceiptsSelectedRows(selectedRows)),
   resetReceiptsSelectedRows: () => dispatch(resetReceiptsSelectedRows()),
 });

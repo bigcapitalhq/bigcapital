@@ -1,0 +1,155 @@
+import {
+  BP_Table,
+  withPagination,
+} from '@bigcapitalhq/blueprintjs-react-table';
+import { functionalUpdate } from '@tanstack/react-table';
+import React from 'react';
+import intl from 'react-intl-universal';
+import '@bigcapitalhq/blueprintjs-react-table/styles.css';
+import './SalesListTable.scss';
+import type { TableQuery } from '@/store/store.types';
+import type {
+  BP_BodyElementProps,
+  BP_PaginatedTableProps,
+} from '@bigcapitalhq/blueprintjs-react-table';
+import {
+  DashboardContentTable,
+  EmptyStatus,
+  MaterialProgressBar,
+} from '@/components';
+import {
+  getDashboardTableSizing,
+  getRowId,
+  TABLE_LOADING_OPTIONS,
+  useTableRowSelection,
+} from '@/components/Datatable/blueprintTable';
+import { useMemorizedColumnsWidths } from '@/hooks';
+
+const PAGE_SIZE_OPTIONS = [20, 30, 50, 75, 100, 150];
+
+interface SalesListTableConfig<TRecord, TActions> {
+  tableName: string;
+  rowName: string;
+  identifierColumn: string;
+  ActionsMenu: React.ComponentType<{
+    row: { original: TRecord };
+    payload: TActions;
+  }>;
+}
+
+interface SalesListTableProps<TRecord extends { id: number }, TActions> {
+  columns: BP_PaginatedTableProps<TRecord>['columns'];
+  data: TRecord[] | undefined;
+  /** An unknown total keeps the current page while its request is in flight. */
+  total: number | undefined;
+  loading: boolean;
+  fetching: boolean;
+  compact: boolean;
+  query: Partial<TableQuery>;
+  setQuery: (query: Partial<TableQuery>) => void;
+  selectedIds: number[];
+  setSelectedIds: (ids: number[]) => void;
+  actions: TActions;
+}
+
+export function createSalesListTable<
+  TRecord extends { id: number },
+  TActions extends { onViewDetails: (record: TRecord) => void },
+>({
+  tableName,
+  rowName,
+  identifierColumn,
+  ActionsMenu,
+}: SalesListTableConfig<TRecord, TActions>) {
+  type TableProps = BP_PaginatedTableProps<TRecord>;
+  const PaginatedTable = withPagination<TRecord>(BP_Table);
+  const rowIdAttribute = `data-${rowName}-id` as const;
+  const emptyRows: TRecord[] = [];
+
+  return function SalesListTable({
+    columns,
+    data = emptyRows,
+    total,
+    loading,
+    fetching,
+    compact,
+    query,
+    setQuery,
+    selectedIds,
+    setSelectedIds,
+    actions,
+  }: SalesListTableProps<TRecord, TActions>) {
+    const [columnSizing, setColumnSizing] =
+      useMemorizedColumnsWidths(tableName);
+    const { rowSelection, onRowSelectionChange } = useTableRowSelection(
+      selectedIds,
+      setSelectedIds,
+    );
+    const pagination = {
+      pageIndex: query.pageIndex ?? 0,
+      pageSize: query.pageSize ?? 20,
+    };
+    const sorting = query.sortBy ?? [];
+    const state = { columnSizing, pagination, sorting };
+    const loadingOptions = loading ? TABLE_LOADING_OPTIONS : undefined;
+    const hasRows = data.length > 0;
+
+    const onSortingChange: TableProps['onSortingChange'] = (update) => {
+      setQuery({ sortBy: functionalUpdate(update, sorting) });
+    };
+    const onPaginationChange: TableProps['onPaginationChange'] = (update) => {
+      setQuery(functionalUpdate(update, pagination));
+    };
+    const getCellProps: TableProps['getCellProps'] = ({ row, column }) => {
+      const props: BP_BodyElementProps = {
+        'data-testId':
+          column.id === identifierColumn ? `${rowName}-row` : undefined,
+        tabIndex: 0,
+        onClick: () => actions.onViewDetails(row.original),
+      };
+      props[rowIdAttribute] = row.original.id;
+      return props;
+    };
+    const bodyContextMenuRenderer: TableProps['bodyContextMenuRenderer'] = (
+      context,
+    ) => {
+      const row = context.getTargetRow();
+      return row && <ActionsMenu row={row} payload={actions} />;
+    };
+
+    return (
+      <DashboardContentTable>
+        {fetching && !loading && <MaterialProgressBar />}
+        <PaginatedTable
+          columns={columns}
+          data={data}
+          getRowId={getRowId}
+          enableRowHeader={false}
+          {...getDashboardTableSizing(compact)}
+          enableSorting
+          manualSorting
+          onSortingChange={onSortingChange}
+          manualPagination
+          autoResetPageIndex={false}
+          rowCount={total}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+          showPaginationBar={hasRows}
+          onPaginationChange={onPaginationChange}
+          state={state}
+          onColumnSizingChange={setColumnSizing}
+          showRowSelectionCheckboxes
+          rowSelection={rowSelection}
+          onRowSelectionChange={onRowSelectionChange}
+          getCellProps={getCellProps}
+          bodyContextMenuRenderer={bodyContextMenuRenderer}
+          enableBodyContextMenu={!fetching}
+          enableGhostCells={loading}
+          loadingOptions={loadingOptions}
+        />
+        {!loading && !hasRows && (
+          <EmptyStatus title={intl.get('there_is_no_results_in_the_table')} />
+        )}
+      </DashboardContentTable>
+    );
+  };
+}

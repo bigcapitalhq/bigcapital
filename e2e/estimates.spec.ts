@@ -114,7 +114,12 @@ test.describe('estimates', () => {
     });
 
     const row = await filterEstimatesByNumber(page, estimateNumber);
-    await expect(row).toContainText(displayName, { timeout: 15_000 });
+    const id = await row.getAttribute('data-estimate-id');
+    await expect(
+      page
+        .locator(`[data-estimate-id="${id}"]`)
+        .getByText(displayName, { exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
   });
 
   test('should edit an estimate successfully.', async ({ page }) => {
@@ -139,7 +144,12 @@ test.describe('estimates', () => {
     await waitForEstimatesList(page);
 
     const editedRow = await filterEstimatesByNumber(page, estimateNumber);
-    await expect(editedRow).toContainText(newReference, { timeout: 15_000 });
+    const id = await editedRow.getAttribute('data-estimate-id');
+    await expect(
+      page
+        .locator(`[data-estimate-id="${id}"]`)
+        .getByText(newReference, { exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
   });
 
   test('should delete an estimate successfully.', async ({ page }) => {

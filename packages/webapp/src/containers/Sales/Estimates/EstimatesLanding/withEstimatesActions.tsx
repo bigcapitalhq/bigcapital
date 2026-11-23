@@ -12,7 +12,7 @@ import {
 export interface WithEstimatesActionsProps {
   setEstimatesTableState: (state: Partial<TableQuery>) => void;
   resetEstimatesTableState: () => void;
-  setEstimatesSelectedRows: (selectedRows: Array<unknown>) => void;
+  setEstimatesSelectedRows: (selectedRows: number[]) => void;
   resetEstimatesSelectedRows: () => void;
 }
 
@@ -22,7 +22,7 @@ export const mapDispatchToProps = (
   setEstimatesTableState: (state: Partial<TableQuery>) =>
     dispatch(setEstimatesTableState(state)),
   resetEstimatesTableState: () => dispatch(resetEstimatesTableState()),
-  setEstimatesSelectedRows: (selectedRows: Array<unknown>) =>
+  setEstimatesSelectedRows: (selectedRows: number[]) =>
     dispatch(setEstimatesSelectedRows(selectedRows)),
   resetEstimatesSelectedRows: () => dispatch(resetEstimatesSelectedRows()),
 });
