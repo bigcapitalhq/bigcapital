@@ -16,6 +16,7 @@ export * from "./sales-by-items";
 export * from "./purchases-by-items";
 export * from "./inventory-valuation";
 export * from "./inventory-details";
+export * from "./inventory-summary";
 export * from "./sales-tax-liability";
 export * from "./budget-vs-actual";
 export * from "./transactions-reference";
