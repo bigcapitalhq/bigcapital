@@ -164,3 +164,32 @@ test('tax rates sort by numeric rate and keep the status action with the record'
     page.getByRole('menuitem', { name: 'Activate Tax Rate', exact: true }),
   ).toBeVisible();
 });
+
+test('item category selection follows its ID after sorting', async ({
+  page,
+}) => {
+  await page.route(
+    (url) => url.pathname === '/api/item-categories',
+    (route) =>
+      route.fulfill({
+        json: [
+          { id: 1, name: 'Tools', count: 5 },
+          { id: 2, name: 'Parts', count: 2 },
+        ],
+      }),
+  );
+  await page.goto('/items/categories');
+  const first = page.getByTestId('category-row').first();
+  await expect(first).toHaveText('Tools');
+  await page
+    .getByRole('checkbox', { name: 'Select row 1', exact: true })
+    .press('Space');
+  const header = page.getByTitle('Count', { exact: true });
+  await header.hover();
+  await header.locator('[data-icon="chevron-down"]').click();
+  await page.getByRole('menuitem', { name: 'Sort Asc' }).click();
+  await expect(first).toHaveText('Parts');
+  await expect(
+    page.getByRole('checkbox', { name: 'Select row 2', exact: true }),
+  ).toBeChecked();
+});

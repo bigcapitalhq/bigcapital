@@ -11,7 +11,7 @@ import {
 
 interface ItemCategoriesState {
   tableState: TableQuery;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery: TableQuery = {
@@ -38,7 +38,7 @@ const reducerInstance = createReducer(initialState, {
 
   [ITEMS_CATEGORIES_SET_SELECTED_ROWS]: (
     state: ItemCategoriesState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

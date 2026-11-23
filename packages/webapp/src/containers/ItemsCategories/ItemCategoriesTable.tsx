@@ -1,5 +1,6 @@
+import { BP_Table as BlueprintTable } from '@bigcapitalhq/blueprintjs-react-table';
+import '@bigcapitalhq/blueprintjs-react-table/styles.css';
 import * as FF from 'fp-ts/function';
-import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
@@ -10,17 +11,27 @@ import type { WithItemCategoriesProps } from './withItemCategories';
 import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import { DataTable, TableSkeletonRows } from '@/components';
+import {
+  DashboardContentTable,
+  MaterialProgressBar,
+  EmptyStatus,
+} from '@/components';
+import {
+  getDashboardTableSizing,
+  getRowId,
+  TABLE_LOADING_OPTIONS,
+  useTableRowSelection,
+} from '@/components/Datatable/blueprintTable';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+const EMPTY_ROWS: ItemCategoryTableRow[] = [];
 
 interface ItemsCategoryTableProps
   extends WithAlertActionsProps,
     WithDialogActionsProps,
     WithItemCategoriesActionsProps,
-    Pick<WithItemCategoriesProps, 'itemsCategoriesSelectedRows'> {
-  tableProps?: Record<string, unknown>;
-}
+    Pick<WithItemCategoriesProps, 'itemsCategoriesSelectedRows'> {}
 
 interface ActionMenuListPayload {
   onDeleteCategory: (category: ItemCategoryTableRow) => void;
@@ -31,9 +42,6 @@ interface ActionMenuListPayload {
  * Items categories table.
  */
 function ItemsCategoryTable({
-  // #ownProps
-  tableProps,
-
   // #withItemCategoriesActions
   setItemsCategoriesSelectedRows,
 
@@ -53,19 +61,9 @@ function ItemsCategoryTable({
     itemsCategories,
     itemsCategoriesSettings,
   } = useItemsCategoriesContext();
-  const tableSize = itemsCategoriesSettings?.tableSize as string | undefined;
 
   // Table columns.
   const columns = useItemsCategoriesTableColumns();
-
-  // Handle selected rows change.
-  const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows: Array<{ original: ItemCategoryTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) ?? [];
-      setItemsCategoriesSelectedRows(selectedIds);
-    },
-    [setItemsCategoriesSelectedRows],
-  );
 
   // Handle delete Item.
   const handleDeleteCategory = ({ id }: ItemCategoryTableRow) => {
@@ -77,33 +75,49 @@ function ItemsCategoryTable({
     openDialog('item-category-form', { action: 'edit', id: category.id });
   };
 
+  const { rowSelection, onRowSelectionChange } = useTableRowSelection(
+    itemsCategoriesSelectedRows,
+    setItemsCategoriesSelectedRows,
+  );
+
   const payload: ActionMenuListPayload = {
     onDeleteCategory: handleDeleteCategory,
     onEditCategory: handleEditCategory,
   };
 
   return (
-    <DataTable
-      noInitialFetch={true}
-      columns={columns}
-      data={itemsCategories || []}
-      loading={isCategoriesLoading}
-      headerLoading={isCategoriesLoading}
-      progressBarLoading={isCategoriesFetching}
-      expandable={false}
-      sticky={true}
-      selectionColumn={true}
-      onSelectedRowsChange={handleSelectedRowsChange}
-      selectedRowsIds={itemsCategoriesSelectedRows}
-      autoResetSelectedRows={false}
-      TableLoadingRenderer={TableSkeletonRows}
-      noResults={intl.get('there_is_no_items_categories_in_table_yet')}
-      rowTestId={'category-row'}
-      payload={payload}
-      ContextMenu={ActionMenuList}
-      size={tableSize}
-      {...tableProps}
-    />
+    <DashboardContentTable>
+      {isCategoriesFetching && !isCategoriesLoading && <MaterialProgressBar />}
+      <BlueprintTable
+        columns={columns}
+        data={itemsCategories ?? EMPTY_ROWS}
+        getRowId={getRowId}
+        enableRowHeader={false}
+        {...getDashboardTableSizing(
+          itemsCategoriesSettings?.tableSize === 'small',
+        )}
+        enableSorting
+        getCellProps={({ row, column }) => ({
+          'data-testId': column.id === 'name' ? 'category-row' : undefined,
+          'data-category-id': row.original.id,
+        })}
+        showRowSelectionCheckboxes
+        rowSelection={rowSelection}
+        onRowSelectionChange={onRowSelectionChange}
+        enableGhostCells={isCategoriesLoading}
+        loadingOptions={isCategoriesLoading ? TABLE_LOADING_OPTIONS : undefined}
+        enableBodyContextMenu={!isCategoriesFetching}
+        bodyContextMenuRenderer={(context) => {
+          const row = context.getTargetRow();
+          return row && <ActionMenuList row={row} payload={payload} />;
+        }}
+      />
+      {!isCategoriesLoading && !itemsCategories?.length && (
+        <EmptyStatus
+          title={intl.get('there_is_no_items_categories_in_table_yet')}
+        />
+      )}
+    </DashboardContentTable>
   );
 }
 

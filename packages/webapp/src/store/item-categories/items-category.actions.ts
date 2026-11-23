@@ -18,9 +18,7 @@ export const setItemsCategoriesTableState = (queries: Partial<TableQuery>) => {
 /**
  * Sets the items categories selected rows.
  */
-export const setItemsCategoriesSelectedRows = (
-  selectedRows: Array<unknown>,
-) => {
+export const setItemsCategoriesSelectedRows = (selectedRows: number[]) => {
   return {
     type: ITEMS_CATEGORIES_SET_SELECTED_ROWS,
     payload: selectedRows,
