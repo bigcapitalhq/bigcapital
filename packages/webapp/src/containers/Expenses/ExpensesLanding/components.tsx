@@ -10,11 +10,12 @@ import {
   Menu,
   MenuDivider,
 } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'classnames';
 import React, { ReactNode } from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { Expense } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { FormattedMessage as T, Icon, If, Can } from '@/components';
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { CLASSES } from '@/constants/classes';
@@ -164,65 +165,50 @@ export function ExpenseAccountAccessor(expense: ExpenseTableRow): ReactNode {
   return null;
 }
 
-/**
- * Retrieve the expenses table columns.
- */
-export function useExpensesTableColumns(): DataTableColumn<ExpenseTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, ExpenseTableRow>();
+
+export function useExpensesTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedDate', {
           id: 'payment_date',
-          Header: intl.get('payment_date'),
-          accessor: 'formattedDate',
-          width: 140,
-          className: 'payment_date',
-          clickable: true,
-        },
-        {
+          header: intl.get('payment_date'),
+          size: 140,
+        }),
+        column.accessor('formattedAmount', {
           id: 'amount',
-          Header: intl.get('full_amount'),
-          accessor: 'formattedAmount',
-          align: 'right',
-          width: 150,
-          clickable: true,
-          money: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('full_amount'),
+          size: 150,
+          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+        }),
+        column.accessor((row) => row.paymentAccount?.name, {
           id: 'payment_account',
-          Header: intl.get('payment_account'),
-          accessor: 'paymentAccount.name',
-          width: 150,
-          clickable: true,
-          className: clsx(CLASSES.TEXT_MUTED),
-        },
-        {
+          header: intl.get('payment_account'),
+          size: 150,
+          meta: { bodyCellClassName: CLASSES.TEXT_MUTED },
+        }),
+        column.accessor((row) => row, {
           id: 'expense_account',
-          Header: intl.get('expense_account'),
-          accessor: (row: ExpenseTableRow) => ExpenseAccountAccessor(row),
-          width: 160,
-          disableSortBy: true,
-          clickable: true,
-        },
-        {
+          header: intl.get('expense_account'),
+          size: 160,
+          cell: ({ row }) => ExpenseAccountAccessor(row.original),
+          enableSorting: false,
+        }),
+        column.accessor('isPublished', {
           id: 'published',
-          Header: intl.get('publish'),
-          accessor: (row: ExpenseTableRow) => PublishAccessor(row),
-          width: 100,
-          className: 'publish',
-          clickable: true,
-        },
-        {
+          header: intl.get('publish'),
+          size: 100,
+          cell: ({ row }) => PublishAccessor(row.original),
+        }),
+        column.accessor('description', {
           id: 'description',
-          Header: intl.get('description'),
-          accessor: (row: ExpenseTableRow) => DescriptionAccessor(row),
-          width: 150,
-          className: 'description',
-          disableSortBy: true,
-          clickable: true,
-        },
-      ] as DataTableColumn<ExpenseTableRow>[],
+          header: intl.get('description'),
+          size: 150,
+          cell: ({ row }) => DescriptionAccessor(row.original),
+          enableSorting: false,
+        }),
+      ]),
     [],
   );
 }

@@ -14,7 +14,7 @@ import {
 export interface WithExpensesActionsProps {
   setExpensesTableState: (state: Partial<TableQuery>) => void;
   resetExpensesTableState: () => void;
-  setExpensesSelectedRows: (selectedRows: Array<unknown>) => void;
+  setExpensesSelectedRows: (selectedRows: number[]) => void;
   resetExpensesSelectedRows: () => void;
 }
 

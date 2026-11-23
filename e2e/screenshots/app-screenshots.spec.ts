@@ -408,7 +408,7 @@ test.describe('app screenshots', () => {
   test('captures the expenses list', async ({ page }) => {
     await capture(page, '/expenses', 'expenses.png', {
       title: 'Expenses',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'expense-row',
     });
   });
 

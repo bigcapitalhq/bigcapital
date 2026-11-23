@@ -33,6 +33,14 @@ const lists = [
     fields: { journal_type: 'Accrual', entries: [] },
     cell: 'Accrual',
   },
+  {
+    path: '/expenses',
+    endpoint: '/api/expenses',
+    rowTestId: 'expense-row',
+    identifier: 'formatted_date',
+    fields: { formatted_amount: '$42.25', categories: [] },
+    cell: '$42.25',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({
