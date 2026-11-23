@@ -65,6 +65,14 @@ const lists = [
     fields: { quantity_on_hand: 3, reorder_point: 5 },
     cell: '3',
   },
+  {
+    path: '/inventory-adjustments',
+    endpoint: '/api/inventory-adjustments',
+    rowTestId: 'inventory-adjustment-row',
+    identifier: 'reference_no',
+    fields: { date: '2026-01-01', reason: 'Stock count' },
+    cell: 'Stock count',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({

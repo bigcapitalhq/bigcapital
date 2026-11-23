@@ -1,5 +1,5 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
+import { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
@@ -11,23 +11,27 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import type { InventoryAdjustment } from '@bigcapital/sdk-ts';
-import { DataTable } from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.INVENTORY_ADJUSTMENTS,
+  rowName: 'inventory-adjustment',
+  identifierColumn: 'reference_no',
+  ActionsMenu,
+});
 
 interface InventoryAdjustmentDataTableProps
   extends Pick<WithInventoryAdjustmentsProps, 'inventoryAdjustmentTableState'>,
     WithInventoryAdjustmentActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps {
-  tableProps?: Record<string, unknown>;
-}
+    WithDrawerActionsProps {}
 
 /**
  * Inventory adjustments datatable.
@@ -47,10 +51,8 @@ function InventoryAdjustmentDataTable({
 
   // #withDrawerActions
   openDrawer,
-
-  // #ownProps
-  tableProps,
 }: InventoryAdjustmentDataTableProps) {
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const {
     isAdjustmentsLoading,
     isAdjustmentsFetching,
@@ -84,65 +86,27 @@ function InventoryAdjustmentDataTable({
   // Inventory adjustments columns.
   const columns = useInventoryAdjustmentsColumns();
 
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.INVENTORY_ADJUSTMENTS);
-
-  // Handle the table fetch data once states changing.
-  const handleDataTableFetchData = useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setInventoryAdjustmentTableState({
-        pageSize,
-        pageIndex,
-        sortBy,
-      });
-    },
-    [setInventoryAdjustmentTableState],
-  );
-  // Handle cell click.
-  const handleCellClick = (
-    cell: { row: { original: InventoryAdjustment } },
-    _event: React.MouseEvent,
-  ) => {
-    openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, {
-      inventoryId: cell.row.original.id,
-    });
-  };
   return (
-    <DataTable
+    <Table
       columns={columns}
-      data={inventoryAdjustments ?? []}
+      data={inventoryAdjustments}
+      total={pagination?.total}
       loading={isAdjustmentsLoading}
-      headerLoading={isAdjustmentsLoading}
-      progressBarLoading={isAdjustmentsFetching}
-      noInitialFetch={true}
-      onFetchData={handleDataTableFetchData}
-      manualSortBy={true}
-      selectionColumn={true}
-      pagination={true}
-      initialPageSize={inventoryAdjustmentTableState?.pageSize ?? 10}
-      rowsCount={pagination?.total ?? 0}
-      autoResetSortBy={false}
-      autoResetPage={false}
-      onCellClick={handleCellClick}
-      initialColumnsWidths={initialColumnsWidths}
-      onColumnResizing={handleColumnResizing}
-      payload={{
+      fetching={isAdjustmentsFetching}
+      compact={false}
+      query={inventoryAdjustmentTableState}
+      setQuery={setInventoryAdjustmentTableState}
+      selectedIds={selectedIds}
+      setSelectedIds={setSelectedIds}
+      emptyMessage={intl.get(
+        'there_is_no_inventory_adjustments_transactions_yet',
+      )}
+      actions={{
         onDelete: handleDeleteAdjustment,
         onEdit: handleEditAdjustment,
         onPublish: handlePublishInventoryAdjustment,
         onViewDetails: handleViewDetailInventoryAdjustment,
       }}
-      ContextMenu={ActionsMenu}
-      noResults={intl.get('there_is_no_inventory_adjustments_transactions_yet')}
-      {...tableProps}
     />
   );
 }
