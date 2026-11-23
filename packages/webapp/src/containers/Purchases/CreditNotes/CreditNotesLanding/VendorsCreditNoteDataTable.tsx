@@ -1,5 +1,4 @@
 import * as FF from 'fp-ts/function';
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { VendorsCreditNoteEmptyStatus } from './VendorsCreditNoteEmptyStatus';
@@ -8,30 +7,30 @@ import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
 import type { VendorCreditTableRow } from './components';
 import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
+import type { WithVendorsCreditNotesActionsProps } from './withVendorsCreditNotesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
 
-interface WithVendorsCreditNotesActionsProps {
-  setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
-  setVendorsCreditNoteSelectedRows: (ids: number[]) => void;
-}
+const Table = createDashboardListTable({
+  tableName: TABLES.VENDOR_CREDITS,
+  rowName: 'vendor-credit',
+  identifierColumn: 'credit_number',
+  ActionsMenu,
+});
 
 interface VendorsCreditNoteDataTableProps
-  extends Pick<WithVendorsCreditNotesProps, 'vendorsCreditNoteTableState'>,
+  extends Pick<
+      WithVendorsCreditNotesProps,
+      'vendorsCreditNoteTableState' | 'vendorsCreditNoteSelectedRows'
+    >,
     WithVendorsCreditNotesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
@@ -41,6 +40,7 @@ function VendorsCreditNoteDataTableInner({
   setVendorsCreditNoteTableState,
   setVendorsCreditNoteSelectedRows,
   vendorsCreditNoteTableState,
+  vendorsCreditNoteSelectedRows,
   openAlert,
   openDrawer,
   openDialog,
@@ -55,41 +55,8 @@ function VendorsCreditNoteDataTableInner({
     isVendorCreditsLoading,
     vendorCreditSettings,
   } = useVendorsCreditNoteListContext();
-  const creditNoteTableSize = vendorCreditSettings?.tableSize as
-    | string
-    | undefined;
 
   const columns = useVendorsCreditNoteTableColumns();
-
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.VENDOR_CREDITS);
-
-  const handleDataTableFetchData = React.useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setVendorsCreditNoteTableState({
-        pageSize,
-        pageIndex,
-        sortBy,
-      });
-    },
-    [setVendorsCreditNoteTableState],
-  );
-
-  const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows: Array<{ original: VendorCreditTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setVendorsCreditNoteSelectedRows(selectedIds);
-    },
-    [setVendorsCreditNoteSelectedRows],
-  );
 
   if (isEmptyStatus) {
     return <VendorsCreditNoteEmptyStatus />;
@@ -107,12 +74,6 @@ function VendorsCreditNoteDataTableInner({
     history.push(`/vendor-credits/${vendorCredit.id}/edit`);
   };
 
-  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
-    openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, {
-      vendorCreditId: cell.row.original.id,
-    });
-  };
-
   const handleRefundCreditVendor = ({ id }: VendorCreditTableRow) => {
     openDialog('refund-vendor-credit', { vendorCreditId: id });
   };
@@ -126,47 +87,37 @@ function VendorsCreditNoteDataTableInner({
   };
 
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={vendorCredits ?? []}
-        loading={isVendorCreditsLoading}
-        headerLoading={isVendorCreditsLoading}
-        progressBarLoading={isVendorCreditsFetching}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        initialPageSize={vendorsCreditNoteTableState?.pageSize ?? 10}
-        rowsCount={pagination?.total ?? 0}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        size={creditNoteTableSize}
-        payload={{
-          onViewDetails: handleViewDetailVendorCredit,
-          onDelete: handleDeleteVendorCreditNote,
-          onEdit: hanldeEditVendorCreditNote,
-          onRefund: handleRefundCreditVendor,
-          onOpen: handleOpenCreditNote,
-          onReconcile: handleReconcileVendorCredit,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={vendorCredits}
+      total={pagination?.total}
+      loading={isVendorCreditsLoading}
+      fetching={isVendorCreditsFetching}
+      compact={vendorCreditSettings?.tableSize === 'small'}
+      query={vendorsCreditNoteTableState}
+      setQuery={setVendorsCreditNoteTableState}
+      selectedIds={vendorsCreditNoteSelectedRows}
+      setSelectedIds={setVendorsCreditNoteSelectedRows}
+      actions={{
+        onViewDetails: handleViewDetailVendorCredit,
+        onDelete: handleDeleteVendorCreditNote,
+        onEdit: hanldeEditVendorCreditNote,
+        onRefund: handleRefundCreditVendor,
+        onOpen: handleOpenCreditNote,
+        onReconcile: handleReconcileVendorCredit,
+      }}
+    />
   );
 }
 
 export const VendorsCreditNoteDataTable = FF.pipe(
   VendorsCreditNoteDataTableInner,
-  withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
-    vendorsCreditNoteTableState,
-  })),
+  withVendorsCreditNotes(
+    ({ vendorsCreditNoteTableState, vendorsCreditNoteSelectedRows }) => ({
+      vendorsCreditNoteTableState,
+      vendorsCreditNoteSelectedRows,
+    }),
+  ),
   withDialogActions,
   withDrawerActions,
   withAlertActions,

@@ -17,6 +17,14 @@ const lists = [
     fields: { payment_account: { name: 'Checking' }, amount: 42 },
     cell: 'Checking',
   },
+  {
+    path: '/vendor-credits',
+    endpoint: '/api/vendor-credits',
+    rowTestId: 'vendor-credit-row',
+    identifier: 'vendor_credit_number',
+    fields: { formatted_credits_remaining: '$42.25', is_draft: true },
+    cell: '$42.25',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({

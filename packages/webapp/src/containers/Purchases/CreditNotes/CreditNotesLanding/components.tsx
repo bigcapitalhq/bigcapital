@@ -1,9 +1,10 @@
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { VendorCreditsListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 import { CLASSES } from '@/constants/classes';
@@ -129,77 +130,52 @@ export function StatusAccessor(creditNote: VendorCreditTableRow) {
   );
 }
 
-export function useVendorsCreditNoteTableColumns(): DataTableColumn<VendorCreditTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, VendorCreditTableRow>();
+
+export function useVendorsCreditNoteTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedVendorCreditDate', {
           id: 'credit_date',
-          Header: intl.get('date'),
-          accessor: 'formattedVendorCreditDate',
-          width: 110,
-          className: 'credit_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('date'),
+          size: 110,
+        }),
+        column.accessor((row) => row.vendor?.displayName, {
           id: 'vendor',
-          Header: intl.get('vendor_name'),
-          accessor: 'vendor.displayName',
-          width: 180,
-          className: 'vendor_id',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('vendor_name'),
+          size: 180,
+        }),
+        column.accessor('vendorCreditNumber', {
           id: 'credit_number',
-          Header: intl.get('vendor_credits.column.vendor_credit_no'),
-          accessor: 'vendorCreditNumber',
-          width: 100,
-          className: 'credit_number',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('vendor_credits.column.vendor_credit_no'),
+          size: 100,
+        }),
+        column.accessor('formattedAmount', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: 'formattedAmount',
-          width: 120,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('amount'),
+          size: 120,
+          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+        }),
+        column.accessor('formattedCreditsRemaining', {
           id: 'balance',
-          Header: intl.get('balance'),
-          accessor: 'formattedCreditsRemaining',
-          width: 120,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          disableSortBy: true,
-          money: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('balance'),
+          size: 120,
+          enableSorting: false,
+          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+        }),
+        column.accessor((row) => row, {
           id: 'status',
-          Header: intl.get('status'),
-          accessor: StatusAccessor,
-          width: 160,
-          className: 'status',
-          clickable: true,
-        },
-        {
+          header: intl.get('status'),
+          size: 160,
+          cell: ({ row }) => StatusAccessor(row.original),
+        }),
+        column.accessor('referenceNo', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'referenceNo',
-          width: 90,
-          className: 'reference_no',
-          clickable: true,
-          textOverview: true,
-        },
-      ] as DataTableColumn<VendorCreditTableRow>[],
+          header: intl.get('reference_no'),
+          size: 90,
+        }),
+      ]),
     [],
   );
 }

@@ -110,7 +110,7 @@ function VendorsCreditNoteActionsBarInner({
 
   if (!isEmpty(vendorsCreditNoteSelectedRows)) {
     const handleBulkDelete = () => {
-      openBulkDeleteDialog(vendorsCreditNoteSelectedRows as number[]);
+      openBulkDeleteDialog(vendorsCreditNoteSelectedRows);
     };
 
     return (
