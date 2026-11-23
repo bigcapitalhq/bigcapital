@@ -59,6 +59,8 @@
   "sub_account": "Underkonto?",
   "account_type": "Typ av konto",
   "account_name": "Kontots namn",
+  "accounts.expand_all": "Expandera alla konton",
+  "accounts.collapse_all": "Fäll ihop alla konton",
   "account_code": "Kontokod",
   "parent_account": "Föräldrakonto",
   "edit": "Redigera",

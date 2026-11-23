@@ -453,6 +453,9 @@ importers:
       '@bigcapital/utils':
         specifier: workspace:*
         version: link:../../shared/bigcapital-utils
+      '@bigcapitalhq/blueprintjs-react-table':
+        specifier: 0.3.1
+        version: 0.3.1(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs-formik/core':
         specifier: ^0.3.9
         version: 0.3.9(patch_hash=c6zgqlrxou2xk4zpcei7thyhui)(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
@@ -471,6 +474,9 @@ importers:
       '@blueprintjs/datetime':
         specifier: ^6.3.4
         version: 6.3.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/icons':
+        specifier: 6.17.0
+        version: 6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/select':
         specifier: ^6.4.4
         version: 6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -504,6 +510,12 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.62.0
         version: 5.91.3(@tanstack/react-query@5.90.21(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-table':
+        specifier: 9.3.1
+        version: 9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-virtual':
+        specifier: 3.14.9
+        version: 3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@testing-library/react':
         specifier: ^9.4.0
         version: 9.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2214,6 +2226,16 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@bigcapitalhq/blueprintjs-react-table@0.3.1':
+    resolution: {integrity: sha512-qj4msZfQ5EsSAB2o5ISH1XtiZmCw8rqlN3/qgo1LINGAdU0KI3ms6JhFqDEr6Ix/EMbRWhVdC/nhCnYULnMM+g==}
+    peerDependencies:
+      '@blueprintjs/core': ^6.18.0
+      '@blueprintjs/icons': ^6.13.0
+      '@tanstack/react-table': ^9.0.0
+      '@tanstack/react-virtual': ^3.14.9
+      react: ^18.2.0
+      react-dom: ^18.2.0
 
   '@blueprintjs-formik/core@0.3.9':
     resolution: {integrity: sha512-R2wKXlTxN7VUBWvU5o6tNDxC+MtjjxxmHQT5hPmp4h6TCqdypSIiiI6mj7jqDvLmw6rh5gArhY8AS6jvMMr8Sw==}
@@ -5194,6 +5216,38 @@ packages:
     resolution: {integrity: sha512-0Lu6y5t+tvlTJMTO7oh5NSpJfpg/5D41LlThfepTixPYkJ0sE2Jj0m0f6yYqujBwIXlId87e234+MxG3D3g7kg==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@tanstack/react-store@0.11.4':
+    resolution: {integrity: sha512-JAQz7LcABVRbxZ6qCd4u/KqDaqBc1qmcOWz7XBTdav1Ib363HQdihCQF1A755nDhoi9VEd6UqZ5thWVKTwIIXw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@tanstack/react-table@9.3.1':
+    resolution: {integrity: sha512-E6Ya5TnY6EaGyZYIUqig/29Lr/gJSAubQkLJFqiWkUl5nRCr0Xr9hvJot+NiRTtG+TzGxHTiqUW3bnLtQxlHug==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: '>=18'
+
+  '@tanstack/react-virtual@3.14.9':
+    resolution: {integrity: sha512-qZyr0FZDP8rDC4WBhsryIZmAd9bveJvFGUJJtskWaew6/0dTRS6wZxnR6VQ5bY2KwL3LjerrHqQLk3a0GKcPXQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@tanstack/store@0.11.3':
+    resolution: {integrity: sha512-/Mt3h2Qe67HmRMc5SJ+8jM2Fp7O4fBbwOlS0ujUvx34KgAvkvdLSHrJatv0PJG5fbvlDsACTawMMY4ptCpVI8w==}
+
+  '@tanstack/table-core@9.3.1':
+    resolution: {integrity: sha512-zQvlxSNi2qGM3L4jh85Z6hqMfdIR5qOfD9KHOU32nuKFJGN0RlJ7UvV1lsPb1fPVhpFYI0VP3jJGxLdLDpTKjQ==}
+    engines: {node: '>=20'}
+
+  '@tanstack/virtual-core@3.17.7':
+    resolution: {integrity: sha512-bp+v10y65sp2H7WpWfIMyxTNfl8ZVfxFTLRjPIFRryi6FV/J33z4IS53WO4pTk36KlvJ4iLiQz+oaydDC1xbcA==}
 
   '@testing-library/dom@10.1.0':
     resolution: {integrity: sha512-wdsYKy5zupPyLCW2Je5DLHSxSfbIp6h80WoHOQc+RPtmPGA52O9x5MJEkv92Sjonpq+poOAtUKhh1kBGAXBrNA==}
@@ -16298,6 +16352,16 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
+  '@bigcapitalhq/blueprintjs-react-table@0.3.1(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blueprintjs/icons': 6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-table': 9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-virtual': 3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      classnames: 2.5.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@blueprintjs-formik/core@0.3.9(patch_hash=c6zgqlrxou2xk4zpcei7thyhui)(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
     dependencies:
       '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -20193,6 +20257,38 @@ snapshots:
     dependencies:
       '@tanstack/query-core': 5.90.20
       react: 18.3.1
+
+  '@tanstack/react-store@0.11.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/store': 0.11.3
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      use-sync-external-store: 1.7.0(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.4
+
+  '@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/react-store': 0.11.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/table-core': 9.3.1
+      react: 18.3.1
+    transitivePeerDependencies:
+      - '@types/react'
+      - react-dom
+
+  '@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/virtual-core': 3.17.7
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@tanstack/store@0.11.3': {}
+
+  '@tanstack/table-core@9.3.1':
+    dependencies:
+      '@tanstack/store': 0.11.3
+
+  '@tanstack/virtual-core@3.17.7': {}
 
   '@testing-library/dom@10.1.0':
     dependencies:

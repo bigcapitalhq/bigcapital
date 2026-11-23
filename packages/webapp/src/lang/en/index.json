@@ -120,6 +120,8 @@
   "sub_account": "Sub account?",
   "account_type": "Account Type",
   "account_name": "Account Name",
+  "accounts.expand_all": "Expand all accounts",
+  "accounts.collapse_all": "Collapse all accounts",
   "account_code": "Account Code",
   "parent_account": "Parent Account",
   "edit": "Edit",

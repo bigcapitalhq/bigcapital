@@ -60,6 +60,8 @@
   "sub_account": "حساب فرعي؟",
   "account_type": "نوع الحساب",
   "account_name": "أسم الحساب",
+  "accounts.expand_all": "توسيع جميع الحسابات",
+  "accounts.collapse_all": "طي جميع الحسابات",
   "account_code": "رمز الحساب",
   "parent_account": "الحساب الأصل",
   "edit": "تعديل",

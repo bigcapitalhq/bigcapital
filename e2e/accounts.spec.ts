@@ -78,7 +78,16 @@ async function createAccount(
  */
 async function filterAccountsBy(page: Page, text: string) {
   await page.getByRole('button', { name: /filter|filters applied/i }).click();
-  await page.getByPlaceholder('Value').first().fill(text);
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.pathname === '/api/accounts' &&
+        !!url.searchParams.get('stringified_filter_roles')?.includes(text)
+      );
+    }),
+    page.getByPlaceholder('Value').first().fill(text),
+  ]);
 
   const row = page.getByTestId('account-row').filter({ hasText: text }).first();
   await expect(row).toBeVisible({ timeout: 30_000 });
@@ -146,7 +155,61 @@ test.describe('accounts chart', () => {
     await createAccount(page, { name, code });
 
     const row = await filterAccountsBy(page, name);
-    await expect(row).toContainText(code, { timeout: 15_000 });
+    const id = await row.getAttribute('data-account-id');
+    await expect(
+      page.locator(`[data-account-id="${id}"]`).getByText(code, { exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('opens and bulk-selects the intended child account', async ({ page }) => {
+    await waitForAccountsChart(page);
+    const name = accountName();
+    const childName = `${name} child`;
+    await createAccount(page, { name, code: accountCode() });
+    const parent = await filterAccountsBy(page, name);
+    await parent.click({ button: 'right' });
+    await page.getByRole('menuitem', { name: 'New Child Account' }).click();
+
+    const dialog = page.getByTestId('account-form-dialog');
+    await dialog.getByTestId('account-name-input').fill(childName);
+    await dialog.getByTestId('account-code-input').fill(accountCode());
+    await dialog.getByRole('button', { name: 'Submit' }).click();
+    await expect(dialog).toBeHidden();
+
+    const child = page.getByTestId('account-row').filter({ hasText: childName });
+    await parent.getByRole('button', { name: /expand row/i }).click();
+    await expect(child).toBeVisible();
+    await expect(page.locator('.drawer-portal')).toBeHidden();
+    await page.getByRole('button', { name: 'Collapse all accounts' }).click();
+    await expect(child).toBeHidden();
+    await page.getByRole('button', { name: 'Expand all accounts' }).click();
+    await expect(child).toBeVisible();
+
+    const id = await child.getAttribute('data-account-id');
+    const [details] = await Promise.all([
+      page.waitForResponse(
+        (response) => new URL(response.url()).pathname === `/api/accounts/${id}`,
+      ),
+      child.click(),
+    ]);
+    expect(details.ok()).toBeTruthy();
+    await expect(page.locator('.drawer-portal')).toContainText(childName);
+    await page.keyboard.press('Escape');
+
+    const childCheckbox = page.getByRole('checkbox', {
+      name: 'Select row 2',
+      exact: true,
+    });
+    await childCheckbox.press('Space');
+    await expect(childCheckbox).toBeChecked();
+    await page.getByRole('button', { name: 'Inactivate', exact: true }).click();
+    const [bulkRequest] = await Promise.all([
+      page.waitForRequest('**/api/accounts/bulk-inactivate'),
+      page.getByRole('button', { name: 'Inactivate (1)', exact: true }).click(),
+    ]);
+    expect(bulkRequest.postDataJSON().ids).toEqual([Number(id)]);
+    await expect(parent).toBeVisible();
+    await expect(child).toBeHidden();
   });
 
   test('should edit an account successfully.', async ({ page }) => {
