@@ -57,6 +57,14 @@ const lists = [
     fields: { company_name: 'Example company' },
     cell: 'Example company',
   },
+  {
+    path: '/items',
+    endpoint: '/api/items',
+    rowTestId: 'item-row',
+    identifier: 'name',
+    fields: { quantity_on_hand: 3, reorder_point: 5 },
+    cell: '3',
+  },
 ];
 for (const list of lists) {
   test(`${list.path} keeps record selection and actions on the correct page`, async ({

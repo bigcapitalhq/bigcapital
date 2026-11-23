@@ -1,5 +1,5 @@
 import * as FF from 'fp-ts/function';
-import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
 import { ItemsEmptyStatus } from './ItemsEmptyStatus';
@@ -12,29 +12,26 @@ import type { WithItemsActionsProps } from './withItemsActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import type { Row } from 'react-table';
-import { FormattedMessage as T } from '@/components';
-import {
-  DashboardContentTable,
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.ITEMS,
+  rowName: 'item',
+  identifierColumn: 'name',
+  ActionsMenu: ItemsActionMenuList,
+});
 
 interface ItemsDataTableProps
   extends WithItemsActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
     WithDrawerActionsProps,
-    Pick<WithItemsProps, 'itemsTableState' | 'itemsSelectedRows'> {
-  tableProps?: Record<string, unknown>;
-}
+    Pick<WithItemsProps, 'itemsTableState' | 'itemsSelectedRows'> {}
 
 interface ActionsMenuPayload {
   onDeleteItem: (item: ItemTableRow) => void;
@@ -66,9 +63,6 @@ function ItemsDataTableInner({
   // #withItems
   itemsTableState,
   itemsSelectedRows,
-
-  // #ownProps
-  tableProps,
 }: ItemsDataTableProps) {
   // Items list context.
   const {
@@ -79,51 +73,12 @@ function ItemsDataTableInner({
     isItemsFetching,
     itemsSettings,
   } = useItemsListContext();
-  const itemsTableSize = itemsSettings?.tableSize as string | undefined;
 
   // Datatable columns.
   const columns = useItemsTableColumns();
 
   // History context.
   const history = useHistory();
-
-  // Table row class names.
-  const rowClassNames = (row: Row<ItemTableRow>) => ({
-    inactive: !row.original.active,
-  });
-
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.ITEMS);
-
-  // Handle fetch data once the page index, size or sort by of the table change.
-  const handleFetchData = React.useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setItemsTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setItemsTableState],
-  );
-
-  // Handle selected rows change.
-  const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows: Array<{ original: ItemTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setItemsSelectedRows(selectedIds);
-    },
-    [setItemsSelectedRows],
-  );
 
   // Handle delete action Item.
   const handleDeleteItem = ({ id }: ItemTableRow) => {
@@ -165,14 +120,6 @@ function ItemsDataTableInner({
     return <ItemsEmptyStatus />;
   }
 
-  // Handle cell click.
-  const handleCellClick = (
-    cell: { row: { original: ItemTableRow } },
-    _event: React.MouseEvent,
-  ) => {
-    openDrawer(DRAWERS.ITEM_DETAILS, { itemId: cell.row.original.id });
-  };
-
   const payload: ActionsMenuPayload = {
     onDeleteItem: handleDeleteItem,
     onEditItem: handleEditItem,
@@ -184,42 +131,20 @@ function ItemsDataTableInner({
   };
 
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={items || []}
-        loading={isItemsLoading}
-        headerLoading={isItemsLoading}
-        progressBarLoading={isItemsFetching}
-        noInitialFetch={true}
-        selectionColumn={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={itemsSelectedRows}
-        autoResetSelectedRows={false}
-        spinnerProps={{ size: 30 }}
-        expandable={false}
-        sticky={true}
-        rowClassNames={rowClassNames}
-        pagination={true}
-        initialPageSize={itemsTableState?.pageSize || 10}
-        manualSortBy={true}
-        manualPagination={true}
-        rowsCount={pagination?.total || 0}
-        autoResetSortBy={false}
-        autoResetPage={true}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ItemsActionMenuList}
-        onFetchData={handleFetchData}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={itemsTableSize}
-        payload={payload}
-        noResults={<T id={'there_is_no_items_in_the_table_yet'} />}
-        {...tableProps}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={items}
+      total={pagination?.total}
+      loading={isItemsLoading}
+      fetching={isItemsFetching}
+      compact={itemsSettings?.tableSize === 'small'}
+      query={itemsTableState}
+      setQuery={setItemsTableState}
+      selectedIds={itemsSelectedRows}
+      setSelectedIds={setItemsSelectedRows}
+      emptyMessage={intl.get('there_is_no_items_in_the_table_yet')}
+      actions={payload}
+    />
   );
 }
 

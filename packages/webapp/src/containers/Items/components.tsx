@@ -9,11 +9,12 @@ import {
   Popover,
   Classes,
 } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { Item } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
 import {
   AbilitySubject,
@@ -84,8 +85,9 @@ export const ItemCodeAccessor = (row: ItemTableRow) =>
     ''
   );
 
-export const QuantityOnHandCell = ({ cell: { value }, row }: CellProps) => {
-  if (value === null || value === undefined || value === '') {
+export const QuantityOnHandCell = ({ item }: { item: ItemTableRow }) => {
+  const value = item.quantityOnHand;
+  if (isBlank(value)) {
     return null;
   }
   const quantityOnHand = Number(value);
@@ -94,10 +96,9 @@ export const QuantityOnHandCell = ({ cell: { value }, row }: CellProps) => {
     return null;
   }
   const reorderPoint =
-    row?.original?.reorderPoint === null ||
-    row?.original?.reorderPoint === undefined
+    item.reorderPoint === null || item.reorderPoint === undefined
       ? null
-      : Number(row.original.reorderPoint);
+      : Number(item.reorderPoint);
   const isLowStock =
     reorderPoint !== null &&
     !Number.isNaN(reorderPoint) &&
@@ -111,7 +112,7 @@ export const QuantityOnHandCell = ({ cell: { value }, row }: CellProps) => {
       })}
       title={isLowStock ? intl.get('reorder_point_reached') : undefined}
     >
-      {value as React.ReactNode}
+      {value}
     </span>
   );
 };
@@ -223,76 +224,55 @@ export const ItemsActionsTableCell = (props: ActionsMenuProps) => {
   );
 };
 
-/**
- * Retrieve all items table columns.
- */
-export const useItemsTableColumns = (): DataTableColumn<ItemTableRow>[] => {
+const column = createColumnHelper<BP_TableFeatures, ItemTableRow>();
+
+export function useItemsTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('name', {
           id: 'name',
-          Header: intl.get('item_name'),
-          accessor: 'name',
-          className: 'name',
-          width: 180,
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('item_name'),
+          size: 180,
+        }),
+        column.accessor('code', {
           id: 'code',
-          Header: intl.get('item_code'),
-          accessor: 'code',
-          className: clsx(Classes.TEXT_MUTED),
-          width: 120,
-          clickable: true,
-        },
-        {
+          header: intl.get('item_code'),
+          size: 120,
+          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+        }),
+        column.accessor('typeFormatted', {
           id: 'type',
-          Header: intl.get('item_type'),
-          accessor: ItemTypeAccessor,
-          className: 'item_type',
-          width: 120,
-          clickable: true,
-        },
-        {
+          header: intl.get('item_type'),
+          size: 120,
+          cell: ({ row }) => ItemTypeAccessor(row.original),
+        }),
+        column.accessor((row) => row.category?.name, {
           id: 'category',
-          Header: intl.get('category'),
-          accessor: 'category.name',
-          className: clsx(Classes.TEXT_MUTED),
-          width: 150,
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('category'),
+          size: 150,
+          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+        }),
+        column.accessor('sellPriceFormatted', {
           id: 'sell_price',
-          Header: intl.get('sell_price'),
-          accessor: 'sellPriceFormatted',
-          align: 'right',
-          width: 150,
-          clickable: true,
-          money: true,
-        },
-        {
+          header: intl.get('sell_price'),
+          size: 150,
+          meta: { bodyCellClassName: 'numeric-cell' },
+        }),
+        column.accessor('costPriceFormatted', {
           id: 'cost_price',
-          Header: intl.get('cost_price'),
-          accessor: 'costPriceFormatted',
-          align: 'right',
-          width: 150,
-          clickable: true,
-          money: true,
-        },
-        {
+          header: intl.get('cost_price'),
+          size: 150,
+          meta: { bodyCellClassName: 'numeric-cell' },
+        }),
+        column.accessor('quantityOnHand', {
           id: 'quantity_on_hand',
-          Header: intl.get('quantity_on_hand'),
-          accessor: 'quantityOnHand',
-          Cell: QuantityOnHandCell,
-          align: 'right',
-          width: 140,
-          clickable: true,
-          money: true,
-        },
-      ] as DataTableColumn<ItemTableRow>[],
+          header: intl.get('quantity_on_hand'),
+          size: 140,
+          cell: ({ row }) => <QuantityOnHandCell item={row.original} />,
+          meta: { bodyCellClassName: 'numeric-cell' },
+        }),
+      ]),
     [],
   );
-};
+}

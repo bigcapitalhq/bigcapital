@@ -401,7 +401,7 @@ test.describe('app screenshots', () => {
   test('captures the items list', async ({ page }) => {
     await capture(page, '/items', 'items.png', {
       title: 'Items',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'item-row',
     });
   });
 

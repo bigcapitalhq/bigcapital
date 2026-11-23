@@ -15,7 +15,7 @@ interface ItemsTableQuery extends Partial<TableQuery> {
 
 interface ItemsState {
   tableState: ItemsTableQuery;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery: ItemsTableQuery = {
@@ -44,7 +44,7 @@ const reducerInstance = createReducer(initialState, {
 
   [ITEMS_SET_SELECTED_ROWS]: (
     state: ItemsState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },
