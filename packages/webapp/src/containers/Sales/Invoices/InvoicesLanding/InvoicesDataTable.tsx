@@ -1,6 +1,13 @@
+import {
+  BP_Table,
+  withPagination,
+} from '@bigcapitalhq/blueprintjs-react-table';
+import { functionalUpdate } from '@tanstack/react-table';
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import '@bigcapitalhq/blueprintjs-react-table/styles.css';
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { InvoicesEmptyStatus } from './InvoicesEmptyStatus';
 import { useInvoicesListContext } from './InvoicesListProvider';
@@ -12,16 +19,20 @@ import type { WithInvoicesProps } from './withInvoices';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { BP_PaginatedTableProps } from '@bigcapitalhq/blueprintjs-react-table';
 import {
-  DataTable,
   DashboardContentTable,
-  TableSkeletonHeader,
-  TableSkeletonRows,
+  EmptyStatus,
+  MaterialProgressBar,
 } from '@/components';
+import {
+  getRowId,
+  TABLE_LOADING_OPTIONS,
+  useTableRowSelection,
+} from '@/components/Datatable/blueprintTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -36,6 +47,12 @@ interface InvoicesDataTableProps
     WithDrawerActionsProps,
     WithDialogActionsProps {}
 
+type InvoiceTableProps = BP_PaginatedTableProps<InvoiceTableRow>;
+
+const InvoiceTable = withPagination<InvoiceTableRow>(BP_Table);
+const EMPTY_INVOICES: InvoiceTableRow[] = [];
+const PAGE_SIZE_OPTIONS = [20, 30, 50, 75, 100, 150];
+
 function InvoicesDataTableInner({
   setInvoicesTableState,
   setInvoicesSelectedRows,
@@ -49,15 +66,42 @@ function InvoicesDataTableInner({
 
   const {
     invoices,
-    pagination,
+    pagination: pageMeta,
     isEmptyStatus,
     isInvoicesLoading,
     isInvoicesFetching,
     invoiceSettings,
   } = useInvoicesListContext();
-  const invoicesTableSize = invoiceSettings?.tableSize as string | undefined;
-
+  const data = invoices ?? EMPTY_INVOICES;
+  const rowHeight = invoiceSettings?.tableSize === 'small' ? 18 : undefined;
+  const loadingOptions = isInvoicesLoading ? TABLE_LOADING_OPTIONS : undefined;
+  const hasNoResults = !isInvoicesLoading && data.length === 0;
+  const showPaginationBar = data.length > 0;
   const columns = useInvoicesTableColumns();
+  const [columnSizing, setColumnSizing] = useMemorizedColumnsWidths(
+    TABLES.INVOICES,
+  );
+  const { rowSelection, onRowSelectionChange } = useTableRowSelection(
+    invoicesSelectedRows,
+    setInvoicesSelectedRows,
+  );
+  const pagination = {
+    pageIndex: invoicesTableState.pageIndex ?? 0,
+    pageSize: invoicesTableState.pageSize ?? 20,
+  };
+  const sorting = invoicesTableState.sortBy ?? [];
+  const tableState = { columnSizing, pagination, sorting };
+  // An unknown total keeps the current page while its request is in flight.
+  const total = pageMeta?.total;
+
+  const onSortingChange: InvoiceTableProps['onSortingChange'] = (update) => {
+    setInvoicesTableState({ sortBy: functionalUpdate(update, sorting) });
+  };
+  const onPaginationChange: InvoiceTableProps['onPaginationChange'] = (
+    update,
+  ) => {
+    setInvoicesTableState(functionalUpdate(update, pagination));
+  };
 
   const handleDeleteInvoice = ({ id }: InvoiceTableRow) => {
     openAlert('invoice-delete', { invoiceId: id });
@@ -71,7 +115,7 @@ function InvoicesDataTableInner({
     history.push(`/invoices/${invoice.id}/edit`);
   };
 
-  const handleConvertToCreitNote = ({ id }: InvoiceTableRow) => {
+  const handleConvertToCreditNote = ({ id }: InvoiceTableRow) => {
     history.push(`/credit-notes/new?from_invoice_id=${id}`, { invoiceId: id });
   };
 
@@ -91,39 +135,30 @@ function InvoicesDataTableInner({
     openDrawer(DRAWERS.INVOICE_SEND_MAIL, { invoiceId: id });
   };
 
-  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
-    openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: cell.row.original.id });
+  const payload = {
+    onDelete: handleDeleteInvoice,
+    onDeliver: handleDeliverInvoice,
+    onEdit: handleEditInvoice,
+    onQuick: handleQuickPaymentReceive,
+    onViewDetails: handleViewDetailInvoice,
+    onPrint: handlePrintInvoice,
+    onConvert: handleConvertToCreditNote,
+    onSendMail: handleSendMailInvoice,
   };
-
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.INVOICES);
-
-  const handleDataTableFetchData = useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setInvoicesTableState({
-        pageSize,
-        pageIndex,
-        sortBy,
-      });
-    },
-    [setInvoicesTableState],
-  );
-
-  const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows: Array<{ original: InvoiceTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setInvoicesSelectedRows(selectedIds);
-    },
-    [setInvoicesSelectedRows],
-  );
+  const getCellProps: InvoiceTableProps['getCellProps'] = ({
+    row,
+    column,
+  }) => ({
+    'data-testId': column.id === 'invoice_no' ? 'invoice-row' : undefined,
+    'data-invoice-id': row.original.id,
+    tabIndex: 0,
+    onClick: () => handleViewDetailInvoice(row.original),
+  });
+  const bodyContextMenuRenderer: InvoiceTableProps['bodyContextMenuRenderer'] =
+    (context) => {
+      const row = context.getTargetRow();
+      return row && <ActionsMenu row={row} payload={payload} />;
+    };
 
   if (isEmptyStatus) {
     return <InvoicesEmptyStatus />;
@@ -131,45 +166,36 @@ function InvoicesDataTableInner({
 
   return (
     <DashboardContentTable>
-      <DataTable
+      {isInvoicesFetching && !isInvoicesLoading && <MaterialProgressBar />}
+      <InvoiceTable
         columns={columns}
-        data={invoices ?? []}
-        loading={isInvoicesLoading}
-        headerLoading={isInvoicesLoading}
-        progressBarLoading={isInvoicesFetching}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={invoicesSelectedRows}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        initialPageSize={invoicesTableState?.pageSize ?? 10}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        autoResetSelectedRows={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        rowTestId={'invoice-row'}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={invoicesTableSize}
-        payload={{
-          onDelete: handleDeleteInvoice,
-          onDeliver: handleDeliverInvoice,
-          onEdit: handleEditInvoice,
-          onQuick: handleQuickPaymentReceive,
-          onViewDetails: handleViewDetailInvoice,
-          onPrint: handlePrintInvoice,
-          onConvert: handleConvertToCreitNote,
-          onSendMail: handleSendMailInvoice,
-        }}
+        data={data}
+        getRowId={getRowId}
+        enableRowHeader={false}
+        rowHeight={rowHeight}
+        enableSorting
+        manualSorting
+        onSortingChange={onSortingChange}
+        manualPagination
+        autoResetPageIndex={false}
+        rowCount={total}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        showPaginationBar={showPaginationBar}
+        onPaginationChange={onPaginationChange}
+        state={tableState}
+        onColumnSizingChange={setColumnSizing}
+        showRowSelectionCheckboxes
+        rowSelection={rowSelection}
+        onRowSelectionChange={onRowSelectionChange}
+        getCellProps={getCellProps}
+        bodyContextMenuRenderer={bodyContextMenuRenderer}
+        enableBodyContextMenu={!isInvoicesFetching}
+        enableGhostCells={isInvoicesLoading}
+        loadingOptions={loadingOptions}
       />
+      {hasNoResults && (
+        <EmptyStatus title={intl.get('there_is_no_results_in_the_table')} />
+      )}
     </DashboardContentTable>
   );
 }
@@ -184,5 +210,4 @@ export const InvoicesDataTable = FF.pipe(
   withDrawerActions,
   withAlertActions,
   withInvoiceActions,
-  withDashboardActions,
 );

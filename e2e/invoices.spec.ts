@@ -90,7 +90,12 @@ test.describe('invoices', () => {
     });
 
     const row = await filterInvoicesByNumber(page, invoiceNumber);
-    await expect(row).toContainText(displayName, { timeout: 15_000 });
+    const id = await row.getAttribute('data-invoice-id');
+    await expect(
+      page
+        .locator(`[data-invoice-id="${id}"]`)
+        .getByText(displayName, { exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
   });
 
   test('should edit an invoice successfully.', async ({ page }) => {
@@ -115,7 +120,12 @@ test.describe('invoices', () => {
     await waitForInvoicesList(page);
 
     const editedRow = await filterInvoicesByNumber(page, invoiceNumber);
-    await expect(editedRow).toContainText(newReference, { timeout: 15_000 });
+    const id = await editedRow.getAttribute('data-invoice-id');
+    await expect(
+      page
+        .locator(`[data-invoice-id="${id}"]`)
+        .getByText(newReference, { exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
   });
 
   test('should delete an invoice successfully.', async ({ page }) => {
@@ -133,5 +143,73 @@ test.describe('invoices', () => {
     await expect(page.getByTestId('invoice-row')).toHaveCount(0, {
       timeout: 15_000,
     });
+  });
+
+  test('keeps bulk selection tied to invoice IDs across server pages and sorting', async ({
+    page,
+  }) => {
+    const invoices = Array.from({ length: 21 }, (_, index) => ({
+      id: 101 + index,
+      invoice_no: `PAGE-${String(index + 1).padStart(2, '0')}`,
+      due_date: '2025-08-01',
+    }));
+    await page.route(
+      (url) => url.pathname === '/api/sale-invoices',
+      (route) => {
+        const query = new URL(route.request().url()).searchParams;
+        const size = Number(query.get('page_size'));
+        const start = (Number(query.get('page')) - 1) * size;
+        const rows =
+          query.get('column_sort_by') === 'invoice_no' &&
+          query.get('sort_order') === 'desc'
+            ? [...invoices].reverse()
+            : invoices;
+        return route.fulfill({
+          json: {
+            data: rows.slice(start, start + size),
+            pagination: { total: invoices.length },
+          },
+        });
+      },
+    );
+    await page.route('**/api/sale-invoices/validate-bulk-delete', (route) =>
+      route.fulfill({ json: { deletable_count: 2, non_deletable_count: 0 } }),
+    );
+    await page.reload();
+
+    const firstInvoice = page.getByTestId('invoice-row').first();
+    const firstCheckbox = page.getByRole('checkbox', {
+      name: 'Select row 1',
+      exact: true,
+    });
+    await expect(firstInvoice).toHaveText('PAGE-01');
+    await firstCheckbox.press('Space');
+    await page.getByRole('button', { name: 'Next page' }).click();
+    await expect(firstInvoice).toHaveText('PAGE-21');
+    await expect(firstCheckbox).not.toBeChecked();
+    await firstCheckbox.press('Space');
+
+    const [validation] = await Promise.all([
+      page.waitForRequest('**/api/sale-invoices/validate-bulk-delete'),
+      page.getByRole('button', { name: 'Delete', exact: true }).click(),
+    ]);
+    expect(validation.postDataJSON().ids).toEqual([101, 121]);
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+
+    await page
+      .getByRole('combobox', { name: 'Rows per page' })
+      .selectOption('30');
+    await expect(firstInvoice).toHaveText('PAGE-01');
+    await expect(firstCheckbox).toBeChecked();
+    await expect(
+      page.getByRole('button', { name: 'Next page' }),
+    ).toBeDisabled();
+
+    const invoiceNumberHeader = page.getByTitle('Invoice No', { exact: true });
+    await invoiceNumberHeader.hover();
+    await invoiceNumberHeader.locator('[data-icon="chevron-down"]').click();
+    await page.getByRole('menuitem', { name: 'Sort Desc' }).click();
+    await expect(firstInvoice).toHaveText('PAGE-21');
+    await expect(firstCheckbox).toBeChecked();
   });
 });

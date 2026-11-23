@@ -123,7 +123,18 @@ export async function filterInvoicesByNumber(
   invoiceNumber: string,
 ): Promise<Locator> {
   await page.getByRole('button', { name: /filter|filters applied/i }).click();
-  await page.getByPlaceholder('Value').first().fill(invoiceNumber);
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return (
+        url.pathname === '/api/sale-invoices' &&
+        !!url.searchParams
+          .get('stringified_filter_roles')
+          ?.includes(invoiceNumber)
+      );
+    }),
+    page.getByPlaceholder('Value').first().fill(invoiceNumber),
+  ]);
 
   const row = page
     .getByTestId('invoice-row')

@@ -12,7 +12,7 @@ import {
 export interface WithInvoiceActionsProps {
   setInvoicesTableState: (queries: Partial<TableQuery>) => void;
   resetInvoicesTableState: () => void;
-  setInvoicesSelectedRows: (selectedRows: Array<unknown>) => void;
+  setInvoicesSelectedRows: (selectedRows: number[]) => void;
   resetInvoicesSelectedRows: () => void;
 }
 
@@ -22,7 +22,7 @@ export const mapDipatchToProps = (
   setInvoicesTableState: (queries: Partial<TableQuery>) =>
     dispatch(setInvoicesTableState(queries)),
   resetInvoicesTableState: () => dispatch(resetInvoicesTableState()),
-  setInvoicesSelectedRows: (selectedRows: Array<unknown>) =>
+  setInvoicesSelectedRows: (selectedRows: number[]) =>
     dispatch(setInvoicesSelectedRows(selectedRows)),
   resetInvoicesSelectedRows: () => dispatch(resetInvoicesSelectedRows()),
 });

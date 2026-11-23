@@ -19,7 +19,7 @@ export const resetInvoicesTableState = () => {
   };
 };
 
-export const setInvoicesSelectedRows = (selectedRows: Array<unknown>) => {
+export const setInvoicesSelectedRows = (selectedRows: number[]) => {
   return {
     type: INVOICES_SET_SELECTED_ROWS,
     payload: selectedRows,

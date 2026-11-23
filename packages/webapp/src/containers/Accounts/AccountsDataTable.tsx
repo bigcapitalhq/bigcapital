@@ -1,10 +1,6 @@
-import {
-  BP_Table as BlueprintTable,
-  TableLoadingOption,
-} from '@bigcapitalhq/blueprintjs-react-table';
-import { functionalUpdate } from '@tanstack/react-table';
+import { BP_Table as BlueprintTable } from '@bigcapitalhq/blueprintjs-react-table';
 import * as FF from 'fp-ts/function';
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
 import '@bigcapitalhq/blueprintjs-react-table/styles.css';
 import { useAccountsChartContext } from './AccountsChartProvider';
@@ -18,11 +14,13 @@ import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import type {
-  BP_RowSelectionState,
-  BP_TableProps,
-} from '@bigcapitalhq/blueprintjs-react-table';
+import type { BP_TableProps } from '@bigcapitalhq/blueprintjs-react-table';
 import { EmptyStatus, MaterialProgressBar } from '@/components';
+import {
+  getRowId,
+  TABLE_LOADING_OPTIONS,
+  useTableRowSelection,
+} from '@/components/Datatable/blueprintTable';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
@@ -42,13 +40,6 @@ interface AccountsDataTableProps
 type AccountsTableProps = BP_TableProps<AccountTableRow>;
 
 const EMPTY_ACCOUNTS: AccountTableRow[] = [];
-const LOADING_OPTIONS = [
-  TableLoadingOption.CELLS,
-  TableLoadingOption.COLUMN_HEADERS,
-  TableLoadingOption.ROW_HEADERS,
-];
-
-const getRowId = (account: AccountTableRow) => String(account.id);
 const getSubRows = (account: AccountTableRow) => account.children;
 const rowExpanderButtonProps = { onClick: stopExpanderPropagation };
 
@@ -76,23 +67,17 @@ function AccountsDataTableInner({
   const data = accounts ?? EMPTY_ACCOUNTS;
   const isEmpty = !isAccountsLoading && data.length === 0;
   const rowHeight = accountsSettings?.tableSize === 'small' ? 18 : undefined;
-  const loadingOptions = isAccountsLoading ? LOADING_OPTIONS : undefined;
+  const loadingOptions = isAccountsLoading ? TABLE_LOADING_OPTIONS : undefined;
 
   const columns = useAccountsTableColumns();
   const [columnSizing, setColumnSizing] = useMemorizedColumnsWidths(
     TABLES.ACCOUNTS,
   );
   const tableState = { columnSizing };
-  const rowSelection = useMemo<BP_RowSelectionState>(
-    () => Object.fromEntries(accountsSelectedRows.map((id) => [id, true])),
-    [accountsSelectedRows],
+  const { rowSelection, onRowSelectionChange } = useTableRowSelection(
+    accountsSelectedRows,
+    setAccountsSelectedRows,
   );
-  const onRowSelectionChange: AccountsTableProps['onRowSelectionChange'] = (
-    update,
-  ) => {
-    const selection = functionalUpdate(update, rowSelection);
-    setAccountsSelectedRows(Object.keys(selection).map(Number));
-  };
 
   // Handle delete action account.
   const handleDeleteAccount = (account: AccountTableRow) => {
