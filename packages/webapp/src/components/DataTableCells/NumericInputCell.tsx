@@ -12,6 +12,7 @@ export default function NumericInputCell({
   column: { id },
   cell: { value: controlledInputValue },
   payload,
+  leftElement,
 }: any) {
   const [valueAsNumber, setValueAsNumber] = useState<number | null>(
     controlledInputValue || null,
@@ -44,6 +45,7 @@ export default function NumericInputCell({
         onValueChange={handleInputValueChange}
         onBlur={handleInputBlur}
         buttonPosition={'none'}
+        leftElement={leftElement}
         fill
       />
     </FormGroup>

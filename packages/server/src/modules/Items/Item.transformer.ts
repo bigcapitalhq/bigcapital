@@ -4,6 +4,14 @@ import { Item } from './models/Item';
 
 export class ItemTransformer extends Transformer {
   /**
+   * Exclude internal attributes from the item response.
+   * @returns {string[]}
+   */
+  public excludeAttributes = (): string[] => {
+    return ['reorderPointNotified'];
+  };
+
+  /**
    * Include these attributes to sale invoice object.
    * @returns {Array}
    */

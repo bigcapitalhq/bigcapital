@@ -1,7 +1,6 @@
-@import '@blueprintjs/colors/lib/scss/colors';
-@import '@blueprintjs/core/src/common/variables';
+@import '@/style/_common';
 
-$ns: bp4;
+$ns: bp6;
 
 :root {
   --color-primary: #8abbff;
@@ -28,6 +27,7 @@ $ns: bp4;
   --color-orange-200: #ec9a3c;
   --color-orange-100: #fbb360;
 
+  --color-dark-gray6: #485261;
   --color-dark-gray5: #404854;
   --color-dark-gray4: #383e47;
   --color-dark-gray3: #2f343c;
@@ -235,6 +235,7 @@ $ns: bp4;
   --color-financial-sheet-date-text: rgb(31, 50, 85);
   --color-financial-sheet-footer-text: var(--color-muted-text);
   --color-financial-sheet-minimal-title-text: #333;
+  --color-financial-sheet-negative-amount-text: var(--color-red-400);
 
   // Transaction locking.
   --color-transaction-locking-item-background: #fff;
@@ -322,7 +323,7 @@ $pt-popover-box-shadow:
   0 2px 4px rgba(16, 22, 26, 0.1),
   0 8px 24px rgba(16, 22, 26, 0.1);
   
-body.bp4-dark  {
+body.#{$ns}-dark  {
   --color-primary: #8abbff;
   --color-danger: rgb(213, 103, 103);
 
@@ -347,6 +348,7 @@ body.bp4-dark  {
   --color-orange-200: #935610;
   --color-orange-100: #77450d;
 
+  --color-dark-gray6: #485261;
   --color-dark-gray5: #404854;
   --color-dark-gray4: #383e47;
   --color-dark-gray3: #2f343c;
@@ -561,6 +563,7 @@ body.bp4-dark  {
   --color-financial-sheet-date-text: var(--color-light-gray1);
   --color-financial-sheet-footer-text: var(--color-muted-text);
   --color-financial-sheet-minimal-title-text: var(--color-white);
+  --color-financial-sheet-negative-amount-text: var(--color-red-500);
 
   // Transaction locking.
   --color-transaction-locking-item-background: var(--color-dark-gray2);

@@ -57,7 +57,7 @@ export async function setEstimateExpirationDateBeforeEstimateDate(
  */
 export async function waitForEstimatesList(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Estimates List',
+    'Estimates',
     { timeout: 30_000 },
   );
   await expect(
@@ -81,81 +81,28 @@ export async function waitForEstimateForm(page: Page, title: string) {
 
 /**
  * Selects the given customer inside the estimate form.
- *
- * The customer Select popover cannot be opened reliably with a plain mouse
- * click, so it is retried the same way the account type select does: focus
- * the trigger, press Enter to open the popover, then immediately click the
- * matching menu item before the popover collapses.
  */
 export async function selectCustomer(page: Page, displayName: string) {
   const button = page.getByTestId('estimate-customer-select');
 
-  for (let attempt = 0; attempt < 8; attempt++) {
-    await button.focus();
-    await page.keyboard.press('Enter');
-
-    const clicked = await page.evaluate((name) => {
-      const items = Array.from(document.querySelectorAll('[role="menuitem"]'));
-      const item = items.find((el) =>
-        (el as HTMLElement).innerText.trim().includes(name),
-      );
-      if (item) {
-        (item as HTMLElement).click();
-        return true;
-      }
-      return false;
-    }, displayName);
-
-    if (clicked) {
-      await expect(button).toContainText(displayName, { timeout: 5_000 });
-      return;
-    }
-    await page.keyboard.press('Escape');
-  }
-  throw new Error(`Failed to select the "${displayName}" customer.`);
+  await button.click();
+  await page.getByRole('menuitem', { name: displayName }).first().click();
+  await expect(button).toContainText(displayName);
 }
 
 /**
  * Selects the given item inside the first entries table row.
  *
- * Once the item is selected the row is auto-filled with the sell price, unit
- * quantity and description, and a new empty line is appended. Waiting for the
- * second item input ensures the fetched values were committed before saving.
+ * Wait for the fetched item to populate the quantity before submitting.
  */
 export async function selectEntryItem(page: Page, itemName: string) {
   const input = page.getByPlaceholder('Enter an item...').first();
   await input.click();
   await input.pressSequentially(itemName);
 
-  // The item suggestion popover opens asynchronously after typing and can
-  // re-render its menu items while waiting, so the click scans the live DOM
-  // in a polling loop instead of holding a possibly-stale locator.
-  let clicked = false;
-  for (let attempt = 0; attempt < 12 && !clicked; attempt++) {
-    clicked = await page.evaluate((name) => {
-      const items = Array.from(document.querySelectorAll('[role="menuitem"]'));
-      const item = items.find((el) =>
-        (el as HTMLElement).innerText.trim().includes(name),
-      );
-      if (item) {
-        (item as HTMLElement).click();
-        return true;
-      }
-      return false;
-    }, itemName);
-
-    if (!clicked) {
-      await page.waitForTimeout(250);
-    }
-  }
-
-  if (!clicked) {
-    throw new Error(`Failed to select the "${itemName}" item.`);
-  }
-
-  await expect(page.getByPlaceholder('Enter an item...')).toHaveCount(2, {
-    timeout: 10_000,
-  });
+  await page.getByRole('menuitem', { name: itemName }).first().click();
+  await expect(page.getByRole('spinbutton').first()).toHaveValue('1');
+  await expect(page.getByPlaceholder('Enter an item...')).toHaveCount(2);
 
   // Close any lingering select popover before interacting with the footer.
   await page.keyboard.press('Escape');
@@ -254,7 +201,7 @@ export async function deleteEstimateViaRow(page: Page, row: Locator) {
 
   await expect(page.getByTestId('estimate-delete-alert')).toBeVisible();
   await page
-    .getByRole('dialog')
+    .getByRole('alertdialog')
     .filter({ has: page.getByTestId('estimate-delete-alert') })
     .getByRole('button', { name: 'Delete' })
     .click();

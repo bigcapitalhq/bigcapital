@@ -1,3 +1,7 @@
+import {
+  CreditNotePaperTemplate,
+  CreditNotePaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { useFormikContext } from 'formik';
 import {
   ElementCustomize,
@@ -6,16 +10,16 @@ import {
 import { initialValues } from './constants';
 import { CreditNoteCustomizeGeneralField } from './CreditNoteCustomizeGeneralFields';
 import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFields';
-import {
-  CreditNotePaperTemplate,
-  CreditNotePaperTemplateProps,
-} from './CreditNotePaperTemplate';
 import { CreditNoteBrandingState, CreditNoteCustomizeValues } from './types';
 import { Box } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import {
+  paperTemplatePreviewStyle,
+  pickPaperTemplateProps,
+} from '@/containers/ElementCustomize/paperTemplatePreview';
 import { useDrawerActions } from '@/hooks/state';
 
 export function CreditNoteCustomizeContent() {
@@ -70,10 +74,15 @@ function CreditNotePaperTemplateFormConnected() {
   const { values } = useFormikContext<CreditNoteCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const mergedProps: CreditNotePaperTemplateProps = {
-    ...brandingState,
-    ...values,
-  };
+  const mergedProps = pickPaperTemplateProps<CreditNotePaperTemplateProps>(
+    { ...brandingState, ...values },
+    initialValues,
+  );
 
-  return <CreditNotePaperTemplate {...mergedProps} />;
+  return (
+    <CreditNotePaperTemplate
+      {...mergedProps}
+      style={paperTemplatePreviewStyle}
+    />
+  );
 }

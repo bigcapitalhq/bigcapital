@@ -1,5 +1,12 @@
 import { TrialBalanceTableQuery } from '@bigcapital/sdk-ts';
-import { createContext, useContext, useMemo, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  ReactNode,
+} from 'react';
 import { transformFilterFormToQuery } from '../common';
 import { FinancialReportPage } from '../FinancialReportPage';
 import { useTrialBalanceSheet } from '@/hooks/query';
@@ -12,10 +19,13 @@ type TrialBalanceSheetContextValue = {
   isLoading: boolean;
   refetchSheet: UseTrialBalanceSheetResult['refetch'];
   httpQuery: TrialBalanceTableQuery;
+  pageQuery: TrialBalanceTableQuery;
+  setPageQuery: (values: Record<string, unknown>) => void;
 };
 
 interface TrialBalanceSheetProviderProps {
   query: TrialBalanceTableQuery;
+  setQuery: (values: Record<string, unknown>) => void;
   children?: ReactNode;
 }
 
@@ -25,6 +35,7 @@ const TrialBalanceSheetContext = createContext<
 
 function TrialBalanceSheetProvider({
   query,
+  setQuery,
   ...props
 }: TrialBalanceSheetProviderProps) {
   const httpQuery = useMemo(
@@ -42,12 +53,25 @@ function TrialBalanceSheetProvider({
     { placeholderData: (prev) => prev },
   );
 
+  // Keeps the last rendered report available while a new query (e.g. a
+  // sorting change) is loading, so the table does not fall back to the
+  // initial skeleton.
+  const lastReportRef = useRef(trialBalanceSheet);
+  useEffect(() => {
+    if (trialBalanceSheet) {
+      lastReportRef.current = trialBalanceSheet;
+    }
+  }, [trialBalanceSheet]);
+  const report = trialBalanceSheet ?? lastReportRef.current;
+
   const provider: TrialBalanceSheetContextValue = {
-    trialBalanceSheet,
+    trialBalanceSheet: report,
     isLoading,
     isFetching,
     refetchSheet: refetch,
     httpQuery,
+    pageQuery: query,
+    setPageQuery: setQuery,
   };
 
   return (

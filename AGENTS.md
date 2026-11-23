@@ -40,6 +40,7 @@ Run from repo root unless noted.
 | Format all | `pnpm run format` (fix) / `pnpm run format:check` (check only) |
 | System DB migrations | `pnpm run system:migrate:latest` |
 | Tenant DB migrations | `pnpm run tenants:migrate:latest` |
+| Sync Stripe billing plans (Cloud) | `pnpm run stripe:sync-plans` |
 | Make new system migration | `pnpm run system:migrate:make <name>` |
 | Make new tenant migration | `pnpm run tenants:migrate:make <name>` |
 | Seed system DB | `pnpm run system:seed:latest` |

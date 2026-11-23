@@ -19,6 +19,7 @@ export class CreditNoteInventoryTransactions {
   public createInventoryTransactions = async (
     creditNote: CreditNote,
     trx?: Knex.Transaction,
+    override: boolean = false,
   ): Promise<void> => {
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
@@ -38,7 +39,7 @@ export class CreditNoteInventoryTransactions {
     // Writes inventory tranactions.
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       transaction,
-      false,
+      override,
       trx,
     );
   };
@@ -51,15 +52,13 @@ export class CreditNoteInventoryTransactions {
    * @param {Knex.Transactions} trx
    */
   public editInventoryTransactions = async (
-    creditNoteId: number,
+    _creditNoteId: number,
     creditNote: CreditNote,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    // Deletes inventory transactions.
-    await this.deleteInventoryTransactions(creditNoteId, trx);
-
-    // Re-write inventory transactions.
-    await this.createInventoryTransactions(creditNote, trx);
+    // Re-write the inventory transactions and validate the net effect of
+    // replacing the old transactions with the new ones.
+    await this.createInventoryTransactions(creditNote, trx, true);
   };
 
   /**

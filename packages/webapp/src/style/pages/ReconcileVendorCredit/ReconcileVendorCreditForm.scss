@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dialog--reconcile-vendor-credit-form {
   width: 850px;
 
@@ -17,10 +18,10 @@
       }
 
       .tbody {
-        .bp4-form-group {
+        .#{$ns}-form-group {
           margin-bottom: 0;
 
-          &:not(.bp4-intent-danger) .bp4-input {
+          &:not(.#{$ns}-intent-danger) .#{$ns}-input {
             border: 1px solid #d0dfe2;
 
             &:focus {
@@ -33,11 +34,11 @@
     }
   }
 
-  .bp4-callout {
+  .#{$ns}-callout {
     font-size: 14px;
   }
 
-  .bp4-dialog-footer {
+  .#{$ns}-dialog-footer {
     display: flex;
     justify-content: flex-start;
     padding-top: 10px;

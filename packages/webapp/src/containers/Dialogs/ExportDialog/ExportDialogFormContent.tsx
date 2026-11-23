@@ -6,6 +6,7 @@ import React from 'react';
 import { ExportResources } from './constants';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FFormGroup, FRadioGroup, FSelect, Group } from '@/components';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
@@ -27,7 +28,7 @@ function ExportDialogFormContentRoot({
   return (
     <Form>
       <x.div p="20px">
-        <x.p className="bp4-text-muted" mb="1.2rem">
+        <x.p className={`${NS}-text-muted`} mb="1.2rem">
           You can export data from Bigcapital in CSV or XLSX format
         </x.p>
 

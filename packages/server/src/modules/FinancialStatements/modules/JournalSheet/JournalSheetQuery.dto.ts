@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsDateString,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -10,11 +11,21 @@ import { Type } from 'class-transformer';
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class JournalSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiPropertyOptional({
+    description: 'Accounting basis for the report',
+    enum: AccountingBasis,
+    example: 'accrual',
+  })
+  @IsEnum(AccountingBasis)
+  @IsOptional()
+  basis: AccountingBasis;
+
+  @ApiPropertyOptional({
     description: 'Start date for the journal sheet',
-    example: '2024-01-01T00:00:00.000Z',
+    example: '2024-01-01',
   })
   @IsDateString()
   @IsOptional()
@@ -22,7 +33,7 @@ export class JournalSheetQueryDto extends FinancialSheetBranchesQueryDto {
 
   @ApiPropertyOptional({
     description: 'End date for the journal sheet',
-    example: '2024-01-31T23:59:59.000Z',
+    example: '2024-01-31',
   })
   @IsDateString()
   @IsOptional()

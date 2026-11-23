@@ -16,6 +16,7 @@ interface ReportTableColumn {
 
 interface TableColumn {
   key?: string;
+  id?: string;
   Header?: string;
   accessor?: string;
   className?: string;
@@ -59,180 +60,33 @@ const getReportColWidth = (
 const isNodeHasChildren = (node: ReportTableColumn) => !isEmpty(node.children);
 
 /**
- * `Percentage of income` column accessor.
+ * Shared money column mapper.
  */
-const percentageOfIncomeAccessor: ColumnMapper = (data) => (column) => {
+const moneyColumnMapper: ColumnMapper = (data) => (column) => {
   const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
     Header: column.label,
     key: column.key,
+    // The column id is sent to the backend as the sorting column key.
+    id: column.key,
     accessor,
     width,
     align: Align.Right,
-    disableSortBy: true,
     textOverview: true,
     money: true,
   };
 };
 
 /**
- * `Percentage of expense` column accessor.
+ * Date periods money column mapper.
+ *
+ * The backend does not support sorting date periods columns, and the same
+ * column keys are repeated on each date range, so they are not sortable and
+ * keep the accessor as their unique id.
  */
-const percentageOfExpenseAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * `Percentage of column` column accessor.
- */
-const percentageOfColumnAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * `Percentage of row` column accessor.
- */
-const percentageOfRowAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Previous year column accessor.
- */
-const previousYearAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Pervious year change column accessor.
- */
-const previousYearChangeAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Previous year percentage column accessor.
- */
-const previousYearPercentageAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Previous period column accessor.
- */
-const previousPeriodAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Previous period change column accessor.
- */
-const previousPeriodChangeAccessor: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Previous period percentage column accessor.
- */
-const previousPeriodPercentageAccessor: ColumnMapper = (data) => (column) => {
+const datePeriodColumnMapper: ColumnMapper = (data) => (column) => {
   const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
@@ -264,27 +118,18 @@ const totalColumnsMapper: ColumnMapper = (data) => (column) =>
 const totalColumnMatchers = (data: unknown[]): ColumnMatcher[] => [
   when(isColumnKey('total'), totalColumn(data)),
   // Percetage of column/row.
-  when(isColumnKey('percentage_column'), percentageOfColumnAccessor(data)),
-  when(isColumnKey('percentage_row'), percentageOfRowAccessor(data)),
-  when(isColumnKey('percentage_income'), percentageOfIncomeAccessor(data)),
-  when(isColumnKey('percentage_expenses'), percentageOfExpenseAccessor(data)),
+  when(isColumnKey('percentage_column'), moneyColumnMapper(data)),
+  when(isColumnKey('percentage_row'), moneyColumnMapper(data)),
+  when(isColumnKey('percentage_income'), moneyColumnMapper(data)),
+  when(isColumnKey('percentage_expenses'), moneyColumnMapper(data)),
   // Previous year.
-  when(isColumnKey('previous_year'), previousYearAccessor(data)),
-  when(isColumnKey('previous_year_change'), previousYearChangeAccessor(data)),
-  when(
-    isColumnKey('previous_year_percentage'),
-    previousYearPercentageAccessor(data),
-  ),
+  when(isColumnKey('previous_year'), moneyColumnMapper(data)),
+  when(isColumnKey('previous_year_change'), moneyColumnMapper(data)),
+  when(isColumnKey('previous_year_percentage'), moneyColumnMapper(data)),
   // Pervious period.
-  when(isColumnKey('previous_period'), previousPeriodAccessor(data)),
-  when(
-    isColumnKey('previous_period_change'),
-    previousPeriodChangeAccessor(data),
-  ),
-  when(
-    isColumnKey('previous_period_percentage'),
-    previousPeriodPercentageAccessor(data),
-  ),
+  when(isColumnKey('previous_period'), moneyColumnMapper(data)),
+  when(isColumnKey('previous_period_change'), moneyColumnMapper(data)),
+  when(isColumnKey('previous_period_percentage'), moneyColumnMapper(data)),
 ];
 
 /**
@@ -325,9 +170,11 @@ const totalColumn: ColumnMapper = (data) => (column) => {
     accessor,
     textOverview: true,
     width,
-    disableSortBy: true,
+    // Group headers are not sortable, only the leaf total column is.
+    disableSortBy: hasChildren,
     align: hasChildren ? Align.Center : Align.Right,
     money: true,
+    ...(!hasChildren ? { id: column.key } : {}),
   };
 };
 
@@ -355,6 +202,8 @@ const accountNameColumn: ColumnMapper = (data) => (column) => {
 
   return {
     key: column.key,
+    // The column id is sent to the backend as the sorting column key.
+    id: column.key,
     Header: column.label,
     accessor,
     className: column.key,
@@ -383,6 +232,26 @@ const dateRangeSoloColumnAttrs = (
 };
 
 /**
+ * Date range children columns composer.
+ */
+const dateRangeColumnsComposer = (
+  data: unknown[],
+  column: ReportTableColumn,
+): TableColumn[] => {
+  return FF.pipe(column.children ?? [], FA.map(datePeriodColumnMapper(data)));
+};
+
+/**
+ * Assoc the date range children columns.
+ */
+const assocColumnsToDateRange =
+  (data: unknown[], column: ReportTableColumn) =>
+  (columnAccessor: TableColumn): TableColumn => ({
+    ...columnAccessor,
+    columns: dateRangeColumnsComposer(data, column),
+  });
+
+/**
  * Retrieves date range column.
  */
 const dateRangeColumn: ColumnMapper = (data) => (column) => {
@@ -391,6 +260,7 @@ const dateRangeColumn: ColumnMapper = (data) => (column) => {
   const columnAccessor: TableColumn = {
     Header: column.label,
     key: column.key,
+    // Date periods columns are not supported by the backend sorting.
     disableSortBy: true,
     textOverview: true,
     align: isDateColumnHasColumns ? Align.Center : Align.Right,
@@ -400,7 +270,7 @@ const dateRangeColumn: ColumnMapper = (data) => (column) => {
   return FF.pipe(
     columnAccessor,
     FO.fromPredicate(FF.constant(isDateColumnHasColumns)),
-    FO.map(assocColumnsToTotalColumn(data, column)),
+    FO.map(assocColumnsToDateRange(data, column)),
     FO.alt(
       (): FO.Option<TableColumn> =>
         FF.pipe(

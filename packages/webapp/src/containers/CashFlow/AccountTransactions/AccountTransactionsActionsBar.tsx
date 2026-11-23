@@ -17,6 +17,7 @@ import {
 import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { withBanking } from '../withBanking';
 import { withBankingActions } from '../withBankingActions';
@@ -34,8 +35,10 @@ import {
   FormattedMessage as T,
   AppToaster,
   If,
+  Can,
 } from '@/components';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
+import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import {
   getAddMoneyOutOptions,
   getAddMoneyInOptions,
@@ -132,6 +135,14 @@ function AccountTransactionsActionsBarInner({
   // Handle bank rules click.
   const handleBankRulesClick = () => {
     history.push(`/bank-rules?accountId=${accountId}`);
+  };
+  // Handle reconciliation click.
+  const handleReconcileClick = () => {
+    history.push(`/reconcile?accountId=${accountId}`);
+  };
+  // Handle reconciliation history click.
+  const handleReconciliationsClick = () => {
+    history.push(`/cashflow-accounts/${accountId}/reconciliations`);
   };
 
   // Handles the bank account disconnect click.
@@ -327,7 +338,7 @@ function AccountTransactionsActionsBarInner({
             interactionKind={PopoverInteractionKind.CLICK}
             position={Position.BOTTOM_LEFT}
             modifiers={{
-              offset: { offset: '0, 4' },
+              offset: { options: { offset: [0, 4] } },
             }}
             content={
               <Menu>
@@ -406,17 +417,22 @@ function AccountTransactionsActionsBarInner({
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_RIGHT}
           modifiers={{
-            offset: { offset: '0, 4' },
+            offset: { options: { offset: [0, 4] } },
           }}
           content={
             <Menu>
               <If condition={isSyncingOwner && isFeedsActive}>
-                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+                <MenuItem
+                  icon={<Icon icon="refresh-16" iconSize={16} />}
+                  onClick={handleBankUpdateClick}
+                  text={'Update'}
+                />
                 <MenuDivider />
               </If>
 
               <If condition={isSyncingOwner && isFeedsActive && !isFeedsPaused}>
                 <MenuItem
+                  icon={<Icon icon="pause-16" iconSize={16} />}
                   onClick={handlePauseFeedsSyncing}
                   text={'Pause bank feeds'}
                 />
@@ -425,22 +441,43 @@ function AccountTransactionsActionsBarInner({
 
               <If condition={isSyncingOwner && isFeedsActive && isFeedsPaused}>
                 <MenuItem
+                  icon={<Icon icon="play-16" iconSize={16} />}
                   onClick={handleResumeFeedsSyncing}
                   text={'Resume bank feeds'}
                 />
                 <MenuDivider />
               </If>
 
-              <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
+              {currentAccount?.accountType === 'bank' && (
+                <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
+                  <MenuItem
+                    icon={<Icon icon="form" iconSize={16} />}
+                    onClick={handleReconcileClick}
+                    text={intl.get('banking.reconciliation.action')}
+                  />
+                  <MenuItem
+                    icon={<Icon icon="time-24" iconSize={16} />}
+                    onClick={handleReconciliationsClick}
+                    text={intl.get('banking.reconciliation.history')}
+                  />
+                </Can>
+              )}
+              <MenuItem
+                icon={<Icon icon="flow-branch" iconSize={16} />}
+                onClick={handleBankRulesClick}
+                text={'Bank rules'}
+              />
               <MenuDivider />
               <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem
+                  icon={<Icon icon="unlink" iconSize={16} />}
                   intent={Intent.DANGER}
                   onClick={handleDisconnectClick}
                   text={'Disconnect'}
                 />
               </If>
               <MenuItem
+                icon={<Icon icon="trash-16" iconSize={16} />}
                 intent={Intent.DANGER}
                 onClick={handleDeleteAccountClick}
                 text={'Delete'}

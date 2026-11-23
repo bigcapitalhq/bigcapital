@@ -1,3 +1,5 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export const TrialBalanceSheetResponseExample = {
   data: {
     accounts: [
@@ -566,7 +568,7 @@ export const TrialBalanceSheetResponseExample = {
       format_money: 'total',
       precision: 2,
     },
-    basis: 'accrual',
+    basis: AccountingBasis.Accrual,
     none_zero: false,
     none_transactions: true,
     only_active: false,

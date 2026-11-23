@@ -14,6 +14,7 @@ import {
   TotalLineTextStyle,
   FormatNumber,
 } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function PaymentMadeFormFooterRight() {
   const { formattedSubtotal, formattedTotal } = usePaymentMadeTotals();
@@ -52,7 +53,7 @@ export function PaymentMadeFormFooterRight() {
 const PaymentMadeTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

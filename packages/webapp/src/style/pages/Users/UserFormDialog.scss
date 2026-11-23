@@ -1,32 +1,33 @@
+@import '@/style/_common';
 .dialog--user-form {
   width: 450px;
 
-  .bp4-form-group {
+  .#{$ns}-form-group {
     margin-bottom: 15px;
   }
-  .bp4-dialog-body {
+  .#{$ns}-dialog-body {
     margin-bottom: 30px;
 
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 140px;
       }
-      .bp4-form-content {
+      .#{$ns}-form-content {
         width: 250px;
       }
     }
-    .bp4-dialog-header {
+    .#{$ns}-dialog-header {
       height: 170px;
     }
   }
 
-  .bp4-callout {
+  .#{$ns}-callout {
     font-size: 13px;
     margin-bottom: 20px;
   }
 
-  .bp4-dialog-footer {
-    .bp4-button {
+  .#{$ns}-dialog-footer {
+    .#{$ns}-button {
       min-width: 75px;
     }
   }

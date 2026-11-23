@@ -2,7 +2,7 @@ import { createApiFetcher } from '@bigcapital/sdk-ts';
 import axios from 'axios';
 import React from 'react';
 import { getCookie, normalizeApiPath } from '../utils';
-import { useAuthOrganizationId, useAuthToken } from './state';
+import { useAuthOrganizationId, useAuthToken } from './state/authentication';
 import { useApiFetcherOnError } from './useApiFetcherOnError';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -12,13 +12,15 @@ import type { AxiosRequestConfig } from 'axios';
  *
  * @param options - Optional configuration
  * @param options.enableCamelCaseTransform - If true, automatically transforms response data from snake_case to camelCase
+ * @param options.locale - Locale to send in Accept-Language when supplied
  */
 export function useApiFetcher(options?: {
   enableCamelCaseTransform?: boolean;
+  locale?: string;
 }) {
   const token = useAuthToken();
   const organizationId = useAuthOrganizationId();
-  const currentLocale = getCookie('locale');
+  const currentLocale = options?.locale ?? getCookie('locale');
   const onError = useApiFetcherOnError();
 
   return React.useMemo(() => {

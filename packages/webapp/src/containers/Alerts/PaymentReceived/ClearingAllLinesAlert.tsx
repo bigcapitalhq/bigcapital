@@ -17,7 +17,7 @@ interface ClearingAllLinesAlertProps extends WithAlertActionsProps {
   name: string;
   isOpen: boolean;
   payload: ClearingAllLinesAlertPayload;
-  onConfirm?: (event: React.SyntheticEvent<HTMLElement>) => void;
+  onConfirm?: (event?: React.SyntheticEvent<HTMLElement>) => void;
 }
 
 /**
@@ -34,7 +34,7 @@ function ClearningAllLinesAlert({
     closeAlert(name);
   };
 
-  const handleConfirm = (event: React.SyntheticEvent<HTMLElement>) => {
+  const handleConfirm = (event?: React.SyntheticEvent<HTMLElement>) => {
     closeAlert(name);
     saveInvoke(onConfirm, event);
   };

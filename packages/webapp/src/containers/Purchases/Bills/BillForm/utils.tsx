@@ -6,6 +6,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBillFormContext } from './BillFormProvider';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { Bill, CreateBillBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import {
@@ -21,7 +23,9 @@ import {
   ensureEntriesHaveEmptyLine,
   assignEntriesTaxAmount,
   aggregateItemEntriesTaxRates,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
@@ -43,11 +47,15 @@ export type BillFormEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  costAccountId: string | number;
   landedCost: boolean;
   landedCostDisabled?: boolean;
   taxRateId: string | number;
   taxRate: string | number;
   taxAmount: string | number;
+  batchId?: number | null;
+  batch?: Batch | null;
+  batches?: ItemEntryBatchAllocation[];
 };
 
 export type BillFormValues = {
@@ -79,10 +87,15 @@ export const defaultBillEntry: BillFormEntry = {
   quantity: '',
   description: '',
   amount: '',
+  costAccountId: '',
   landedCost: false,
+  landedCostDisabled: true,
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
+  batchId: null,
+  batch: null,
+  batches: [],
 };
 
 // Default bill.
@@ -160,8 +173,14 @@ export const transformEntriesToSubmit = (
   entries: BillFormEntry[],
 ): Record<string, unknown>[] => {
   const transformBillEntry = (entry: BillFormEntry) => {
-    const { amount, ...rest } = transformToForm(entry, defaultBillEntry);
-    return rest;
+    const { amount, batch, batchId, batches, ...rest } = transformToForm(
+      entry,
+      defaultBillEntry,
+    );
+    return {
+      ...rest,
+      ...getEntryBatchRequest(entry),
+    };
   };
   return FF.pipe(
     entries,
@@ -176,7 +195,9 @@ export const transformEntriesToSubmit = (
 export const filterNonZeroEntries = (
   entries: BillFormEntry[],
 ): BillFormEntry[] => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

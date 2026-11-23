@@ -7,11 +7,15 @@ import { useCurrentOrganizationName } from '@/hooks/query';
 
 function BalanceSheetBodyJSX() {
   const organizationName = useCurrentOrganizationName();
-  const { isLoading } = useBalanceSheetContext();
+  const { isLoading, balanceSheet } = useBalanceSheetContext();
+
+  // Shows the skeleton only on the initial load. Refetches (e.g. sorting)
+  // keep the current report rendered while the request is in flight.
+  const isInitialLoading = isLoading && !balanceSheet;
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
+      {isInitialLoading ? (
         <FinancialSheetSkeleton />
       ) : (
         <BalanceSheetTable companyName={organizationName} />

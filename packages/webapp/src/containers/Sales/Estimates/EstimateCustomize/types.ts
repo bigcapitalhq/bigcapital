@@ -26,15 +26,14 @@ export interface EstimateCustomizeValues extends BrandingTemplateValues {
   showEstimateDate?: boolean;
 
   // Addresses
-  showBilledFromAddress?: boolean;
-  showBillingToAddress?: boolean;
+  showCustomerAddress?: boolean;
+  showCompanyAddress?: boolean;
   billedToLabel?: string;
 
   // Entries
-  itemNameLabel?: string;
-  itemDescriptionLabel?: string;
-  itemRateLabel?: string;
-  itemTotalLabel?: string;
+  lineItemLabel?: string;
+  lineRateLabel?: string;
+  lineTotalLabel?: string;
 
   // Totals
   showSubtotal?: boolean;

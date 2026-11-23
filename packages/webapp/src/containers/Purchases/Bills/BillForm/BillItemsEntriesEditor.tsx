@@ -41,8 +41,10 @@ export function BillFormBody() {
           linesNumber={4}
           currencyCode={form.values.currencyCode}
           itemType={ITEM_TYPE.PURCHASABLE}
+          accountField={'costAccountId'}
           taxRates={taxRates}
           landedCost={isLandedCostEnabled}
+          batchMode="purchase"
         />
       )}
     </FastField>

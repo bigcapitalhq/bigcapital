@@ -1,4 +1,5 @@
 import React from 'react';
+import { NS } from '@/constants/classes';
 
 interface CreditCard2IconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -8,7 +9,7 @@ export const CreditCard2Icon: React.FC<CreditCard2IconProps> = ({
   size = 16,
   ...props
 }) => (
-  <span className={'bp4-icon bp4-icon-credit-card-2'}>
+  <span className={`${NS}-icon ${NS}-icon-credit-card-2`}>
     <svg
       width={size}
       height={size}

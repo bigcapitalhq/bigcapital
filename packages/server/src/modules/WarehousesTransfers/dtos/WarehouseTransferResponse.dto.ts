@@ -15,6 +15,12 @@ export class WarehouseTransferEntryResponseDto {
   itemId: number;
 
   @ApiProperty({
+    description: 'Batch assigned to this inventory movement',
+    required: false,
+  })
+  batchId?: number;
+
+  @ApiProperty({
     description: 'The quantity of items being transferred',
     example: 100,
   })
@@ -96,13 +102,13 @@ export class WarehouseTransferResponseDto {
 
   @ApiProperty({
     description: 'The date when the transfer was initiated',
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
   })
   transferInitiatedAt: Date;
 
   @ApiProperty({
     description: 'The date when the transfer was delivered',
-    example: '2024-03-21T15:00:00Z',
+    example: '2024-03-21',
   })
   transferDeliveredAt: Date;
 

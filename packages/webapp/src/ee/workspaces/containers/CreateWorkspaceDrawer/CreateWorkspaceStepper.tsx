@@ -5,6 +5,7 @@ import BuildingWorkspaceStep from './BuildingWorkspaceStep';
 import CreateWorkspaceForm from './CreateWorkspaceForm';
 import InviteUsersStep from './InviteUsersStep';
 import { Stepper } from '@/components/Stepper';
+import { NS } from '@/constants/classes';
 
 interface CreateWorkspaceStepperProps {
   onClose: () => void;
@@ -38,12 +39,12 @@ const createWorkspaceStepperContentCss = css`
   margin-top: 16px;
   margin-bottom: 0;
 
-  > .bp4-drawer-body {
+  > .${NS}-drawer-body {
     flex: 1;
     min-height: 0;
     overflow: auto;
   }
-  > .bp4-navbar {
+  > .${NS}-navbar {
     flex-shrink: 0;
   }
 `;

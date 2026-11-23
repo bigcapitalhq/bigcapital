@@ -34,6 +34,7 @@ export class ManualJournalGL {
       date: this.manualJournal.date,
       currencyCode: this.manualJournal.currencyCode,
       exchangeRate: this.manualJournal.exchangeRate,
+      basis: this.manualJournal.basis ?? null,
 
       transactionType: 'Journal',
       transactionId: this.manualJournal.id,
@@ -67,6 +68,12 @@ export class ManualJournalGL {
 
       branchId: entry.branchId,
       projectId: entry.projectId,
+      trackingCategories: (entry.trackingCategories ?? []).map(
+        (assignment) => ({
+          categoryId: assignment.categoryId,
+          optionId: assignment.optionId,
+        }),
+      ),
     };
   }
 

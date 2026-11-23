@@ -12,7 +12,7 @@ import {
   withProfitLossActions,
   WithProfitLossActionsProps,
 } from './withProfitLossActions';
-import { DashboardPageContent } from '@/components';
+import { DashboardPageContent, FinancialStatement } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 type ProfitLossSheetProps = Pick<
@@ -49,7 +49,7 @@ function ProfitLossSheetInner({
   );
 
   return (
-    <ProfitLossSheetProvider query={query}>
+    <ProfitLossSheetProvider query={query} setQuery={setLocationQuery}>
       <ProfitLossActionsBar
         numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
@@ -58,11 +58,13 @@ function ProfitLossSheetInner({
       <ProfitLossSheetAlerts />
 
       <DashboardPageContent>
-        <ProfitLossSheetHeader
-          pageFilter={query}
-          onSubmitFilter={handleSubmitFilter}
-        />
-        <ProfitLossBody />
+        <FinancialStatement numberFormat={query.numberFormat}>
+          <ProfitLossSheetHeader
+            pageFilter={query}
+            onSubmitFilter={handleSubmitFilter}
+          />
+          <ProfitLossBody />
+        </FinancialStatement>
       </DashboardPageContent>
 
       <ProfitLossSheetDialogs />

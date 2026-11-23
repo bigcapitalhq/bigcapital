@@ -1,6 +1,6 @@
+import { InvoicePaperTemplate } from '@bigcapital/pdf-templates';
 import { usePaymentPortalBoot } from '../../PaymentPortalBoot';
 import { Box, DrawerBody, DrawerHeaderContent } from '@/components';
-import { InvoicePaperTemplate } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoicePaperTemplate';
 
 export function PaymentInvoicePreviewContent() {
   const { sharableLinkMeta } = usePaymentPortalBoot();
@@ -17,13 +17,17 @@ export function PaymentInvoicePreviewContent() {
             dateIssue={sharableLinkMeta?.invoiceDateFormatted}
             total={sharableLinkMeta?.totalFormatted}
             subtotal={sharableLinkMeta?.subtotalFormatted}
-            balanceDue={sharableLinkMeta?.dueAmountFormatted}
+            dueAmount={sharableLinkMeta?.dueAmountFormatted}
             paymentMade={sharableLinkMeta?.paymentAmountFormatted}
             termsConditions={sharableLinkMeta?.termsConditions}
             statement={sharableLinkMeta?.invoiceMessage}
-            companyName={sharableLinkMeta?.organization?.name}
             primaryColor={sharableLinkMeta?.brandingTemplate?.primaryColor}
             secondaryColor={sharableLinkMeta?.brandingTemplate?.secondaryColor}
+            style={{
+              borderRadius: 5,
+              boxShadow:
+                'inset 0 4px 0 0 var(--invoice-primary-color), 0 10px 15px rgba(0, 0, 0, 0.05)',
+            }}
             lines={sharableLinkMeta?.entries?.map((entry) => ({
               item: entry.itemName,
               description: entry.description,

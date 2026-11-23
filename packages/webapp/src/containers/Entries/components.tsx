@@ -1,9 +1,16 @@
-import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import {
+  MenuItem,
+  Menu,
+  Button,
+  Position,
+  Intent,
+  Popover,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
-import type { Tooltip2Props } from '@blueprintjs/popover2';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
 import {
   InputGroupCell,
@@ -12,9 +19,14 @@ import {
   PercentFieldCell,
   NumericInputCell,
   CheckBoxFieldCell,
+  AccountsListFieldCell,
 } from '@/components/DataTableCells';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
-import { Align, CellType } from '@/constants';
+import { Align, CellType, ACCOUNT_ROOT_TYPE } from '@/constants';
+import {
+  PurchaseBatchAllocationsPopover,
+  SaleBatchAllocationsPopover,
+} from '@/ee/batches/components';
 import { formattedAmount } from '@/utils';
 
 /**
@@ -27,9 +39,25 @@ export function ItemHeaderCell() {
       <Hint
         content={<T id={'item_entries.products_services.hint'} />}
         tooltipProps={{
-          // The `boundary: 'window'` value predates the popper v2 boundary
-          // renames; the cast keeps the same runtime value.
-          boundary: 'window' as unknown as Tooltip2Props['boundary'],
+          rootBoundary: 'viewport',
+          position: Position.RIGHT,
+        }}
+      />
+    </>
+  );
+}
+
+/**
+ * Account header cell.
+ */
+export function AccountHeaderCell() {
+  return (
+    <>
+      <T id={'account'} />
+      <Hint
+        content={<T id={'item_entries.account.hint'} />}
+        tooltipProps={{
+          rootBoundary: 'viewport',
           position: Position.RIGHT,
         }}
       />
@@ -72,9 +100,9 @@ export function ActionsCellRenderer({
   } as React.ComponentProps<typeof Button>;
 
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button {...buttonProps} />
-    </Popover2>
+    </Popover>
   );
 }
 ActionsCellRenderer.cellType = CellType.Button;
@@ -106,11 +134,111 @@ const LandedCostHeaderCell = () => {
   );
 };
 
+interface BatchEntryCellProps {
+  row: {
+    index: number;
+    original: {
+      itemId?: number | string;
+      batchId?: number | null;
+      batch?: Batch | null;
+      batches?: ItemEntryBatchAllocation[];
+      quantity?: number | string;
+    };
+  };
+  payload: {
+    items?: Array<{ id: number; type?: string; name?: string }>;
+    batchMode?: 'purchase' | 'sale' | 'return';
+    updateRow: (rowIndex: number, patch: Record<string, unknown>) => void;
+  };
+}
+
+/**
+ * Batch entry button used by purchase/sale transaction lines.
+ */
+export function BatchEntryCell({ row, payload }: BatchEntryCellProps) {
+  const { index, original } = row;
+  const item = payload.items?.find(
+    (item) => Number(item.id) === Number(original.itemId),
+  );
+
+  if (!item || item.type !== 'inventory') {
+    return null;
+  }
+  const allocations: ItemEntryBatchAllocation[] =
+    (original.batches?.length ?? 0) > 0
+      ? (original.batches as ItemEntryBatchAllocation[])
+      : original.batchId
+        ? [
+            {
+              batchId: original.batchId,
+              quantity: Number(original.quantity) || 0,
+              batch: original.batch,
+            },
+          ]
+        : [];
+
+  if (payload.batchMode === 'sale' || payload.batchMode === 'return') {
+    return (
+      <SaleBatchAllocationsPopover
+        isReturn={payload.batchMode === 'return'}
+        itemId={Number(original.itemId)}
+        entryQuantity={original.quantity ?? 0}
+        allocations={allocations}
+        onApply={(nextAllocations) => {
+          payload.updateRow(index, {
+            batches: nextAllocations,
+            batchId: null,
+            batch: null,
+          });
+        }}
+      />
+    );
+  }
+  return (
+    <PurchaseBatchAllocationsPopover
+      itemId={Number(original.itemId)}
+      entryQuantity={original.quantity ?? 0}
+      allocations={allocations}
+      onApply={(nextAllocations) => {
+        payload.updateRow(index, {
+          batches: nextAllocations,
+          batchId: null,
+          batch: null,
+        });
+      }}
+    />
+  );
+}
+
+/**
+ * Quantity cell with the batch allocation trigger inside the input's left
+ * element.
+ */
+function BatchQuantityCell(props: any) {
+  const { row, payload } = props;
+  const item = payload.items?.find(
+    (item: { id: number }) => Number(item.id) === Number(row.original.itemId),
+  );
+
+  return (
+    <NumericInputCell
+      {...props}
+      leftElement={
+        item?.type === 'inventory' ? (
+          <BatchEntryCell row={row} payload={payload} />
+        ) : undefined
+      }
+    />
+  );
+}
+BatchQuantityCell.cellType = NumericInputCell.cellType;
+
 /**
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  const { landedCost, enableTaxRates } = useItemEntriesTableContext();
+  const { landedCost, enableTaxRates, batchMode, accountField } =
+    useItemEntriesTableContext();
 
   return React.useMemo(
     () => [
@@ -133,11 +261,24 @@ export function useEditableItemsEntriesColumns() {
         width: 120,
       },
       {
+        Header: AccountHeaderCell,
+        accessor: accountField || 'sellAccountId',
+        Cell: AccountsListFieldCell,
+        disableSortBy: true,
+        className: 'account',
+        width: 140,
+        filterAccountsByRootTypes: [
+          accountField === 'costAccountId'
+            ? ACCOUNT_ROOT_TYPE.EXPENSE
+            : ACCOUNT_ROOT_TYPE.INCOME,
+        ],
+      },
+      {
         Header: intl.get('quantity'),
         accessor: 'quantity',
-        Cell: NumericInputCell,
+        Cell: batchMode ? BatchQuantityCell : NumericInputCell,
         disableSortBy: true,
-        width: 70,
+        width: batchMode ? 120 : 70,
         align: Align.Right,
       },
       {
@@ -199,6 +340,6 @@ export function useEditableItemsEntriesColumns() {
         align: Align.Center,
       },
     ],
-    [],
+    [accountField, batchMode, enableTaxRates, landedCost],
   );
 }

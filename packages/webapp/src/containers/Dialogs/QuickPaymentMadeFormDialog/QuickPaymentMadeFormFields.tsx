@@ -26,6 +26,7 @@ import {
   FMoneyInputGroup,
 } from '@/components';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
@@ -153,7 +154,7 @@ function QuickPaymentMadeFormFieldsInner(): React.ReactElement {
 
       {/* --------- Statement --------- */}
       <FFormGroup name={'statement'} label={intl.get('statement')}>
-        <FTextArea name={'statement'} growVertically={true} fill={true} />
+        <FTextArea name={'statement'} autoResize={true} fill={true} />
       </FFormGroup>
     </div>
   );
@@ -166,7 +167,7 @@ export const BranchRowDivider = styled.div`
   background: #ebf1f6;
   margin-bottom: 15px;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     background: rgba(255, 255, 255, 0.1);
   }
 `;

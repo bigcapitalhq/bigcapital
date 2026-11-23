@@ -10,8 +10,12 @@ import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 import { events } from '@/common/events/events';
 import { IInventoryTransactionsCreatedPayload } from '../types/InventoryCost.types';
-import { transformItemEntriesToInventory } from '../utils';
+import {
+  groupInventoryTransactionsByTypeId,
+  transformItemEntriesToInventory,
+} from '../utils';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { InventoryStockGuard } from './InventoryStockGuard.service';
 
 @Injectable()
 export class InventoryTransactionsService {
@@ -19,9 +23,11 @@ export class InventoryTransactionsService {
    * @param {EventEmitter2} eventEmitter - Event emitter.
    * @param {TenantModelProxy<typeof InventoryTransaction>} inventoryTransactionModel - Inventory transaction model.
    * @param {TenantModelProxy<typeof InventoryCostLotTracker>} inventoryCostLotTracker - Inventory cost lot tracker model.
+   * @param {InventoryStockGuard} stockGuard - Inventory stock guard.
    */
   constructor(
     private readonly eventEmitter: EventEmitter2,
+    private readonly stockGuard: InventoryStockGuard,
 
     @Inject(InventoryTransaction.name)
     private readonly inventoryTransactionModel: TenantModelProxy<
@@ -46,13 +52,30 @@ export class InventoryTransactionsService {
     override: boolean = false,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    const bulkInsertOpers = [];
+    // Prevent inventory transactions that would make the items stock negative.
+    await this.stockGuard.assertSufficientStock(transactions, override, trx);
 
-    transactions.forEach((transaction: IInventoryTransactionRecord) => {
-      const oper = this.recordInventoryTransaction(transaction, override, trx);
-      bulkInsertOpers.push(oper);
-    });
-    const inventoryTransactions = await Promise.all(bulkInsertOpers);
+    if (override) {
+      const references = groupInventoryTransactionsByTypeId(
+        transactions.map(({ transactionId, transactionType }) => ({
+          transactionId,
+          transactionType,
+        })),
+      );
+      for (const [reference] of references) {
+        await this.deleteInventoryTransactions(
+          reference.transactionId,
+          reference.transactionType,
+          trx,
+          false,
+        );
+      }
+    }
+    const inventoryTransactions = await Promise.all(
+      transactions.map((transaction) =>
+        this.recordInventoryTransaction(transaction, false, trx),
+      ),
+    );
 
     // Triggers `onInventoryTransactionsCreated` event.
     await this.eventEmitter.emitAsync(
@@ -82,6 +105,7 @@ export class InventoryTransactionsService {
         inventoryEntry.transactionId,
         inventoryEntry.transactionType,
         trx,
+        false,
       );
     }
     return this.inventoryTransactionModel()
@@ -106,6 +130,16 @@ export class InventoryTransactionsService {
   ): Promise<void> {
     // Can't continue if there is no entries has inventory items in the invoice.
     if (transaction.entries.length <= 0) {
+      // When replacing an existing transaction, make sure its old inventory
+      // transactions are reverted even if the new transaction has no
+      // inventory entries.
+      if (override) {
+        await this.deleteInventoryTransactions(
+          transaction.transactionId,
+          transaction.transactionType,
+          trx,
+        );
+      }
       return;
     }
     // Inventory transactions.
@@ -124,17 +158,29 @@ export class InventoryTransactionsService {
    * @param {number} transactionId - Transaction id.
    * @param {string} transactionType - Transaction type.
    * @param {Knex.Transaction} trx - Knex transaction.
+   * @param {boolean} validateStock - Validate the stock after deleting the transactions.
    * @return {Promise<{ oldInventoryTransactions: IInventoryTransaction[] }>}
    */
   public async deleteInventoryTransactions(
     transactionId: number,
     transactionType: string,
     trx?: Knex.Transaction,
+    validateStock: boolean = true,
   ): Promise<{ oldInventoryTransactions: InventoryTransaction[] }> {
     // Retrieve the inventory transactions of the given sale invoice.
-    const oldInventoryTransactions = await this.inventoryTransactionModel()
-      .query(trx)
-      .where({ transactionId, transactionType });
+    const oldInventoryTransactions = await this.findInventoryTransactions(
+      transactionId,
+      transactionType,
+      trx,
+    );
+
+    // Prevent deleting the transactions that would make the items stock negative.
+    if (validateStock) {
+      await this.stockGuard.assertSufficientStockForDeletion(
+        oldInventoryTransactions,
+        trx,
+      );
+    }
 
     // Deletes the inventory transactions by the given transaction type and id.
     await this.inventoryTransactionModel()
@@ -153,6 +199,28 @@ export class InventoryTransactionsService {
       } as IInventoryTransactionsDeletedPayload,
     );
     return { oldInventoryTransactions };
+  }
+
+  /**
+   * Retrieves the stored inventory transactions of the given reference.
+   * @param {number} transactionId - Transaction reference id.
+   * @param {string} transactionType - Transaction reference type.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @return {Promise<InventoryTransaction[]>}
+   */
+  private async findInventoryTransactions(
+    transactionId: number,
+    transactionType: string,
+    trx?: Knex.Transaction,
+  ): Promise<InventoryTransaction[]> {
+    let query = this.inventoryTransactionModel()
+      .query(trx)
+      .where({ transactionId, transactionType });
+
+    if (trx) {
+      query = query.forUpdate();
+    }
+    return query;
   }
 
   /**

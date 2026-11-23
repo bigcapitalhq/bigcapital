@@ -42,8 +42,27 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     };
 
     /**
+     * Keeps an account when it or a descendant account has ledger entries
+     * in the report period. Parents stay so children that have transactions
+     * are not removed with them.
+     * @param {IProfitLossSheetNode} node
+     * @returns {boolean}
+     */
+    private isAccountNodeHasTransactions = (
+      node: IProfitLossSheetNode,
+    ): boolean => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id,
+      );
+
+      return !this.repository.totalAccountsLedger
+        .whereAccountsIds(accountIds)
+        .isEmpty();
+    };
+
+    /**
      * Determines account none-transactions node.
-     * @param {IBalanceSheetDataNode} node
+     * @param {IProfitLossSheetNode} node
      * @returns {boolean}
      */
     private accountNoneTransFilterDetarminer = (
@@ -51,7 +70,7 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     ): boolean => {
       return ifElse(
         this.isNodeType(ProfitLossNodeType.ACCOUNT),
-        this.isNodeNoneZero,
+        this.isAccountNodeHasTransactions,
         constant(true),
       )(node);
     };

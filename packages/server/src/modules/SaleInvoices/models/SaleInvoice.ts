@@ -21,6 +21,30 @@ import { SaleInvoiceMeta } from './SaleInvoice.meta';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { SaleInvoiceDefaultViews } from '../constants';
 
+/**
+ * Invoice total amount SQL expression that mirrors the `total` getter.
+ */
+const SALE_INVOICE_TOTAL_SQL = `(
+  COALESCE(BALANCE, 0)
+  - CASE
+      WHEN DISCOUNT_TYPE = 'amount' THEN COALESCE(DISCOUNT, 0)
+      ELSE COALESCE(BALANCE, 0) * (COALESCE(DISCOUNT, 0) / 100)
+    END
+  + COALESCE(ADJUSTMENT, 0)
+  + CASE WHEN IS_INCLUSIVE_TAX THEN 0 ELSE COALESCE(TAX_AMOUNT_WITHHELD, 0) END
+)`;
+
+/**
+ * Invoice due amount SQL expression that mirrors the `dueAmount` getter.
+ */
+const SALE_INVOICE_DUE_AMOUNT_SQL = `GREATEST(
+  ${SALE_INVOICE_TOTAL_SQL}
+  - COALESCE(PAYMENT_AMOUNT, 0)
+  - COALESCE(WRITTENOFF_AMOUNT, 0)
+  - COALESCE(CREDITED_AMOUNT, 0),
+  0
+)`;
+
 @InjectAttachable()
 @ExportableModel()
 @InjectModelMeta(SaleInvoiceMeta)
@@ -59,6 +83,9 @@ export class SaleInvoice extends TenantBaseModel {
 
   public branchId: number;
   public warehouseId: number;
+
+  public recurringInvoiceId: number | null;
+  public recurringInvoiceDate: string | null;
 
   public taxes!: TaxRateTransaction[];
   public entries!: ItemEntry[];
@@ -472,13 +499,19 @@ export class SaleInvoice extends TenantBaseModel {
             break;
           case 'overdue':
           default:
+            query.modify('delivered');
             query.modify('overdue');
+            query.whereRaw(`${SALE_INVOICE_DUE_AMOUNT_SQL} > 0`);
             break;
           case 'partially-paid':
-            query.modify('partiallyPaid');
+            query.whereRaw(`${SALE_INVOICE_DUE_AMOUNT_SQL} > 0`);
+            query.whereRaw(
+              `${SALE_INVOICE_DUE_AMOUNT_SQL} < ${SALE_INVOICE_TOTAL_SQL}`,
+            );
             break;
           case 'paid':
-            query.modify('paid');
+            query.modify('delivered');
+            query.whereRaw(`${SALE_INVOICE_DUE_AMOUNT_SQL} = 0`);
             break;
         }
       },
@@ -493,12 +526,16 @@ export class SaleInvoice extends TenantBaseModel {
       },
 
       dueInvoicesFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft invoices are not yet delivered, hence not receivables.
+        query.modify('delivered');
         query.modify('dueInvoices');
         query.modify('notOverdue', asDate);
         query.modify('fromDate', asDate);
       },
 
       overdueInvoicesFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft invoices are not yet delivered, hence not receivables.
+        query.modify('delivered');
         query.modify('dueInvoices');
         query.modify('overdue', asDate);
         query.modify('fromDate', asDate);
@@ -537,8 +574,23 @@ export class SaleInvoice extends TenantBaseModel {
     const {
       PdfTemplateModel,
     } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      RecurringInvoice,
+    } = require('../../RecurringInvoices/models/RecurringInvoice');
 
     return {
+      /**
+       * Sale invoice may belong to a recurring invoice profile.
+       */
+      recurringInvoice: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: RecurringInvoice,
+        join: {
+          from: 'sales_invoices.recurringInvoiceId',
+          to: 'recurring_invoices.id',
+        },
+      },
+
       /**
        * Sale invoice associated entries.
        */

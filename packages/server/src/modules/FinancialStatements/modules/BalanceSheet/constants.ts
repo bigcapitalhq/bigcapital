@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { IBalanceSheetQuery } from './BalanceSheet.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
@@ -84,7 +85,7 @@ export const getBalanceSheetDefaultQuery = (): IBalanceSheetQuery => {
     noneZero: false,
     noneTransactions: false,
 
-    basis: 'cash',
+    basis: AccountingBasis.Cash,
     accountIds: [],
 
     percentageOfColumn: false,

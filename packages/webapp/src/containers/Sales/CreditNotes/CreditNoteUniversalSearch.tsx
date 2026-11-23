@@ -6,6 +6,7 @@ import type { CreditNote } from '@bigcapital/sdk-ts';
 import type { ItemRendererProps } from '@blueprintjs/select';
 import { Icon, Choose, T, TextStatus } from '@/components';
 import { AbilitySubject, CreditNoteAction } from '@/constants/abilityOption';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -93,7 +94,7 @@ export function CreditNoteUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span className="bp4-text-muted">
+          <span className={`${NS}-text-muted`}>
             {item.reference.creditNoteNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedCreditNoteDate}

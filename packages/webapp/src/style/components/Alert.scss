@@ -1,6 +1,7 @@
-.bp4-alert{
-  .bp4-alert-footer{
-    .bp4-button{
+@import '@/style/_common';
+.#{$ns}-alert{
+  .#{$ns}-alert-footer{
+    .#{$ns}-button{
       min-width: 70px;
     }
   }

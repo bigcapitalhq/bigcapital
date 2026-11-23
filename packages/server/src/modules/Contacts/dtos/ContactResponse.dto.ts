@@ -22,11 +22,7 @@ export class ContactResponseDto {
   @ApiProperty({ example: 250.5, required: false, nullable: true })
   openingBalance?: number | null;
 
-  @ApiProperty({
-    example: '2024-01-15T00:00:00Z',
-    required: false,
-    nullable: true,
-  })
+  @ApiProperty({ example: '2024-01-15', required: false, nullable: true })
   openingBalanceAt?: Date | null;
 
   @ApiProperty({ example: 'Mr.', required: false, nullable: true })

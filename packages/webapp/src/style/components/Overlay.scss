@@ -1,6 +1,7 @@
+@import '@/style/_common';
 
 
 
-.bp4-overlay-backdrop {
+.#{$ns}-overlay-backdrop {
     // background-color: rgba(0, 10, 30, 0.7);
   }

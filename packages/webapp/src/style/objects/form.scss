@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .form {
   &__floating-footer {
     position: fixed;
@@ -14,14 +15,14 @@
 }
 
 // Form form.
-label.bp4-label {
+label.#{$ns}-label {
   color: #353535;
   font-weight: 400;
 
   .required {
     color: red;
   }
-  .bp4-form-group.bp4-inline & {
+  .#{$ns}-form-group.#{$ns}-inline & {
     margin: 0 10px 0 0;
     line-height: 30px;
   }
@@ -36,42 +37,42 @@ label.bp4-label {
   color: #333;
 
   &,
-  .bp4-dark & {
+  .#{$ns}-dark & {
     box-shadow: 0 0 0 transparent;
   }
   &:focus,
-  &.bp4-active {
+  &.#{$ns}-active {
     box-shadow: 0 0 0 1px #116cd0;
     border-color: #116cd0;
   }
 
-  &.bp4-disabled,
+  &.#{$ns}-disabled,
   &:disabled {
     background: #e9ecef;
   }
 
-  &.bp4-intent-danger {
+  &.#{$ns}-intent-danger {
     box-shadow: 0 0 0 transparent;
     border-color: #db3737;
 
     &:focus,
-    &.bp4-active {
+    &.#{$ns}-active {
       box-shadow: 0 0 0 1px #db3737;
       border-color: #db3737;
     }
   }
 }
 
-.bp4-input-group{
+.#{$ns}-input-group{
 
-  &.bp4-intent-danger{
+  &.#{$ns}-intent-danger{
     
-    .bp4-input{
+    .#{$ns}-input{
       box-shadow: 0 0 0 transparent;
       border-color: #db3737;
 
       &:focus,
-      &.bp4-active {
+      &.#{$ns}-active {
         box-shadow: 0 0 0 1px #db3737;
         border-color: #db3737;
       }
@@ -93,6 +94,15 @@ label.bp4-label {
   .#{$ns}-label {
     margin-bottom: 6px;
   }
+
+  // Blueprint's dark theme overrides the helper text but not the sub-label,
+  // which keeps the light theme muted color that's unreadable on dark surfaces.
+  .#{$ns}-dark & {
+    .#{$ns}-form-group-sub-label,
+    .#{$ns}-form-helper-text {
+      color: var(--color-muted-text);
+    }
+  }
 }
 
 .#{$ns}-button:not([class*='.#{$ns}-intent-']) {
@@ -106,8 +116,8 @@ label.bp4-label {
 
   &,
   &:hover,
-  .bp4-dark &,
-  .bp4-dark &:hover {
+  .#{$ns}-dark &,
+  .#{$ns}-dark &:hover {
     box-shadow: none;
     background-color: var(--color-ui-input-background);
     border: 1px solid var(--color-ui-input-border);
@@ -136,7 +146,7 @@ label.bp4-label {
     border-radius: 0.25rem;
     height: 100%;
 
-    .bp4-form-group & {
+    .#{$ns}-form-group & {
       padding: 0.25rem 0.5rem;
       font-size: 0.875rem;
       line-height: 1.5;
@@ -145,11 +155,11 @@ label.bp4-label {
   }
 }
 
-.bp4-form-group {
-  .bp4-input-group {
+.#{$ns}-form-group {
+  .#{$ns}-input-group {
     flex: 1 1 auto;
   }
-  .bp4-control-group {
+  .#{$ns}-control-group {
     >.input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -158,12 +168,12 @@ label.bp4-label {
 }
 
 .#{$ns}-html-select {
-  .bp4-icon-double-caret-vertical {
+  .#{$ns}-icon-double-caret-vertical {
     display: none;
   }
 }
 
-.bp4-datepicker-caption select {
+.#{$ns}-datepicker-caption select {
 
   &,
   &:hover {
@@ -191,7 +201,7 @@ label.bp4-label {
 
 .form-group--select-list {
 
-  .form-group--select-list.bp4-intent-danger & {
+  .form-group--select-list.#{$ns}-intent-danger & {
     & {
       border-color: #db3737;
     }
@@ -203,7 +213,7 @@ label.bp4-label {
     padding-right: 25px;
     justify-content: start;
 
-    &:not([class*="bp4-intent-"]):not(.bp4-minimal) {
+    &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal) {
 
       &,
       &:hover {
@@ -223,41 +233,41 @@ label.bp4-label {
     }
   }
 
-  &.bp4-fill {
+  &.#{$ns}-fill {
     width: 100%;
   }
 
-  .bp4-popover-target.bp4-popover-open {
+  .#{$ns}-popover-target.#{$ns}-popover-open {
 
     .#{$ns}-button {
 
-      &:not([class*="bp4-intent-"]):not(.bp4-minimal):not(:disabled),
-      &:not([class*="bp4-intent-"]):not(.bp4-minimal):hover:not(:disabled) {
+      &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal):not(:disabled),
+      &:not([class*="#{$ns}-intent-"]):not(.#{$ns}-minimal):hover:not(:disabled) {
         background-color: #fafafa;
       }
     }
   }
 
-  .bp4-popover-target {
-    .bp4-icon {
+  .#{$ns}-popover-target {
+    .#{$ns}-icon {
       position: absolute;
       top: 0;
       left: 0;
       margin: 7px;
 
-      +.bp4-button-text {
+      +.#{$ns}-button-text {
         padding-left: 20px;
       }
     }
 
-    .bp4-button {
+    .#{$ns}-button {
       padding-left: 10px;
       color: #333;
     }
   }
 
-  &.bp4-intent-danger {
-    .bp4-button:not(.bp4-minimal) {
+  &.#{$ns}-intent-danger {
+    .#{$ns}-button:not(.#{$ns}-minimal) {
       border-color: #db3737;
     }
   }
@@ -266,23 +276,23 @@ label.bp4-label {
 .select-list--fill-popover {
   position: relative;
 
-  .bp4-transition-container,
-  .bp4-popover {
+  .#{$ns}-popover-transition-container,
+  .#{$ns}-popover {
     min-width: 100%;
   }
 }
 
-.select-list--tooltip-items .bp4-popover-target {
+.select-list--tooltip-items .#{$ns}-popover-target {
   display: block;
 }
-.bp4-menu-item::before,
-.bp4-menu-item>.bp4-icon {
+.#{$ns}-menu-item::before,
+.#{$ns}-menu-item>.#{$ns}-icon {
   color: #4b5d6b;
 }
 
-.bp4-control-group {
+.#{$ns}-control-group {
   .input-prepend {
-    &:not(.bp4-fixed) {
+    &:not(.#{$ns}-fixed) {
       flex: 0;
     }
 
@@ -303,13 +313,13 @@ label.bp4-label {
       border: 1px solid var(--color-ui-input-group-prepend-border);
       border-radius: 0 3px 3px 0;
 
-      .bp4-icon {
+      .#{$ns}-icon {
         color: #848da0;
       }
     }
   }
 }
 
-.bp4-control.bp4-checkbox .bp4-control-indicator{
+.#{$ns}-control.#{$ns}-checkbox .#{$ns}-control-indicator{
   border-color: #666;
 }

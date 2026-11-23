@@ -5,9 +5,11 @@ import {
   SendInviteUserDto,
   BulkSendInviteUserDto,
 } from './dtos/InviteUser.dto';
+import { SkipSubscriptionCheck } from '@/modules/Subscription/decorators/SkipSubscriptionCheck.decorator';
 
 @Controller('invite')
 @ApiTags('Users')
+@SkipSubscriptionCheck()
 export class UsersInviteController {
   constructor(private readonly usersApplication: UsersApplication) {}
 

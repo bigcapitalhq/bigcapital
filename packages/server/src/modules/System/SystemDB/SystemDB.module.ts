@@ -1,6 +1,7 @@
 import Knex from 'knex';
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
 import {
   SystemKnexConnection,
   SystemKnexConnectionConfigure,
@@ -21,6 +22,7 @@ const providers = [
         password: configService.get('systemDatabase.password'),
         database: configService.get('systemDatabase.databaseName'),
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
         directory: configService.get('systemDatabase.migrationDir'),

@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 
 
@@ -18,7 +19,7 @@
     background: #fbfafa;
     margin-bottom: 22px;
 
-    .bp4-form-group.bp4-inline{
+    .#{$ns}-form-group.#{$ns}-inline{
       margin-bottom: 0;
     }
   }
@@ -71,7 +72,7 @@
   .dragable-columns{
     &__column{
 
-      .bp4-input-group .bp4-input{
+      .#{$ns}-input-group .#{$ns}-input{
         border-radius: 3px 3px 0 0;
       }
 
@@ -91,7 +92,7 @@
   &__role-conditional{
     margin-top: 1rem;
 
-    .bp4-form-group{
+    .#{$ns}-form-group{
       margin-bottom: 0;
     }
   }

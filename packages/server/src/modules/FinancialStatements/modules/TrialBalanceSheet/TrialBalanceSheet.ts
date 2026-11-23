@@ -16,6 +16,7 @@ import {
   IFinancialReportMeta,
   DEFAULT_REPORT_META,
 } from '../../types/Report.types';
+import { sortTrialBalanceAccounts } from './_utils';
 
 export class TrialBalanceSheet extends FinancialSheet {
   /**
@@ -243,6 +244,19 @@ export class TrialBalanceSheet extends FinancialSheet {
   }
 
   /**
+   * Sort accounts nodes.
+   * @param {ITrialBalanceAccount[]}
+   * @returns {ITrialBalanceAccount[]}
+   */
+  private sortAccounts = (accountsNodes: ITrialBalanceAccount[]) => {
+    return sortTrialBalanceAccounts(
+      accountsNodes,
+      this.query.columnSortBy,
+      this.query.sortOrder,
+    );
+  };
+
+  /**
    * Retrieve accounts section of trial balance report.
    * @param {IAccount[]} accounts
    * @returns {ITrialBalanceAccount[]}
@@ -250,6 +264,7 @@ export class TrialBalanceSheet extends FinancialSheet {
   private accountsSection(accounts: ModelObject<Account>[]) {
     return flow(
       this.accountsMapper,
+      this.sortAccounts,
       this.nestedAccountsNode,
       this.accountsFilter,
     )(accounts);

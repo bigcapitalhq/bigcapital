@@ -147,6 +147,7 @@ function useDefaultComparatorFieldValue({
   fieldMeta,
 }: DefaultComparatorHookArgs) {
   const fieldKeyValue = getConditionValue('fieldKey');
+  const prevFieldKeyRef = React.useRef(fieldKeyValue);
 
   const comparatorsOptions = React.useMemo(
     () => (fieldMeta ? getConditionTypeCompatators(fieldMeta.fieldType) : []),
@@ -154,6 +155,13 @@ function useDefaultComparatorFieldValue({
   );
 
   useUpdateEffect(() => {
+    // Do not reset the comparator when the field meta/options are rebuilt on
+    // every list re-render, only reset it when the field key itself changes.
+    if (prevFieldKeyRef.current === fieldKeyValue) {
+      return;
+    }
+    prevFieldKeyRef.current = fieldKeyValue;
+
     if (fieldKeyValue) {
       const defaultValue = get(first(comparatorsOptions), 'value');
       setConditionValue('comparator', defaultValue);

@@ -6,6 +6,7 @@ import {
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { IFinancialTable, ITableRow } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface ICashFlowStatementQuery {
   fromDate: Date | string;
@@ -15,7 +16,7 @@ export interface ICashFlowStatementQuery {
   noneZero: boolean;
   noneTransactions: boolean;
   numberFormat: INumberFormatQuery;
-  basis: string;
+  basis: AccountingBasis;
 
   branchesIds?: number[];
 }

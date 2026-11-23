@@ -1,8 +1,9 @@
+@import '@/style/_common';
 
 .financial-statement--journal{
 
   .financial-header-drawer{
-    .bp4-drawer{
+    .#{$ns}-drawer{
       max-height: 350px;
     }
   }

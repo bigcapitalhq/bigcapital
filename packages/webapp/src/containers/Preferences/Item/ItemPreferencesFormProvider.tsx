@@ -3,14 +3,20 @@ import React, { createContext } from 'react';
 import { useContext } from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
-import type { Account } from '@bigcapital/sdk-ts';
+import type { Account, User } from '@bigcapital/sdk-ts';
 import type { SaveSettingsBody, SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { useAccounts, useSaveSettings, useSettingsItems } from '@/hooks/query';
+import {
+  useAccounts,
+  useSaveSettings,
+  useSettingsItems,
+  useUsers,
+} from '@/hooks/query';
 
 interface ItemPreferencesFormContextValue {
   accounts: Account[];
+  users: User[];
   itemsSettings?: SettingsGroup;
   saveSettingMutate: (vars: {
     options: SaveSettingsBody['options'];
@@ -29,22 +35,22 @@ function ItemPreferencesFormProvider({
   ...props
 }: ItemPreferencesFormProviderProps) {
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isUsersLoading, data: users } = useUsers();
 
-  const {
-    data: itemsSettings,
-    isLoading: isItemsSettingsLoading,
-    isFetching: isItemsSettingsFetching,
-  } = useSettingsItems();
+  const { data: itemsSettings, isLoading: isItemsSettingsLoading } =
+    useSettingsItems();
 
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   const provider: ItemPreferencesFormContextValue = {
     accounts: accounts ?? [],
+    users: users ?? [],
     itemsSettings,
     saveSettingMutate,
   };
 
-  const isLoading = isAccountsLoading || isItemsSettingsLoading;
+  const isLoading =
+    isAccountsLoading || isUsersLoading || isItemsSettingsLoading;
 
   return (
     <div

@@ -4,6 +4,7 @@ import { get } from 'lodash';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { Group } from '@/components';
+import { NS } from '@/constants/classes';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 
 export interface PaymentMethodSelectProps {
@@ -65,7 +66,7 @@ export function PaymentMethodSelectField({
 const PaymentMethodSelectRoot = styled(Group)`
   --x-color-border: #d3d8de;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-border: rgba(255, 255, 255, 0.2);
   }
   border: 1px solid var(--x-color-border);
@@ -79,12 +80,12 @@ const PaymentMethodSelectRoot = styled(Group)`
 const PaymentMethodCheckbox = styled(Checkbox)`
   --x-color-border: #c5cbd3;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-border: rgba(255, 255, 255, 0.2);
   }
   margin: 0;
 
-  &.bp4-control .bp4-control-indicator {
+  &.${NS}-control .${NS}-control-indicator {
     box-shadow: 0 0 0 1px var(--x-color-border);
   }
 `;
@@ -92,7 +93,7 @@ const PaymentMethodCheckbox = styled(Checkbox)`
 const PaymentMethodText = styled(Text)`
   --x-color-text: #404854;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   color: var(--x-color-text);

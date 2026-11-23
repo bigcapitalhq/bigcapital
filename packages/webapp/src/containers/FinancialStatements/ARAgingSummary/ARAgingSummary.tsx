@@ -54,7 +54,7 @@ function ARAgingSummaryInner({
       <ARAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat}>
           <ARAgingSummaryHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

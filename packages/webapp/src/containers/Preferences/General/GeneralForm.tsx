@@ -1,6 +1,6 @@
 import { getAllCountries } from '@bigcapital/utils';
 import { Button, FormGroup, Intent } from '@blueprintjs/core';
-import { TimezonePicker, getTimezoneMetadata } from '@blueprintjs/timezone';
+import { TimezoneSelect, getTimezoneMetadata } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { ErrorMessage, Form, useFormikContext } from 'formik';
 import React from 'react';
@@ -20,6 +20,7 @@ import {
   Group,
 } from '@/components';
 import { SelectButton } from '@/components/Forms/Select';
+import { NS } from '@/constants/classes';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
@@ -255,10 +256,10 @@ const CardFooterActions = styled.div`
   border-top: 1px solid var(--x-color-border);
   margin-top: 30px;
 
-  .bp4-button {
+  .${NS}-button {
     min-width: 70px;
 
-    + .bp4-button {
+    + .${NS}-button {
       margin-left: 10px;
     }
   }
@@ -275,11 +276,8 @@ function TimezoneField() {
     const placeholder = <T id={'select_time_zone'} />;
     if (!value) return placeholder;
     try {
-      const { abbreviation, offsetAsString } = getTimezoneMetadata(
-        value,
-        new Date(),
-      );
-      return `${value}${abbreviation ? ` (${abbreviation})` : ''} ${offsetAsString}`;
+      const zone = getTimezoneMetadata(value, new Date());
+      return zone ? `${value} (${zone.shortName}) ${zone.offset}` : value;
     } catch (e) {
       return value; // fallback
     }
@@ -294,17 +292,18 @@ function TimezoneField() {
       intent={inputIntent({ error, touched: isTouched }) as Intent | undefined}
       helperText={<ErrorMessage name="timezone" />}
     >
-      <TimezonePicker
+      <TimezoneSelect
         value={value}
         onChange={(timezone: string) => setFieldValue('timezone', timezone)}
-        popoverProps={{ minimal: true, fill: true }}
+        fill
+        popoverProps={{ minimal: true }}
       >
         <SelectButton
           text={compositeLabel}
           className={classNames({ 'is-selected': !!value })}
           fill
         />
-      </TimezonePicker>
+      </TimezoneSelect>
     </FFormGroup>
   );
 }

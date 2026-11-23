@@ -1,15 +1,19 @@
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { SaleInvoice } from '../../models/SaleInvoice';
 import { IInventoryTransactionFromItemsEntries } from '@/modules/InventoryCost/types/InventoryCost.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class InvoiceInventoryTransactions {
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
     private readonly inventoryService: InventoryTransactionsService,
+
+    @Inject(SaleInvoice.name)
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -25,24 +29,30 @@ export class InvoiceInventoryTransactions {
     override?: boolean,
     trx?: Knex.Transaction,
   ): Promise<void> {
+    // Retrieves the invoice entries with their batch allocations.
+    const invoice = await this.saleInvoiceModel()
+      .query(trx)
+      .findById(saleInvoice.id)
+      .withGraphFetched('entries.batches');
+
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(
-        saleInvoice.entries,
+        invoice.entries,
         trx,
       );
     const transaction: IInventoryTransactionFromItemsEntries = {
-      transactionId: saleInvoice.id,
+      transactionId: invoice.id,
       transactionType: 'SaleInvoice',
-      transactionNumber: saleInvoice.invoiceNo,
+      transactionNumber: invoice.invoiceNo,
 
-      exchangeRate: saleInvoice.exchangeRate,
-      warehouseId: saleInvoice.warehouseId,
+      exchangeRate: invoice.exchangeRate,
+      warehouseId: invoice.warehouseId,
 
-      date: saleInvoice.invoiceDate,
+      date: invoice.invoiceDate,
       direction: 'OUT',
       entries: inventoryEntries,
-      createdAt: saleInvoice.createdAt,
+      createdAt: invoice.createdAt,
     };
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       transaction,

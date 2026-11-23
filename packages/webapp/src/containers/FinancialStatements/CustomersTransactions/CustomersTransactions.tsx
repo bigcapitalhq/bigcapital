@@ -59,7 +59,7 @@ function CustomersTransactionsInner({
       />
       <CustomersTransactionsLoadingBar />
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={filter.numberFormat ?? {}}>
           <CustomersTransactionsHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}

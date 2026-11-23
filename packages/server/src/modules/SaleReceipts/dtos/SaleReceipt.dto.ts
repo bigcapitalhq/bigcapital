@@ -108,8 +108,9 @@ export class CommandSaleReceiptDto {
   @Type(() => SaleReceiptEntryDto)
   @ArrayMinSize(1)
   @ApiProperty({
+    type: [ItemEntryDto],
     description: 'The entries of the sale receipt',
-    example: [{ key: '123456' }],
+    example: [{ itemId: 1, quantity: 1, rate: 10 }],
   })
   entries: SaleReceiptEntryDto[];
 
@@ -135,7 +136,7 @@ export class CommandSaleReceiptDto {
   @Type(() => AttachmentDto)
   @ApiProperty({
     description: 'The attachments of the sale receipt',
-    example: [{ key: '123456' }],
+    example: [{ itemId: 1, quantity: 1, rate: 10 }],
   })
   attachments?: AttachmentDto[];
 

@@ -78,7 +78,7 @@ export interface ISalesInvoicesFilter extends IDynamicListFilter {
 
 export interface ISaleInvoiceWriteoffDTO {
   expenseAccountId: number;
-  date: Date;
+  date?: Date | string;
   reason: string;
 }
 
@@ -243,7 +243,7 @@ export interface InvoicePdfTemplateAttributes {
   companyName: string;
 
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
 
   dueDate: string;
   dueDateLabel: string;

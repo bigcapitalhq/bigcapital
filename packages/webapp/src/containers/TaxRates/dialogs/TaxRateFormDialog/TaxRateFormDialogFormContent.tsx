@@ -1,4 +1,4 @@
-import { Tag, Text } from '@blueprintjs/core';
+import { Tag } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { ChangeEvent } from 'react';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import {
   useIsTaxRateChanged,
 } from './utils';
 import { FCheckbox, FFormGroup, FInputGroup, Hint } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Tax rate form content.
@@ -106,7 +107,7 @@ function ConfirmEditingTaxRate() {
 
   return (
     <EditWarningWrap>
-      <Text color={'#766f58'}>Please Note:</Text>
+      <EditWarningTitle>Please Note:</EditWarningTitle>
       <ConfirmEditFormGroup name={'confirmEdit'} helperText={''}>
         <FCheckbox
           name={'confirmEdit'}
@@ -128,14 +129,28 @@ const CompoundFormGroup = styled(FFormGroup)`
 `;
 
 const EditWarningWrap = styled(`div`)`
-  background: #fcf8ec;
-  margin-left: -20px;
-  margin-right: -20px;
+  --x-warning-background: #fcf8ec;
+  --x-warning-border: #f2eddf;
+  --x-warning-title-text: #766f58;
+
+  .${NS}-dark & {
+    --x-warning-background: var(--color-dark-gray3);
+    --x-warning-border: rgba(255, 255, 255, 0.15);
+    --x-warning-title-text: var(--color-light-gray2);
+  }
+
+  background: var(--x-warning-background);
+  margin-left: -14px;
+  margin-right: -14px;
   padding: 14px 20px;
   font-size: 13px;
   margin-top: 8px;
-  border-top: 1px solid #f2eddf;
-  border-bottom: 1px solid #f2eddf;
+  border-top: 1px solid var(--x-warning-border);
+  border-bottom: 1px solid var(--x-warning-border);
+`;
+
+const EditWarningTitle = styled(`div`)`
+  color: var(--x-warning-title-text);
 `;
 
 const ConfirmEditFormGroup = styled(FFormGroup)`

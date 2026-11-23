@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
 import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { CLASSES, NS } from '@/constants/classes';
 import { useSettingsEstimates } from '@/hooks/query';
 
 export interface PreferencesEstimatesBootContextValue {
@@ -60,7 +60,7 @@ const usePreferencesEstimatesFormContext = () =>
 const PreferencesEstimatesCard = styled(Card)`
   padding: 25px;
 
-  .bp4-form-group {
+  .${NS}-form-group {
     max-width: 600px;
   }
 `;

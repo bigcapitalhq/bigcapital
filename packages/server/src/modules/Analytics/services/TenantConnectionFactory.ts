@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import knex, { Knex } from 'knex';
 import * as LRUCache from 'lru-cache';
 import { knexSnakeCaseMappers } from 'objection';
+import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
 
 /**
  * Resolves raw knex connections to the tenant databases by organization id.
@@ -66,6 +67,7 @@ export class TenantConnectionFactory {
         password: this.configService.get('tenantDatabase.password'),
         database: databaseName,
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       pool: { min: 0, max: 5 },
       ...knexSnakeCaseMappers({ upperCase: true }),

@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dialog--keyboard-shortcuts {
   .bigcapital-datatable {
     .table {
@@ -31,8 +32,8 @@
     text-align: right;
     margin: 0px 15px;
 
-    .bp4-button.bp4-small,
-    .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal).bp4-small {
+    .#{$ns}-button.#{$ns}-small,
+    .#{$ns}-button:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal).#{$ns}-small {
       min-width: 65px;
       height: 26px;
       min-height: 26px;

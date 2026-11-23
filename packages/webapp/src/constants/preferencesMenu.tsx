@@ -14,13 +14,18 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     disabled: false,
     href: '/preferences/branding',
   },
-  // {
-  //   text: 'Billing',
-  //   href: '/preferences/billing',
-  // },
+  {
+    text: 'Billing',
+    href: '/preferences/billing',
+    cloudOnly: true,
+  },
   {
     text: <T id={'users'} />,
     href: '/preferences/users',
+  },
+  {
+    text: <T id={'security.title'} />,
+    href: '/preferences/security',
   },
   {
     text: 'Payment Methods',
@@ -53,6 +58,11 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
   {
     text: <T id={'warehouses.label'} />,
     href: '/preferences/warehouses',
+  },
+  {
+    text: <T id={'tracking_categories.label'} />,
+    href: '/preferences/tracking-categories',
+    feature: Features.TrackingCategories,
   },
   {
     text: <T id={'accountant'} />,

@@ -3,10 +3,10 @@
 
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
-@import '@blueprintjs/popover2/src/blueprint-popover2.scss';
+@import '@blueprintjs/select/src/blueprint-select.scss';
 
 @mixin dark-mode {
-  .bp4-dark & {
+  .#{$ns}-dark & {
     @content;
   }
 }
@@ -58,57 +58,63 @@ body.hide-scrollbar .Pane2 {
   overflow: hidden;
 }
 
-.bp4-fill {
+.#{$ns}-fill {
 
-  .bp4-popover-wrapper,
-  .bp4-popover-target {
+  .#{$ns}-popover-target {
     display: block;
     width: 100%;
   }
 
-  .bp4-button {
+  .#{$ns}-button {
     width: 100%;
     justify-content: start;
   }
 }
 
-.bp4-datepicker-caption .bp4-html-select::after {
+.#{$ns}-datepicker-caption .#{$ns}-html-select::after {
   margin-right: 6px;
 }
 
-.bp4-select-popover .bp4-menu,
-.bp4-multi-select-popover .bp4-menu {
+.#{$ns}-select-popover .#{$ns}-menu,
+.#{$ns}-multi-select-popover .#{$ns}-menu {
   max-height: 300px;
   overflow: auto;
 }
 
-.bp4-form-group .bp4-label {
+.#{$ns}-form-group .#{$ns}-label {
   .hint {
-    .bp4-popover-wrapper {
+    .#{$ns}-popover-target {
       display: inline;
     }
   }
 
-  &:not(.bp4-inline) .hint .bp4-popover-target {
+  &:not(.#{$ns}-inline) .hint .#{$ns}-popover-target {
     display: inline;
     margin-left: 0;
   }
 }
 
-.bp4-popover.bp4-tooltip {
+.#{$ns}-popover.#{$ns}-tooltip {
   max-width: 300px;
 }
 
-.bp4-timezone-picker {
-  .bp4-button {
+.#{$ns}-timezone-select {
+  .#{$ns}-button {
     [icon='caret-down'] {
       display: none;
     }
   }
 }
 
-.bp4-progress-bar.bp4-intent-primary .bp4-progress-meter {
+.#{$ns}-progress-bar.#{$ns}-intent-primary .#{$ns}-progress-meter {
   background-color: #0066ff;
+}
+
+.#{$ns}-card,
+.#{$ns}-card.#{$ns}-dark,
+.#{$ns}-dark .#{$ns}-card {
+  box-shadow: 0 0 0;
+  border: 1px solid #383e47;
 }
 
 .ReactVirtualized__Collection {}
@@ -190,7 +196,7 @@ body.hide-scrollbar .Pane2 {
 
 .ReactVirtualized__List {}
 
-.bp4-drawer {
+.#{$ns}-drawer {
   box-shadow: 0 0 0;
   background-color: #fbfbfb;
 
@@ -201,7 +207,7 @@ body.hide-scrollbar .Pane2 {
 
 // RTL Icons.
 html[dir='rtl'] {
-  .bp4-icon-caret-right {
+  .#{$ns}-icon-caret-right {
     transform: scaleX(-1);
   }
 }
@@ -212,12 +218,12 @@ html[lang^='ar'] {
   }
 }
 
-.bp4-popover2 {
+.#{$ns}-popover {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
 }
 
-.bp4-tooltip2 .bp4-popover2-arrow:before {
+.#{$ns}-tooltip .#{$ns}-popover-arrow:before {
   box-shadow: 0 0 0;
 }
 
@@ -240,25 +246,25 @@ html[lang^='ar'] {
     gap: 10px;
   }
 
-  .bp4-dialog {
+  .#{$ns}-dialog {
     &-body {
       &:not(.loading) {
         margin: 0;
       }
 
-      >.bp4-spinner {
+      >.#{$ns}-spinner {
         margin: 20px 0;
       }
     }
   }
 }
 
-.bp4-drawer {
+.#{$ns}-drawer {
   border-left: 1px solid var(--color-drawer-border-left);
 }
 
 .drawer-portal {
-  .bp4-overlay-backdrop {
+  .#{$ns}-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
 }
@@ -286,7 +292,7 @@ html[lang^='ar'] {
 a.text-link {
   text-decoration: none;
   &,
-  .bp4-dark &{
+  .#{$ns}-dark &{
     color: inherit;
   }
   &:hover {
@@ -299,7 +305,7 @@ span.table-tooltip-overview-target {
   display: inline;
 }
 
-.bp4-callout .bp4-heading:first-child {
+.#{$ns}-callout .#{$ns}-heading:first-child {
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: 600;

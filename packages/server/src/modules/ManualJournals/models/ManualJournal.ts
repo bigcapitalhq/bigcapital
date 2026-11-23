@@ -10,6 +10,7 @@ import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { ManualJournalDefaultViews } from '../constants';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 @InjectAttachable()
 @ExportableModel()
@@ -20,6 +21,7 @@ export class ManualJournal extends TenantBaseModel {
   date: Date;
   journalNumber: string;
   journalType: string;
+  basis: AccountingBasis | null;
   reference: string;
   amount: number;
   currencyCode: string;
@@ -27,6 +29,9 @@ export class ManualJournal extends TenantBaseModel {
   publishedAt: Date | string | null;
   description: string;
   userId?: number;
+
+  recurringJournalId?: number | null;
+  recurringJournalDate?: Date | string | null;
 
   createdAt?: Date;
   updatedAt?: Date;

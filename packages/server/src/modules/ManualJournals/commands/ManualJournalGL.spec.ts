@@ -1,4 +1,5 @@
 import { AccountNormal } from '@/modules/Accounts/Accounts.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { ManualJournalGL } from './ManualJournalGL';
 
 const buildManualJournal = (overrides: Record<string, any> = {}) =>
@@ -87,5 +88,54 @@ describe('ManualJournalGL', () => {
 
     expect(entry.currencyCode).toBe('EUR');
     expect(entry.exchangeRate).toBe(2);
+  });
+
+  it.each([
+    [AccountingBasis.Cash, AccountingBasis.Cash],
+    [AccountingBasis.Accrual, AccountingBasis.Accrual],
+    [null, null],
+  ])(
+    'flags every ledger entry with the journal accounting basis %s',
+    (basis, expected) => {
+      const ledger = buildLedger(buildManualJournal({ basis }));
+
+      expect(
+        ledger.getEntries().every((entry) => entry.basis === expected),
+      ).toBe(true);
+    },
+  );
+
+  it('propagates the tracking category assignments to the ledger entries', () => {
+    const ledger = buildLedger(
+      buildManualJournal({
+        entries: [
+          {
+            id: 1,
+            index: 1,
+            debit: 1000,
+            credit: 0,
+            accountId: 10,
+            account: { accountNormal: AccountNormal.DEBIT },
+            trackingCategories: [{ categoryId: 3, optionId: 7 }],
+          },
+          {
+            id: 2,
+            index: 2,
+            debit: 0,
+            credit: 1000,
+            accountId: 20,
+            account: { accountNormal: AccountNormal.CREDIT },
+            trackingCategories: [],
+          },
+        ],
+      }),
+    );
+
+    const [debitEntry, creditEntry] = ledger.getEntries();
+
+    expect(debitEntry.trackingCategories).toEqual([
+      { categoryId: 3, optionId: 7 },
+    ]);
+    expect(creditEntry.trackingCategories).toEqual([]);
   });
 });

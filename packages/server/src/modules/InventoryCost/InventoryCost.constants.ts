@@ -1,0 +1,6 @@
+export const PREVENT_STOCK_FROM_GOING_BELOW_ZERO_SETTING =
+  'prevent_stock_from_going_below_zero';
+
+export const ERRORS = {
+  INVENTORY_ITEM_INSUFFICIENT_STOCK: 'INVENTORY_ITEM_INSUFFICIENT_STOCK',
+};

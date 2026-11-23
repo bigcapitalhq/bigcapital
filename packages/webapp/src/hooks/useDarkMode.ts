@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
 import { useState, useEffect } from 'react';
+import { NS } from '@/constants/classes';
 
 export const useIsDarkMode = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -7,8 +8,8 @@ export const useIsDarkMode = () => {
     if (typeof window === 'undefined') return false;
 
     return (
-      document.documentElement.classList.contains('bp4-dark') ||
-      document.body.classList.contains('bp4-dark')
+      document.documentElement.classList.contains(`${NS}-dark`) ||
+      document.body.classList.contains(`${NS}-dark`)
     );
   });
 
@@ -17,8 +18,8 @@ export const useIsDarkMode = () => {
 
     const checkDarkMode = () => {
       const hasDarkClass =
-        document.documentElement.classList.contains('bp4-dark') ||
-        document.body.classList.contains('bp4-dark');
+        document.documentElement.classList.contains(`${NS}-dark`) ||
+        document.body.classList.contains(`${NS}-dark`);
       setIsDarkMode(hasDarkClass);
     };
 
@@ -58,7 +59,7 @@ export const useIsDarkMode = () => {
 };
 
 export const darkMode = (styles: string) => css`
-  .bp4-dark & {
+  .${NS}-dark & {
     ${styles}
   }
 `;

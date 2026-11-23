@@ -179,6 +179,20 @@ export type InventoryValuationColumnKey =
   (typeof INVENTORY_VALUATION_COLUMN_KEYS)[keyof typeof INVENTORY_VALUATION_COLUMN_KEYS];
 
 // ----------------------------------------
+// # Inventory summary.
+// ----------------------------------------
+export const INVENTORY_SUMMARY_COLUMN_KEYS = {
+  ITEM_NAME: 'item_name',
+  OPENING_STOCK: 'opening_stock',
+  QUANTITY_IN: 'quantity_in',
+  QUANTITY_OUT: 'quantity_out',
+  CLOSING_STOCK: 'closing_stock',
+} as const;
+
+export type InventorySummaryColumnKey =
+  (typeof INVENTORY_SUMMARY_COLUMN_KEYS)[keyof typeof INVENTORY_SUMMARY_COLUMN_KEYS];
+
+// ----------------------------------------
 // # Inventory item details.
 // ----------------------------------------
 export const INVENTORY_ITEM_DETAILS_COLUMN_KEYS = {

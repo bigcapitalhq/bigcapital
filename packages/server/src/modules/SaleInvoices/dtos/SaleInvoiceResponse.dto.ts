@@ -7,6 +7,7 @@ import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.d
 import { PaymentMethodDto } from '../dtos/SaleInvoice.dto';
 import { SaleInvoiceTaxEntryDto } from './SaleInvoiceTaxEntry.dto';
 import { DiscountType } from '@/common/types/Discount';
+import { DocumentBatchDto } from '@/modules/TransactionItemEntry/dto/DocumentBatch.dto';
 
 export class SaleInvoiceResponseDto {
   @ApiProperty({
@@ -17,13 +18,13 @@ export class SaleInvoiceResponseDto {
 
   @ApiProperty({
     description: 'The date of the invoice',
-    example: '2023-01-01T00:00:00Z',
+    example: '2023-01-01',
   })
   invoiceDate: Date;
 
   @ApiProperty({
     description: 'The due date of the invoice',
-    example: '2023-01-15T00:00:00Z',
+    example: '2023-01-15',
   })
   dueDate: Date;
 
@@ -95,8 +96,15 @@ export class SaleInvoiceResponseDto {
   taxes?: SaleInvoiceTaxEntryDto[];
 
   @ApiProperty({
+    description: 'The batch movements of the invoice',
+    type: [DocumentBatchDto],
+    required: false,
+  })
+  batches?: DocumentBatchDto[];
+
+  @ApiProperty({
     description: 'The date when the invoice was delivered',
-    example: '2023-01-02T00:00:00Z',
+    example: '2023-01-02',
     required: false,
   })
   deliveredAt?: Date;

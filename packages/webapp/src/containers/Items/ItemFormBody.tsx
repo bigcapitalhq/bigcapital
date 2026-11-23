@@ -128,7 +128,7 @@ function ItemFormBodyInner() {
           >
             <FTextArea
               name={'sellDescription'}
-              growVertically={true}
+              autoResize={true}
               disabled={!values.sellable}
               fill
               fastField
@@ -227,7 +227,7 @@ function ItemFormBodyInner() {
           >
             <FTextArea
               name={'purchaseDescription'}
-              growVertically={true}
+              autoResize={true}
               disabled={!values.purchasable}
               fill
               shouldUpdate={purchaseDescFieldShouldUpdate}

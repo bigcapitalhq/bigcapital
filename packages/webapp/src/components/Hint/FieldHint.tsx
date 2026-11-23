@@ -1,6 +1,5 @@
 // @ts-nocheck
-import { Position, Tooltip } from '@blueprintjs/core';
-import { Tooltip2Props } from '@blueprintjs/popover2';
+import { Position, Tooltip, TooltipProps } from '@blueprintjs/core';
 import React from 'react';
 import { Icon } from '../Icon';
 import '@/style/components/Hint.scss';
@@ -9,7 +8,7 @@ interface HintProps {
   content?: string | React.ReactNode;
   position?: Position;
   iconSize?: number;
-  tooltipProps?: Partial<Tooltip2Props>;
+  tooltipProps?: Partial<TooltipProps>;
 }
 
 /**

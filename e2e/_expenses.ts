@@ -8,7 +8,7 @@ export const EXPENSE_ACCOUNT = 'Rent';
  */
 export async function waitForExpensesPage(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Expenses List',
+    'Expenses',
     { timeout: 30_000 },
   );
   await expect(
@@ -32,40 +32,13 @@ export async function waitForExpenseFormPage(page: Page, title: string) {
 
 /**
  * Selects the given payment account inside the expense form.
- *
- * The payment account Select popover cannot be opened reliably with a plain
- * mouse click, so it is retried the same way the account type select does:
- * focus the trigger, press Enter to open the popover, then immediately click
- * the matching menu item before the popover collapses.
  */
 export async function selectPaymentAccount(page: Page, name: string) {
   const button = page.getByTestId('expense-payment-account-select');
 
-  for (let attempt = 0; attempt < 8; attempt++) {
-    await button.focus();
-    await page.keyboard.press('Enter');
-
-    const clicked = await page.evaluate((accountName) => {
-      const items = Array.from(
-        document.querySelectorAll('[role="menuitem"]'),
-      );
-      const item = items.find((el) =>
-        (el as HTMLElement).innerText.includes(accountName),
-      );
-      if (item) {
-        (item as HTMLElement).click();
-        return true;
-      }
-      return false;
-    }, name);
-
-    if (clicked) {
-      await expect(button).toContainText(name, { timeout: 5_000 });
-      return;
-    }
-    await page.keyboard.press('Escape');
-  }
-  throw new Error(`Failed to select the ${name} payment account.`);
+  await button.click();
+  await page.getByRole('menuitem', { name: name }).first().click();
+  await expect(button).toContainText(name);
 }
 
 /**

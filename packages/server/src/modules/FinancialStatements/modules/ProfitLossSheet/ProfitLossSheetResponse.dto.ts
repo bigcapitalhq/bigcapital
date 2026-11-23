@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
   FinancialTableColumnDto,
@@ -11,6 +12,7 @@ import {
   PROFIT_LOSS_COLUMN_KEYS,
   ProfitLossColumnKey,
 } from '../../common/constants/tableColumnKeys';
+import { ProfitLossSheetSortOrder } from './ProfitLossSheet.types';
 
 export class ProfitLossSheetDataNodeDto {
   @ApiProperty({
@@ -157,8 +159,8 @@ export class ProfitLossSheetQueryResponseDto {
   @ApiProperty({ description: 'Exclude accounts with no transactions' })
   noneTransactions: boolean;
 
-  @ApiProperty({ description: 'Accounting basis', enum: ['cash', 'accrual'] })
-  basis: string;
+  @ApiProperty({ description: 'Accounting basis', enum: AccountingBasis })
+  basis: AccountingBasis;
 
   @ApiProperty({ description: 'Account IDs to include', type: [Number] })
   accountsIds: number[];
@@ -192,6 +194,18 @@ export class ProfitLossSheetQueryResponseDto {
 
   @ApiProperty({ description: 'Show previous year percentage change' })
   previousYearPercentageChange: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Column the accounts are sorted by',
+    enum: Object.values(PROFIT_LOSS_COLUMN_KEYS),
+  })
+  columnSortBy?: ProfitLossColumnKey;
+
+  @ApiPropertyOptional({
+    description: 'Sort order of the accounts',
+    enum: ['asc', 'desc'],
+  })
+  sortOrder?: ProfitLossSheetSortOrder;
 }
 
 export class ProfitLossSheetResponseDto {

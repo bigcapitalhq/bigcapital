@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 :root {
   --payment-page-background-color: #fff;
@@ -79,11 +80,11 @@
   }
 }
 
-.downloadInvoiceButton:global(.bp4-button.bp4-minimal){
+.downloadInvoiceButton:global(.#{$ns}-button.#{$ns}-minimal){
   box-shadow: 0 0 0 1px #DCE0E5;
 }
 
-.viewInvoiceButton:global(.bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal)){
+.viewInvoiceButton:global(.#{$ns}-button:not([class*=#{$ns}-intent-]):not(.#{$ns}-minimal)){
   background-color: #EDEFF2;
 }
 

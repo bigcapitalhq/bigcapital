@@ -14,22 +14,16 @@ export const initialValues = {
   showPaymentReceivedNumber: true,
   paymentReceivedNumberLabel: 'Payment number',
 
-  // Payment number
+  // Payment date
   showPaymentReceivedDate: true,
   paymentReceivedDateLabel: 'Date of Issue',
 
-  // Customer address
+  // Company address
   showCompanyAddress: true,
 
-  // Company address
+  // Customer address
   showCustomerAddress: true,
   billedToLabel: 'Billed To',
-
-  // Entries
-  itemNameLabel: 'Item',
-  itemDescriptionLabel: 'Description',
-  itemRateLabel: 'Rate',
-  itemTotalLabel: 'Total',
 
   // Subtotal
   showSubtotal: true,

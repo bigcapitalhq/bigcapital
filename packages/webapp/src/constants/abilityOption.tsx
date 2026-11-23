@@ -3,6 +3,8 @@ export const AbilitySubject = {
   InventoryAdjustment: 'InventoryAdjustment',
   Estimate: 'SaleEstimate',
   Invoice: 'SaleInvoice',
+  RecurringInvoice: 'RecurringInvoice',
+  RecurringJournal: 'RecurringJournal',
   Receipt: 'SaleReceipt',
   PaymentReceive: 'PaymentReceive',
   Bill: 'Bill',
@@ -54,6 +56,20 @@ export const SaleInvoiceAction = {
   Delete: 'Delete',
   Writeoff: 'bad-debt',
   NotifyBySms: 'NotifyBySms',
+} as const;
+
+export const RecurringInvoiceAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
+} as const;
+
+export const RecurringJournalAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
 } as const;
 
 export const SaleReceiptAction = {
@@ -144,6 +160,8 @@ export const CashflowAction = {
   View: 'View',
   Create: 'Create',
   Delete: 'Delete',
+  Reconcile: 'Reconcile',
+  UndoReconciliation: 'UndoReconciliation',
 } as const;
 
 export const ReportsAction = {
@@ -153,6 +171,7 @@ export const ReportsAction = {
   READ_PROFIT_LOSS: 'read-profit-loss',
   READ_JOURNAL: 'read-journal',
   READ_GENERAL_LEDGET: 'read-general-ledger',
+  READ_RECONCILIATION_STATUS: 'read-reconciliation-status',
   READ_CASHFLOW: 'read-cashflow',
   READ_AR_AGING_SUMMARY: 'read-ar-aging-summary',
   READ_AP_AGING_SUMMARY: 'read-ap-aging-summary',
@@ -163,7 +182,9 @@ export const ReportsAction = {
   READ_CUSTOMERS_SUMMARY_BALANCE: 'read-customers-summary-balance',
   READ_VENDORS_SUMMARY_BALANCE: 'read-vendors-summary-balance',
   READ_INVENTORY_VALUATION_SUMMARY: 'read-inventory-valuation-summary',
+  READ_INVENTORY_SUMMARY: 'read-inventory-summary',
   READ_INVENTORY_ITEM_DETAILS: 'read-inventory-item-details',
+  READ_BATCH_DETAILS: 'read-batch-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
   READ_SALES_TAX_LIABILITY_SUMMARY: 'read-sales-tax-liability-summary',
   READ_BUDGET_VS_ACTUAL: 'read-budget-vs-actual',

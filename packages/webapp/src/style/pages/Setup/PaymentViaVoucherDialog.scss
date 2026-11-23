@@ -1,8 +1,9 @@
+@import '@/style/_common';
 
 
 .dialog--payment-via-voucher{
   
-  .bp4-dialog-body{
+  .#{$ns}-dialog-body{
     p{
       margin-bottom: 20px;
     }
@@ -11,11 +12,11 @@
     }
   }
 
-  .bp4-dialog-footer-actions{ 
+  .#{$ns}-dialog-footer-actions{
     button{
       min-width: 80px;
 
-      &.bp4-intent-primary{
+      &.#{$ns}-intent-primary{
         min-width: 90px;
       }
     }

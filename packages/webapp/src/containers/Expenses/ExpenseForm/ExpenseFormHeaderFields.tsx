@@ -1,5 +1,4 @@
 import { FormGroup, Position, Classes } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import classNames from 'classnames';
@@ -24,6 +23,7 @@ import {
   FieldRequiredHint,
   Hint,
 } from '@/components';
+import { DateInput } from '@/components/Forms/DateInput';
 import { CLASSES } from '@/constants/classes';
 import { useDateInputFormatter } from '@/hooks';
 import { tansformDateValue, inputIntent, handleDateChange } from '@/utils';

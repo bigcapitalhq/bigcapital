@@ -22,6 +22,8 @@ export class SalesTaxLiabiltiySummaryPdf {
       table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedDateRange,
+      undefined,
+      query.numberFormat?.showInRed,
     );
   }
 }

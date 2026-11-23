@@ -202,7 +202,7 @@ export const defaultInvoicePdfTemplateAttributes = {
   subtotalLabel: 'Subtotal',
   discountLabel: 'Discount',
   paymentMadeLabel: 'Payment Made',
-  balanceDueLabel: 'Balance Due',
+  dueAmountLabel: 'Balance Due',
 
   // Totals
   showTotal: true,
@@ -211,7 +211,6 @@ export const defaultInvoicePdfTemplateAttributes = {
   showTaxes: true,
   showPaymentMade: true,
   showDueAmount: true,
-  showBalanceDue: true,
 
   discount: '0.00',
 

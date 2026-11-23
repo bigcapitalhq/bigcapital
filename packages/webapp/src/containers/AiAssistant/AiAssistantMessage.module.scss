@@ -1,0 +1,183 @@
+@use './variables' as *;
+@import '@/style/_common';
+
+.message {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.user {
+  justify-content: flex-end;
+}
+
+.body {
+  min-width: 0;
+}
+
+.user .body {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 18px 18px 4px 18px;
+  background: var(--color-dark-gray2);
+}
+
+.assistant .body {
+  flex: 1;
+  padding-top: 4px;
+}
+
+.text {
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.actionsDivider {
+  width: 1px;
+  height: 12px;
+  margin: 0 2px;
+  background: $border;
+}
+
+.action {
+  // Button renders as `bp6-button bp6-small bp6-minimal`; composing those
+  // global classes raises specificity above Blueprint's own button rules.
+  &:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal) {
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px;
+    color: $muted;
+  }
+
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .message:hover & {
+    opacity: 0.8;
+  }
+
+  &:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover {
+    opacity: 1;
+    color: $accent;
+  }
+}
+
+.likeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal),
+.likeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover {
+  opacity: 1;
+  color: $accent;
+}
+
+.dislikeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal),
+.dislikeActive:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover {
+  opacity: 1;
+  color: $danger;
+}
+
+.copied {
+  color: $muted;
+  font-size: 10.5px;
+}
+
+.tool {
+  margin: 8px 0 10px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+}
+
+.toolError {
+  background: rgba(231, 106, 110, 0.08);
+  color: $danger;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+.errorText {
+  margin-top: 6px;
+  color: $danger;
+  line-height: 1.5;
+}
+
+.preview {
+  margin-top: 8px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+
+    th,
+    td {
+      padding: 4px 6px;
+      border-bottom: 1px solid rgba(127, 127, 127, 0.18);
+      text-align: start;
+      white-space: nowrap;
+    }
+
+    th {
+      color: $muted;
+      font-weight: 600;
+    }
+  }
+}
+
+.currency {
+  margin-top: 4px;
+  color: $muted;
+  font-size: 10px;
+  text-align: end;
+}
+
+.details {
+  margin-top: 6px;
+
+  summary {
+    color: $accent;
+    cursor: pointer;
+    font-size: 11px;
+    user-select: none;
+  }
+
+  pre {
+    max-height: 240px;
+    overflow: auto;
+    padding: 8px;
+    border-radius: 6px;
+    background: $hover;
+    font-size: 11px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 960px) {
+  .user .body {
+    max-width: 88%;
+  }
+}

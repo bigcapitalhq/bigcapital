@@ -58,6 +58,7 @@ export interface IAuthSendedResetPassword {
 
 export interface IAuthGetMetaPOJO {
   signupDisabled: boolean;
+  googleEnabled: boolean;
 }
 
 export interface IAuthSignUpVerifingEventPayload {

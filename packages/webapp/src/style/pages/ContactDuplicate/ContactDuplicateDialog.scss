@@ -1,22 +1,23 @@
+@import '@/style/_common';
 .dialog--contact-duplicate {
-  .bp4-dialog-body {
+  .#{$ns}-dialog-body {
     > .paragraph {
       margin-bottom: 1rem;
     }
-    .bp4-form-group {
+    .#{$ns}-form-group {
       margin-bottom: 1.4rem;
 
-      .bp4-label {
+      .#{$ns}-label {
         font-size: 13px;
       }
     }
-    .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
+    .#{$ns}-button:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal) {
       width: 260px;
     }
   }
 
-  .bp4-dialog-footer {
-    .bp4-dialog-footer-actions .bp4-button {
+  .#{$ns}-dialog-footer {
+    .#{$ns}-dialog-footer-actions .#{$ns}-button {
       margin-left: 8px;
       min-width: 65px;
     }

@@ -2,6 +2,7 @@ import { ToNumber } from '@/common/decorators/Validators';
 import { DiscountType } from '@/common/types/Discount';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEnum,
   IsIn,
   IsInt,
@@ -9,8 +10,32 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ItemLinkDto } from '@/modules/Items/dtos/ItemLink.dto';
+
+export class ItemEntryBatchDto {
+  @IsNotEmpty()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'The id of the batch',
+    example: 1,
+  })
+  batchId: number;
+
+  @IsNotEmpty()
+  @ToNumber()
+  @IsNumber()
+  @Min(0)
+  @ApiProperty({
+    description: 'The quantity allocated from the batch',
+    example: 5,
+  })
+  quantity: number;
+}
 
 export class ItemEntryDto {
   @IsInt()
@@ -21,13 +46,15 @@ export class ItemEntryDto {
   })
   index: number;
 
-  @IsNotEmpty()
+  @ToNumber()
+  @IsOptional()
   @IsInt()
   @ApiProperty({
     description: 'The id of the item',
     example: 1,
+    required: false,
   })
-  itemId: number;
+  itemId?: number;
 
   @ApiProperty({
     description: 'The nested item summary',
@@ -77,6 +104,7 @@ export class ItemEntryDto {
   @ApiProperty({
     description: 'The description of the item entry',
     example: 'This is a description',
+    required: false,
   })
   description?: string;
 
@@ -90,6 +118,7 @@ export class ItemEntryDto {
   taxCode?: string;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -99,6 +128,7 @@ export class ItemEntryDto {
   taxRateId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -108,6 +138,28 @@ export class ItemEntryDto {
   warehouseId?: number;
 
   @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'The batch id of the item entry',
+    example: 1,
+    required: false,
+  })
+  batchId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ItemEntryBatchDto)
+  @ApiProperty({
+    description: 'The batch allocations of the item entry',
+    type: [ItemEntryBatchDto],
+    required: false,
+  })
+  batches?: ItemEntryBatchDto[];
+
+  @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -117,6 +169,7 @@ export class ItemEntryDto {
   projectId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
@@ -136,6 +189,7 @@ export class ItemEntryDto {
   projectRefType?: string;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({
@@ -145,20 +199,24 @@ export class ItemEntryDto {
   projectRefInvoicedAmount?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The sell account id of the item entry',
     example: 1020,
+    required: false,
   })
   sellAccountId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The cost account id of the item entry',
     example: 1021,
+    required: false,
   })
   costAccountId?: number;
 

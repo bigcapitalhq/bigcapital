@@ -59,7 +59,9 @@ function InventoryItemDetailsInner({
       <InventoryItemDetailsAlerts />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement
+          numberFormat={query.numberFormat as Record<string, unknown>}
+        >
           <InventoryItemDetailsHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

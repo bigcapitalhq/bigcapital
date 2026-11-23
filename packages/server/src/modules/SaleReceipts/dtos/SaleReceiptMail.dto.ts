@@ -50,7 +50,7 @@ export class SaleReceiptMailResponseDto {
 
   @ApiProperty({
     description: 'The closed date',
-    example: '2024-01-15T00:00:00Z',
+    example: '2024-01-15',
   })
   closedAtDate: string;
 
@@ -90,7 +90,7 @@ export class SaleReceiptMailResponseDto {
 
   @ApiProperty({
     description: 'The receipt date',
-    example: '2024-01-15T00:00:00Z',
+    example: '2024-01-15',
   })
   receiptDate: string;
 

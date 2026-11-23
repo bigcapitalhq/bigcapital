@@ -1,5 +1,4 @@
-import { Intent } from '@blueprintjs/core';
-import { ContextMenu2 } from '@blueprintjs/popover2';
+import { Intent, ContextMenu } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -45,7 +44,7 @@ function WarehouseGridItem({
   };
 
   return (
-    <ContextMenu2
+    <ContextMenu
       content={
         <WarehouseContextMenu
           warehouse={warehouse}
@@ -62,7 +61,7 @@ function WarehouseGridItem({
         country={warehouse.country}
         primary={warehouse.primary}
       />
-    </ContextMenu2>
+    </ContextMenu>
   );
 }
 

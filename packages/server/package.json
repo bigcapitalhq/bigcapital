@@ -29,10 +29,12 @@
     "cli:tenants:migrate:make": "ts-node -r tsconfig-paths/register src/cli.ts tenants:migrate:make",
     "cli:tenants:list": "ts-node -r tsconfig-paths/register src/cli.ts tenants:list",
     "openapi:export": "ts-node -r tsconfig-paths/register src/cli.ts openapi:export",
+    "cli:stripe:sync-plans": "ts-node -r tsconfig-paths/register src/cli.ts stripe:sync-plans",
     "cli:system:seed:latest": "ts-node -r tsconfig-paths/register src/cli.ts system:seed:latest",
     "cli:tenants:seed:latest": "ts-node -r tsconfig-paths/register src/cli.ts tenants:seed:latest"
   },
   "dependencies": {
+    "@ai-sdk/openai": "3.0.143",
     "@aws-sdk/client-s3": "^3.576.0",
     "@aws-sdk/s3-request-presigner": "^3.583.0",
     "@bigcapital/email-components": "workspace:*",
@@ -44,7 +46,6 @@
     "@bull-board/nestjs": "^5.22.0",
     "@casl/ability": "^5.4.3",
     "@clickhouse/client": "^1.23.1",
-    "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
     "@liaoliaots/nestjs-redis": "^10.0.0",
     "@nest-lab/throttler-storage-redis": "^1.1.0",
     "@nestjs/bull": "^10.2.1",
@@ -70,6 +71,7 @@
     "@types/passport-local": "^1.0.38",
     "@types/ramda": "^0.30.2",
     "accounting": "^0.4.1",
+    "ai": "6.0.332",
     "async": "^3.2.0",
     "async-mutex": "^0.5.0",
     "axios": "^1.6.0",
@@ -137,7 +139,7 @@
     "uuid": "^10.0.0",
     "xlsx": "^0.18.5",
     "yup": "^0.28.1",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

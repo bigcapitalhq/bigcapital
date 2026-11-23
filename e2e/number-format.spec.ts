@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Locator, type Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import {
   createCustomerViaApi,
@@ -12,6 +12,7 @@ import {
   findItemIdByName,
   findVendorIdByName,
   readApiAuth,
+  waitForCostCompute,
 } from './_api';
 
 const API_BASE = process.env.PLAYWRIGHT_TEST_API_URL || 'http://localhost:3000';
@@ -107,7 +108,9 @@ const REPORTS: ReportConfig[] = [
   },
   {
     title: 'Sales Tax Liability Summary',
-    path: '/financial-reports/sales-tax-liability-summary',
+    // The seeded invoice is not paid, so tax is only recognised on the
+    // accrual basis (the report page defaults to cash).
+    path: '/financial-reports/sales-tax-liability-summary?basis=accrual',
     rowPrefix: 'sales-tax-liability',
   },
   {
@@ -163,7 +166,7 @@ async function assertNumberFormatFields(page: Page) {
 
   for (const label of ['Negative format', 'Decimal places', 'Money format']) {
     await expect(
-      dropdown.locator('.bp4-form-group').filter({ hasText: label }),
+      dropdown.locator('.bp6-form-group').filter({ hasText: label }),
     ).toBeVisible();
   }
   for (const label of [
@@ -191,7 +194,7 @@ async function selectOptionInDropdown(
 ) {
   const dropdown = page.locator('.number-format-dropdown');
   const group = dropdown
-    .locator('.bp4-form-group')
+    .locator('.bp6-form-group')
     .filter({ hasText: fieldLabel });
 
   await group.locator('button').evaluate((el) => (el as HTMLElement).click());
@@ -284,6 +287,141 @@ function parseFormattedAmount(text: string): number {
   const cleaned = text.replace(/[()]/g, '').replace(/[^0-9.,-]/g, '');
   const amount = parseFloat(cleaned.replace(/,/g, ''));
   return Number.isFinite(amount) ? (negative ? -Math.abs(amount) : amount) : 0;
+}
+
+// --color-financial-sheet-negative-amount-text resolves to --color-red-500
+// (#fa999c) in the dark theme the webapp starts in (index.html sets
+// bp6-dark on <body>), and to --color-red-400 (#ac2f33) in the light theme.
+const NEGATIVE_RED_DARK = 'rgb(250, 153, 156)';
+const NEGATIVE_RED_LIGHT = 'rgb(172, 47, 51)';
+
+// A non-negative amount: an optional currency symbol, then a digit.
+const POSITIVE_AMOUNT_RE = /^\s*[^-(\s\d]*\d/;
+
+/**
+ * Locates the inner element of a column's cell in the account row whose text
+ * contains the given account name.
+ */
+const accountCell = (
+  page: Page,
+  prefix: string,
+  accountName: string,
+  columnId: string,
+): Locator =>
+  page
+    .getByTestId(new RegExp(`^${prefix}-row--ACCOUNT`))
+    .filter({ hasText: accountName })
+    .locator(`.td-${columnId} .cell-inner`);
+
+/**
+ * Locates the inner element of the first account row cell in the given
+ * column that holds a non-negative amount.
+ */
+async function firstPositiveAccountCell(
+  page: Page,
+  prefix: string,
+  columnId: string,
+): Promise<Locator | null> {
+  const rowTestId = await page
+    .getByTestId(new RegExp(`^${prefix}-row--ACCOUNT`))
+    .evaluateAll(
+      (rows, { columnId, source }) => {
+        const positiveRe = new RegExp(source);
+        for (const row of rows) {
+          const text = row.querySelector(`.td-${columnId}`)?.textContent ?? '';
+          if (positiveRe.test(text)) {
+            return row.getAttribute('data-testId');
+          }
+        }
+        return null;
+      },
+      { columnId, source: POSITIVE_AMOUNT_RE.source },
+    );
+  return rowTestId
+    ? page.locator(`[data-testId="${rowTestId}"] .td-${columnId} .cell-inner`)
+    : null;
+}
+
+/**
+ * Appends the "Show negative in red." number format to a report path.
+ */
+const withShowInRed = (path: string): string =>
+  `${path}${path.includes('?') ? '&' : '?'}numberFormat[showInRed]=true`;
+
+/**
+ * Checks, with the switch on, that a report cell is red exactly when it is
+ * marked as a negative amount, and that every marked cell shows its sign.
+ * A probe cell added to the report's first row checks that the report
+ * colours negative cells at all, even when its data has none.
+ * Returns the number of marked cells and a description of each problem.
+ */
+function auditNegativeColours(
+  page: Page,
+  prefix: string,
+): Promise<{ marked: number; problems: string[] }> {
+  return page.evaluate((prefix) => {
+    const problems: string[] = [];
+    const token = getComputedStyle(document.body)
+      .getPropertyValue('--color-financial-sheet-negative-amount-text')
+      .trim();
+    if (!token) {
+      problems.push('negative colour token is not defined');
+    }
+    const colourProbe = document.createElement('span');
+    colourProbe.style.color =
+      'var(--color-financial-sheet-negative-amount-text)';
+    document.body.appendChild(colourProbe);
+    const red = getComputedStyle(colourProbe).color;
+    colourProbe.remove();
+
+    const firstRow = document.querySelector(`[data-testId^="${prefix}-row--"]`);
+    if (firstRow) {
+      const cellProbe = document.createElement('div');
+      cellProbe.className = 'td is-negative-amount';
+      cellProbe.innerHTML = '<div class="cell-inner">-1.00</div>';
+      firstRow.appendChild(cellProbe);
+      const probeColour = getComputedStyle(
+        cellProbe.firstElementChild as Element,
+      ).color;
+      cellProbe.remove();
+      if (probeColour !== red) {
+        problems.push('the report does not colour negative cells');
+      }
+    } else {
+      problems.push('the report has no rows');
+    }
+
+    let marked = 0;
+    document
+      .querySelectorAll(`[data-testId^="${prefix}-row--"]`)
+      .forEach((row) => {
+        const rowTestId = row.getAttribute('data-testId');
+        row.querySelectorAll('.td').forEach((cell, index) => {
+          const inner = cell.querySelector('.cell-inner');
+          if (!inner) {
+            return;
+          }
+          const text = (cell.textContent ?? '').trim();
+          const isMarked = cell.classList.contains('is-negative-amount');
+          const isRed = getComputedStyle(inner).color === red;
+
+          if (isMarked) {
+            marked += 1;
+          }
+          if (isMarked !== isRed) {
+            problems.push(
+              `${rowTestId} cell ${index} "${text}": marked=${isMarked} red=${isRed}`,
+            );
+          }
+          if (isMarked && !/^\s*[-(]/.test(text)) {
+            problems.push(
+              `${rowTestId} cell ${index} "${text}": marked without a sign`,
+            );
+          }
+        });
+      });
+    return { marked, problems };
+  }, prefix);
 }
 
 test.describe('number format', () => {
@@ -389,6 +527,11 @@ test.describe('number format', () => {
     test(`should divide the ${report.title} report amounts by 1000.`, async ({
       page,
     }) => {
+      // The inventory cost-compute job can change report amounts while it
+      // runs. Wait for it first so the baseline cell below is not stale.
+      test.setTimeout(180_000);
+      await waitForCostCompute(API_BASE, readApiAuth());
+
       await page.goto(report.path);
       await waitForReportPage(page, report.title);
       await waitForReportRows(page, report.rowPrefix);
@@ -468,4 +611,154 @@ test.describe('number format', () => {
     await expect(totalAssets).not.toHaveText('');
     await expect(totalAssets).not.toContainText('AED');
   });
+
+  test('should show negative amounts in red on the balance sheet when the switch is on.', async ({
+    page,
+  }) => {
+    // On the accrual basis the seeded unpaid invoice and bill give accounts
+    // with positive balances (the page defaults to cash).
+    await page.goto('/financial-reports/balance-sheet?basis=accrual');
+    await waitForReportPage(page, 'Balance Sheet');
+    await waitForReportRows(page, 'balance-sheet');
+
+    // Expenses are paid from Petty Cash, so its balance is negative.
+    const pettyCash = accountCell(page, 'balance-sheet', 'Petty Cash', 'total');
+    await expect(pettyCash).toHaveText(/^\s*-/);
+    const positive = await firstPositiveAccountCell(
+      page,
+      'balance-sheet',
+      'total',
+    );
+    expect(positive).not.toBeNull();
+
+    // While the switch is off, the negative cell has the normal colour.
+    const normalColour = await pettyCash.evaluate(
+      (el) => getComputedStyle(el).color,
+    );
+    const positiveColour = await positive!.evaluate(
+      (el) => getComputedStyle(el).color,
+    );
+    expect(normalColour).toBe(positiveColour);
+
+    await openNumberFormat(page);
+    await toggleSwitch(page, 'Show negative in red.');
+    await submitNumberFormat(page);
+    await expect(page).toHaveURL(/numberFormat%5BshowInRed%5D=true/, {
+      timeout: 15_000,
+    });
+    await expect(pettyCash).toHaveCSS('color', NEGATIVE_RED_DARK, {
+      timeout: 30_000,
+    });
+    await expect(positive!).toHaveCSS('color', positiveColour);
+
+    const audit = await auditNegativeColours(page, 'balance-sheet');
+    expect(audit.problems).toEqual([]);
+    expect(audit.marked).toBeGreaterThan(0);
+
+    // Turning the switch off restores the normal colour.
+    await openNumberFormat(page);
+    await toggleSwitch(page, 'Show negative in red.');
+    await submitNumberFormat(page);
+    await expect(page).toHaveURL(/numberFormat%5BshowInRed%5D=false/, {
+      timeout: 15_000,
+    });
+    await expect(pettyCash).toHaveCSS('color', normalColour, {
+      timeout: 30_000,
+    });
+  });
+
+  test('should show negative amounts in red in the light theme from a shared link.', async ({
+    page,
+  }) => {
+    await page.goto(withShowInRed('/financial-reports/balance-sheet'));
+    await waitForReportPage(page, 'Balance Sheet');
+    await waitForReportRows(page, 'balance-sheet');
+
+    // Switch to the light theme the way the theme hotkey does.
+    await page.evaluate(() => document.body.classList.remove('bp6-dark'));
+    await expect(
+      accountCell(page, 'balance-sheet', 'Petty Cash', 'total'),
+    ).toHaveCSS('color', NEGATIVE_RED_LIGHT, { timeout: 30_000 });
+
+    // The switch reflects the setting carried by the link.
+    await openNumberFormat(page);
+    await expect(
+      page
+        .locator('.number-format-dropdown')
+        .getByLabel('Show negative in red.'),
+    ).toBeChecked();
+  });
+
+  test('should show parenthesised negative amounts in red.', async ({
+    page,
+  }) => {
+    await page.goto('/financial-reports/balance-sheet');
+    await waitForReportPage(page, 'Balance Sheet');
+    await waitForReportRows(page, 'balance-sheet');
+
+    await openNumberFormat(page);
+    await selectOptionInDropdown(page, 'Negative format', '($1000)');
+    await toggleSwitch(page, 'Show negative in red.');
+    await submitNumberFormat(page);
+    await expect(page).toHaveURL(
+      /numberFormat%5BnegativeFormat%5D=parentheses/,
+      { timeout: 15_000 },
+    );
+    await expect(page).toHaveURL(/numberFormat%5BshowInRed%5D=true/);
+
+    const pettyCash = accountCell(page, 'balance-sheet', 'Petty Cash', 'total');
+    await expect(pettyCash).toHaveText(/^\s*\(.*\)\s*$/, { timeout: 30_000 });
+    await expect(pettyCash).toHaveCSS('color', NEGATIVE_RED_DARK);
+  });
+
+  test('should show negative amounts in red on the trial balance sheet.', async ({
+    page,
+  }) => {
+    await page.goto('/financial-reports/trial-balance-sheet');
+    await waitForReportPage(page, 'Trial Balance Sheet');
+    await waitForReportRows(page, 'trial-balance');
+
+    // Petty Cash only receives credits, and the balance is debit - credit.
+    const balance = accountCell(page, 'trial-balance', 'Petty Cash', 'total');
+    const credit = accountCell(page, 'trial-balance', 'Petty Cash', 'credit');
+    await expect(balance).toHaveText(/^\s*-/);
+    await expect(credit).toHaveText(POSITIVE_AMOUNT_RE);
+    const creditColour = await credit.evaluate(
+      (el) => getComputedStyle(el).color,
+    );
+
+    await openNumberFormat(page);
+    await toggleSwitch(page, 'Show negative in red.');
+    await submitNumberFormat(page);
+    await expect(page).toHaveURL(/numberFormat%5BshowInRed%5D=true/, {
+      timeout: 15_000,
+    });
+    await expect(balance).toHaveCSS('color', NEGATIVE_RED_DARK, {
+      timeout: 30_000,
+    });
+    await expect(credit).toHaveCSS('color', creditColour);
+    expect(
+      (await auditNegativeColours(page, 'trial-balance')).problems,
+    ).toEqual([]);
+  });
+
+  for (const report of ROW_BEARING_REPORTS) {
+    test(`should show only the negative amounts in red in the ${report.title} report.`, async ({
+      page,
+    }) => {
+      await page.goto(withShowInRed(report.path));
+      await waitForReportPage(page, report.title);
+      await waitForReportRows(page, report.rowPrefix);
+
+      // Passes without checking a colour when the report has no negative
+      // amounts; the single-report tests above always have one.
+      await expect
+        .poll(
+          async () =>
+            (await auditNegativeColours(page, report.rowPrefix)).problems,
+          { timeout: 30_000 },
+        )
+        .toEqual([]);
+    });
+  }
 });

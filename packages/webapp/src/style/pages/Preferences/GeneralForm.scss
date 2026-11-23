@@ -1,19 +1,20 @@
+@import '@/style/_common';
 
 
 //  General page
 //---------------------------------
 .preferences-page__inside-content--general {
-  .bp4-form-group {
+  .#{$ns}-form-group {
     max-width: 650px;
     margin-bottom: 24px;
 
-    .bp4-label {
+    .#{$ns}-label {
       min-width: 190px;
       font-weight: 600;
       // color: #38414e;
     }
 
-    .bp4-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
   }

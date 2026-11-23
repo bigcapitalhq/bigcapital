@@ -16,7 +16,7 @@ interface ExpenseDeleteEntriesAlertProps extends WithAlertActionsProps {
   name: string;
   isOpen: boolean;
   payload: ExpenseDeleteEntriesAlertPayload;
-  onConfirm?: (event: React.SyntheticEvent<HTMLElement>) => void;
+  onConfirm?: (event?: React.SyntheticEvent<HTMLElement>) => void;
 }
 
 /**
@@ -33,7 +33,7 @@ function ExpenseDeleteEntriesAlertInner({
     closeAlert(name);
   };
 
-  const handleConfirm = (event: React.SyntheticEvent<HTMLElement>) => {
+  const handleConfirm = (event?: React.SyntheticEvent<HTMLElement>) => {
     closeAlert(name);
     saveInvoke(onConfirm, event);
   };

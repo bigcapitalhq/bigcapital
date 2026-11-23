@@ -3,6 +3,7 @@ import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class SaleInvoiceWriteoffGL {
   private saleInvoiceModel: SaleInvoice;
@@ -31,7 +32,10 @@ export class SaleInvoiceWriteoffGL {
    */
   private get invoiceWriteoffGLCommonEntry() {
     return {
-      date: this.saleInvoiceModel.invoiceDate,
+      // The write-off entries are dated on the write-off date, not the invoice
+      // date, so they land in the period the bad debt was recognized.
+      date:
+        this.saleInvoiceModel.writtenoffAt ?? this.saleInvoiceModel.invoiceDate,
 
       currencyCode: this.saleInvoiceModel.currencyCode,
       exchangeRate: this.saleInvoiceModel.exchangeRate,
@@ -42,6 +46,11 @@ export class SaleInvoiceWriteoffGL {
 
       referenceNo: this.saleInvoiceModel.referenceNo,
       branchId: this.saleInvoiceModel.branchId,
+
+      // The write-off credits the account receivable and debits the bad debt
+      // expense without any cash movement, hence it is an accrual basis entry
+      // and it is excluded from the cash basis reports.
+      basis: AccountingBasis.Accrual,
     };
   }
 

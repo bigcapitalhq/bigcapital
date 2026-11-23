@@ -25,6 +25,7 @@ export class TransactionsByVendorsPdf {
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,
+      query.numberFormat?.showInRed,
     );
   }
 }

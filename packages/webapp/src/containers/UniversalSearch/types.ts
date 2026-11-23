@@ -1,5 +1,5 @@
 import type { UniversalSearchItem } from '@/components/UniversalSearch/UniversalSearch';
-import type { IItemRendererProps } from '@blueprintjs/select';
+import type { ItemRendererProps } from '@blueprintjs/select';
 import type { ComponentType } from 'react';
 
 export interface UniversalSearchSelectActionProps {
@@ -19,7 +19,7 @@ export interface UniversalSearchBind {
   selectItemAction?: ComponentType<UniversalSearchSelectActionProps>;
   itemRenderer?(
     item: UniversalSearchItem,
-    modifiers: IItemRendererProps,
+    modifiers: ItemRendererProps,
   ): React.ReactElement | null;
   itemSelect?(item: unknown): UniversalSearchItem;
   permission?: UniversalSearchPermission;

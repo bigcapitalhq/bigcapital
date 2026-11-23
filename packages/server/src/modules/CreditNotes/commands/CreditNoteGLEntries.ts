@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { CreditNoteGL } from './CreditNoteGL';
+import { CreditNoteAccrualGL } from './CreditNoteAccrualGL';
 import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { CreditNote } from '../models/CreditNote';
@@ -53,7 +53,7 @@ export class CreditNoteGLEntries {
     const adjustmentAccount =
       await this.accountRepository.findOrCreateOtherChargesAccount({});
 
-    const creditNoteLedger = new CreditNoteGL(creditNoteWithItems)
+    const creditNoteLedger = new CreditNoteAccrualGL(creditNoteWithItems)
       .setARAccountId(ARAccount.id)
       .setDiscountAccountId(discountAccount.id)
       .setAdjustmentAccountId(adjustmentAccount.id)

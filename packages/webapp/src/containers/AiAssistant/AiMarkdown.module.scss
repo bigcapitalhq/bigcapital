@@ -1,0 +1,74 @@
+@use './variables' as *;
+
+.markdown {
+  font-size: 14px;
+  line-height: 1.7;
+
+  p {
+    margin: 0 0 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 8px 0 12px;
+    padding-inline-start: 22px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 18px 0 8px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: $hover;
+    font-size: 12.5px;
+  }
+
+  pre {
+    padding: 12px;
+    border-radius: 8px;
+    background: $hover;
+    overflow-x: auto;
+    font-size: 12px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+
+    th,
+    td {
+      padding: 7px 10px;
+      border-bottom: 1px solid $border;
+      text-align: start;
+      white-space: nowrap;
+    }
+
+    th {
+      color: $muted;
+      font-weight: 600;
+      background: $hover;
+    }
+  }
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 10px 0 14px;
+}

@@ -14,7 +14,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 export class InventoryValuationQueryDto {
   @ApiPropertyOptional({
     description: 'The date for which the inventory valuation is requested',
-    example: '2024-01-01T00:00:00.000Z',
+    example: '2024-01-01',
     type: String,
   })
   @IsDateString()

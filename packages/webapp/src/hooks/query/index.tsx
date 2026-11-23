@@ -17,6 +17,8 @@ export * from './users';
 export * from './roles';
 export * from './invite';
 export * from './invoices';
+export * from './recurring-invoices';
+export * from '@/ee/recurring-journals/hooks/query';
 export * from './bills';
 export * from './estimates';
 export * from './receipts';
@@ -29,7 +31,6 @@ export * from './vendor-credit';
 export * from './expenses';
 export * from './manual-journals';
 export * from './settings';
-export * from './subscriptions';
 export * from './subscription';
 export * from './organization';
 export * from './landed-cost';
@@ -41,11 +42,13 @@ export * from './cashflow-accounts';
 export * from './transactions-locking';
 export * from './warehouses';
 export * from './branches';
+export * from './tracking-categories';
 export * from './warehouses-transfers';
 
 // Banking and payment hooks (nested directory structure)
 export * from './banking';
 export * from './api-keys';
+export * from './two-factor';
 export * from './payment-methods';
 export * from './payment-link';
 export * from './payment-services';
@@ -58,5 +61,7 @@ export * from './base';
 // Subdirectories (already in nested structure)
 export * from './UniversalSearch/universal-search';
 export * from './FinancialReports';
+export * from './notifications';
 export * from './audit-logs';
 export * from './budgets';
+export * from './ai-assistant';

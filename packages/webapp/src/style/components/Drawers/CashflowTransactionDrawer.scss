@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .cashflow-drawer {
   .card {
     margin: 15px;
@@ -56,14 +57,14 @@
       &--subtotal {
         border-bottom: 1px solid #000;
 
-        .bp4-dark & {
+        .#{$ns}-dark & {
           border-bottom-color: var(--color-dark-gray5);
         }
       }
       &--total {
         border-bottom: 3px double #000;
 
-        .bp4-dark & {
+        .#{$ns}-dark & {
           border-bottom-color: var(--color-dark-gray5);
         }
       }

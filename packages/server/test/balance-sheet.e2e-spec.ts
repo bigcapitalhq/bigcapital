@@ -19,6 +19,8 @@ import {
   fetchAccountsByCode,
   fetchBalanceSheet,
   findNode,
+  findNodePeriodTotal,
+  findNodeTotal,
 } from './_utils/balance-sheet';
 
 const FY2023 = { fromDate: '2023-01-01', toDate: '2023-12-31' };
@@ -266,8 +268,7 @@ describe('Balance Sheet (e2e)', () => {
 
     it('aggregates cash and cash equivalents balances', () => {
       const cashNode = findNode(data, 'CASH_EQUIVALENTS');
-      const beforeCash = findNode(baseline.data, 'CASH_EQUIVALENTS').total
-        .amount;
+      const beforeCash = findNodeTotal(baseline.data, 'CASH_EQUIVALENTS');
 
       expectDelta(cashNode.total.amount, beforeCash, 11700);
       expect(cashNode.total.amount).toBeCloseTo(childrenTotalSum(cashNode), 2);
@@ -323,8 +324,7 @@ describe('Balance Sheet (e2e)', () => {
         currentLiabilities.children.find((c) => c.id === unearnedId),
       ).toBeDefined();
 
-      const beforeCurrent = findNode(baseline.data, 'CURRENT_LIABILITY').total
-        .amount;
+      const beforeCurrent = findNodeTotal(baseline.data, 'CURRENT_LIABILITY');
       expectDelta(currentLiabilities.total.amount, beforeCurrent, 700);
     });
 
@@ -346,8 +346,7 @@ describe('Balance Sheet (e2e)', () => {
 
     it('computes net income as cumulative income minus expenses', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(baseline.data, 'NET_INCOME').total
-        .amount;
+      const beforeNetIncome = findNodeTotal(baseline.data, 'NET_INCOME');
 
       expectDelta(netIncome.total.amount, beforeNetIncome, 2700);
     });
@@ -375,11 +374,11 @@ describe('Balance Sheet (e2e)', () => {
       // The pre-existing tenant data may include unbalanced legacy entries,
       // so the accounting equation is asserted on the seeded activity only:
       // balanced journals must increase both sides by the same amount.
-      const assetsBefore = findNode(baseline.data, 'ASSETS').total.amount;
+      const assetsBefore = findNodeTotal(baseline.data, 'ASSETS');
       const assetsAfter = findNode(data, 'ASSETS').total.amount;
       expectDelta(assetsAfter, assetsBefore, 13400);
 
-      const leBefore = findNode(baseline.data, 'LIABILITY_EQUITY').total.amount;
+      const leBefore = findNodeTotal(baseline.data, 'LIABILITY_EQUITY');
       const leAfter = findNode(data, 'LIABILITY_EQUITY').total.amount;
       expectDelta(leAfter, leBefore, 13400);
       expect(assetsAfter - assetsBefore).toBeCloseTo(leAfter - leBefore, 2);
@@ -400,8 +399,7 @@ describe('Balance Sheet (e2e)', () => {
       expectDelta(bank.total.amount, before[bankId] ?? 0, 11600);
 
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(baseline.data, 'NET_INCOME').total
-        .amount;
+      const beforeNetIncome = findNodeTotal(baseline.data, 'NET_INCOME');
       expectDelta(netIncome.total.amount, beforeNetIncome, 2700);
     });
 
@@ -414,8 +412,7 @@ describe('Balance Sheet (e2e)', () => {
       // Compared against a baseline captured with the same extended range so
       // transactions of other spec files dated within 2024 cancel out.
       const bank = findNode(extended, bankId);
-      const beforeExtendedBank = findNode(baselineExtended.data, bankId).total
-        .amount;
+      const beforeExtendedBank = findNodeTotal(baselineExtended.data, bankId);
       expectDelta(bank.total.amount, beforeExtendedBank, 12599);
     });
 
@@ -451,19 +448,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('carries cumulative closing balances per period end', () => {
       const bank = findNode(data, bankId);
-      const beforeBank = findNode(
-        baselinePeriods.data,
-        bankId,
-      ).horizontal_totals;
 
       expectDelta(
         bank.horizontal_totals[0].total.amount,
-        beforeBank[0].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, bankId, 0),
         10000,
       );
       expectDelta(
         bank.horizontal_totals[1].total.amount,
-        beforeBank[1].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, bankId, 1),
         11600,
       );
       expect(bank.horizontal_totals[1].total.amount).toBeCloseTo(
@@ -489,19 +482,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('accumulates net income per period end', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(
-        baselinePeriods.data,
-        'NET_INCOME',
-      ).horizontal_totals;
 
       expectDelta(
         netIncome.horizontal_totals[0].total.amount,
-        beforeNetIncome[0].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, 'NET_INCOME', 0),
         500,
       );
       expectDelta(
         netIncome.horizontal_totals[1].total.amount,
-        beforeNetIncome[1].total.amount,
+        findNodePeriodTotal(baselinePeriods.data, 'NET_INCOME', 1),
         2700,
       );
       expect(netIncome.horizontal_totals[1].total.amount).toBeCloseTo(
@@ -534,17 +523,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('accumulates the fixture activity in the week it was posted', () => {
       const bank = findNode(data, bankId);
-      const beforeBank = findNode(
-        baselineWeekly.data,
-        bankId,
-      ).horizontal_totals;
+      const beforeBank =
+        findNode(baselineWeekly.data, bankId)?.horizontal_totals ?? [];
 
       // The 2022 owner capital (10000) is part of every weekly closing
       // balance; the Jan 15 cash sale (3000) lands in the third week.
       bank.horizontal_totals.forEach((total, index) => {
         expectDelta(
           total.total.amount,
-          beforeBank[index].total.amount,
+          beforeBank[index]?.total.amount ?? 0,
           10000 + (index >= 2 ? 3000 : 0),
         );
       });
@@ -552,17 +539,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('accumulates net income from the week of the cash sale onwards', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(
-        baselineWeekly.data,
-        'NET_INCOME',
-      ).horizontal_totals;
+      const beforeNetIncome =
+        findNode(baselineWeekly.data, 'NET_INCOME')?.horizontal_totals ?? [];
 
       // The 2022 credit sale (500) opens net income; the Jan 15 cash sale
       // (3000) is picked up from the third week onwards.
       netIncome.horizontal_totals.forEach((total, index) => {
         expectDelta(
           total.total.amount,
-          beforeNetIncome[index].total.amount,
+          beforeNetIncome[index]?.total.amount ?? 0,
           500 + (index >= 2 ? 3000 : 0),
         );
       });
@@ -675,8 +660,8 @@ describe('Balance Sheet (e2e)', () => {
 
     it('attaches the previous year net income', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(baselinePY.data, 'NET_INCOME')
-        .previous_year.amount;
+      const beforeNetIncome =
+        findNode(baselinePY.data, 'NET_INCOME')?.previous_year?.amount ?? 0;
 
       expectDelta(netIncome.previous_year.amount, beforeNetIncome, 500);
     });
@@ -755,15 +740,167 @@ describe('Balance Sheet (e2e)', () => {
       expect(accountNodes.length).toBeLessThan(defaultAccounts.length);
     });
 
-    it('excludes zero-balance accounts with noneTransactions', async () => {
-      const { data } = await fetchBalanceSheet({
+    it('filters accounts by transaction presence with noneTransactions', async () => {
+      const suffix = `${Date.now().toString(36)}${Math.floor(Math.random() * 36).toString(36)}`;
+      const code = (prefix: string) =>
+        `${prefix}${suffix}`.slice(0, 6).toUpperCase();
+
+      const createAccount = async (
+        name: string,
+        accountType: string,
+        accountCode: string,
+        parentAccountId?: number,
+      ) => {
+        const res = await request(app.getHttpServer())
+          .post('/accounts')
+          .set(authHeaders())
+          .send({
+            name,
+            accountType,
+            code: accountCode,
+            ...(parentAccountId ? { parentAccountId } : {}),
+          })
+          .expect(201);
+
+        accountsByCode[accountCode] = {
+          id: Number(res.body.id),
+          name,
+          accountType,
+        };
+        return Number(res.body.id);
+      };
+
+      const emptyCashId = await createAccount(
+        `Empty cash ${suffix}`,
+        'cash',
+        code('e'),
+      );
+      const parentCashId = await createAccount(
+        `Parent cash ${suffix}`,
+        'cash',
+        code('p'),
+      );
+      const childCashCode = code('c');
+      const childCashId = await createAccount(
+        `Child cash ${suffix}`,
+        'cash',
+        childCashCode,
+        parentCashId,
+      );
+      const offsetCashCode = code('o');
+      await createAccount(`Offset cash ${suffix}`, 'cash', offsetCashCode);
+
+      const emptyIncomeId = await createAccount(
+        `Empty income ${suffix}`,
+        'income',
+        code('i'),
+      );
+      const parentIncomeId = await createAccount(
+        `Parent income ${suffix}`,
+        'income',
+        code('n'),
+      );
+      const childIncomeCode = code('h');
+      const childIncomeId = await createAccount(
+        `Child income ${suffix}`,
+        'income',
+        childIncomeCode,
+        parentIncomeId,
+      );
+      const offsetIncomeCode = code('f');
+      const offsetIncomeId = await createAccount(
+        `Offset income ${suffix}`,
+        'income',
+        offsetIncomeCode,
+      );
+
+      // Activity that nets to zero still counts as transactions.
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-01',
+        entries: [
+          { code: childCashCode, debit: 40 },
+          { code: offsetCashCode, credit: 40 },
+        ],
+      });
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-02',
+        entries: [
+          { code: offsetCashCode, debit: 40 },
+          { code: childCashCode, credit: 40 },
+        ],
+      });
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-03',
+        entries: [
+          { code: childIncomeCode, debit: 25 },
+          { code: offsetIncomeCode, credit: 25 },
+        ],
+      });
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-04',
+        entries: [
+          { code: offsetIncomeCode, debit: 25 },
+          { code: childIncomeCode, credit: 25 },
+        ],
+      });
+
+      const { data: balanceSheet } = await fetchBalanceSheet({
         ...FY2023,
         noneTransactions: true,
       });
+      const balanceSheetIds = collectAccountNodes(balanceSheet).map(
+        (node) => node.id,
+      );
 
-      for (const node of collectAccountNodes(data)) {
-        expect(node.total.amount).not.toBe(0);
-      }
+      expect(balanceSheetIds).toEqual(
+        expect.arrayContaining([parentCashId, childCashId]),
+      );
+      expect(balanceSheetIds).not.toContain(emptyCashId);
+      expect(findNode(balanceSheet, childCashId).total.amount).toBeCloseTo(
+        0,
+        2,
+      );
+      expect(findNode(balanceSheet, bankId)).toBeDefined();
+
+      const { data: zeroBalanceSheet } = await fetchBalanceSheet({
+        ...FY2023,
+        noneZero: true,
+      });
+      const zeroBalanceIds = collectAccountNodes(zeroBalanceSheet).map(
+        (node) => node.id,
+      );
+      expect(zeroBalanceIds).not.toContain(childCashId);
+      expect(zeroBalanceIds).not.toContain(parentCashId);
+      expect(zeroBalanceIds).not.toContain(emptyCashId);
+
+      const profitLoss = await request(app.getHttpServer())
+        .get('/reports/profit-loss-sheet')
+        .query({ ...FY2023, noneTransactions: true })
+        .set(authHeaders())
+        .expect(200);
+      const profitLossIds = collectAccountNodes(profitLoss.body.data).map(
+        (node) => node.id,
+      );
+
+      expect(profitLossIds).toEqual(
+        expect.arrayContaining([parentIncomeId, childIncomeId, offsetIncomeId]),
+      );
+      expect(profitLossIds).not.toContain(emptyIncomeId);
+      expect(
+        findNode(profitLoss.body.data, childIncomeId).total.amount,
+      ).toBeCloseTo(0, 2);
+
+      const zeroProfitLoss = await request(app.getHttpServer())
+        .get('/reports/profit-loss-sheet')
+        .query({ ...FY2023, noneZero: true })
+        .set(authHeaders())
+        .expect(200);
+      const zeroProfitLossIds = collectAccountNodes(
+        zeroProfitLoss.body.data,
+      ).map((node) => node.id);
+      expect(zeroProfitLossIds).not.toContain(childIncomeId);
+      expect(zeroProfitLossIds).not.toContain(parentIncomeId);
+      expect(zeroProfitLossIds).not.toContain(emptyIncomeId);
     });
   });
 

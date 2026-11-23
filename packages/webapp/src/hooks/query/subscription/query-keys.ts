@@ -5,7 +5,7 @@ export const SUBSCRIPTIONS = 'GetSubscriptions';
 export const subscriptionKeys = {
   all: () => [SUBSCRIPTIONS] as const,
   list: () => [SUBSCRIPTIONS] as const,
-  lemon: () => [SUBSCRIPTIONS, 'lemon'] as const,
+  plans: () => [SUBSCRIPTIONS, 'plans'] as const,
 };
 
 // Grouped object for use in components/hooks

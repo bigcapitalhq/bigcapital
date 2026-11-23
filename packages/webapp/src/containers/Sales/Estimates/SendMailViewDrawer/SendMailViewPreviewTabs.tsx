@@ -1,5 +1,6 @@
 import { Tabs } from '@blueprintjs/core';
 import { css } from '@emotion/css';
+import { NS } from '@/constants/classes';
 
 interface SendMailViewPreviewTabsProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ export function SendMailViewPreviewTabs({
         --x-color-border: #dcdcdd;
         --x-color-tab-text: #5f6b7c;
 
-        .bp4-dark & {
+        .${NS}-dark & {
           --x-color-background: var(--color-dark-gray2);
           --x-color-border: rgba(255, 255, 255, 0.2);
           --x-color-tab-text: rgba(255, 255, 255, 0.6);
@@ -27,21 +28,21 @@ export function SendMailViewPreviewTabs({
         display: flex;
         flex-direction: column;
 
-        .bp4-tab-list {
+        .${NS}-tab-list {
           padding: 0 20px;
           background: var(--x-color-background);
           border-bottom: 1px solid var(--x-color-border);
         }
-        .bp4-tab {
+        .${NS}-tab {
           line-height: 40px;
         }
-        .bp4-tab:not([aria-selected='true']) {
+        .${NS}-tab:not([aria-selected='true']) {
           color: var(--x-color-tab-text);
         }
-        .bp4-tab-indicator-wrapper .bp4-tab-indicator {
+        .${NS}-tab-indicator-wrapper .${NS}-tab-indicator {
           height: 2px;
         }
-        .bp4-tab-panel {
+        .${NS}-tab-panel {
           margin: 0;
           overflow: auto;
         }

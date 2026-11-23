@@ -33,6 +33,10 @@ export const getDefaultProfitLossQuery = () => ({
 
   branchesIds: [],
   numberFormat: {},
+
+  // Columns sorting.
+  columnSortBy: undefined,
+  sortOrder: undefined,
 });
 
 const parseProfitLossQuery = (locationQuery: Record<string, unknown>) => {

@@ -12,6 +12,7 @@ import PercentFieldCell from './PercentFieldCell';
 import SwitchFieldCell from './SwitchFieldCell';
 import TextAreaCell from './TextAreaCell';
 import { TextOverviewTooltipCell } from './TextOverviewTooltipCell';
+import TrackingCategoryOptionFieldCell from './TrackingCategoryOptionFieldCell';
 
 export {
   AccountsListFieldCell,
@@ -28,4 +29,5 @@ export {
   TextAreaCell,
   BranchesListFieldCell,
   TextOverviewTooltipCell,
+  TrackingCategoryOptionFieldCell,
 };

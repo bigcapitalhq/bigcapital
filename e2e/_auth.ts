@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 const API_PREFIX = '/api';
+export const ORGANIZATION_BUILD_TIMEOUT_MS = 120_000;
 
 export interface UserCredentials {
   firstName: string;
@@ -164,7 +165,7 @@ export async function waitForOrganizationBuild(
   jobId: string,
   opts: { timeoutMs?: number; intervalMs?: number } = {}
 ): Promise<void> {
-  const timeoutMs = opts.timeoutMs ?? 120_000;
+  const timeoutMs = opts.timeoutMs ?? ORGANIZATION_BUILD_TIMEOUT_MS;
   const intervalMs = opts.intervalMs ?? 2_000;
   const deadline = Date.now() + timeoutMs;
 

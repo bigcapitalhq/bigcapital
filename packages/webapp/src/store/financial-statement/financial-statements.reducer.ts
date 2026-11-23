@@ -11,6 +11,7 @@ import {
   GENERAL_LEDGER,
   INVENTORY_ITEM_DETAILS,
   INVENTORY_VALUATION,
+  INVENTORY_SUMMARY,
   JOURNAL,
   PROFIT_LOSS,
   PURCHASES_BY_ITEMS,
@@ -42,6 +43,7 @@ const initialState: FinancialStatementsState = {
   purchasesByItems: { displayFilterDrawer: false },
   salesByItems: { displayFilterDrawer: false },
   inventoryValuation: { displayFilterDrawer: false },
+  inventorySummary: { displayFilterDrawer: false },
   customersBalanceSummary: { displayFilterDrawer: false },
   vendorsBalanceSummary: { displayFilterDrawer: false },
   customersTransactions: { displayFilterDrawer: false },
@@ -82,6 +84,7 @@ export const financialStatementsReducer = createReducer(initialState, {
   ...financialStatementFilterToggle(PURCHASES_BY_ITEMS, 'purchasesByItems'),
   ...financialStatementFilterToggle(SALES_BY_ITEMS, 'salesByItems'),
   ...financialStatementFilterToggle(INVENTORY_VALUATION, 'inventoryValuation'),
+  ...financialStatementFilterToggle(INVENTORY_SUMMARY, 'inventorySummary'),
   ...financialStatementFilterToggle(
     CUSTOMERS_BALANCE_SUMMARY,
     'customersBalanceSummary',

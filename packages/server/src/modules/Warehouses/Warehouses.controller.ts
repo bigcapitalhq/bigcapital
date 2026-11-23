@@ -18,9 +18,12 @@ import {
 import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
 import { WarehouseResponseDto } from './dtos/WarehouseResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('warehouses')
 @ApiTags('Warehouses')
+@RequireSubscriptionFeature(SubscriptionFeature.Warehouses)
 @ApiExtraModels(WarehouseResponseDto)
 @ApiCommonHeaders()
 export class WarehousesController {

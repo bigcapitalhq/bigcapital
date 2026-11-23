@@ -93,6 +93,20 @@ function GlobalErrorsInner({
       },
     });
   }
+  if (globalErrors.trialExpired) {
+    AppToaster.show({
+      message:
+        'Your free trial has ended. Subscribe to Go to keep making changes. Your data is still available to view.',
+      intent: Intent.WARNING,
+      action: {
+        text: 'Upgrade',
+        onClick: () => window.location.assign('/preferences/billing'),
+      },
+      onDismiss: () => {
+        globalErrorsSet({ trialExpired: undefined });
+      },
+    });
+  }
   if (globalErrors.userInactive) {
     AppToaster.show({
       message: intl.get('global_error.authorized_user_inactive'),

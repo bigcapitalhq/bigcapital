@@ -61,6 +61,13 @@ export const financialReportMenus: FinancialSection[] = [
         ability: ReportsAction.READ_GENERAL_LEDGET,
       },
       {
+        title: <T id="report.reconciliation_status.title" />,
+        desc: <T id="report.reconciliation_status.description" />,
+        link: '/financial-reports/reconciliation-status',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_RECONCILIATION_STATUS,
+      },
+      {
         title: <T id={'receivable_aging_summary'} />,
         desc: (
           <T id={'summarize_total_unpaid_balances_of_customers_invoices'} />
@@ -184,11 +191,26 @@ export const financialReportMenus: FinancialSection[] = [
         ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
       },
       {
+        title: <T id={'batch_details'} />,
+        desc: <T id={'batch_details_desc'} />,
+        link: '/financial-reports/batch-details',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_BATCH_DETAILS,
+        feature: Features.BatchTracking,
+      },
+      {
         title: <T id={'inventory_valuation'} />,
         desc: <T id={'summerize_your_transactions_for_each_inventory_item'} />,
         link: '/financial-reports/inventory-valuation',
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+      },
+      {
+        title: <T id={'inventory_summary'} />,
+        desc: <T id={'summerize_the_stock_movements_of_each_inventory_item'} />,
+        link: '/financial-reports/inventory-summary',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_INVENTORY_SUMMARY,
       },
     ],
   },

@@ -2,6 +2,7 @@ export const JournalSheetResponseExample = {
   query: {
     from_date: '2025-06-01',
     to_date: '2025-06-21',
+    basis: 'accrual',
     from_range: null,
     to_range: null,
     accounts_ids: [],

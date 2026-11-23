@@ -1,7 +1,8 @@
+@import '@/style/_common';
 .content {
   --border-color: #DCE0E5;
   
-  :global(.bp4-dark) & {
+  :global(.#{$ns}-dark) & {
     --border-color: var(--color-dark-gray5);    
   }
   margin-top: 0;

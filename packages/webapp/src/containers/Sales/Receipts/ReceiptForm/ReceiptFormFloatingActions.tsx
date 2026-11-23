@@ -239,7 +239,7 @@ export function ReceiptFormFloatingActions() {
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.TOP_RIGHT}
           modifiers={{
-            offset: { offset: '0, 4' },
+            offset: { options: { offset: [0, 4] } },
           }}
           content={
             <Menu>

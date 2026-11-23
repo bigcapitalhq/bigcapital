@@ -1,0 +1,84 @@
+@use './variables' as *;
+@import '@/style/_common';
+
+.composer {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-height: 50px;
+  padding: 0 8px 0 16px;
+  border: 1px solid $border;
+  border-radius: 50px;
+  background: $surface;
+}
+
+.input {
+  flex: 1;
+  max-height: 180px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: $text;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
+.send {
+  flex: 0 0 auto;
+
+  // Send/stop are Blueprint buttons; composing the global button classes
+  // raises specificity above `.#{$ns}-button` / `.#{$ns}-intent-primary`.
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)) {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--color-dark-gray5, #404854);
+    color: #fff;
+  }
+
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):hover:not(:disabled) {
+    background: var(--color-dark-gray6, #485261);
+  }
+
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):active:not(:disabled),
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):focus:not(:disabled) {
+    background: var(--color-dark-gray5, #404854);
+  }
+
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):disabled {
+    background: var(--color-dark-gray5, #404854);
+    color: #fff;
+    opacity: 0.6;
+  }
+}
+
+.sendStop {
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)) {
+    background: var(--color-dark-gray5, #404854);
+    color: #fff;
+  }
+
+  &:global(.#{$ns}-button:not(.#{$ns}-minimal):not(.#{$ns}-outlined)):hover {
+    background: var(--color-dark-gray5, #404854);
+  }
+}

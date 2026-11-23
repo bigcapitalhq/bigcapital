@@ -9,6 +9,8 @@ import {
 } from '../Analytics.constants';
 import { ILedger } from '../../Ledger/types/Ledger.types';
 import { LedgerAnalyticsDirtySet } from './LedgerAnalyticsDirtySet.service';
+import { ClickHouseSchemaService } from './ClickHouseSchema.service';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 @Injectable()
 export class LedgerClickHouseSink {
@@ -17,6 +19,7 @@ export class LedgerClickHouseSink {
     private readonly syncQueue: Queue,
     private readonly dirtySet: LedgerAnalyticsDirtySet,
     private readonly cls: ClsService,
+    private readonly schemaService: ClickHouseSchemaService,
   ) {}
 
   /**
@@ -24,13 +27,20 @@ export class LedgerClickHouseSink {
    * @param {ILedger} ledger
    */
   public onLedgerCommitted(ledger: ILedger): void {
+    if (!this.schemaService.isEnabled()) return;
+
     const organizationId = this.cls.get<string>('organizationId');
     if (!organizationId) return;
 
     const deltas: ILedgerDelta[] = ledger
       .getEntries()
       .filter(
-        (entry) => Boolean(entry.credit || entry.debit) && entry.accountId,
+        (entry) =>
+          Boolean(entry.credit || entry.debit) &&
+          entry.accountId &&
+          // The cash basis entries are excluded from the analytics
+          // store which is accrual based.
+          entry.basis !== AccountingBasis.Cash,
       )
       .map((entry) => ({
         accountId: entry.accountId,
@@ -48,17 +58,29 @@ export class LedgerClickHouseSink {
   /**
    * Queues the negated deltas of the deleted ledger entries to
    * the analytics store.
-   * @param {Array<{accountId: number; credit: number; debit: number}>} deletedEntries - The deleted rows as they were read from the tenant database.
+   * @param {Array<{accountId: number, credit: number, debit: number, basis?: AccountingBasis | null}>} deletedEntries - The deleted rows as they were read from the tenant database.
    */
   public onLedgerDeleted(
-    deletedEntries: Array<{ accountId: number; credit: number; debit: number }>,
+    deletedEntries: Array<{
+      accountId: number;
+      credit: number;
+      debit: number;
+      basis?: AccountingBasis | null;
+    }>,
   ): void {
+    if (!this.schemaService.isEnabled()) return;
+
     const organizationId = this.cls.get<string>('organizationId');
     if (!organizationId) return;
 
     const deltas: ILedgerDelta[] = deletedEntries
       .filter(
-        (entry) => Boolean(entry.credit || entry.debit) && entry.accountId,
+        (entry) =>
+          Boolean(entry.credit || entry.debit) &&
+          entry.accountId &&
+          // The cash basis entries are excluded from the analytics
+          // store which is accrual based.
+          entry.basis !== AccountingBasis.Cash,
       )
       .map((entry) => ({
         accountId: entry.accountId,

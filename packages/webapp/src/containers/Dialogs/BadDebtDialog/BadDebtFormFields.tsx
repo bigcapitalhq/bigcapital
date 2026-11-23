@@ -1,4 +1,10 @@
-import { Classes, ControlGroup, Callout, Intent } from '@blueprintjs/core';
+import {
+  Classes,
+  ControlGroup,
+  Callout,
+  Intent,
+  Position,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBadDebtContext } from './BadDebtFormProvider';
@@ -8,17 +14,20 @@ import {
   FFormGroup,
   FMoneyInputGroup,
   FAccountsSuggestField,
+  FDateInput,
+  Icon,
   InputPrependText,
   FieldRequiredHint,
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { useAutofocus } from '@/hooks';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 /**
  * Bad debt form fields.
  */
 export function BadDebtFormFields(): React.ReactElement {
   const amountfieldRef = useAutofocus<HTMLInputElement>();
+  const dateInputFormatter = useDateInputFormatter();
   const { accounts, invoice } = useBadDebtContext();
 
   return (
@@ -28,6 +37,22 @@ export function BadDebtFormFields(): React.ReactElement {
           <T id={'bad_debt.dialog.header_note'} />
         </p>
       </Callout>
+
+      {/*------------ Date -----------*/}
+      <FFormGroup
+        name={'date'}
+        label={intl.get('date')}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <FDateInput
+          {...dateInputFormatter}
+          name={'date'}
+          popoverProps={{ position: Position.BOTTOM, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+          }}
+        />
+      </FFormGroup>
 
       {/*------------ Written-off amount -----------*/}
       <FFormGroup
@@ -67,7 +92,7 @@ export function BadDebtFormFields(): React.ReactElement {
         label={intl.get('reason')}
         labelInfo={<FieldRequiredHint />}
       >
-        <FTextArea name={'reason'} growVertically={true} large={true} fill />
+        <FTextArea name={'reason'} autoResize={true} large={true} fill />
       </FFormGroup>
     </div>
   );

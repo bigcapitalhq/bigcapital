@@ -21,6 +21,7 @@ export class InventoryTransaction extends TenantBaseModel {
   updatedAt?: Date;
 
   warehouseId?: number;
+  batchId?: number;
   meta?: InventoryTransactionMeta;
 
   /**
@@ -114,6 +115,7 @@ export class InventoryTransaction extends TenantBaseModel {
     } = require('../../TransactionItemEntry/models/ItemEntry');
     const { InventoryTransactionMeta } = require('./InventoryTransactionMeta');
     const { InventoryCostLotTracker } = require('./InventoryCostLotTracker');
+    const { Batch } = require('../../EE/Batches/models/Batch');
 
     return {
       // Transaction meta.
@@ -167,6 +169,15 @@ export class InventoryTransaction extends TenantBaseModel {
         join: {
           from: 'inventory_transactions.entryId',
           to: 'items_entries.id',
+        },
+      },
+
+      batch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Batch,
+        join: {
+          from: 'inventory_transactions.batchId',
+          to: 'batches.id',
         },
       },
     };

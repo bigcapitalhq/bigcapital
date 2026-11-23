@@ -16,12 +16,14 @@ import {
 } from './withTrialBalanceActions';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
 
 interface TrialBalanceFormValues {
   fromDate: Date;
   toDate: Date;
+  basis: 'cash' | 'accrual';
   branchesIds: string[];
   filterByOption: string;
   [key: string]: unknown;
@@ -67,6 +69,8 @@ function TrialBalanceSheetHeaderInner({
   const defaultValues: TrialBalanceFormValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
+    // Must match the report default basis in `getDefaultTrialBalanceQuery`.
+    basis: 'accrual',
     branchesIds: [],
     filterByOption: 'with-transactions',
   };
@@ -148,7 +152,7 @@ export const TrialBalanceSheetHeader = FF.pipe(
 );
 
 const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .dashboard__insider--expense-form {
   padding-bottom: 64px;
   .bigcapital-datatable {
@@ -22,18 +23,18 @@
       flex: 1 0 0;
     }
 
-    .bp4-label {
+    .#{$ns}-label {
       min-width: 140px;
     }
 
-    .bp4-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
 
-    .bp4-form-group {
+    .#{$ns}-form-group {
       margin-bottom: 18px;
 
-      &.bp4-inline {
+      &.#{$ns}-inline {
         max-width: 440px;
       }
     }
@@ -50,12 +51,12 @@
 
           &.landed-cost {
 
-            .bp4-control {
+            .#{$ns}-control {
               margin-top: 0;
               margin-left: 34px;
             }
 
-            .bp4-control-indicator {
+            .#{$ns}-control-indicator {
               height: 18px;
               width: 18px;
               border-color: #e0e0e0;

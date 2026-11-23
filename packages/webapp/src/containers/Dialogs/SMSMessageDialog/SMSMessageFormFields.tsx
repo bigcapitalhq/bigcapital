@@ -49,7 +49,7 @@ export function SMSMessageFormFields(): React.ReactElement {
             }
           >
             <TextArea
-              growVertically={true}
+              autoResize={true}
               large={true}
               intent={inputIntent({ error, touched }) as Intent | undefined}
               {...field}

@@ -14,11 +14,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ISaleInvoiceWriteoffDTO,
-  SaleInvoiceMailState,
-  SendInvoiceMailDTO,
-} from './SaleInvoice.types';
+import { SaleInvoiceMailState, SendInvoiceMailDTO } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import {
   ApiBody,
@@ -55,10 +51,14 @@ import { InvoicePaymentTransactionDto } from './dtos/InvoicePaymentTransactionRe
 import { SaleInvoiceHtmlContentResponseDto } from './dtos/SaleInvoiceHtmlResponse.dto';
 import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
 import { NotifySaleInvoiceBySmsDto } from './dtos/NotifySaleInvoiceBySms.dto';
+import { SaleInvoiceWriteoffDto } from './dtos/SaleInvoiceWriteoff.dto';
 import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
+@RequireSubscriptionFeature(SubscriptionFeature.SaleInvoices)
 @ApiExtraModels(SaleInvoiceResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleInvoiceStateResponseDto)
@@ -318,7 +318,7 @@ export class SaleInvoicesController {
   })
   writeOff(
     @Param('id', ParseIntPipe) id: number,
-    @Body() writeoffDTO: ISaleInvoiceWriteoffDTO,
+    @Body() writeoffDTO: SaleInvoiceWriteoffDto,
   ) {
     return this.saleInvoiceApplication.writeOff(id, writeoffDTO);
   }

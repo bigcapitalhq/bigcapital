@@ -25,6 +25,7 @@ export class APAgingSummaryPdfInjectable {
       table.meta.sheetName,
       table.meta.formattedAsDate,
       HtmlTableCss,
+      query.numberFormat?.showInRed,
     );
   }
 }

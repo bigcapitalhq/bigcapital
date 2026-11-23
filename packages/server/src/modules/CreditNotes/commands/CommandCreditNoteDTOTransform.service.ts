@@ -50,16 +50,19 @@ export class CommandCreditNoteDTOTransform {
     const amount = this.itemsEntriesService.getTotalItemsEntries(
       creditNoteDTO.entries,
     );
+    const entriesWithDefaults =
+      await this.itemsEntriesService.setItemsEntriesDefaultAccounts(
+        creditNoteDTO.entries.map((entry: CreditNoteEntryDto) => ({
+          ...entry,
+          referenceType: 'CreditNote',
+          batches: entry.batches ?? [],
+          batchId: entry.batchId ?? null,
+        })),
+      );
     const entries = R.compose(
       // Associate the default index to each item entry.
       assocItemEntriesDefaultIndex,
-
-      // Associate the reference type to credit note entries.
-      R.map((entry: CreditNoteEntryDto) => ({
-        ...entry,
-        referenceType: 'CreditNote',
-      })),
-    )(creditNoteDTO.entries);
+    )(entriesWithDefaults);
 
     // Retrieves the next credit note number.
     const autoNextNumber = this.creditNoteAutoIncrement.getNextCreditNumber();

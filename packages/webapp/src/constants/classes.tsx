@@ -1,6 +1,8 @@
 import { Classes } from '@blueprintjs/core';
 
-export const NS = 'bp4';
+// Blueprint keeps the class namespace internal, but it is exposed through the
+// public `Classes` namespace object as `getClassNamespace()` (e.g. "bp6").
+export const NS = Classes.getClassNamespace();
 
 export const SECTION = `${NS}-section`;
 export const SECTION_COLLAPSED = `${SECTION}-collapsed`;

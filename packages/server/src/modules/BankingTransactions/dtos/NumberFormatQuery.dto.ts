@@ -33,6 +33,15 @@ export class NumberFormatQueryDto {
   readonly showZero: boolean;
 
   @ApiPropertyOptional({
+    description: 'Whether to show negative amounts in red',
+    example: false,
+  })
+  @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
+  @IsOptional()
+  readonly showInRed: boolean;
+
+  @ApiPropertyOptional({
     description: 'How to format money values',
     example: 'total',
     enum: ['total', 'always', 'none'],

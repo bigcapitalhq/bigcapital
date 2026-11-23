@@ -1,4 +1,4 @@
-
+@import '@/style/_common';
 // Blueprint framework.
 // @import '@blueprintjs/core/src/blueprint.scss';
 
@@ -7,18 +7,21 @@
     .table {
       .tbody {
         .item_type.td {
-          .bp4-tag {
+          .#{$ns}-tag {
             font-size: 13px;
           }
         }
         .tr.inactive .td {
-
-          &.normal .bp4-icon {
+          &.normal .#{$ns}-icon {
             color: #9eaab6;
           }
         }
         .quantity_on_hand {
           color: #ff0000;
+        }
+
+        .low-stock {
+          color: #d9822b;
         }
       }
     }

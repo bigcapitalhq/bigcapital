@@ -12,6 +12,7 @@ interface JournalEntriesTableProps {
   transactions: GLTransactionRow[];
   columns?: DataTableColumn<GLTransactionRow>[];
   loading?: boolean;
+  noResults?: React.ReactNode;
   className?: string;
 }
 

@@ -49,6 +49,31 @@ export const settingsKeys = {
   smsNotification: (key: string) => [SETTING_SMS_NOTIFICATIONS, key] as const,
 };
 
+// Maps the snake_case settings group names (as sent to/read from the API) to
+// their dedicated query key. Groups without a dedicated query are omitted and
+// are only reflected in the grouped settings query.
+export const settingsGroupKeys: Record<string, () => readonly unknown[]> = {
+  sales_invoices: settingsKeys.invoices,
+  sales_estimates: settingsKeys.estimates,
+  sales_receipts: settingsKeys.receipts,
+  payment_receives: settingsKeys.paymentReceives,
+  manual_journals: settingsKeys.manualJournals,
+  items: settingsKeys.items,
+  item_categories: settingsKeys.itemCategories,
+  cashflow: settingsKeys.cashflow,
+  credit_note: settingsKeys.creditNotes,
+  vendor_credit: settingsKeys.vendorCredits,
+  warehouse_transfers: settingsKeys.warehouseTransfers,
+  bills: settingsKeys.bills,
+  bill_payments: settingsKeys.billPayments,
+  organization: settingsKeys.organization,
+  expenses: settingsKeys.expenses,
+  accounts: settingsKeys.accounts,
+  customers: settingsKeys.customers,
+  vendors: settingsKeys.vendors,
+  cashflow_transactions: settingsKeys.cashflowTransactions,
+};
+
 // Grouped object for use in components/hooks
 export const SettingsQueryKeys = {
   SETTING,

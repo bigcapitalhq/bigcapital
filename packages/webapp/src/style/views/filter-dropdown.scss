@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 .filter-dropdown{
   width: 600px;
@@ -19,43 +20,43 @@
     display: flex;
     padding: 6px 12px;
 
-    .bp4-input{
+    .#{$ns}-input{
       padding: 0 6px;
     }
-    .form-group--select-list .bp4-popover-target .bp4-button{
+    .form-group--select-list .#{$ns}-popover-target .#{$ns}-button{
       padding-left: 6px;
     } 
 
-    .bp4-html-select::after,
-    .form-group--select-list .bp4-button::after{
+    .#{$ns}-html-select::after,
+    .form-group--select-list .#{$ns}-button::after{
       margin-right: 6px;
       // border-top-color: #c5c5c5;
     }
-    .bp4-html-select,
-    .bp4-input,
-    .form-group--select-list .bp4-button{
+    .#{$ns}-html-select,
+    .#{$ns}-input,
+    .form-group--select-list .#{$ns}-button{
       
       &:not(:focus){
         // border-color: #d3d9de;
       }
     }
 
-    .form-group--select-list .bp4-button{
+    .form-group--select-list .#{$ns}-button{
       padding-right: 20px;
     }
-    .bp4-form-group{
+    .#{$ns}-form-group{
       margin-bottom: 0;
       padding-right: 10px;
 
-      .bp4-control.bp4-checkbox{
+      .#{$ns}-control.#{$ns}-checkbox{
         margin-left: 20px;
       }
 
-      .bp4-popover-wrapper{
+      .#{$ns}-popover-target{
         width: 100%;
       }
 
-      .bp4-button{
+      .#{$ns}-button{
         text-overflow: ellipsis;
         overflow: visible;
         white-space: nowrap;
@@ -84,7 +85,7 @@
     .button--remove{
       margin-left: -6px;
 
-      .bp4-icon{
+      .#{$ns}-icon{
         color: #929aa0;
       }
     }
@@ -96,15 +97,15 @@
   }
 }
 
-.bp4-popover{
+.#{$ns}-popover{
 
   &,
-  & .bp4-popover-content{
+  & .#{$ns}-popover-content{
     border-radius: 5px;
   }
 }
 
-.bp4-menu-item{
+.#{$ns}-menu-item{
   .text-hint{
     font-size: 11px;
     line-height: 1.3;

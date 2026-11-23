@@ -3,14 +3,15 @@ import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { NS } from '@/constants/classes';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
 
 const organizationsSwitchLabelBpCss = css`
-  .bp4-control.bp4-switch {
+  .${NS}-control.${NS}-switch {
     margin: 0;
   }
-  .bp4-control.bp4-switch input:checked ~ .bp4-control-indicator {
+  .${NS}-control.${NS}-switch input:checked ~ .${NS}-control-indicator {
     background: rgb(0, 82, 204);
     box-shadow: none;
   }

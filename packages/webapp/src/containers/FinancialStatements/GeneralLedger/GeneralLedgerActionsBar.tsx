@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Popover,
   PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as FF from 'fp-ts/function';
@@ -13,17 +14,24 @@ import { GeneralLedgerSheetExportMenu } from './components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { withGeneralLedger } from './withGeneralLedger';
 import { withGeneralLedgerActions } from './withGeneralLedgerActions';
-import type { WithGeneralLedgerProps } from './withGeneralLedger';
 import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
+
+interface GeneralLedgerActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
 
 type GeneralLedgerActionsBarProps = {
   isFilterDrawerOpen: boolean;
 } & Pick<WithGeneralLedgerActionsProps, 'toggleGeneralLedgerFilterDrawer'> &
-  WithDialogActionsProps;
+  WithDialogActionsProps &
+  GeneralLedgerActionsBarOwnProps;
 
 /**
  * General ledger - Actions bar.
@@ -37,8 +45,12 @@ function GeneralLedgerActionsBarInner({
 
   // #withDialogActions
   openDialog,
+
+  // #ownProps
+  numberFormat,
+  onNumberFormatSubmit,
 }: GeneralLedgerActionsBarProps) {
-  const { sheetRefresh } = useGeneralLedgerContext();
+  const { sheetRefresh, isLoading } = useGeneralLedgerContext();
 
   // Handle customize button click.
   const handleCustomizeClick = () => {
@@ -48,6 +60,11 @@ function GeneralLedgerActionsBarInner({
   // Handle re-calculate button click.
   const handleRecalcReport = () => {
     sheetRefresh();
+  };
+
+  // Handle number format form submit.
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
+    saveInvoke(onNumberFormatSubmit, values);
   };
 
   // Handle the print button click.
@@ -79,6 +96,26 @@ function GeneralLedgerActionsBarInner({
           onClick={handleCustomizeClick}
           active={isFilterDrawerOpen}
         />
+        <NavbarDivider />
+
+        <Popover
+          content={
+            <NumberFormatDropdown
+              numberFormat={numberFormat}
+              onSubmit={handleNumberFormatSubmit}
+              submitDisabled={isLoading}
+            />
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'format'} />}
+            icon={<Icon icon="numbers" width={23} height={16} />}
+          />
+        </Popover>
         <NavbarDivider />
 
         <Button

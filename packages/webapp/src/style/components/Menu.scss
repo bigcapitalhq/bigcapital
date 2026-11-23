@@ -1,4 +1,5 @@
-.bp4-menu-item {
+@import '@/style/_common';
+.#{$ns}-menu-item {
     &:hover{
         background-color: var(--color-ui-menu-select-item-hover-background);
     }

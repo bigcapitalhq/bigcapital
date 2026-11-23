@@ -1,15 +1,16 @@
+@import '@/style/_common';
 .dialog--invite-form {
   width: 450px;
 
-  .bp4-dialog-body {
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 70px;
       }
-      .bp4-form-content {
+      .#{$ns}-form-content {
         width: 250px;
 
-        .bp4-dialog-footer-actions {
+        .#{$ns}-dialog-footer-actions {
           margin-right: 20px;
           display: flex;
           justify-content: flex-end;
@@ -20,12 +21,12 @@
 }
 
 .dialog--invite-user {
-  .bp4-dialog-body {
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 140px;
       }
-      .bp4-form-content {
+      .#{$ns}-form-content {
         width: 250px;
       }
     }

@@ -13,7 +13,9 @@ export const formatNumber = (balance, { noCents, divideOn1000 }): string => {
   return formattedBalance.toString();
 };
 
-export const tableClassNames = (rows: ITableRow[]): ITableRow[] => {
+export const tableClassNames = (
+  rows: ITableRow[],
+): Array<ITableRow & { classNames: string[] }> => {
   return rows.map((row) => {
     const classNames =
       row?.rowTypes?.map((rowType) => `row-type--${kebabCase(rowType)}`) || [];

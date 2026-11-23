@@ -7,6 +7,9 @@ export interface ItemFormValues {
   name: string;
   type: ItemFormType;
   code: string;
+  inventoryTracking: 'none' | 'batches';
+  reorderPoint: string | number;
+  unit: string;
   costPrice: string | number;
   sellPrice: string | number;
   costAccountId: number | string;

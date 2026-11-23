@@ -12,6 +12,12 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, ToNumber } from '@/common/decorators/Validators';
+import {
+  ITEM_UNITS,
+  ItemUnit,
+  INVENTORY_TRACKING,
+  type InventoryTracking,
+} from '../Items.constants';
 
 export class CommandItemDto {
   @IsString()
@@ -33,6 +39,15 @@ export class CommandItemDto {
   })
   type: 'service' | 'non-inventory' | 'inventory';
 
+  @IsIn([...INVENTORY_TRACKING])
+  @ValidateIf((_item, value) => value !== undefined)
+  @ApiProperty({
+    enum: [...INVENTORY_TRACKING],
+    description: 'Inventory tracking mode. New items default to none.',
+    required: false,
+  })
+  inventoryTracking?: InventoryTracking;
+
   @IsOptional()
   @IsString()
   @MaxLength(255)
@@ -42,6 +57,31 @@ export class CommandItemDto {
     example: 'CHAIR-X2000',
   })
   code?: string;
+
+  @IsOptional()
+  @ToNumber()
+  @IsNumber({ maxDecimalPlaces: 3 })
+  @Min(0)
+  @ApiProperty({
+    description:
+      'Stock level at which the item should be reordered (inventory items only)',
+    required: false,
+    minimum: 0,
+    example: 10,
+  })
+  reorderPoint?: number;
+
+  @IsOptional()
+  @IsString()
+  @IsIn([...ITEM_UNITS])
+  @MaxLength(20)
+  @ApiProperty({
+    description: 'Unit of measure the item is measured in',
+    enum: [...ITEM_UNITS],
+    example: 'kg',
+    required: false,
+  })
+  unit?: ItemUnit;
 
   // Purchase attributes
   @IsOptional()

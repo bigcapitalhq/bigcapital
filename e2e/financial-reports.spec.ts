@@ -106,6 +106,44 @@ test.describe('financial reports', () => {
     await waitForReportRows(page, 'trial-balance');
   });
 
+  test('should customize the trial balance sheet accounting basis through the filter drawer.', async ({
+    page,
+  }) => {
+    await page.goto('/financial-reports/trial-balance-sheet');
+    await waitForReportPage(page, 'Trial Balance Sheet');
+    await waitForReportRows(page, 'trial-balance');
+
+    await expect(
+      page.getByTestId('financial-sheet-accounting-basis'),
+    ).toContainText('Accrual');
+
+    await page.getByRole('button', { name: 'Customize Report' }).click();
+
+    const drawer = page.getByTestId('financial-report-drawer');
+    await expect(drawer).toBeVisible({ timeout: 15_000 });
+    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeChecked();
+    await expect(drawer.getByRole('radio', { name: 'Cash' })).toBeVisible();
+
+    // Click the radio directly (some environments inject the TanStack Query
+    // Devtools overlay which intercepts pointer events; element.click()
+    // bypasses it and still fires the React change event that updates the
+    // form).
+    await drawer
+      .getByRole('radio', { name: 'Cash' })
+      .evaluate((el) => (el as HTMLInputElement).click());
+    await expect(drawer.getByRole('radio', { name: 'Cash' })).toBeChecked();
+
+    // Submit the form directly for the same reason as the radio above.
+    await drawer
+      .getByRole('button', { name: 'Calculate report' })
+      .evaluate((el) => (el as HTMLButtonElement).click());
+
+    await expect(page).toHaveURL(/basis=cash/);
+    await expect(
+      page.getByTestId('financial-sheet-accounting-basis'),
+    ).toContainText('Cash', { timeout: 30_000 });
+  });
+
   test('should render the General Ledger report.', async ({ page }) => {
     await page.goto('/financial-reports/general-ledger');
     await waitForReportPage(page, 'General Ledger');
@@ -122,6 +160,43 @@ test.describe('financial reports', () => {
     await page.goto('/financial-reports/journal-sheet');
     await waitForReportPage(page, 'Journal Sheet');
     await waitForReportRows(page, 'journal');
+  });
+
+  test('should customize the journal report accounting basis through the filter drawer.', async ({
+    page,
+  }) => {
+    await page.goto('/financial-reports/journal-sheet');
+    await waitForReportPage(page, 'Journal Sheet');
+    await waitForReportRows(page, 'journal');
+
+    await expect(
+      page.getByTestId('financial-sheet-accounting-basis'),
+    ).toContainText('Accrual');
+
+    await page.getByRole('button', { name: 'Customize Report' }).click();
+
+    const drawer = page.getByTestId('financial-report-drawer');
+    await expect(drawer).toBeVisible({ timeout: 15_000 });
+    await expect(drawer.getByRole('radio', { name: 'Cash' })).toBeVisible();
+    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeVisible();
+
+    // Click the radio directly (some environments inject the TanStack Query
+    // Devtools overlay which intercepts pointer events; element.click()
+    // bypasses it and still fires the React change event that updates the
+    // form).
+    await drawer
+      .getByRole('radio', { name: 'Cash' })
+      .evaluate((el) => (el as HTMLInputElement).click());
+
+    // Submit the form directly for the same reason as the radio above.
+    await drawer
+      .getByRole('button', { name: 'Calculate report' })
+      .evaluate((el) => (el as HTMLButtonElement).click());
+
+    await expect(page).toHaveURL(/basis=cash/);
+    await expect(
+      page.getByTestId('financial-sheet-accounting-basis'),
+    ).toContainText('Cash', { timeout: 30_000 });
   });
 
   test('should render the Cash Flow Statement report.', async ({ page }) => {
@@ -199,7 +274,11 @@ test.describe('financial reports', () => {
   test('should render the Sales Tax Liability Summary report.', async ({
     page,
   }) => {
-    await page.goto('/financial-reports/sales-tax-liability-summary');
+    // The seeded invoice is not paid, so tax is only recognised on the
+    // accrual basis (the report page defaults to cash).
+    await page.goto(
+      '/financial-reports/sales-tax-liability-summary?basis=accrual',
+    );
     await waitForReportPage(page, 'Sales Tax Liability Summary');
     await waitForReportRows(page, 'sales-tax-liability');
   });
@@ -230,5 +309,21 @@ test.describe('financial reports', () => {
     await expect(page.getByTestId('audit-log-row').first()).toBeVisible({
       timeout: 30_000,
     });
+
+    await page.getByRole('button', { name: 'Filter', exact: true }).click();
+    const action = page.locator('.bp6-form-group').filter({
+      has: page.getByText('Action', { exact: true }),
+    });
+    await action.getByPlaceholder('All').click();
+    const option = page
+      .getByRole('menuitem')
+      .filter({ hasNotText: 'No results' })
+      .first();
+    const label = (await option.innerText()).trim();
+    await option.click();
+    const tag = action.locator('.bp6-tag');
+    await expect(tag).toHaveText(label);
+    await tag.getByRole('button').click();
+    await expect(tag).toHaveCount(0);
   });
 });

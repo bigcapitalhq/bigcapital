@@ -1,5 +1,4 @@
 import { Position, Checkbox, InputGroup } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { isUndefined } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -11,6 +10,7 @@ import {
 } from './interfaces';
 import { Choose } from '@/components';
 import { Select } from '@/components/Forms';
+import { DateInput } from '@/components/Forms/DateInput';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 function AdvancedFilterEnumerationField({
@@ -26,8 +26,8 @@ function AdvancedFilterEnumerationField({
     <Select
       items={options}
       selectedValue={typeof value === 'string' ? value : undefined}
+      fill
       popoverProps={{
-        fill: true,
         minimal: true,
         captureDismiss: true,
       }}

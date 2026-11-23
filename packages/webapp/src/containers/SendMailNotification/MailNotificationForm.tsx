@@ -7,6 +7,7 @@ import {
   FMultiSelect,
   FRichEditor,
 } from '@/components';
+import { NS } from '@/constants/classes';
 
 type MailOption = SelectOptionProps & { mail?: string };
 
@@ -34,7 +35,7 @@ export function MailNotificationForm({
           <FMultiSelect
             items={fromAddresses}
             name={'from'}
-            popoverProps={{ minimal: true, fill: true }}
+            popoverProps={{ minimal: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
             }}
@@ -47,7 +48,7 @@ export function MailNotificationForm({
           <FMultiSelect
             items={toAddresses}
             name={'to'}
-            popoverProps={{ minimal: true, fill: true }}
+            popoverProps={{ minimal: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
             }}
@@ -86,7 +87,7 @@ const HeaderBox = styled('div')`
   border-bottom: 2px solid #eaeaef;
   padding: 6px 15px;
 
-  .bp4-form-group {
+  .${NS}-form-group {
     margin: 0;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -102,29 +103,29 @@ const HeaderBox = styled('div')`
     }
   }
 
-  .bp4-form-content {
+  .${NS}-form-content {
     flex: 1 0;
   }
 
-  .bp4-label {
+  .${NS}-label {
     min-width: 65px;
     color: #738091;
   }
 
-  .bp4-input {
+  .${NS}-input {
     border-color: transparent;
     padding: 0;
 
     &:focus,
-    &.bp4-active {
+    &.${NS}-active {
       box-shadow: 0 0 0 0;
     }
   }
 
-  .bp4-input-ghost {
+  .${NS}-input-ghost {
     margin-top: 5px;
   }
-  .bp4-tag-input-values {
+  .${NS}-tag-input-values {
     margin: 0;
   }
 `;

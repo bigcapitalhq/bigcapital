@@ -46,6 +46,17 @@ function GeneralLedgerInner({
     [setLocationQuery],
   );
 
+  // Handle number format submit.
+  const handleNumberFormatSubmit = useCallback(
+    (values: Record<string, unknown>) => {
+      setLocationQuery({
+        ...query,
+        numberFormat: values,
+      });
+    },
+    [query, setLocationQuery],
+  );
+
   // Hide the filter drawer once the page unmount.
   useEffect(
     () => () => toggleGeneralLedgerFilterDrawer(false),
@@ -54,10 +65,13 @@ function GeneralLedgerInner({
 
   return (
     <GeneralLedgerProvider query={query}>
-      <GeneralLedgerActionsBar />
+      <GeneralLedgerActionsBar
+        numberFormat={query.numberFormat ?? {}}
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <GeneralLedgerHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

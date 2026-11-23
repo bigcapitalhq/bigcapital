@@ -62,7 +62,7 @@
 
     &.#{$ns}-menu {
       &,
-      .bp4-dark & {
+      .#{$ns}-dark & {
         background: transparent;
       }
     }

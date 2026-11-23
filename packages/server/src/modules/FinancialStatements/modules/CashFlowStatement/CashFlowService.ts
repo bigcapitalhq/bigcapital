@@ -14,6 +14,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { getDefaultCashflowQuery } from './constants';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable()
 export class CashFlowStatementService {
@@ -26,6 +27,7 @@ export class CashFlowStatementService {
     private readonly cashFlowRepo: CashFlowRepository,
     private readonly cashflowSheetMeta: CashflowSheetMeta,
     private readonly tenancyContext: TenancyContext,
+    private readonly accountingBasisService: AccountingBasisService,
     private readonly i18n: I18nService,
   ) {}
 
@@ -74,6 +76,8 @@ export class CashFlowStatementService {
       ...getDefaultCashflowQuery(),
       ...query,
     };
+    filter.basis = await this.accountingBasisService.resolve(filter.basis);
+
     // Retrieve the accounts transactions.
     const transactions =
       await this.cashFlowRepo.getAccountsTransactions(filter);

@@ -1,3 +1,4 @@
+@import '@/style/_common';
 body.page-warehouse-transfer-new,
 body.page-warehouse-transfer-edit {
   .dashboard__footer {
@@ -19,15 +20,15 @@ body.page-warehouse-transfer-edit {
       flex: 1 0 0;
     }
 
-    .bp4-label {
+    .#{$ns}-label {
       min-width: 150px;
     }
-    .bp4-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
 
-    .bp4-form-group {
-      &.bp4-inline {
+    .#{$ns}-form-group {
+      &.#{$ns}-inline {
         max-width: 450px;
       }
     }

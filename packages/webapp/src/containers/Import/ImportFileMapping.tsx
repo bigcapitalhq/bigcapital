@@ -12,6 +12,7 @@ import { EntityColumnField, useImportFileContext } from './ImportFileProvider';
 import type { ImportFileMappingFormValues } from './_types';
 import { Box, FSelect, Group, Hint } from '@/components';
 import { CLASSES } from '@/constants';
+import { NS } from '@/constants/classes';
 
 export function ImportFileMapping() {
   const { importId, entityColumns } = useImportFileContext();
@@ -55,7 +56,7 @@ function ImportFileMappingGroup({
     <Box className={styles.group}>
       {groupLabel && <h3 className={styles.groupTitle}>{groupLabel}</h3>}
 
-      <table className={clsx('bp4-html-table', styles.table)}>
+      <table className={clsx(`${NS}-html-table`, styles.table)}>
         <thead>
           <tr>
             <th className={styles.label}>Bigcapital Fields</th>

@@ -9,7 +9,7 @@ const categoryName = () =>
  */
 async function waitForItemCategories(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Categories List',
+    'Categories',
     { timeout: 30_000 },
   );
   await expect(
@@ -70,7 +70,7 @@ async function deleteCategoryViaRow(page: Page, row: Locator) {
 
   await expect(page.getByTestId('category-delete-alert')).toBeVisible();
   await page
-    .getByRole('dialog')
+    .getByRole('alertdialog')
     .filter({ hasText: 'delete this category' })
     .getByRole('button', { name: 'Delete' })
     .click();

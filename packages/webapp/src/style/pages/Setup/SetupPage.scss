@@ -17,7 +17,7 @@
     background-color: #2f3d6f;
     width: 100%;
 
-    .bp4-dark & {
+    .#{$ns}-dark & {
       background-color: #2f343c;
     }
     .content {

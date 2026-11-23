@@ -28,15 +28,14 @@ export interface InvoiceCustomizeFormValues extends BrandingTemplateValues {
   dueDateLabel?: string;
 
   // Addresses
-  showBilledFromAddress?: boolean;
-  showBillingToAddress?: boolean;
+  showCompanyAddress?: boolean;
+  showCustomerAddress?: boolean;
   billedToLabel?: string;
 
   // Entries
-  itemNameLabel?: string;
-  itemDescriptionLabel?: string;
-  itemRateLabel?: string;
-  itemTotalLabel?: string;
+  lineItemLabel?: string;
+  lineRateLabel?: string;
+  lineTotalLabel?: string;
 
   // Totals
   showSubtotal?: boolean;

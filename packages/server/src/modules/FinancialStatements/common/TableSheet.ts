@@ -3,7 +3,7 @@ import { ITableData } from '../types/Table.types';
 import { FinancialTableStructure } from './FinancialTableStructure';
 
 interface ITableSheet {
-  convertToXLSX(): xlsx.WorkBook;
+  convertToXLSX(sheetName?: string): xlsx.WorkBook;
   convertToCSV(): string;
   convertToBuffer(workbook: xlsx.WorkBook, fileType: string): Buffer;
 }
@@ -74,7 +74,7 @@ export class TableSheet implements ITableSheet {
    * Convert the array of objects to an XLSX file with styled headers
    * @returns {xlsx.WorkBook}
    */
-  public convertToXLSX(): xlsx.WorkBook {
+  public convertToXLSX(sheetName = 'Sheet1'): xlsx.WorkBook {
     // Create a new workbook and a worksheet
     const workbook = xlsx.utils.book_new();
     const worksheet = xlsx.utils.json_to_sheet(this.rows, {
@@ -88,7 +88,7 @@ export class TableSheet implements ITableSheet {
     worksheet['!cols'] = this.computeXlsxColumnsWidths(this.rows);
 
     // Append the worksheet to the workbook
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
 
     return workbook;
   }

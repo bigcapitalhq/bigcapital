@@ -1,5 +1,6 @@
 import request = require('supertest');
 import { faker } from '@faker-js/faker';
+import * as moment from 'moment';
 import { app } from './init-app-test';
 import {
   authHeaders,
@@ -68,6 +69,8 @@ describe('GL entries — Sales transactions (e2e)', () => {
       const legs = await fetchLegs('SaleInvoice', invoiceId);
 
       expectBalanced(legs);
+      // The invoice journal entries are accrual basis flagged.
+      expect(legs.every((leg) => leg.basis === 'accrual')).toBe(true);
       expectLegs(
         legs,
         [
@@ -317,16 +320,126 @@ describe('GL entries — Sales transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('PaymentReceive', paymentRes.body.id);
-
-      expectBalanced(legs);
-      expectLegs(
-        legs,
-        [
-          { accountCode: '10001', debit: 1000 },
-          { accountCode: '10007', contactId: customerId, credit: 1000 },
-        ],
+      const accrualLegs = await fetchLegs(
         'PaymentReceive',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'cash',
+      );
+
+      expectBalanced(accrualLegs);
+      expectLegs(
+        accrualLegs,
+        [
+          // Accrual basis: Dr deposit / Cr A/R.
+          { accountCode: '10001', debit: 1000, basis: 'accrual' },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 1000,
+            basis: 'accrual',
+          },
+        ],
+        'PaymentReceive (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
+          // Cash basis: Dr deposit / Cr income.
+          { accountCode: '10001', debit: 1000, basis: 'cash' },
+          { accountCode: '50002', credit: 1000, basis: 'cash' },
+        ],
+        'PaymentReceive (cash)',
+      );
+    });
+
+    it('posts both accrual and cash journals for a partial payment of a taxed invoice', async () => {
+      const invoiceRes = await request(app.getHttpServer())
+        .post('/sale-invoices')
+        .set(authHeaders())
+        .send({
+          customerId,
+          invoiceDate: '2023-01-01',
+          dueDate: '2023-02-01',
+          invoiceNo: faker.string.uuid(),
+          referenceNo: 'REF-000202',
+          delivered: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              taxRateId: taxRate10,
+              description: 'Item description...',
+            },
+          ],
+        })
+        .expect(201);
+
+      const paymentRes = await request(app.getHttpServer())
+        .post('/payments-received')
+        .set(authHeaders())
+        .send({
+          customerId,
+          paymentDate: '2023-01-01',
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          depositAccountId: 1000,
+          paymentReceiveNo: faker.string.uuid(),
+          statement: 'Partial payment received for invoice',
+          entries: [
+            { index: 1, invoiceId: invoiceRes.body.id, paymentAmount: 550 },
+          ],
+          branchId: 1,
+        })
+        .expect(201);
+
+      const accrualLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'cash',
+      );
+
+      expectBalanced(accrualLegs);
+      expectLegs(
+        accrualLegs,
+        [
+          // Accrual basis: Dr deposit / Cr A/R.
+          { accountCode: '10001', debit: 550, basis: 'accrual' },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 550,
+            basis: 'accrual',
+          },
+        ],
+        'PaymentReceive (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
+          // Cash basis: the paid proportion of the invoice composition.
+          { accountCode: '10001', debit: 550, basis: 'cash' },
+          { accountCode: '50002', credit: 500, basis: 'cash' },
+          { accountCode: '20006', credit: 50, basis: 'cash' },
+        ],
+        'PaymentReceive (cash)',
       );
     });
   });
@@ -362,9 +475,14 @@ describe('GL entries — Sales transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '10007', contactId: customerId, credit: 900 },
-          { accountCode: '50002', debit: 1000 },
-          { accountCode: '40008', credit: 100 },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 900,
+            basis: 'accrual',
+          },
+          { accountCode: '50002', debit: 1000, basis: 'accrual' },
+          { accountCode: '40008', credit: 100, basis: 'accrual' },
         ],
         'CreditNote',
       );
@@ -400,10 +518,89 @@ describe('GL entries — Sales transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '10007', contactId: customerId, credit: 1900 },
-          { accountCode: '50002', debit: 1900 },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 1900,
+            basis: 'accrual',
+          },
+          { accountCode: '50002', debit: 1900, basis: 'accrual' },
         ],
         'CreditNote',
+      );
+    });
+
+    it('posts both accrual and cash journals for a credit note refund', async () => {
+      const creditNoteRes = await request(app.getHttpServer())
+        .post('/credit-notes')
+        .set(authHeaders())
+        .send({
+          customerId,
+          creditNoteDate: '2020-02-02',
+          open: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              description: "It's description here.",
+            },
+          ],
+        })
+        .expect(201);
+
+      const refundRes = await request(app.getHttpServer())
+        .post(`/credit-notes/${creditNoteRes.body.id}/refunds`)
+        .set(authHeaders())
+        .send({
+          fromAccountId: 1000,
+          amount: 1000,
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          description: 'Refund credit note',
+          date: '2020-02-03',
+        })
+        .expect(201);
+
+      const accrualLegs = await fetchLegs(
+        'RefundCreditNote',
+        refundRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'RefundCreditNote',
+        refundRes.body.id,
+        'cash',
+      );
+
+      expectBalanced(accrualLegs);
+      expectLegs(
+        accrualLegs,
+        [
+          // Accrual basis: Dr A/R / Cr withdrawal account.
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            debit: 1000,
+            basis: 'accrual',
+          },
+          { accountCode: '10001', credit: 1000, basis: 'accrual' },
+        ],
+        'RefundCreditNote (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
+          // Cash basis: Dr income / Cr withdrawal account.
+          { accountCode: '50002', debit: 1000, basis: 'cash' },
+          { accountCode: '10001', credit: 1000, basis: 'cash' },
+        ],
+        'RefundCreditNote (cash)',
       );
     });
   });
@@ -439,7 +636,7 @@ describe('GL entries — Sales transactions (e2e)', () => {
         .set(authHeaders())
         .send({
           expenseAccountId: 1024,
-          date: '2023-01-01',
+          date: '2023-01-15',
           reason: 'Write off reason',
         })
         .expect(200);
@@ -447,14 +644,34 @@ describe('GL entries — Sales transactions (e2e)', () => {
       const legs = await fetchLegs('InvoiceWriteOff', invoiceRes.body.id);
 
       expectBalanced(legs);
+      // The write-off entries are dated on the write-off date, not the invoice date.
+      expect(
+        legs.every(
+          (leg) => moment(leg.date).format('YYYY-MM-DD') === '2023-01-15',
+        ),
+      ).toBe(true);
       expectLegs(
         legs,
         [
-          { accountCode: '40007', debit: 1000 },
-          { accountCode: '10007', contactId: customerId, credit: 1000 },
+          { accountCode: '40007', debit: 1000, basis: 'accrual' },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 1000,
+            basis: 'accrual',
+          },
         ],
         'InvoiceWriteOff',
       );
+
+      // The write-off has no cash movement, so it must not appear in the
+      // cash basis journal.
+      const cashLegs = await fetchLegs(
+        'InvoiceWriteOff',
+        invoiceRes.body.id,
+        'cash',
+      );
+      expect(cashLegs).toHaveLength(0);
     });
   });
 });

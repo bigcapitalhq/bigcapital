@@ -1,4 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  DEFAULT_ITEM_UNIT,
+  ITEM_UNITS,
+  INVENTORY_TRACKING,
+  type InventoryTracking,
+} from '../Items.constants';
 
 export class ItemResponseDto {
   @ApiProperty({
@@ -21,6 +27,13 @@ export class ItemResponseDto {
   type: string;
 
   @ApiProperty({
+    enum: [...INVENTORY_TRACKING],
+    default: 'none',
+    required: true,
+  })
+  inventoryTracking: InventoryTracking;
+
+  @ApiProperty({
     description: 'The formatted type of the item',
     example: 'Inventory Item',
   })
@@ -32,6 +45,14 @@ export class ItemResponseDto {
     required: false,
   })
   code?: string;
+
+  @ApiProperty({
+    description: 'Unit of measure the item is measured in',
+    enum: [...ITEM_UNITS],
+    default: DEFAULT_ITEM_UNIT,
+    example: 'kg',
+  })
+  unit: string;
 
   @ApiProperty({
     description: 'Whether the item can be sold',
@@ -164,6 +185,14 @@ export class ItemResponseDto {
     required: false,
   })
   quantityOnHand?: number;
+
+  @ApiProperty({
+    description:
+      'The stock level at which the item should be reordered (for inventory items)',
+    example: 10,
+    required: false,
+  })
+  reorderPoint?: number;
 
   @ApiProperty({
     description: 'Additional notes about the item',

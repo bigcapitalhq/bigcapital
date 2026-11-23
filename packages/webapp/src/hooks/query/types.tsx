@@ -2,6 +2,17 @@
 // New QueryKeys exports (preferred approach)
 // Re-export from module directories
 // ==========================================
+export const TAX_RATES = {
+  TAX_RATES: 'TAX_RATES',
+};
+
+export const EXCHANGE_RATE = {
+  EXCHANGE_RATE: 'EXCHANGE_RATE',
+};
+
+export const API_KEYS = {
+  API_KEYS: 'API_KEYS',
+};
 
 export { AuthenticationQueryKeys } from './authentication';
 export { AccountsQueryKeys } from './accounts';

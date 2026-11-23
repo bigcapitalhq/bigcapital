@@ -24,9 +24,12 @@ import { LandedCostTransactionsQueryDto } from './dtos/LandedCostTransactionsQue
 import { BillLandedCostTransactionDto } from './dtos/BillLandedCostTransaction.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { LandedCostFeatureGuard } from './LandedCostFeatureGuard';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @ApiTags('Landed Cost')
 @Controller('landed-cost')
+@RequireSubscriptionFeature(SubscriptionFeature.LandedCost)
 @UseGuards(LandedCostFeatureGuard)
 @ApiExtraModels(BillLandedCostTransactionDto)
 @ApiCommonHeaders()

@@ -14,7 +14,7 @@ export class ValidateMatchingOnCashflowDeleteSubscriber {
    * Validates the cashflow transaction whether matched with bank transaction on deleting.
    * @param {IManualJournalDeletingPayload}
    */
-  @OnEvent(events.cashflow.onTransactionDeleting)
+  @OnEvent(events.cashflow.onTransactionDeleting, { suppressErrors: false })
   public async validateMatchingOnCashflowDeleting({
     oldCashflowTransaction,
     trx,

@@ -5,6 +5,7 @@ import { ApplicationState } from '@/store/reducers';
 import {
   getWarehouseTransfersTableStateFactory,
   isWarehouseTransferTableStateChangedFactory,
+  getWarehouseTransfersSelectedRowsFactory,
 } from '@/store/warehouse-transfer/warehouse-transfer.selector';
 
 export interface WithWarehouseTransfersProps {
@@ -13,6 +14,9 @@ export interface WithWarehouseTransfersProps {
   >;
   warehouseTransferTableStateChanged: ReturnType<
     ReturnType<typeof isWarehouseTransferTableStateChangedFactory>
+  >;
+  warehouseTransferSelectedRows: ReturnType<
+    ReturnType<typeof getWarehouseTransfersSelectedRowsFactory>
   >;
 }
 
@@ -26,12 +30,14 @@ export const withWarehouseTransfers = <
     getWarehouseTransfersTableStateFactory();
   const isWarehouseTransferTableChanged =
     isWarehouseTransferTableStateChangedFactory();
+  const getSelectedRows = getWarehouseTransfersSelectedRowsFactory();
 
   const mapStateToProps = (state: ApplicationState, props: Props) => {
     const mapped: WithWarehouseTransfersProps = {
       warehouseTransferTableState: getWarehouseTransferTableState(state, props),
       warehouseTransferTableStateChanged:
         isWarehouseTransferTableChanged(state),
+      warehouseTransferSelectedRows: getSelectedRows(state),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

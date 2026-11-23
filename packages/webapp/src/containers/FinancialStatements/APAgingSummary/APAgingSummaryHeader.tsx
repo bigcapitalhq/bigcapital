@@ -16,6 +16,7 @@ import {
 import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
 import { transformToForm } from '@/utils';
@@ -112,7 +113,7 @@ export const APAgingSummaryHeader = FF.pipe(
 );
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .${NS}-drawer {
     max-height: 520px;
   }
 `;

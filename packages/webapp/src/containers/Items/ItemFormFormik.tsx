@@ -14,7 +14,7 @@ import {
 import type { ItemFormValues, ItemFormSubmitPayload } from './types';
 import type { CreateItemBody, EditItemBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { CLASSES, NS } from '@/constants/classes';
 import { safeInvoke } from '@/utils';
 
 type SubmitSuccessHandler = (
@@ -136,14 +136,13 @@ export function ItemFormFormik({
 }
 
 const ItemFormFields = styled.div`
-  .bp4-form-content,
-  .bp6-form-content {
+  .${NS}-form-content, .${NS}-form-content {
     min-width: 300px;
   }
-  .bp4-form-group {
+  .${NS}-form-group {
     margin-bottom: 20px;
   }
-  .bp4-form-group.bp4-inline label.bp4-label {
+  .${NS}-form-group.${NS}-inline label.${NS}-label {
     min-width: 140px;
   }
 `;

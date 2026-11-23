@@ -34,6 +34,7 @@ export const MIN_LINES_NUMBER = 1;
 // Default warehouse transfer entry.
 export const defaultWarehouseTransferEntry: WarehouseTransferEntry = {
   index: 0,
+  batchId: null,
   itemId: '',
   sourceWarehouse: '',
   destinationWarehouse: '',

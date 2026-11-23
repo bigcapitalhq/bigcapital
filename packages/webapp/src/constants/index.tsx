@@ -4,6 +4,7 @@ export * from './features';
 export * from './cellTypes';
 export * from './classes';
 export * from './cashflowOptions';
+export * from './trackingCategoryModules';
 
 export const Align = {
   Left: 'left',

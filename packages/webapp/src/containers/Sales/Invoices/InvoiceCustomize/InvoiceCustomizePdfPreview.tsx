@@ -1,12 +1,17 @@
-import { useFormikContext } from 'formik';
-import * as FF from 'fp-ts/function';
 import {
   InvoicePaperTemplate,
   InvoicePaperTemplateProps,
-} from './InvoicePaperTemplate';
+} from '@bigcapital/pdf-templates';
+import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import { initialValues } from './constants';
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import {
+  paperTemplatePreviewStyle,
+  pickPaperTemplateProps,
+} from '@/containers/ElementCustomize/paperTemplatePreview';
 
 /**
  * Injects the `InvoicePaperTemplate` component props from the form and branding states.
@@ -20,13 +25,18 @@ const withInvoicePreviewTemplateProps = <P extends object>(
     const { values } = useFormikContext<InvoiceCustomizeFormValues>();
     const { brandingState } = useElementCustomizeContext();
 
-    const mergedProps: InvoicePaperTemplateProps = {
-      ...brandingState,
-      ...values,
-    };
+    const mergedProps = pickPaperTemplateProps<InvoicePaperTemplateProps>(
+      { ...brandingState, ...values },
+      initialValues,
+    );
+
     return (
       <Box px={4} py={6}>
-        <Component {...(props as P)} {...mergedProps} />
+        <Component
+          {...(props as P)}
+          {...mergedProps}
+          style={paperTemplatePreviewStyle}
+        />
       </Box>
     );
   };

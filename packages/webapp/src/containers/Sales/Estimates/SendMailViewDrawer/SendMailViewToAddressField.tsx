@@ -6,21 +6,22 @@ import { useFormikContext } from 'formik';
 import { useMemo, useState } from 'react';
 import { SendMailViewFormValues } from './_types';
 import { FFormGroup, FMultiSelect, Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 
 const fieldsWrapStyle = css`
-  > :not(:first-of-type) .bp4-input {
+  > :not(:first-of-type) .${NS}-input {
     border-top-color: transparent;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
   }
-  > :not(:last-of-type) .bp4-input {
+  > :not(:last-of-type) .${NS}-input {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
 `;
 
 const styleEmailButton = css`
-  &.bp4-button.bp4-small {
+  &.${NS}-button.${NS}-small {
     width: auto;
     margin: 0;
     min-height: 26px;
@@ -139,7 +140,7 @@ export function SendMailViewToAddressField({
           items={[]}
           name={'to'}
           placeholder={'To'}
-          popoverProps={{ minimal: true, fill: true }}
+          popoverProps={{ minimal: true }}
           tagInputProps={{
             tagProps: { round: true, minimal: true, large: true },
             rightElement: rightElementsToField,
@@ -162,7 +163,7 @@ export function SendMailViewToAddressField({
             items={[]}
             name={'cc'}
             placeholder={'Cc'}
-            popoverProps={{ minimal: true, fill: true }}
+            popoverProps={{ minimal: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
               large: true,
@@ -185,7 +186,7 @@ export function SendMailViewToAddressField({
             items={[]}
             name={'bcc'}
             placeholder={'Bcc'}
-            popoverProps={{ minimal: true, fill: true }}
+            popoverProps={{ minimal: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
               large: true,

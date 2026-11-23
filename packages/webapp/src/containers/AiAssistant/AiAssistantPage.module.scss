@@ -1,0 +1,140 @@
+@use './variables' as *;
+@import '@/style/_common';
+
+:global(.dashboard__insider--ai-assistant) {
+  padding: 0;
+  overflow: hidden;
+}
+
+.page {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  background: $bg;
+  color: $text;
+  overflow: hidden;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.composerWrap {
+  flex: 0 0 auto;
+  padding: 10px 24px 26px;
+  background: $bg;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% - 48px);
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 8px 12px;
+  border: 1px solid rgba(231, 106, 110, 0.3);
+  border-radius: 8px;
+  background: rgba(231, 106, 110, 0.08);
+  color: $danger;
+  font-size: 12px;
+}
+
+/**
+ * Composer error rendered above the input inside the empty state. Keeps the
+ * same specificity as the old cross-component selector so the responsive
+ * width below does not win.
+ */
+.error.errorInline {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.retry:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal),
+.retry:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):hover,
+.retry:global(.#{$ns}-button.#{$ns}-small.#{$ns}-minimal):active {
+  margin-inline-start: auto;
+  color: $danger;
+}
+
+.loading {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.state {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.stateCard {
+  max-width: 520px;
+  text-align: center;
+
+  h1 {
+    margin: 16px 0 8px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0 0 20px;
+    color: $muted;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+
+.stateLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c6cff 0%, #4d8dff 100%);
+}
+
+.stateLink {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid $border;
+  border-radius: 8px;
+  color: $text;
+  text-decoration: none;
+  font-size: 13px;
+
+  &:hover {
+    border-color: rgba(99, 91, 255, 0.5);
+    color: $accent;
+    text-decoration: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .composerWrap {
+    padding-inline: 16px;
+  }
+
+  .error {
+    width: calc(100% - 32px);
+  }
+}

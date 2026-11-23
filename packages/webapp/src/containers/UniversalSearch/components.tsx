@@ -2,7 +2,8 @@ import { MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import { getUniversalSearchBind } from './utils';
 import type { UniversalSearchItem } from '@/components/UniversalSearch/UniversalSearch';
-import type { IItemRendererProps, ItemRenderer } from '@blueprintjs/select';
+import type { ItemRendererProps, ItemRenderer } from '@blueprintjs/select';
+import { NS } from '@/constants/classes';
 import { highlightText } from '@/utils';
 
 /**
@@ -10,7 +11,7 @@ import { highlightText } from '@/utils';
  */
 function UniversalSearchItemDetail(
   item: UniversalSearchItem,
-  { handleClick, modifiers, query }: IItemRendererProps,
+  { handleClick, modifiers, query }: ItemRendererProps,
 ) {
   return (
     <MenuItem
@@ -21,7 +22,7 @@ function UniversalSearchItemDetail(
           <div>{highlightText(item.text, query)}</div>
 
           {item.subText && (
-            <span className="bp4-text-muted">
+            <span className={`${NS}-text-muted`}>
               {highlightText(item.subText, query)}
             </span>
           )}

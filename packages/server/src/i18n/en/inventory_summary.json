@@ -1,0 +1,8 @@
+{
+  "sheet_name": "Inventory Summary",
+  "item_name": "Item Name",
+  "opening_stock": "Opening Stock",
+  "quantity_in": "Quantity In",
+  "quantity_out": "Quantity Out",
+  "closing_stock": "Closing Stock"
+}

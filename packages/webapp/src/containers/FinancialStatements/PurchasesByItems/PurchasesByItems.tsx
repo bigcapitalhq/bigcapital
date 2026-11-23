@@ -63,7 +63,7 @@ function PurchasesByItemsInner({
       <PurchasesByItemsLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <PurchasesByItemsHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

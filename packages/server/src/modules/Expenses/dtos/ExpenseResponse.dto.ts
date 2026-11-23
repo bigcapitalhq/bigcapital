@@ -113,7 +113,7 @@ export class ExpenseResponseDto {
   referenceNo: string;
 
   @ApiProperty({
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
     description: 'The date when the expense was published',
     required: false,
   })
@@ -126,7 +126,7 @@ export class ExpenseResponseDto {
   userId: number;
 
   @ApiProperty({
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
     description: 'The payment date of the expense',
   })
   paymentDate: Date;

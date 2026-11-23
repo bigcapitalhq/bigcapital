@@ -11,6 +11,7 @@ import { NotifyViaSMSFormFloatingActions } from './NotifyViaSMSFormFloatingActio
 import { getSMSUnits } from './utils';
 import type { FormikHelpers } from 'formik';
 import { FormObserver, SMSMessagePreview } from '@/components';
+import { NS } from '@/constants/classes';
 import { transformToForm } from '@/utils';
 
 export interface NotifyViaSMSFormValues {
@@ -184,7 +185,7 @@ const SMSPreviewSectionRoot = styled.div`
   margin-left: 25px;
   border-left: 1px solid #dcdcdd;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     border-left-color: var(--color-dark-gray5);
   }
 `;

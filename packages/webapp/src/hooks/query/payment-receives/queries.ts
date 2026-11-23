@@ -89,7 +89,7 @@ export function usePaymentReceives(
   return useQuery({
     ...props,
     queryKey: paymentReceivesKeys.list(query),
-    queryFn: () => fetchPaymentsReceived(fetcher),
+    queryFn: () => fetchPaymentsReceived(fetcher, query),
   });
 }
 

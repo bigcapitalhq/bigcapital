@@ -7,7 +7,7 @@ import { ItemMeta } from './Item.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
-import { ItemDefaultViews } from '../Items.constants';
+import { ItemDefaultViews, type InventoryTracking } from '../Items.constants';
 
 @ExportableModel()
 @ImportableModel()
@@ -15,11 +15,15 @@ import { ItemDefaultViews } from '../Items.constants';
 @InjectModelMeta(ItemMeta)
 @InjectModelDefaultViews(ItemDefaultViews)
 export class Item extends TenantBaseModel {
+  public readonly inventoryTracking: InventoryTracking;
   public readonly quantityOnHand: number;
+  public readonly reorderPoint: number | null;
+  public readonly reorderPointNotified: boolean;
   public readonly name: string;
   public readonly active: boolean;
   public readonly type: string;
   public readonly code: string;
+  public readonly unit: string;
   public readonly sellable: boolean;
   public readonly purchasable: boolean;
   public readonly costPrice: number;
@@ -107,6 +111,7 @@ export class Item extends TenantBaseModel {
       InventoryAdjustmentEntry,
     } = require('../../InventoryAdjutments/models/InventoryAdjustmentEntry');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const { Batch } = require('../../EE/Batches/models/Batch');
 
     return {
       /**
@@ -178,6 +183,18 @@ export class Item extends TenantBaseModel {
         join: {
           from: 'items.id',
           to: 'items_entries.itemId',
+        },
+      },
+
+      /**
+       * Item may has many batches.
+       */
+      batches: {
+        relation: Model.HasManyRelation,
+        modelClass: Batch,
+        join: {
+          from: 'items.id',
+          to: 'batches.itemId',
         },
       },
 

@@ -55,6 +55,7 @@ export class EditQuickInventoryAdjustmentService {
       {
         index: 1,
         itemId: adjustmentDTO.itemId,
+        batchId: adjustmentDTO.batchId,
         ...('increment' === adjustmentDTO.type
           ? {
               quantity: adjustmentDTO.quantity,
@@ -70,7 +71,13 @@ export class EditQuickInventoryAdjustmentService {
     ];
     const initialDTO = {
       ...formatDateFields(
-        omit(adjustmentDTO, ['quantity', 'cost', 'itemId', 'publish']),
+        omit(adjustmentDTO, [
+          'quantity',
+          'cost',
+          'itemId',
+          'batchId',
+          'publish',
+        ]),
         ['date'],
       ),
       // Publishing is a one-way action; keep the original published state

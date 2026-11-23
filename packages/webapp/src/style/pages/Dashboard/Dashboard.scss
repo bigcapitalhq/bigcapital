@@ -45,9 +45,9 @@ $dashboard-views-bar-height: 44px;
       align-items: center;
       margin-left: 2px;
 
-      .bp4-button.bp4-minimal {
+      .#{$ns}-button.#{$ns}-minimal {
         &,
-        .bp4-dark & {
+        .#{$ns}-dark & {
           color: var(--color-sidebar-toggle);
 
         &,
@@ -68,7 +68,7 @@ $dashboard-views-bar-height: 44px;
       margin-right: 4px;
 
       &,
-      .bp4-dark & {
+      .#{$ns}-dark & {
         box-shadow: 0 0 0;
         border: 0;
         background: transparent;
@@ -94,16 +94,16 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp4-navbar-divider {
+      .#{$ns}-navbar-divider {
         margin: 0 8px;
       }
 
       .form-group-quick-new-downDrop {
-        .bp4-popover-target .bp4-button {
+        .#{$ns}-popover-target .#{$ns}-button {
           color: #1552c8;
         }
 
-        .bp4-button::after {
+        .#{$ns}-button::after {
           content: none;
         }
       }
@@ -114,7 +114,7 @@ $dashboard-views-bar-height: 44px;
       align-items: center;
       margin-right: 14px;
 
-      .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
+      .#{$ns}-button:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal) {
         padding: 0;
         background-size: contain;
         border-radius: 50%;
@@ -161,7 +161,7 @@ $dashboard-views-bar-height: 44px;
         background: $light-gray2;
       }
 
-      .bp4-dark & {
+      .#{$ns}-dark & {
         background: var(--color-dark-gray4);
 
         &:hover {
@@ -199,7 +199,7 @@ $dashboard-views-bar-height: 44px;
   &__actions-bar {
     border-bottom: 2px solid var(--color-dashboard-actionsbar-border);
 
-    .bp4-navbar-divider {
+    .#{$ns}-navbar-divider {
       border-left-color: var(--color-dashboard-actionsbar-divider);
     }
 
@@ -227,22 +227,22 @@ $dashboard-views-bar-height: 44px;
           background: var(--color-dashboard-navbar-item-hover-background);
           color: var(--color-dashboard-navbar-item-hover-text);
         }
-        &.bp4-minimal:active,
-        &.bp4-minimal.bp4-active {
+        &.#{$ns}-minimal:active,
+        &.#{$ns}-minimal.#{$ns}-active {
           background: var(--color-dashboard-navbar-item-active-background);
           color: var(--color-dashboard-navbar-item-active-text);
         }
-        &.bp4-disabled {
+        &.#{$ns}-disabled {
           background: transparent;
           color: rgba(50, 48, 74, 0.4);
         }
         &.has-active-filters {
           &,
-          &.bp4-active,
+          &.#{$ns}-active,
           &:active {
             background: var(--color-dark-gray1);
           }
-          .bp4-dark & {
+          .#{$ns}-dark & {
             background: rgba(52, 152, 219, 0.1);
           }
         }
@@ -254,11 +254,11 @@ $dashboard-views-bar-height: 44px;
         &.#{$ns}-minimal.#{$ns}-intent-danger {
           color: rgb(194, 48, 48);
 
-          &:not(.bp4-disabled) &:hover,
+          &:not(.#{$ns}-disabled) &:hover,
           &:focus {
             background: rgba(219, 55, 55, 0.1);
           }
-          &.bp4-disabled {
+          &.#{$ns}-disabled {
             color: rgb(194, 48, 48, 0.6);
           }
         }
@@ -276,8 +276,6 @@ $dashboard-views-bar-height: 44px;
           color: #cc7e25;
         }
         &.#{$ns}-minimal.#{$ns}-intent-primary {
-          color: #223fc5;
-
           &:hover,
           &:focus {
             color: #223fc5;
@@ -313,25 +311,25 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp4-control.bp4-switch {
+      .#{$ns}-control.#{$ns}-switch {
         margin-bottom: 0;
         margin-left: 8px;
         color: var(--color-dashboard-navbar-item-text);
 
-        .bp4-control-indicator {
+        .#{$ns}-control-indicator {
           height: 16px;
           min-width: 1.8em;
         }
 
-        .bp4-control-indicator::before {
+        .#{$ns}-control-indicator::before {
           box-shadow: 0 0 0;
         }
 
-        input ~ .bp4-control-indicator {
+        input ~ .#{$ns}-control-indicator {
           background: rgba(167, 182, 194, 0.55);
         }
 
-        input:checked ~ .bp4-control-indicator {
+        input:checked ~ .#{$ns}-control-indicator {
           background: #0069ff;
         }
       }
@@ -436,7 +434,7 @@ $dashboard-views-bar-height: 44px;
     background-color: var(--color-dashboard-fallback-loading-background);
     height: 100%;
 
-    .bp4-spinner {
+    .#{$ns}-spinner {
       margin: auto;
     }
   }
@@ -557,7 +555,7 @@ $dashboard-views-bar-height: 44px;
       color: var(--color-dashboard-error-boundary-description-text);
       opacity: 0.8;
     }
-    .bp4-icon {
+    .#{$ns}-icon {
       margin-top: 6px;
 
       path {
@@ -621,15 +619,15 @@ $dashboard-views-bar-height: 44px;
   height: $dashboard-views-bar-height;
   padding: 0 20px;
 
-  .bp4-navbar-group {
+  .#{$ns}-navbar-group {
     height: $dashboard-views-bar-height;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .#{$ns}-tab[aria-selected='true'] {
     box-shadow: inset 0 -2px 0 #0052cc;
   }
 
-  .bp4-button {
+  .#{$ns}-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
       color: #32304a;
@@ -652,7 +650,7 @@ $dashboard-views-bar-height: 44px;
   background-color: #fff;
   width: 600px;
 
-  .bp4-input {
+  .#{$ns}-input {
     padding-left: 40px !important;
   }
 }

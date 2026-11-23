@@ -1,10 +1,15 @@
-import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
-import { ContextMenu2 } from '@blueprintjs/popover2';
+import {
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Intent,
+  ContextMenu,
+} from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 import type { CashflowAccountRow } from './components';
@@ -21,6 +26,7 @@ import {
   getAddMoneyInOptions,
   getAddMoneyOutOptions,
 } from '@/constants/cashflowOptions';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
@@ -44,6 +50,8 @@ interface CashflowAccountContextMenuProps {
   onDeleteClick: () => void;
   onMoneyInClick: (transactionType: string) => void;
   onMoneyOutClick: (transactionType: string) => void;
+  onReconcileClick: () => void;
+  onReconciliationsClick: () => void;
 }
 
 interface CashflowBankAccountProps
@@ -125,9 +133,18 @@ function CashflowBankAccount({
       account_id: account.id,
     });
   };
+  // Handle reconcile account action.
+  const history = useHistory();
+  const handleReconcileClick = () => {
+    history.push(`/reconcile?accountId=${account.id}`);
+  };
+  // Handle reconciliation history action.
+  const handleReconciliationsClick = () => {
+    history.push(`/cashflow-accounts/${account.id}/reconciliations`);
+  };
 
   return (
-    <ContextMenu2
+    <ContextMenu
       content={
         <CashflowAccountContextMenu
           account={account}
@@ -138,6 +155,8 @@ function CashflowBankAccount({
           onEditClick={handleEditAccount}
           onMoneyInClick={handleMoneyInClick}
           onMoneyOutClick={handleMoneyOutClick}
+          onReconcileClick={handleReconcileClick}
+          onReconciliationsClick={handleReconciliationsClick}
         />
       }
     >
@@ -149,6 +168,7 @@ function CashflowBankAccount({
           code={account.code}
           balance={account.amount != null ? account.formattedAmount : '-'}
           type={account.accountType}
+          logoUrl={account.plaidInstitutionLogo}
           updatedBeforeText={
             account.lastFeedsUpdatedFromNow
               ? `Updated ${account.lastFeedsUpdatedFromNow} ago`
@@ -157,7 +177,7 @@ function CashflowBankAccount({
           uncategorizedTransactionsCount={undefined}
         />
       </CashflowAccountAnchor>
-    </ContextMenu2>
+    </ContextMenu>
   );
 }
 
@@ -273,6 +293,8 @@ function CashflowAccountContextMenu({
   onDeleteClick,
   onMoneyInClick,
   onMoneyOutClick,
+  onReconcileClick,
+  onReconciliationsClick,
 }: CashflowAccountContextMenuProps) {
   return (
     <Menu>
@@ -281,6 +303,20 @@ function CashflowAccountContextMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewClick)}
       />
+      {account.accountType === 'bank' && (
+        <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
+          <MenuItem
+            icon={<Icon icon="tick-circle" />}
+            text={intl.get('banking.reconciliation.action')}
+            onClick={safeCallback(onReconcileClick)}
+          />
+          <MenuItem
+            icon={<Icon icon="reader-18" />}
+            text={intl.get('banking.reconciliation.history')}
+            onClick={safeCallback(onReconciliationsClick)}
+          />
+        </Can>
+      )}
       <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
         <MenuDivider />
         <MenuItem
@@ -358,7 +394,7 @@ const AccountsEmptyStateBase = styled.div`
 const AccountsEmptyStateTitle = styled.h1`
   --x-text-color: #626b76;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   font-size: 18px;

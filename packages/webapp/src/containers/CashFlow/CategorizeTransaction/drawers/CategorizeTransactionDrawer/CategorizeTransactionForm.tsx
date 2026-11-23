@@ -1,6 +1,6 @@
 import { categorizeTransactionsBulk } from '@bigcapital/sdk-ts';
 import { Intent } from '@blueprintjs/core';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as FF from 'fp-ts/function';
 import React from 'react';
@@ -16,8 +16,10 @@ import type { CategorizeTransactionFormValues } from './_utils';
 import type { WithBankingActionsProps } from '@/containers/CashFlow/withBankingActions';
 import type { CategorizeTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
+import { NS } from '@/constants/classes';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
+import { invalidateBankingQueries } from '@/hooks/query/banking/invalidate-banking';
 import { useApiFetcher } from '@/hooks/useRequest';
 
 interface CategorizeTransactionFormRootProps
@@ -32,12 +34,16 @@ function CategorizeTransactionFormRoot({
 }: CategorizeTransactionFormRootProps) {
   const { uncategorizedTransactionIds } = useCategorizeTransactionTabsBoot();
   const fetcher = useApiFetcher();
+  const queryClient = useQueryClient();
   const { mutateAsync: categorizeBulk } = useMutation<
     void,
     Error,
     CategorizeTransactionBody
   >({
     mutationFn: (body) => categorizeTransactionsBulk(fetcher, body),
+    onSuccess: () => {
+      invalidateBankingQueries(queryClient);
+    },
   });
 
   // Form initial values in create and edit mode.
@@ -112,13 +118,13 @@ const FormRoot = styled(Form)`
   flex-direction: column;
   flex: 1 1 auto;
 
-  .bp4-form-group .bp4-form-content {
+  .${NS}-form-group .${NS}-form-content {
     flex: 1 0;
   }
-  .bp4-form-group .bp4-label {
+  .${NS}-form-group .${NS}-label {
     width: 140px;
   }
-  .bp4-form-group {
+  .${NS}-form-group {
     margin-bottom: 18px;
   }
 `;

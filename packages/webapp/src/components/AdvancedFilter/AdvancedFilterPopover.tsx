@@ -1,11 +1,15 @@
-import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import {
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  type PopoverProps,
+} from '@blueprintjs/core';
 import React from 'react';
 import { AdvancedFilterDropdown } from './AdvancedFilterDropdown';
 import type { IAdvancedFilterDropdown } from './interfaces';
-import type { IPopoverProps } from '@blueprintjs/core';
 
 interface AdvancedFilterPopoverProps {
-  popoverProps?: IPopoverProps;
+  popoverProps?: PopoverProps;
   advancedFilterProps: IAdvancedFilterDropdown;
   children?: React.ReactNode;
 }
@@ -30,7 +34,7 @@ export function AdvancedFilterPopover({
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}
       modifiers={{
-        offset: { offset: '0, 4' },
+        offset: { options: { offset: [0, 4] } },
       }}
       {...popoverProps}
     >

@@ -8,6 +8,7 @@ import {
   FSelect,
   TotalLinePrimitive,
 } from '@/components';
+import { NS } from '@/constants/classes';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
@@ -18,7 +19,7 @@ const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
   }) as CSSProperties;
 
 const inputGroupCss = css`
-  & .bp4-input {
+  & .${NS}-input {
     max-width: 110px;
     padding-left: 8px;
   }
@@ -41,7 +42,7 @@ export function DiscountTotalLine({
       small
       minimal
       className={css`
-        &.bp4-small {
+        &.${NS}-small {
           font-size: 12px;
         }
       `}

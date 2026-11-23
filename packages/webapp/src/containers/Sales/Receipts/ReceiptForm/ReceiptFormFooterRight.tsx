@@ -19,6 +19,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function ReceiptFormFooterRight() {
   const {
@@ -68,7 +69,7 @@ export function ReceiptFormFooterRight() {
 const ReceiptTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

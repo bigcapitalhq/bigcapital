@@ -14,6 +14,7 @@ import {
   findCustomerIdByName,
   findItemIdByName,
   findVendorIdByName,
+  formatLocalDate,
   readApiAuth,
 } from '../_api';
 import { selectCustomer, selectEntryItem } from '../_invoices';
@@ -113,15 +114,9 @@ const EXPENSES = [
 ];
 
 function daysAgo(days: number): string {
-  return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
-}
-
-function isoDate(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${date.getFullYear()}-${month}-${day}`;
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return formatLocalDate(date);
 }
 
 /**
@@ -131,7 +126,7 @@ function previousMonthRange(): { fromDate: string; toDate: string } {
   const now = new Date();
   const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const to = new Date(now.getFullYear(), now.getMonth(), 0);
-  return { fromDate: isoDate(from), toDate: isoDate(to) };
+  return { fromDate: formatLocalDate(from), toDate: formatLocalDate(to) };
 }
 
 async function seedDemoData() {
@@ -283,12 +278,12 @@ async function openPage(page: Page, route: string, title?: string) {
       { timeout: 30_000 },
     );
   }
-  // The webapp hardcodes `bp4-dark` on <body> and only toggles the class when
+  // The webapp hardcodes `bp6-dark` on <body> and only toggles the class when
   // the user switches themes. Force the dark theme so captures are consistent.
   await page.evaluate(() => {
     localStorage.setItem('theme', 'dark');
-    document.documentElement.classList.add('bp4-dark');
-    document.body.classList.add('bp4-dark');
+    document.documentElement.classList.add('bp6-dark');
+    document.body.classList.add('bp6-dark');
   });
   await page.addStyleTag({
     content:
@@ -377,42 +372,42 @@ test.describe('app screenshots', () => {
 
   test('captures the invoices list', async ({ page }) => {
     await capture(page, '/invoices', 'invoices.png', {
-      title: 'Invoices List',
+      title: 'Invoices',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the bills list', async ({ page }) => {
     await capture(page, '/bills', 'bills.png', {
-      title: 'Bills List',
+      title: 'Bills',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the customers list', async ({ page }) => {
     await capture(page, '/customers', 'customers.png', {
-      title: 'Customers List',
+      title: 'Customers',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the vendors list', async ({ page }) => {
     await capture(page, '/vendors', 'vendors.png', {
-      title: 'Vendors List',
+      title: 'Vendors',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the items list', async ({ page }) => {
     await capture(page, '/items', 'items.png', {
-      title: 'Items List',
+      title: 'Items',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the expenses list', async ({ page }) => {
     await capture(page, '/expenses', 'expenses.png', {
-      title: 'Expenses List',
+      title: 'Expenses',
       rowSelector: '.tbody .tr',
     });
   });

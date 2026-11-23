@@ -2,10 +2,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { getReportCellTestId, getReportRowTestId } from '../reportTestIds';
+import { useFinancialReportSorting } from '../useReportSorting';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { useBalanceSheetColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { NS } from '@/constants/classes';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface BalanceSheetTableProps {
@@ -14,7 +16,7 @@ interface BalanceSheetTableProps {
 
 export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
   // Balance sheet context.
-  const { balanceSheet } = useBalanceSheetContext();
+  const { balanceSheet, pageQuery, setPageQuery } = useBalanceSheetContext();
 
   // Retrieve the database columns.
   const tableColumns = useBalanceSheetColumns();
@@ -24,6 +26,12 @@ export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
     () => defaultExpanderReducer(balanceSheet?.table?.rows ?? [], 3),
     [balanceSheet?.table],
   );
+
+  // Balance sheet backend columns sorting.
+  const { sortableTableProps } = useFinancialReportSorting({
+    pageQuery,
+    setPageQuery,
+  });
 
   return (
     <FinancialSheet
@@ -48,6 +56,7 @@ export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
         expandColumnSpace={0.8}
         headerLoading={true}
         sticky={true}
+        {...sortableTableProps}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
@@ -58,7 +67,7 @@ const BalanceSheetDataTable = styled(ReportDataTable)`
   --color-table-text-color: #252a31;
   --color-table-total-text-color: #000;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --color-table-text-color: var(--color-light-gray1);
     --color-table-total-text-color: var(--color-light-gray4);
   }

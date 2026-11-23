@@ -12,6 +12,7 @@ import {
   TotalLineTextStyle,
   FormatNumber,
 } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function PaymentReceiveFormFootetRight() {
   const { formattedSubtotal, formattedTotal } = usePaymentReceiveTotals();
@@ -41,7 +42,7 @@ export function PaymentReceiveFormFootetRight() {
 const PaymentReceiveTotalLines = styled(TotalLines)`
   --x-color-text: #555;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray4);
   }
   width: 100%;

@@ -3,5 +3,7 @@ export interface FeaturesFormValues {
     landedCost: boolean;
     smsNotifications: boolean;
     salesTax: boolean;
+    recurringJournals: boolean;
+    batchTracking: boolean;
   };
 }

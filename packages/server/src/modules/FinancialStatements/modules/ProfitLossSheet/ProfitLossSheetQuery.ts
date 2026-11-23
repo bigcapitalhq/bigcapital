@@ -10,6 +10,7 @@ import { DISPLAY_COLUMNS_BY } from './constants';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { FinancialDateRanges } from '../../common/FinancialDateRanges';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class ProfitLossSheetQuery extends flow(FinancialDateRanges)(
   class {} as GConstructor<FinancialSheet>,
@@ -41,7 +42,7 @@ export class ProfitLossSheetQuery extends flow(FinancialDateRanges)(
    */
   public readonly PPFromDate: Date;
 
-  public basis: string;
+  public basis: AccountingBasis;
   public fromDate: moment.MomentInput;
   public toDate: moment.MomentInput;
   public numberFormat: INumberFormatQuery;

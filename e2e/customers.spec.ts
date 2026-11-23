@@ -22,7 +22,7 @@ const companyName = () => `${faker.company.name()} ${faker.string.alphanumeric(4
  */
 async function waitForCustomersList(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Customers List',
+    'Customers',
     { timeout: 30_000 },
   );
   await expect(
@@ -46,11 +46,6 @@ async function waitForCustomerForm(page: Page, title: string) {
 
 /**
  * Selects the display name inside the customer form.
- *
- * The display name Select popover cannot be opened reliably with a plain mouse
- * click, so it is retried the same way the account type select does: focus the
- * trigger, press Enter to open the popover, then immediately click the matching
- * menu item before the popover collapses.
  */
 async function selectDisplayName(
   page: Page,
@@ -59,31 +54,9 @@ async function selectDisplayName(
 ) {
   const button = page.getByTestId(selector);
 
-  for (let attempt = 0; attempt < 8; attempt++) {
-    await button.focus();
-    await page.keyboard.press('Enter');
-
-    const clicked = await page.evaluate((name) => {
-      const items = Array.from(
-        document.querySelectorAll('[role="menuitem"]'),
-      );
-      const item = items.find(
-        (el) => (el as HTMLElement).innerText.trim() === name,
-      );
-      if (item) {
-        (item as HTMLElement).click();
-        return true;
-      }
-      return false;
-    }, displayName);
-
-    if (clicked) {
-      await expect(button).toContainText(displayName, { timeout: 5_000 });
-      return;
-    }
-    await page.keyboard.press('Escape');
-  }
-  throw new Error(`Failed to select the "${displayName}" display name.`);
+  await button.click();
+  await page.getByRole('menuitem', { name: displayName, exact: true }).first().click();
+  await expect(button).toContainText(displayName);
 }
 
 /**
@@ -154,7 +127,7 @@ async function deleteCustomerViaRow(page: Page, row: Locator) {
 
   await expect(page.getByTestId('customer-delete-alert')).toBeVisible();
   await page
-    .getByRole('dialog')
+    .getByRole('alertdialog')
     .filter({ has: page.getByTestId('customer-delete-alert') })
     .getByRole('button', { name: 'Delete' })
     .click();

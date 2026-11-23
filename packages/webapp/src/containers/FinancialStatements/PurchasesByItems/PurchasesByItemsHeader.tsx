@@ -15,6 +15,7 @@ import {
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { transformToForm } from '@/utils';
 
@@ -124,7 +125,7 @@ export const PurchasesByItemsHeader = FF.pipe(
 );
 
 const PurchasesByItemsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

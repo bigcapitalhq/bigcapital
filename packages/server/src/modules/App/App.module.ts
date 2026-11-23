@@ -22,6 +22,7 @@ import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
 import { AppService } from './App.service';
 import { ItemsModule } from '../Items/Items.module';
+import { ItemReorderPointsModule } from '../ItemReorderPoints/ItemReorderPoints.module';
 import { config } from '../../common/config';
 import { ENV_FILE_PATHS } from '../../common/config/env';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
@@ -38,6 +39,7 @@ import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
 import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
+import { TrackingCategoriesModule } from '../TrackingCategories/TrackingCategories.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
 import { ToJsonInterceptor } from '@/common/interceptors/to-json.interceptor';
@@ -50,6 +52,7 @@ import { VendorsModule } from '../Vendors/Vendors.module';
 import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { BillsModule } from '../Bills/Bills.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
+import { RecurringInvoicesModule } from '../RecurringInvoices/RecurringInvoices.module';
 import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
 import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
 import { BudgetsModule } from '../Budgets/Budgets.module';
@@ -67,6 +70,7 @@ import { BankingTransactionsExcludeModule } from '../BankingTransactionsExclude/
 import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
 import { BankingMatchingModule } from '../BankingMatching/BankingMatching.module';
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
+import { BankingReconciliationModule } from '../BankingReconciliation/BankingReconciliation.module';
 import { TransactionsLockingModule } from '../TransactionsLocking/TransactionsLocking.module';
 import { SettingsModule } from '../Settings/Settings.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
@@ -103,10 +107,13 @@ import { ContactsModule } from '../Contacts/Contacts.module';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
+import { WebhooksModule } from '../Webhooks/Webhooks.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { SocketModule } from '../Socket/Socket.module';
+import { NotificationsModule } from '../Notifications/Notifications.module';
 import { EEModule } from '../EE/EE.module';
 import { AnalyticsModule } from '../Analytics/Analytics.module';
+import { AiAssistantModule } from '../AiAssistant/AiAssistant.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
 
@@ -116,6 +123,7 @@ import { AppThrottleModule } from './AppThrottle.module';
       rootPath: join(__dirname, '../../..', 'public'),
       serveRoot: '/public',
     }),
+
     ConfigModule.forRoot({
       envFilePath: ENV_FILE_PATHS,
       load: config,
@@ -200,17 +208,20 @@ import { AppThrottleModule } from './AppThrottle.module';
     TransformerModule,
     MailModule,
     ItemsModule,
+    ItemReorderPointsModule,
     ItemCategoryModule,
     AccountsModule,
     ExpensesModule,
     TaxRatesModule,
     PdfTemplatesModule,
     BranchesModule,
+    TrackingCategoriesModule,
     WarehousesModule,
     WarehousesTransfersModule,
     CustomersModule,
     VendorsModule,
     SaleInvoicesModule,
+    RecurringInvoicesModule,
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
@@ -231,6 +242,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     BankingTransactionsRegonizeModule,
     BankingTransactionsModule,
     BankingMatchingModule,
+    BankingReconciliationModule,
     BankingPlaidModule,
     BankingCategorizeModule,
     TransactionsLockingModule,
@@ -262,9 +274,12 @@ import { AppThrottleModule } from './AppThrottle.module';
     UsersModule,
     ContactsModule,
     SocketModule,
+    NotificationsModule,
     EEModule,
     AnalyticsModule,
+    AiAssistantModule,
     ExchangeRatesModule,
+    WebhooksModule,
   ],
   controllers: [AppController],
   providers: [

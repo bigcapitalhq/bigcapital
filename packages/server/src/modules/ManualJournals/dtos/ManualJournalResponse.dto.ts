@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { ManualJournalEntryTrackingCategoryResponseDto } from '@/modules/TrackingCategories/dtos/TrackingCategoryResponse.dto';
 
 export class ManualJournalEntryResponseDto {
   @ApiProperty({ description: 'Entry index', example: 1 })
@@ -38,6 +40,12 @@ export class ManualJournalEntryResponseDto {
 
   @ApiPropertyOptional({ description: 'Branch details' })
   branch?: any;
+
+  @ApiPropertyOptional({
+    description: 'Tracking category assignments',
+    type: [ManualJournalEntryTrackingCategoryResponseDto],
+  })
+  trackingCategories?: ManualJournalEntryTrackingCategoryResponseDto[];
 }
 
 export class ManualJournalResponseDto {
@@ -52,6 +60,15 @@ export class ManualJournalResponseDto {
 
   @ApiPropertyOptional({ description: 'Journal type', example: 'General' })
   journalType?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports',
+    enum: AccountingBasis,
+    nullable: true,
+    example: AccountingBasis.Accrual,
+  })
+  basis?: AccountingBasis | null;
 
   @ApiPropertyOptional({ description: 'Reference number', example: 'REF-001' })
   reference?: string;
@@ -76,7 +93,7 @@ export class ManualJournalResponseDto {
 
   @ApiPropertyOptional({
     description: 'Published date',
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
   })
   publishedAt?: Date;
 
@@ -91,6 +108,18 @@ export class ManualJournalResponseDto {
 
   @ApiPropertyOptional({ description: 'Branch ID', example: 1 })
   branchId?: number;
+
+  @ApiPropertyOptional({
+    description: 'Recurring journal profile ID',
+    example: 1,
+  })
+  recurringJournalId?: number;
+
+  @ApiPropertyOptional({
+    description: 'Recurring journal occurrence date',
+    example: '2026-11-06',
+  })
+  recurringJournalDate?: Date | string;
 
   @ApiProperty({ description: 'Formatted amount', example: '$1,000.00' })
   formattedAmount: string;

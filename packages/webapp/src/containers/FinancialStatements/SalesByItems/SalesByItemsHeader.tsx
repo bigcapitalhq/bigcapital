@@ -16,6 +16,7 @@ import {
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { transformToForm } from '@/utils';
 
 interface SalesByItemsFormValues {
@@ -127,7 +128,7 @@ export const SalesByItemsHeader = FF.pipe(
 );
 
 const SalesByItemsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

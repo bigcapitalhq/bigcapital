@@ -1,12 +1,13 @@
+@import '@/style/_common';
 
 .dialog--exchangeRate-form {
 
-  .bp4-dialog-body {
-    .bp4-form-group.bp4-inline {
-      .bp4-label {
+  .#{$ns}-dialog-body {
+    .#{$ns}-form-group.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 140px;
       }
-      .bp4-form-content {
+      .#{$ns}-form-content {
         width: 250px;
       }
     }

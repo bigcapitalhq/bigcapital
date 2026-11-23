@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { NS } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
@@ -15,15 +16,10 @@ interface GlobalHotkeyRoute {
   hotkey?: string;
 }
 
-// Toggle dark/light mode by toggling 'bp4-dark' class on body
 const handleToggleDarkMode = () => {
-  const body = document.body;
-
-  if (body.classList.contains('bp4-dark')) {
-    body.classList.remove('bp4-dark');
-  } else {
-    body.classList.add('bp4-dark');
-  }
+  const dark = !document.body.classList.contains(`${NS}-dark`);
+  document.documentElement.classList.toggle(`${NS}-dark`, dark);
+  document.body.classList.toggle(`${NS}-dark`, dark);
 };
 
 type GlobalHotkeysProps = Pick<

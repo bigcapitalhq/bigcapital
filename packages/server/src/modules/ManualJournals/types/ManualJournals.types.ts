@@ -6,6 +6,7 @@ import { Knex } from 'knex';
 import { ManualJournal } from '../models/ManualJournal';
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface IManualJournalEntryDTO {
   index: number;
@@ -24,6 +25,7 @@ export interface IManualJournalDTO {
   exchangeRate?: number;
   journalNumber: string;
   journalType: string;
+  basis?: AccountingBasis | null;
   reference?: string;
   description?: string;
   publish?: boolean;

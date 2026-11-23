@@ -30,7 +30,7 @@ export interface IBillLandedCostEntryLike {
  * Bill landed cost entry contract.
  */
 export interface IBillLandedCostEntryDTO {
-  itemId: number;
+  itemId?: number;
   landedCost?: boolean;
 }
 

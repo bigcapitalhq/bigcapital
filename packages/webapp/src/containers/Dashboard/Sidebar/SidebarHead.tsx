@@ -13,6 +13,7 @@ import { useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 import type { ComponentType } from 'react';
 import { Icon, IconProps, FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import {
   withDrawerActions,
@@ -28,9 +29,10 @@ import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
 import { firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
-const POPOVER_MODIFIERS = {
-  offset: { offset: '28, 8' },
-};
+const POPOVER_MODIFIERS: import('@blueprintjs/core').PopoverProps['modifiers'] =
+  {
+    offset: { options: { offset: [28, 8] } },
+  };
 
 // Minimum number of workspaces required to show the search input.
 const WORKSPACES_SEARCH_MIN_COUNT = 4;
@@ -50,32 +52,32 @@ const DashboardOrganizationMenu = styled(Menu)`
       background: rgba(255, 255, 255, 0.08);
     }
 
-    &:hover:not(.is-active):not(.bp4-disabled) {
+    &:hover:not(.is-active):not(.${NS}-disabled) {
       background: rgba(255, 255, 255, 0.05);
     }
 
-    &.bp4-disabled {
+    &.${NS}-disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
   }
 
-  .bp4-menu-divider {
+  .${NS}-menu-divider {
     margin: 8px 0;
     border-top-color: rgba(255, 255, 255, 0.1);
   }
 
-  .bp4-menu-item {
+  .${NS}-menu-item {
     color: rgba(255, 255, 255, 0.9);
     border-radius: 4px;
     line-height: 20px;
 
-    &:hover:not(.bp4-disabled) {
+    &:hover:not(.${NS}-disabled) {
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
     }
 
-    .bp4-icon {
+    .${NS}-icon {
       color: rgba(255, 255, 255, 0.6);
     }
   }
@@ -87,7 +89,7 @@ const DashboardSearchInput = styled(InputGroup)`
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 
-  .bp4-input {
+  .${NS}-input {
     background: transparent;
     color: #fff;
 
@@ -96,12 +98,12 @@ const DashboardSearchInput = styled(InputGroup)`
     }
   }
 
-  .bp4-icon {
+  .${NS}-icon {
     color: rgba(255, 255, 255, 0.35);
   }
 
   &:focus-within,
-  &.bp4-active {
+  &.${NS}-active {
     border-color: rgba(17, 131, 218, 0.55);
     box-shadow: 0 0 0 1px rgba(17, 131, 218, 0.35);
   }
@@ -157,7 +159,7 @@ function SidebarHeadJSX({
       <div className="sidebar__head-organization">
         <Popover
           modifiers={POPOVER_MODIFIERS}
-          boundary={'window'}
+          rootBoundary="viewport"
           content={
             <DashboardOrganizationMenu>
               <x.div

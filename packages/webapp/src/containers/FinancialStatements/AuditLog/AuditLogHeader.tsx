@@ -8,6 +8,7 @@ import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import { getDefaultAuditLogQuery, getAuditLogQuerySchema } from './common';
 import { FormattedMessage as T, FFormGroup, FDateInput } from '@/components';
 import { FMultiSelect } from '@/components/Forms';
+import { NS } from '@/constants/classes';
 import { useDateInputFormatter } from '@/hooks';
 import { useAuditLogFilterOptionsQuery } from '@/hooks/query';
 import { saveInvoke, transformToForm } from '@/utils';
@@ -43,7 +44,7 @@ const auditLogSelectItemPredicate = (query: string, item: SelectItem) => {
 };
 
 const AuditLogDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .${NS}-drawer {
     max-height: 350px;
   }
 `;
@@ -163,7 +164,7 @@ export function AuditLogHeader({
               title={<T id={'general'} />}
               panel={
                 <div style={{ maxWidth: '400px' }}>
-                  <FFormGroup name="subject" label={'Subject'} fastField>
+                  <FFormGroup name="subject" label={'Subject'}>
                     <FMultiSelect
                       name="subject"
                       items={subjectSelectItems}
@@ -178,11 +179,10 @@ export function AuditLogHeader({
                       }}
                       fill
                       resetOnSelect
-                      fastField
                     />
                   </FFormGroup>
 
-                  <FFormGroup name="action" label={'Action'} fastField>
+                  <FFormGroup name="action" label={'Action'}>
                     <FMultiSelect
                       name="action"
                       items={actionSelectItems}
@@ -197,7 +197,6 @@ export function AuditLogHeader({
                       }}
                       fill
                       resetOnSelect
-                      fastField
                     />
                   </FFormGroup>
 
@@ -217,7 +216,6 @@ export function AuditLogHeader({
                   <FFormGroup name="toDate" label={'To'} fastField>
                     <FDateInput
                       name="toDate"
-                      type="date"
                       popoverProps={{
                         position: Position.BOTTOM,
                         minimal: true,

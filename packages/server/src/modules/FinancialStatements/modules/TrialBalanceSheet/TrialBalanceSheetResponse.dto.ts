@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import {
   FinancialTableColumnDto,
   FinancialReportTotalDto,
@@ -10,6 +11,7 @@ import {
   TrialBalanceColumnKey,
 } from '../../common/constants/tableColumnKeys';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { TrialBalanceSortOrder } from './TrialBalanceSheet.types';
 
 export class TrialBalanceSheetAccountDto {
   @ApiProperty({ description: 'Account ID', type: Number })
@@ -112,8 +114,8 @@ export class TrialBalanceSheetQueryResponseDto {
   @ApiProperty({ description: 'Exclude accounts with no transactions' })
   noneTransactions: boolean;
 
-  @ApiProperty({ description: 'Accounting basis', enum: ['cash', 'accrual'] })
-  basis: string;
+  @ApiProperty({ description: 'Accounting basis', enum: AccountingBasis })
+  basis: AccountingBasis;
 
   @ApiProperty({
     description: 'Column display type',
@@ -132,6 +134,18 @@ export class TrialBalanceSheetQueryResponseDto {
     type: NumberFormatQueryDto,
   })
   numberFormat: NumberFormatQueryDto;
+
+  @ApiPropertyOptional({
+    description: 'Column the accounts are sorted by',
+    enum: Object.values(TRIAL_BALANCE_COLUMN_KEYS),
+  })
+  columnSortBy?: TrialBalanceColumnKey;
+
+  @ApiPropertyOptional({
+    description: 'Sort order of the accounts',
+    enum: ['asc', 'desc'],
+  })
+  sortOrder?: TrialBalanceSortOrder;
 }
 
 export class TrialBalanceSheetResponseDto {

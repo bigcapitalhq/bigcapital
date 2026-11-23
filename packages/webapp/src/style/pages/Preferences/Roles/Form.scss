@@ -1,3 +1,4 @@
+@import '@/style/_common';
 //  Roles Form page
 //---------------------------------
 .preferences-page__inside-content--roles-form {
@@ -11,30 +12,30 @@
       border-top: 1px solid var(--color-role-form-footer-border, #e0e7ea);
       margin-top: 30px;
 
-      .bp4-dark & {
+      .#{$ns}-dark & {
         --color-role-form-footer-border: rgba(255, 255, 255, 0.1);
       }
 
-      .bp4-button {
+      .#{$ns}-button {
         min-width: 65px;
 
-        + .bp4-button {
+        + .#{$ns}-button {
           margin-left: 10px;
         }
       }
     }
   }
 
-  .bp4-form-group {
+  .#{$ns}-form-group {
     max-width: 600px;
     margin-bottom: 14px;
 
-    &.bp4-inline {
-      .bp4-label {
+    &.#{$ns}-inline {
+      .#{$ns}-label {
         min-width: 150px;
       }
     }
-    .bp4-form-content {
+    .#{$ns}-form-content {
       width: 100%;
     }
 

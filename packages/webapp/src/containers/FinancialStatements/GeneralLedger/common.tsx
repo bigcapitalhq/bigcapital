@@ -32,6 +32,7 @@ export const getDefaultGeneralLedgerQuery = () => ({
   filterByOption: 'with-transactions',
   branchesIds: [] as string[],
   accountsIds: [] as string[],
+  numberFormat: {},
 });
 
 /**

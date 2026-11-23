@@ -68,6 +68,13 @@ export const useAuthUser = () => {
 };
 
 /**
+ * Retrieve the authentication user ID.
+ */
+export const useAuthUserId = () => {
+  return useAppSelector((state) => state.authentication.userId);
+};
+
+/**
  * Retrieve the authenticated organization id.
  */
 export const useAuthOrganizationId = () => {

@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
+import { NS } from '@/constants/classes';
 
 export interface PreferencesReceiptsFormProps {
   isSubmitting: boolean;
@@ -57,17 +58,17 @@ export function PreferencesReceiptsForm({
 const CardFooterActions = styled.div`
   --x-color-border: #e0e7ea;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-border: rgba(255, 255, 255, 0.15);
   }
   padding-top: 16px;
   border-top: 1px solid var(--x-color-border);
   margin-top: 30px;
 
-  .bp4-button {
+  .${NS}-button {
     min-width: 70px;
 
-    + .bp4-button {
+    + .${NS}-button {
       margin-left: 10px;
     }
   }

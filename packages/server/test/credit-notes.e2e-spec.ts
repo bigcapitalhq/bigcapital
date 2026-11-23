@@ -69,6 +69,35 @@ describe('Credit Notes (e2e)', () => {
       .expect(201);
   });
 
+  it('/credit-notes (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/credit-notes')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...requestCreditNote(),
+        entries: [
+          {
+            index: 1,
+            description: 'Consulting services',
+            quantity: 1,
+            rate: 1000,
+            sellAccountId: 1026,
+          },
+        ],
+      })
+      .expect(201);
+
+    const creditNote = await request(app.getHttpServer())
+      .get(`/credit-notes/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(creditNote.body.entries[0].item_id).toBeNull();
+    expect(creditNote.body.entries[0].sell_account_id).toBe(1026);
+  });
+
   it('/credit-notes/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/credit-notes')

@@ -15,7 +15,7 @@ interface EnsureSubscriptionsIsInactiveProps {
  */
 export default function EnsureSubscriptionsIsInactive({
   children,
-  redirectTo = '/billing',
+  redirectTo = '/preferences/billing',
   routePath,
   exclude,
 }: EnsureSubscriptionsIsInactiveProps) {

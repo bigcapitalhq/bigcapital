@@ -1,8 +1,4 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { TransactionsByReferenceApplication } from './TransactionsByReferenceApplication';
-import { TransactionsByReferenceQueryDto } from './TransactionsByReferenceQuery.dto';
-import { TransactionsByReferenceResponseDto } from './TransactionsByReferenceResponse.dto';
-import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -11,6 +7,10 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { TransactionsByReferenceApplication } from './TransactionsByReferenceApplication';
+import { TransactionsByReferenceQueryDto } from './TransactionsByReferenceQuery.dto';
+import { TransactionsByReferenceResponseDto } from './TransactionsByReferenceResponse.dto';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 
 @Controller('reports/transactions-by-reference')
 @ApiTags('Reports')

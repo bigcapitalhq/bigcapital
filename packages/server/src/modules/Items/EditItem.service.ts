@@ -33,6 +33,7 @@ export class EditItemService {
    * @param {Item} oldItem
    */
   async authorize(itemDTO: EditItemDto, oldItem: Item) {
+    await this.validators.validateBatchTrackingEnabled(itemDTO);
     // Validate edit item type from inventory type.
     this.validators.validateEditItemFromInventory(itemDTO, oldItem);
 
@@ -90,14 +91,53 @@ export class EditItemService {
     itemDTO: EditItemDto,
     oldItem: Item,
   ): Partial<Item> {
+    const oldReorderPoint = this.normalizeReorderPoint(oldItem.reorderPoint);
+    const nextReorderPoint =
+      itemDTO.type === 'inventory'
+        ? this.normalizeReorderPoint(
+            itemDTO.reorderPoint !== undefined
+              ? itemDTO.reorderPoint
+              : oldItem.reorderPoint,
+          )
+        : null;
+    const reorderPointPatch =
+      itemDTO.type === 'inventory'
+        ? itemDTO.reorderPoint !== undefined
+          ? { reorderPoint: itemDTO.reorderPoint ?? null }
+          : {}
+        : { reorderPoint: null };
+    const reorderPointNotifiedPatch =
+      nextReorderPoint !== oldReorderPoint
+        ? { reorderPointNotified: false }
+        : {};
+
     return {
       ...itemDTO,
+      ...(itemDTO.type !== 'inventory' && {
+        inventoryTracking: 'none' as const,
+      }),
       ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
         ? {
             quantityOnHand: 0,
           }
         : {}),
+      ...reorderPointPatch,
+      ...reorderPointNotifiedPatch,
     };
+  }
+
+  /**
+   * Normalizes the reorder point value to a number or null.
+   * @param {unknown} value
+   * @returns {number | null}
+   */
+  private normalizeReorderPoint(value: unknown): number | null {
+    if (value === null || value === undefined || value === '') {
+      return null;
+    }
+    const parsedValue = Number(value);
+
+    return Number.isFinite(parsedValue) ? parsedValue : null;
   }
 
   /**

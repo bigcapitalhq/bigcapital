@@ -1,3 +1,4 @@
+@import '@/style/_common';
 
 
 
@@ -19,10 +20,10 @@
   flex-direction: column;
   flex: 1 1 0;
 
-  :global .bp4-form-group{
+  :global .#{$ns}-form-group{
     margin-bottom: 0;
   }
-  :global .bp4-input {
+  :global .#{$ns}-input {
     line-height: 30px;
     height: 30px;
   }
@@ -32,7 +33,7 @@
   background: #F6F7F9;
   height: 335px;
 
-  :global(.bp4-dark) & {
+  :global(.#{$ns}-dark) & {
     background: var(--color-dark-gray2);
   }
 }
@@ -41,7 +42,7 @@
   flex: 1 1 0;
   box-shadow: 0 0 0 1px rgba(17,20,24,.1),0 1px 1px rgba(17,20,24,.2),0 2px 6px rgba(17,20,24,.2);
 
-  :global(.bp4-dark) & {
+  :global(.#{$ns}-dark) & {
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),0 1px 1px rgba(255, 255, 255, 0.2),0 2px 6px rgba(255, 255, 255, 0.2);
   }
 }
@@ -49,7 +50,7 @@
 .asideFooter {
   background: #F6F7F9; 
 
-  :global(.bp4-dark) & {
+  :global(.#{$ns}-dark) & {
     background: var(--color-dark-gray2);
   }
 }

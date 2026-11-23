@@ -72,6 +72,35 @@ describe('Sale Receipts (e2e)', () => {
       .expect(201);
   });
 
+  it('/sale-receipts (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-receipts')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...makeReceiptRequest(),
+        entries: [
+          {
+            index: 1,
+            description: 'Consulting services',
+            quantity: 1,
+            rate: 2000,
+            sellAccountId: 1026,
+          },
+        ],
+      })
+      .expect(201);
+
+    const receipt = await request(app.getHttpServer())
+      .get(`/sale-receipts/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(receipt.body.entries[0].item_id).toBeNull();
+    expect(receipt.body.entries[0].sell_account_id).toBe(1026);
+  });
+
   it('/sale-receipts/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-receipts')

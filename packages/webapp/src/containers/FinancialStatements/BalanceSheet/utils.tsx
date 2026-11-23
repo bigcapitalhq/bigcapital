@@ -48,6 +48,10 @@ export const getDefaultBalanceSheetQuery = (): BalanceSheetFormQuery => ({
   // Declared required by the API spec but unused by the server.
   accountIds: [],
   numberFormat: {},
+
+  // Columns sorting.
+  columnSortBy: undefined,
+  sortOrder: undefined,
 });
 
 const parseBalanceSheetQuery = (

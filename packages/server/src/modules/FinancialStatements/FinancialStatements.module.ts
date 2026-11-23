@@ -11,6 +11,7 @@ import { ARAgingSummaryModule } from './modules/ARAgingSummary/ARAgingSummary.mo
 import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
 import { InventoryItemDetailsModule } from './modules/InventoryItemDetails/InventoryItemDetails.module';
 import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet/InventoryValuationSheet.module';
+import { InventorySummaryModule } from './modules/InventorySummary/InventorySummary.module';
 import { SalesTaxLiabilityModule } from './modules/SalesTaxLiabilitySummary/SalesTaxLiability.module';
 import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
 import { ProfitLossSheetModule } from './modules/ProfitLossSheet/ProfitLossSheet.module';
@@ -18,6 +19,7 @@ import { CashflowStatementModule } from './modules/CashFlowStatement/CashflowSta
 import { VendorBalanceSummaryModule } from './modules/VendorBalanceSummary/VendorBalanceSummary.module';
 import { BalanceSheetModule } from './modules/BalanceSheet/BalanceSheet.module';
 import { BudgetVsActualModule } from './modules/BudgetVsActual/BudgetVsActual.module';
+import { ReconciliationStatusModule } from './modules/ReconciliationStatus/ReconciliationStatus.module';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { BudgetVsActualModule } from './modules/BudgetVsActual/BudgetVsActual.mo
     VendorBalanceSummaryModule,
     SalesByItemsModule,
     GeneralLedgerModule,
+    ReconciliationStatusModule,
     TrialBalanceSheetModule,
     TransactionsByVendorModule,
     TransactionsByCustomerModule,
@@ -35,6 +38,7 @@ import { BudgetVsActualModule } from './modules/BudgetVsActual/BudgetVsActual.mo
     APAgingSummaryModule,
     InventoryItemDetailsModule,
     InventoryValuationSheetModule,
+    InventorySummaryModule,
     SalesTaxLiabilityModule,
     JournalSheetModule,
     ProfitLossSheetModule,

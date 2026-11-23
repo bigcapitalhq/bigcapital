@@ -14,6 +14,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
+import { BatchAllocationsBridge } from '@/modules/TransactionItemEntry/integrations/BatchAllocationsBridge';
 
 @Injectable()
 export class EditSaleInvoice {
@@ -32,6 +33,7 @@ export class EditSaleInvoice {
     private readonly validators: CommandSaleInvoiceValidators,
     private readonly transformerDTO: CommandSaleInvoiceDTOTransformer,
     private readonly uow: UnitOfWork,
+    private readonly batchAllocationsBridge: BatchAllocationsBridge,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -73,6 +75,15 @@ export class EditSaleInvoice {
           id: saleInvoiceId,
           ...saleInvoiceObj,
         });
+
+      // Replaces the batch allocations of the invoice entries.
+      await this.batchAllocationsBridge.syncEntriesAllocations(
+        'SaleInvoice',
+        saleInvoice.id,
+        saleInvoiceDTO.entries,
+        trx,
+      );
+
       // Edit event payload.
       const editEventPayload: ISaleInvoiceEditedPayload = {
         saleInvoiceId,
@@ -125,6 +136,11 @@ export class EditSaleInvoice {
     // Validate non-sellable entries items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       saleInvoiceDTO.entries,
+    );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      saleInvoiceDTO.entries,
+      'sellAccountId',
     );
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(

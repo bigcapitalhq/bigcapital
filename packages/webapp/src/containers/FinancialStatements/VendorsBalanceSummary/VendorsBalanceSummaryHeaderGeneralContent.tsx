@@ -1,5 +1,4 @@
 import { FormGroup, Position, Checkbox } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { FastField } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -13,6 +12,7 @@ import {
   FFormGroup,
   VendorsMultiSelect,
 } from '@/components';
+import { DateInput } from '@/components/Forms/DateInput';
 import { useDateInputFormatter } from '@/hooks';
 import { tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 

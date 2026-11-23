@@ -1,4 +1,5 @@
 import React from 'react';
+import { NS } from '@/constants/classes';
 
 interface DollarIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -8,7 +9,7 @@ export const DollarIcon: React.FC<DollarIconProps> = ({
   size = 16,
   ...props
 }) => (
-  <span className={'bp4-icon bp4-icon-arrow-bottom-left'}>
+  <span className={`${NS}-icon ${NS}-icon-arrow-bottom-left`}>
     <svg
       version="1.1"
       id="Layer_1"

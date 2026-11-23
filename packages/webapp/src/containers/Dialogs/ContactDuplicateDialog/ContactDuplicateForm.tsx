@@ -17,7 +17,7 @@ import {
 import { ContactsOptions } from '@/constants/contactsOptions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-// Widened BP4 wrapper type — `popoverProps` minimal not exposed publicly.
+// Widened select wrapper type — `popoverProps` minimal not exposed publicly.
 type FFormGroupProps = React.PropsWithChildren<{
   name?: string;
   label?: React.ReactNode;

@@ -1,9 +1,18 @@
-import { Menu, MenuItem, Position, Button, Intent } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import {
+  Menu,
+  MenuItem,
+  Position,
+  Button,
+  Intent,
+  Popover,
+} from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
+import {
+  useMakeJournalFormContext,
+  useMakeJournalFormContextOptional,
+} from './MakeJournalProvider';
 import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import {
   ExchangeRateInputGroup,
@@ -17,8 +26,14 @@ import {
   InputGroupCell,
   ContactsListFieldCell,
   BranchesListFieldCell,
+  TrackingCategoryOptionFieldCell,
 } from '@/components/DataTableCells';
-import { CellType, Features, Align } from '@/constants';
+import {
+  CellType,
+  Features,
+  Align,
+  TrackingCategoryModules,
+} from '@/constants';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
@@ -94,13 +109,13 @@ export const ActionsCellRenderer = ({
     </Menu>
   );
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
         className="m12"
         minimal={true}
       />
-    </Popover2>
+    </Popover>
   );
 };
 ActionsCellRenderer.cellType = CellType.Button;
@@ -108,8 +123,49 @@ ActionsCellRenderer.cellType = CellType.Button;
 /**
  * Retrieve columns of make journal entries table.
  */
-export const useJournalTableEntriesColumns = () => {
+export const useJournalTableEntriesColumns = (options?: {
+  trackingCategories?: any[];
+  usedCategoryIds?: Set<number>;
+}) => {
   const { featureCan } = useFeatureCan();
+  const context = useMakeJournalFormContextOptional();
+  const trackingCategories = React.useMemo(
+    () => options?.trackingCategories ?? context?.trackingCategories ?? [],
+    [options?.trackingCategories, context?.trackingCategories],
+  );
+  const manualJournal = context?.manualJournal;
+
+  // Categories already used by the journal remain visible on edit so history
+  // is preserved even after the category is archived or its module
+  // availability changes.
+  const usedCategoryIds = React.useMemo(() => {
+    if (options?.usedCategoryIds) {
+      return options.usedCategoryIds;
+    }
+    return new Set(
+      (manualJournal?.entries ?? []).flatMap((entry) =>
+        (entry.trackingCategories ?? []).map(
+          (assignment) => assignment.categoryId,
+        ),
+      ),
+    );
+  }, [manualJournal, options?.usedCategoryIds]);
+
+  const visibleCategories = React.useMemo(() => {
+    return trackingCategories.filter((category) => {
+      // Categories already used by the journal stay visible so historical
+      // assignments survive even after the category is archived or its module
+      // availability changes.
+      if (usedCategoryIds.has(category.id)) {
+        return true;
+      }
+      const isAvailableForManualJournals =
+        category.modules?.includes(TrackingCategoryModules.ManualJournals) ??
+        true;
+
+      return !!category.active && isAvailableForManualJournals;
+    });
+  }, [trackingCategories, usedCategoryIds]);
 
   return React.useMemo(
     () => [
@@ -159,6 +215,29 @@ export const useJournalTableEntriesColumns = () => {
             },
           ]
         : []),
+      ...(featureCan(Features.TrackingCategories)
+        ? visibleCategories.map((category) => ({
+            Header: category.active
+              ? category.name
+              : `${category.name} (${intl.get(
+                  'tracking_categories.status.archived',
+                )})`,
+            id: `tracking-category-${category.id}`,
+            accessor: (entry: {
+              trackingCategories?: Array<{
+                categoryId: number;
+                optionId: number;
+              }>;
+            }) =>
+              entry.trackingCategories?.find(
+                (assignment) => assignment.categoryId === category.id,
+              )?.optionId,
+            Cell: TrackingCategoryOptionFieldCell,
+            trackingCategory: category,
+            disableSortBy: true,
+            width: 140,
+          }))
+        : []),
       {
         Header: intl.get('note'),
         accessor: 'note',
@@ -176,7 +255,7 @@ export const useJournalTableEntriesColumns = () => {
         align: Align.Center,
       },
     ],
-    [],
+    [featureCan, visibleCategories],
   );
 };
 

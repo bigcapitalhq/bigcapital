@@ -28,6 +28,7 @@ export interface IItem {
   purchaseTaxRateId: number;
 
   quantityOnHand: number;
+  reorderPoint: number;
 
   note: string;
   active: boolean;
@@ -87,6 +88,9 @@ export class IItemDTO {
 
   @ApiProperty()
   quantityOnHand: number;
+
+  @ApiProperty()
+  reorderPoint: number;
 
   @ApiProperty()
   note: string;

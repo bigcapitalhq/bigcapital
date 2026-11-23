@@ -89,7 +89,7 @@ $organizations-drawer-border: rgba(255, 255, 255, 0.08);
   }
 
   .organizations-list-table__row-menu-popover {
-    .bp4-popover-content {
+    .#{$ns}-popover-content {
       padding: 0;
     }
   }

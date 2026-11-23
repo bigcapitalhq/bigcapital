@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   Inject,
+  HttpCode,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -25,16 +26,24 @@ import {
 import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTransfersQuery.dto';
 import { WarehouseTransferResponseDto } from './dtos/WarehouseTransferResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('warehouse-transfers')
 @ApiTags('Warehouse Transfers')
+@RequireSubscriptionFeature(SubscriptionFeature.Warehouses)
 @ApiExtraModels(WarehouseTransferResponseDto, PaginatedResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class WarehouseTransfersController {
@@ -45,6 +54,52 @@ export class WarehouseTransfersController {
     @Inject(WarehouseTransferApplication)
     private readonly warehouseTransferApplication: WarehouseTransferApplication,
   ) {}
+
+  /**
+   * Validates which warehouse transfers can be deleted and returns the results.
+   */
+  @Post('validate-bulk-delete')
+  @RequirePermission(WarehouseTransferAction.DELETE, AbilitySubject.Warehouse)
+  @ApiOperation({
+    summary:
+      'Validates which warehouse transfers can be deleted and returns the results.',
+  })
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable warehouse transfers.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  async validateBulkDeleteWarehouseTransfers(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.warehouseTransferApplication.validateBulkDeleteWarehouseTransfers(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  /**
+   * Deletes multiple warehouse transfers.
+   */
+  @Post('bulk-delete')
+  @RequirePermission(WarehouseTransferAction.DELETE, AbilitySubject.Warehouse)
+  @ApiOperation({ summary: 'Deletes multiple warehouse transfers.' })
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Warehouse transfers deleted successfully.',
+  })
+  async bulkDeleteWarehouseTransfers(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.warehouseTransferApplication.bulkDeleteWarehouseTransfers(
+      bulkDeleteDto.ids,
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
+    );
+  }
 
   /**
    * Creates a new warehouse transfer transaction.

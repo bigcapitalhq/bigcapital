@@ -11,6 +11,7 @@ import {
   DialogFooterActions,
   FormattedMessage as T,
 } from '@/components';
+import { NS } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 interface AllocateLandedCostFloatingActionsProps
@@ -76,7 +77,7 @@ const AllocateDialogFooter = styled(DialogFooter)`
 const UnallocatedAmount = styled.div`
   --x-color-text: #3f5278;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-text: var(--color-light-gray1);
   }
   color: var(--x-color-text);

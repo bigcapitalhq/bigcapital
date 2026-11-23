@@ -1,3 +1,5 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export interface ITransactionsByReferenceQuery {
   referenceType: string;
   referenceId: string;
@@ -33,6 +35,11 @@ export interface ITransactionsByReferenceTransaction {
   accountName: string;
   accountCode: string;
   accountId: number;
+
+  /**
+   * The accounting basis flag; null means general.
+   */
+  basis: AccountingBasis | null;
 }
 
 export interface ITransactionsByReferencePojo {

@@ -5,12 +5,19 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsIn,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import {
+  BALANCE_SHEET_COLUMN_KEYS,
+  BalanceSheetColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { BalanceSheetSortOrder } from './BalanceSheet.types';
 
 export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -75,13 +82,13 @@ export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   noneZero: boolean;
 
   @ApiProperty({
-    enum: ['cash', 'accrual'],
+    enum: AccountingBasis,
     description: 'Accounting basis for the balance sheet',
     required: false,
   })
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
 
   @ApiProperty({
     description: 'Array of account IDs to include in the balance sheet',
@@ -168,4 +175,22 @@ export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   previousYearPercentageChange: boolean;
+
+  @ApiProperty({
+    description: 'Column to sort the accounts by',
+    required: false,
+    enum: Object.values(BALANCE_SHEET_COLUMN_KEYS),
+  })
+  @IsIn(Object.values(BALANCE_SHEET_COLUMN_KEYS))
+  @IsOptional()
+  columnSortBy?: BalanceSheetColumnKey;
+
+  @ApiProperty({
+    description: 'Sort order for the accounts',
+    required: false,
+    enum: ['asc', 'desc'],
+  })
+  @IsIn(['asc', 'desc'])
+  @IsOptional()
+  sortOrder?: BalanceSheetSortOrder;
 }

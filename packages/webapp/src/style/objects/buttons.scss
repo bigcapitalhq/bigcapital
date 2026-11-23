@@ -1,7 +1,8 @@
-.bp4-button {
+@import '@/style/_common';
+.#{$ns}-button {
   --color-button-color: #555;
 
-  .bp4-dark & {
+  .#{$ns}-dark & {
     --color-button-color: var(--color-light-gray3);
   }
   min-width: 32px;
@@ -9,35 +10,35 @@
   padding-left: 12px;
   padding-right: 12px;
 
-  &.bp4-outlined {
-    .bp4-dark & {
+  &.#{$ns}-outlined {
+    .#{$ns}-dark & {
       border-color: rgba(255, 255, 255, 0.2);
     }
   }
 }
 
-.bp4-button:not([class*='bp4-intent-']) {
+.#{$ns}-button:not([class*='#{$ns}-intent-']) {
   color: #33304a;
 }
 
-.bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
+.#{$ns}-button:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal) {
   color: var(--color-button-color);
   box-shadow: 0 0 0 transparent;
 
-  &.bp4-small {
+  &.#{$ns}-small {
     font-size: 13px;
   }
 }
 
-.bp4-button-group.bp4-minimal .bp4-button {
+.#{$ns}-button-group.#{$ns}-minimal .#{$ns}-button {
   background-color: transparent;
 }
 
-.bp4-button {
-  &.bp4-intent-primary,
-  &.bp4-intent-success,
-  &.bp4-intent-danger,
-  &.bp4-intent-warning {
+.#{$ns}-button {
+  &.#{$ns}-intent-primary,
+  &.#{$ns}-intent-success,
+  &.#{$ns}-intent-danger,
+  &.#{$ns}-intent-warning {
     &,
     &:hover {
       box-shadow: 0 0 0 transparent;

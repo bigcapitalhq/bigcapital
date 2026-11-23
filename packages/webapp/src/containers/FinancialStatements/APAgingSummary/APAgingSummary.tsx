@@ -55,7 +55,7 @@ function APAgingSummaryInner({
       <APAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat}>
           <APAgingSummaryHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

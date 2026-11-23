@@ -14,7 +14,7 @@ export class ValidateMatchingOnPaymentReceivedDeleteSubscriber {
    * Validates the payment received transaction whether matched with bank transaction on deleting.
    * @param {IPaymentReceivedDeletedPayload}
    */
-  @OnEvent(events.paymentReceive.onDeleting)
+  @OnEvent(events.paymentReceive.onDeleting, { suppressErrors: false })
   public async validateMatchingOnPaymentReceivedDeleting({
     oldPaymentReceive,
     trx,

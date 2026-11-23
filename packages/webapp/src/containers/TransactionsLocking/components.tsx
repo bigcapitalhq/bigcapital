@@ -6,14 +6,15 @@ import {
   Intent,
   Divider,
   Classes,
+  Popover,
 } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 import type { TransactionsLockingMeta } from '@bigcapital/sdk-ts';
 import { Hint, Icon, If, FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 
 export interface TransactionLockingHandlers {
   onLock?: (module: string, event: React.MouseEvent) => void;
@@ -330,7 +331,7 @@ function TransactionsLockingItemActions() {
           <T id={'edit'} />
         </Button>
         <Divider />
-        <Popover2
+        <Popover
           content={
             <Menu>
               <MenuItem
@@ -358,7 +359,7 @@ function TransactionsLockingItemActions() {
           <Button small={true} minimal={true} intent={Intent.PRIMARY}>
             <T id={'transactions_locking.unlock'} />
           </Button>
-        </Popover2>
+        </Popover>
       </If>
     </TransLockingActions>
   );
@@ -405,7 +406,7 @@ const TransLockingItemDesc = styled.p`
 const TransLockingIcon = styled.div`
   --x-text-color: #93a1ba;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   border: 1px solid var(--color-transaction-locking-item-icon-border);
@@ -416,7 +417,7 @@ const TransLockingIcon = styled.div`
   border-radius: 8px;
   color: var(--x-text-color);
 
-  .bp4-icon {
+  .${NS}-icon {
     position: relative;
     top: 1px;
   }
@@ -425,7 +426,7 @@ const TransLockingIcon = styled.div`
 export const TransLockingActions = styled.div`
   display: flex;
 
-  .bp4-divider {
+  .${NS}-divider {
     margin: 2px;
   }
 `;
@@ -441,7 +442,7 @@ export const TransLockingReason = styled.div`
   font-size: 13px;
   --x-text-color: #777;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-text-color: rgba(255, 255, 255, 0.6);
   }
   strong {
@@ -452,7 +453,7 @@ export const TransLockingReason = styled.div`
 const TransUnlockWrap = styled.div`
   -x-border-color: #ddd;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-border-color: rgba(255, 255, 255, 0.1);
   }
   padding-top: 10px;

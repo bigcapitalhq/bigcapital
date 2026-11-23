@@ -37,6 +37,7 @@ import {
 import { GetCurrentOrganizationResponseDto } from './dtos/GetCurrentOrganizationResponse.dto';
 import { OrganizationBuildJobResponseDto } from './dtos/OrganizationBuildJobResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { SkipSubscriptionCheck } from '@/modules/Subscription/decorators/SkipSubscriptionCheck.decorator';
 import { OrgBaseCurrencyMutateAbilitiesResponseDto } from './dtos/OrgBaseCurrencyMutateAbilitiesResponse.dto';
 
 @ApiTags('Organization')
@@ -44,6 +45,7 @@ import { OrgBaseCurrencyMutateAbilitiesResponseDto } from './dtos/OrgBaseCurrenc
 @IgnoreTenantInitializedRoute()
 @IgnoreTenantSeededRoute()
 @IgnoreTenantModelsInitialize()
+@SkipSubscriptionCheck()
 @ApiExtraModels(GetCurrentOrganizationResponseDto)
 @ApiExtraModels(OrganizationBuildJobResponseDto)
 @ApiExtraModels(OrgBaseCurrencyMutateAbilitiesResponseDto)

@@ -1,6 +1,7 @@
+@import '@/style/_common';
 .datatable-editor {
   
-  .bp4-form-group {
+  .#{$ns}-form-group {
     margin-bottom: 0;
   }
   .table {
@@ -58,11 +59,11 @@
 
         &.landed-cost{
           
-          .bp4-control{
+          .#{$ns}-control{
             margin-top: 0;
             margin-left: 34px;
           }
-          .bp4-control-indicator{
+          .#{$ns}-control-indicator{
             height: 18px;
             width: 18px;
             border-color: #dbdbdb;
@@ -70,13 +71,13 @@
         }
       }
       .tr {
-        .bp4-form-group:not(.bp4-intent-danger) .bp4-input,
-        .form-group--select-list .bp4-button {
+        .#{$ns}-form-group:not(.#{$ns}-intent-danger) .#{$ns}-input,
+        .form-group--select-list .#{$ns}-button {
           border-color: #ffffff;
           color: #222;
           border-radius: 3px;
         }
-        .bp4-form-group:not(.bp4-intent-danger) .bp4-input {
+        .#{$ns}-form-group:not(.#{$ns}-intent-danger) .#{$ns}-input {
           border-radius: 2px;
           padding-left: 4px;
           padding-right: 4px;
@@ -85,7 +86,7 @@
             box-shadow: 0 0 0 2px #116cd0;
           }
         }
-        .form-group--select-list .bp4-button {
+        .form-group--select-list .#{$ns}-button {
           padding-left: 6px;
           padding-right: 6px;
 
@@ -94,10 +95,10 @@
           }
         }
         .form-group--select-list,
-        .bp4-form-group {
-          &.bp4-intent-danger {
-            .bp4-button:not(.bp4-minimal),
-            .bp4-input {
+        .#{$ns}-form-group {
+          &.#{$ns}-intent-danger {
+            .#{$ns}-button:not(.#{$ns}-minimal),
+            .#{$ns}-input {
               border-color: #f7b6b6;
             }
           }
@@ -110,7 +111,7 @@
         }
 
         .td.actions {
-          .bp4-button {
+          .#{$ns}-button {
             background-color: transparent;
             color: #e66d6d;
 
@@ -135,7 +136,7 @@
         }
         .td {
           &.note {
-            .bp4-form-group {
+            .#{$ns}-form-group {
               width: 100%;
             }
           }
@@ -159,7 +160,7 @@
     }
 
     .actions.td {
-      .bp4-button {
+      .#{$ns}-button {
         background: transparent;
         margin: 0;
       }
@@ -186,7 +187,7 @@
 
   .table {
     .tbody {
-      .tr .td.actions .bp4-button {
+      .tr .td.actions .#{$ns}-button {
         background-color: transparent;
         color: #e66d6d;
 
@@ -200,13 +201,13 @@
   &__actions {
     margin-top: 12px;
 
-    .bp4-button {
+    .#{$ns}-button {
       padding-left: 10px;
       padding-right: 10px;
     }
 
     .button--clear-lines {
-      &.bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
+      &.#{$ns}-button:not([class*='#{$ns}-intent-']):not(.#{$ns}-minimal) {
         background-color: #fcefef;
 
         &:hover{

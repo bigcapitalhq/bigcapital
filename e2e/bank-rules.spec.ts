@@ -104,7 +104,7 @@ async function deleteBankRuleViaRow(page: Page, row: Locator) {
 
   await expect(page.getByTestId("bank-rule-delete-alert")).toBeVisible();
   await page
-    .getByRole("dialog")
+    .getByRole("alertdialog")
     .filter({ has: page.getByTestId("bank-rule-delete-alert") })
     .getByRole("button", { name: "Delete" })
     .click();

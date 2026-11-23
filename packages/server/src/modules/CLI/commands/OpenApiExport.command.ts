@@ -35,14 +35,21 @@ export class OpenApiExportCommand extends CommandRunner {
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    await app.close();
-
     const outputPath = path.resolve(
       process.cwd(),
       '../../shared/sdk-ts/openapi.json',
     );
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, JSON.stringify(document, null, 2), 'utf-8');
-    console.log(`OpenAPI spec written to ${outputPath}`);
+    try {
+      fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+      fs.writeFileSync(outputPath, JSON.stringify(document, null, 2), 'utf-8');
+      console.log(`OpenAPI spec written to ${outputPath}`);
+    } catch (error) {
+      console.error('Failed to write the OpenAPI spec', error);
+      process.exit(1);
+    }
+    // The Nest app keeps background Redis/BullMQ connections open. The
+    // document is already written, so exit explicitly instead of waiting for
+    // a graceful shutdown that can reject while closing those connections.
+    process.exit(0);
   }
 }

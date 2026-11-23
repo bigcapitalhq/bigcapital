@@ -64,6 +64,7 @@ const totalColumnAccessor = () => ({
   className: 'total',
   width: 140,
   align: Align.Right,
+  money: true,
 });
 
 /**
@@ -75,6 +76,7 @@ const percentageColumnAccessor = () => ({
   className: 'total',
   width: 140,
   align: Align.Right,
+  money: true,
 });
 
 const isColumnKey =

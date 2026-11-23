@@ -2,6 +2,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { useTaxRateDetailsContext } from './TaxRateDetailsContentBoot';
 import { Card, DetailItem, DetailsMenu } from '@/components';
+import { NS } from '@/constants/classes';
 
 export function TaxRateDetailsContentDetails() {
   const { taxRate } = useTaxRateDetailsContext();
@@ -76,7 +77,7 @@ const TaxRateAmount = styled('div')`
   display: inline-block;
   color: var(--x-color-amount-text, #565b71);
 
-  .bp4-dark & {
+  .${NS}-dark & {
     color: rgba(255, 255, 255, 0.9);
   }
 `;

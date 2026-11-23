@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { lazy } from 'react';
+import { Features } from '@/constants/features';
 
 const BASE_URL = '/preferences';
 
@@ -23,10 +24,28 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/billing`,
+    component: lazy(() =>
+      import('../containers/Subscriptions/BillingPage').then((m) => ({
+        default: m.BillingPage,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/users`,
     component: lazy(() =>
       import('../containers/Preferences/Users/Users').then((m) => ({
         default: m.Users,
+      })),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/security`,
+    component: lazy(() =>
+      import('@/containers/Preferences/Security/Security').then((m) => ({
+        default: m.Security,
       })),
     ),
     exact: true,
@@ -129,6 +148,16 @@ export const getPreferenceRoutes = () => [
       })),
     ),
     exact: true,
+  },
+  {
+    path: `${BASE_URL}/tracking-categories`,
+    component: lazy(() =>
+      import('../containers/Preferences/TrackingCategories').then((m) => ({
+        default: m.TrackingCategoriesPreferences,
+      })),
+    ),
+    exact: true,
+    feature: Features.TrackingCategories,
   },
   {
     path: `${BASE_URL}/accountant`,

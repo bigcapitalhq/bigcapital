@@ -24,6 +24,7 @@ import {
   DEFAULT_REPORT_META,
 } from '../../types/Report.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { sortBalanceSheetAccountsNodes } from './_utils';
 
 export class BalanceSheet extends FinancialSheetStructure(
   BalanceSheetBase(
@@ -107,6 +108,21 @@ export class BalanceSheet extends FinancialSheetStructure(
   };
 
   /**
+   * Sorts the report account nodes by the query column sorting.
+   * @param {IBalanceSheetDataNode[]} nodes
+   * @returns {IBalanceSheetDataNode[]}
+   */
+  private sortAccountsNodes = (
+    nodes: IBalanceSheetDataNode[],
+  ): IBalanceSheetDataNode[] => {
+    return sortBalanceSheetAccountsNodes(
+      nodes,
+      this.query.query.columnSortBy,
+      this.query.query.sortOrder,
+    );
+  };
+
+  /**
    * Retrieve the report statement data.
    * @returns {IBalanceSheetDataNode[]}
    */
@@ -116,6 +132,7 @@ export class BalanceSheet extends FinancialSheetStructure(
     return flow(
       this.parseSchemaNodes,
       this.reportPercentageCompose,
+      this.sortAccountsNodes,
       this.reportFilterPlugin,
     )(balanceSheetSchema);
   };

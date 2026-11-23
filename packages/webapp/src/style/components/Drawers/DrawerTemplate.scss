@@ -1,3 +1,4 @@
+@import '@/style/_common';
 #page-size {
   margin: 0 auto;
   background-color: transparent;
@@ -116,14 +117,14 @@
   }
 }
 
-.bp4-drawer.bp4-position-right {
+.#{$ns}-drawer.#{$ns}-position-right {
   bottom: 0;
   right: 0;
   top: 0;
   overflow: auto;
   height: 100%;
 
-  .bp4-drawer-header .bp4-heading {
+  .#{$ns}-drawer-header .#{$ns}-heading {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

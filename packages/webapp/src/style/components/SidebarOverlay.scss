@@ -1,3 +1,4 @@
+@import '@/style/_common';
 .sidebar-overlay {
   background: var(--color-sidebar-overlay-background);
   height: 100%;
@@ -91,7 +92,7 @@
 .sidebar-overlay-transition {
   transform: translateX(-100%);
 
-  &.bp4-overlay {
+  &.#{$ns}-overlay {
 
     &-appear,
     &-enter {

@@ -15,7 +15,7 @@ import {
   withInventoryValuationActions,
   WithInventoryValuationActionsProps,
 } from './withInventoryValuationActions';
-import { DashboardPageContent } from '@/components';
+import { DashboardPageContent, FinancialStatement } from '@/components';
 import { useCurrentOrganizationName } from '@/hooks/query';
 
 interface InventoryValuationProps {
@@ -67,11 +67,13 @@ function InventoryValuationInner({
       <InventoryValuationLoadingBar />
 
       <DashboardPageContent>
-        <InventoryValuationHeader
-          pageFilter={query as ReturnType<typeof getInventoryValuationQuery>}
-          onSubmitFilter={handleFilterSubmit}
-        />
-        <InventoryValuationBody />
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
+          <InventoryValuationHeader
+            pageFilter={query as ReturnType<typeof getInventoryValuationQuery>}
+            onSubmitFilter={handleFilterSubmit}
+          />
+          <InventoryValuationBody />
+        </FinancialStatement>
       </DashboardPageContent>
 
       <InventoryValuationDialogs />

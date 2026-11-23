@@ -5,6 +5,7 @@ import { TableSheetPdf } from './TableSheetPdf';
 import { TemplateInjectableModule } from '@/modules/TemplateInjectable/TemplateInjectable.module';
 import { ChromiumlyTenancyModule } from '@/modules/ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { InventoryCostModule } from '@/modules/InventoryCost/InventoryCost.module';
+import { AccountingBasisService } from './AccountingBasisService';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { InventoryCostModule } from '@/modules/InventoryCost/InventoryCost.modul
     ChromiumlyTenancyModule,
     InventoryCostModule,
   ],
-  providers: [FinancialSheetMeta, TableSheetPdf],
-  exports: [FinancialSheetMeta, TableSheetPdf],
+  providers: [FinancialSheetMeta, TableSheetPdf, AccountingBasisService],
+  exports: [FinancialSheetMeta, TableSheetPdf, AccountingBasisService],
 })
 export class FinancialSheetCommonModule {}

@@ -8,6 +8,9 @@ import { AccountTransaction } from '../Accounts/models/AccountTransaction.model'
 import { Ledger } from './Ledger';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { LedgerClickHouseSink } from '../Analytics/services/LedgerClickHouseSink.service';
+import { BankReconciliationTransaction } from '../BankingReconciliation/models/BankReconciliationTransaction';
+import { ERRORS as BANK_RECONCILIATION_ERRORS } from '../BankingReconciliation/constants';
+import { ServiceError } from '../Items/ServiceError';
 
 @Injectable()
 export class LedgerStorageService {
@@ -24,6 +27,11 @@ export class LedgerStorageService {
     @Inject(AccountTransaction.name)
     private accountTransactionModel: TenantModelProxy<
       typeof AccountTransaction
+    >,
+
+    @Inject(BankReconciliationTransaction.name)
+    private reconciliationTransactionModel: TenantModelProxy<
+      typeof BankReconciliationTransaction
     >,
 
     private ledgerClickHouseSink: LedgerClickHouseSink,
@@ -74,8 +82,26 @@ export class LedgerStorageService {
         ? await this.accountTransactionModel()
             .query(trx)
             .whereIn('id', deletedEntryIds)
-            .select('accountId', 'credit', 'debit')
+            .select('accountId', 'credit', 'debit', 'basis')
         : [];
+
+    // Reconciled journal entries are immutable until the reconciliation is
+    // undone; deleting them would silently break the reconciliation relation.
+    if (deletedEntryIds.length > 0) {
+      const reconciled = await this.reconciliationTransactionModel()
+        .query(trx)
+        .whereIn('accountTransactionId', deletedEntryIds)
+        .select('reconciliationId')
+        .first();
+
+      if (reconciled) {
+        throw new ServiceError(
+          BANK_RECONCILIATION_ERRORS.BANK_RECONCILIATION_TRANSACTION_LOCKED,
+          'This transaction belongs to a completed reconciliation. Undo the reconciliation before editing or deleting it.',
+          { reconciliationId: reconciled.reconciliationId },
+        );
+      }
+    }
 
     const tasks = [
       // Deletes the ledger entries.

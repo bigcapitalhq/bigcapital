@@ -1,5 +1,4 @@
-import { Button, Menu, MenuItem } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
+import { Button, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { find, get } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -9,10 +8,13 @@ import {
   ItemsListCell,
   InputGroupCell,
 } from '@/components';
-import { Align, CellType } from '@/constants';
+import { Align, CellType, Features } from '@/constants';
+import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
+import { useFeatureCan } from '@/hooks/state';
 
 interface WarehouseTransferEntryRow {
   itemId?: number | string;
+  batchId?: number | null;
   warehouses?: Array<{
     warehouseId: number;
     quantityOnHandFormatted?: string;
@@ -54,16 +56,35 @@ export function ActionsCellRenderer({
   );
 
   return (
-    <Popover2 content={exampleMenu} placement="left-start">
+    <Popover content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
         className="m12"
         minimal={true}
       />
-    </Popover2>
+    </Popover>
   );
 }
 ActionsCellRenderer.cellType = CellType.Button;
+
+function BatchCell({
+  row,
+  payload,
+}: CellProps<{
+  items: { id: number; inventoryTracking?: string }[];
+  updateData: (index: number, column: string, value: number | null) => void;
+}>) {
+  const { itemId, batchId } = row.original;
+  const item = payload.items.find((item) => item.id === Number(itemId));
+  if (!item || (item.inventoryTracking !== 'batches' && !batchId)) return null;
+  return (
+    <ItemBatchSelect
+      itemId={item.id}
+      batchId={batchId}
+      onChange={(id) => payload.updateData(row.index, 'batchId', id)}
+    />
+  );
+}
 
 function SourceWarehouseAccessorCell({
   row: { original },
@@ -98,6 +119,8 @@ function DistentionWarehouseAccessorCell({
  * @returns
  */
 export const useWarehouseTransferTableColumns = () => {
+  const { featureCan } = useFeatureCan();
+  const enableBatches = featureCan(Features.BatchTracking);
   return React.useMemo(
     () => [
       {
@@ -118,6 +141,16 @@ export const useWarehouseTransferTableColumns = () => {
         className: 'description',
         width: 120,
       },
+      ...(enableBatches
+        ? [
+            {
+              Header: intl.get('batch.tab.label'),
+              accessor: 'batchId',
+              Cell: BatchCell,
+              width: 120,
+            },
+          ]
+        : []),
       {
         id: 'sourceWarehouse',
         Header: intl.get('warehouse_transfer.column.source_warehouse'),
@@ -162,6 +195,6 @@ export const useWarehouseTransferTableColumns = () => {
         align: Align.Center,
       },
     ],
-    [],
+    [enableBatches],
   );
 };

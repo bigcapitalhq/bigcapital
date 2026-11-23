@@ -13,6 +13,7 @@ const Schema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('journal_type')),
+  basis: Yup.string().oneOf(['', 'cash', 'accrual']).nullable(),
   date: Yup.date().required().label(intl.get('date')),
   currencyCode: Yup.string().max(3),
   publish: Yup.boolean(),
@@ -32,6 +33,12 @@ const Schema = Yup.object().shape({
         }),
       contactId: Yup.number().nullable(),
       contactType: Yup.string().nullable(),
+      trackingCategories: Yup.array().of(
+        Yup.object().shape({
+          categoryId: Yup.number().required(),
+          optionId: Yup.number().required(),
+        }),
+      ),
       note: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
     }),
   ),

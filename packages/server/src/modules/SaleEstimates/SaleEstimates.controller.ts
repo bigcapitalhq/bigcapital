@@ -46,9 +46,12 @@ import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { SaleEstimateAction } from './types/SaleEstimates.types';
 import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('sale-estimates')
 @ApiTags('Sale Estimates')
+@RequireSubscriptionFeature(SubscriptionFeature.SaleEstimates)
 @ApiExtraModels(
   SaleEstimateResponseDto,
   PaginatedResponseDto,

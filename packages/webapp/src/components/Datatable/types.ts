@@ -154,6 +154,7 @@ export interface DataTableProps<D extends object = any> {
 
   initialPageIndex?: number;
   initialPageSize?: number;
+  initialSortBy?: Array<{ id: string; desc: boolean }>;
   initialHiddenColumns?: string[];
   updateDebounceTime?: number;
   selectionColumnWidth?: number;
@@ -258,4 +259,8 @@ export type ResolvedDataTableProps<D extends object = any> = Omit<
 export interface TableContextValue<D extends object = any> {
   table: TableInstance<D>;
   props: ResolvedDataTableProps<D>;
+  openRowMenu: (menu: {
+    row: Row<D>;
+    offset: { left: number; top: number };
+  }) => void;
 }

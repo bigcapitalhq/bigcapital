@@ -1,4 +1,5 @@
 import { isEqual } from 'lodash';
+import { createSelector } from 'reselect';
 import { defaultTableQuery } from './warehouse-transfer.reducer';
 import type { RootState } from '@/store/reducers';
 import { paginationLocationQuery } from '@/store/selectors';
@@ -31,4 +32,13 @@ export const isWarehouseTransferTableStateChangedFactory = () =>
     (tableState) => {
       return !isEqual(tableState, defaultTableQuery);
     },
+  );
+
+/**
+ * Retrieve warehouse transfers selected rows.
+ */
+export const getWarehouseTransfersSelectedRowsFactory = () =>
+  createSelector(
+    (state: RootState) => state.warehouseTransfers.selectedRows,
+    (selectedRows) => selectedRows,
   );

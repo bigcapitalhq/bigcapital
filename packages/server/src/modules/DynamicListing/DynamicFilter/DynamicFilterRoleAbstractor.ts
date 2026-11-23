@@ -121,20 +121,42 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
   };
 
   /**
+   * Detarmines whether the given comparator is a negative one.
+   * @param {string} comparator - Filter role comparator.
+   * @returns {boolean}
+   */
+  protected isNegativeComparator = (comparator?: string): boolean => {
+    return [
+      COMPARATOR_TYPE.IS_NOT,
+      COMPARATOR_TYPE.NOT_EQUAL,
+      COMPARATOR_TYPE.NOT_EQUALS,
+    ].includes(comparator);
+  };
+
+  /**
    * Builds roles queries.
    * @param {IModel} model -
    * @param {Object} role -
    */
   protected buildRoleQuery = (model: MetableModel, role: IFilterRole) => {
     const field = model.getField(role.fieldKey);
-    const comparatorColumn = this.getFieldComparatorColumn(field);
 
     // Field relation custom query.
     if (typeof field.filterCustomQuery !== 'undefined') {
       return (builder) => {
-        field.filterCustomQuery(builder, role);
+        // The custom query only describes the positive case, negative
+        // comparators are applied by negating the whole custom query.
+        if (this.isNegativeComparator(role.comparator)) {
+          builder.whereNot((subquery) => {
+            field.filterCustomQuery(subquery, role);
+          });
+        } else {
+          field.filterCustomQuery(builder, role);
+        }
       };
     }
+    const comparatorColumn = this.getFieldComparatorColumn(field);
+
     switch (field.fieldType) {
       case FIELD_TYPE.BOOLEAN:
       case FIELD_TYPE.ENUMERATION:

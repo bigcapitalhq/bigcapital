@@ -11,6 +11,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrawerContext } from './DrawerProvider';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import {
   withDrawerActions,
   WithDrawerActionsProps,
@@ -48,7 +49,7 @@ function DrawerHeaderContentRoot(props: DrawerHeaderContentInnerProps) {
 
   return (
     <div className={Classes.DRAWER_HEADER}>
-      <Icon icon={icon as IconName} iconSize={IconSize.LARGE} />
+      <Icon icon={icon as IconName} size={IconSize.LARGE} />
       <H4>
         {title}
         <SubTitle>{subTitle}</SubTitle>
@@ -57,7 +58,7 @@ function DrawerHeaderContentRoot(props: DrawerHeaderContentInnerProps) {
       <Button
         aria-label="Close"
         className={Classes.DIALOG_CLOSE_BUTTON}
-        icon={<Icon icon="small-cross" iconSize={IconSize.LARGE} />}
+        icon={<Icon icon="small-cross" size={IconSize.LARGE} />}
         minimal={true}
         onClick={handleClose}
       />
@@ -88,7 +89,7 @@ function SubTitle({ children }: SubTitleProps) {
 const SubTitleHead = styled.div`
   --x-color-text: #666;
 
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-text: rgba(255, 255, 255, 0.6);
   }
   color: var(--x-color-text);

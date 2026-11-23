@@ -58,6 +58,7 @@ const taxableAmountAccessor: ColumnMapper = (data: any[]) => (column) => {
     width: getColumnWidth(data, accessor, { minWidth: 120 }),
     align: Align.Right,
     disableSortBy: true,
+    money: true,
   };
 };
 

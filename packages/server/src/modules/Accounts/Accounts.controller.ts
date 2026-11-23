@@ -39,9 +39,12 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { AccountAction } from './Accounts.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('accounts')
 @ApiTags('Accounts')
+@RequireSubscriptionFeature(SubscriptionFeature.Accounts)
 @ApiExtraModels(AccountResponseDto)
 @ApiExtraModels(AccountTypeResponseDto)
 @ApiExtraModels(GetAccountTransactionResponseDto)

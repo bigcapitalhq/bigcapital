@@ -4,6 +4,7 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useReceiptFormContext } from './ReceiptFormProvider';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { SaleReceipt, CreateSaleReceiptBody } from '@bigcapital/sdk-ts';
 import {
   transformAttachmentsToForm,
@@ -14,7 +15,9 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
   getEntriesTotal,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
@@ -27,6 +30,8 @@ import {
 export const MIN_LINES_NUMBER = 1;
 
 export type ReceiptEntry = {
+  batchId?: number | null;
+  batches?: ItemEntryBatchAllocation[];
   index: number;
   itemId: string | number;
   rate: string | number;
@@ -34,6 +39,7 @@ export type ReceiptEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
 };
 
 export type ReceiptFormValues = {
@@ -60,6 +66,8 @@ export type ReceiptFormValues = {
 };
 
 export const defaultReceiptEntry: ReceiptEntry = {
+  batchId: null,
+  batches: [],
   index: 0,
   itemId: '',
   rate: '',
@@ -67,6 +75,7 @@ export const defaultReceiptEntry: ReceiptEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
 };
 
 const defaultReceiptEntryReq = {
@@ -76,6 +85,7 @@ const defaultReceiptEntryReq = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
 };
 
 export const defaultReceipt: ReceiptFormValues = {
@@ -216,7 +226,9 @@ export const handleErrors = (
 export const transformFormValuesToRequest = (
   values: ReceiptFormValues,
 ): CreateSaleReceiptBody => {
-  const entries = values.entries.filter((item) => item.itemId && item.quantity);
+  const entries = values.entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
   const attachments = transformAttachmentsToRequest(values);
 
   return {
@@ -226,6 +238,7 @@ export const transformFormValuesToRequest = (
     }),
     entries: entries.map((entry) => ({
       ...transformToForm(entry, defaultReceiptEntryReq),
+      ...getEntryBatchRequest(entry),
     })),
     closed: false,
     attachments,

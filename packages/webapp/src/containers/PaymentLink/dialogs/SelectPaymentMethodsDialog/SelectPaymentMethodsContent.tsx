@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { SelectPaymentMethodsForm } from './SelectPaymemtMethodsForm';
 import { SelectPaymentMethodsBoot } from './SelectPaymentMethodsBoot';
 import { Group, Stack } from '@/components';
+import { NS } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 import { useDialogActions } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
@@ -104,7 +105,7 @@ const PaymentMethodSelectRoot = styled(Group)`
 const PaymentMethodCheckbox = styled(Checkbox)`
   margin: 0;
 
-  &.bp4-control .bp4-control-indicator {
+  &.${NS}-control .${NS}-control-indicator {
     box-shadow: 0 0 0 1px #c5cbd3;
   }
 `;

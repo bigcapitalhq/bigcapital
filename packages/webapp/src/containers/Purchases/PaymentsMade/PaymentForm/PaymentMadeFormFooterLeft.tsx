@@ -2,6 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Payment made form footer left-side.
@@ -27,14 +28,14 @@ export function PaymentMadeFormFooterLeft() {
 }
 
 const InternalNoteFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
+  &.${NS}-form-group {
     margin-bottom: 40px;
 
-    .bp4-label {
+    .${NS}-label {
       font-size: 12px;
       margin-bottom: 12px;
     }
-    .bp4-form-content {
+    .${NS}-form-content {
       margin-left: 10px;
     }
   }

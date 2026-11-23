@@ -36,10 +36,12 @@ export class DeleteWarehouseTransfer {
   /**
    * Deletes warehouse transfer transaction.
    * @param {number} warehouseTransferId
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @returns {Promise<void>}
    */
   public deleteWarehouseTransfer = async (
     warehouseTransferId: number,
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Retrieve the old warehouse transfer or throw not found service error.
     const oldWarehouseTransfer = await this.warehouseTransferModel()
@@ -72,6 +74,6 @@ export class DeleteWarehouseTransfer {
         oldWarehouseTransfer,
         trx,
       } as IWarehouseTransferDeletedPayload);
-    });
+    }, trx);
   };
 }

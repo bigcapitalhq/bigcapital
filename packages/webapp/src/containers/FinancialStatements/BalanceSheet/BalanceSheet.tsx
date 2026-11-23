@@ -56,7 +56,7 @@ function BalanceSheetInner({
   );
 
   return (
-    <BalanceSheetProvider filter={query}>
+    <BalanceSheetProvider filter={query} setQuery={setLocationQuery}>
       <BalanceSheetActionsBar
         numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
@@ -65,7 +65,7 @@ function BalanceSheetInner({
       <BalanceSheetAlerts />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <BalanceSheetHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

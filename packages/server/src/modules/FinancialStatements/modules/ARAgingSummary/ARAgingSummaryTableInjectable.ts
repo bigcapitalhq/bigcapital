@@ -21,7 +21,10 @@ export class ARAgingSummaryTableInjectable {
     query: ARAgingSummaryQueryDto,
   ): Promise<IARAgingSummaryTable> {
     const report = await this.ARAgingSummarySheet.ARAgingSummary(query);
-    const table = new ARAgingSummaryTable(report.data, query, this.i18n);
+    // The report resolves the query defaults (aging periods, days before), and
+    // the columns must be built from them, otherwise a request that omits the
+    // aging parameters renders no aging-period headers.
+    const table = new ARAgingSummaryTable(report.data, report.query, this.i18n);
 
     return {
       table: {

@@ -1,6 +1,25 @@
+import { Intent } from '@blueprintjs/core';
 import { useCallback } from 'react';
-import { useAuthActions, useSetGlobalErrors } from './state';
+import intl from 'react-intl-universal';
+import { useAuthActions } from './state/authentication';
+import { useSetGlobalErrors } from './state/globalErrors';
 import type { ApiError } from 'openapi-typescript-fetch';
+import { AppToaster } from '@/components/AppToaster';
+import { ERROR } from '@/constants/errors';
+
+interface InsufficientStockItem {
+  itemId: number;
+  itemName: string;
+  availableQuantity: number;
+  requestedQuantity: number;
+  warehouseId?: number;
+}
+
+interface ApiErrorEntry {
+  type?: string;
+  message?: string;
+  payload?: any;
+}
 
 /**
  * Returns a stable callback that translates SDK fetcher rejections into
@@ -32,27 +51,95 @@ export function useApiFetcherOnError() {
         setGlobalErrors({ too_many_requests: true });
       }
       if (status === 400 && Array.isArray(data?.errors)) {
-        const lockedError = data.errors.find(
-          (e: { type?: string }) => e.type === 'TRANSACTIONS_DATE_LOCKED',
+        const errors = data.errors as ApiErrorEntry[];
+        const lockedError = errors.find(
+          (e) => e.type === 'TRANSACTIONS_DATE_LOCKED',
         );
         if (lockedError) {
           setGlobalErrors({
             transactionsLocked: { ...lockedError.payload },
           });
         }
+        const insufficientStockError = errors.find(
+          (e) => e.type === ERROR.INVENTORY_ITEM_INSUFFICIENT_STOCK,
+        );
+        if (insufficientStockError) {
+          const shortage = insufficientStockError.payload?.items?.[0] as
+            | InsufficientStockItem
+            | undefined;
+          const message = shortage
+            ? intl.get(
+                shortage.warehouseId
+                  ? 'insufficient_stock_for_item_in_warehouse'
+                  : 'insufficient_stock_for_item',
+                {
+                  itemName: shortage.itemName,
+                  availableQuantity: shortage.availableQuantity,
+                  requestedQuantity: shortage.requestedQuantity,
+                },
+              )
+            : insufficientStockError.message ||
+              intl.get('something_went_wrong');
+
+          AppToaster.show({ message, intent: Intent.DANGER });
+        }
         if (
-          data.errors.find(
-            (e: { type?: string }) =>
-              e.type === 'ORGANIZATION.SUBSCRIPTION.INACTIVE',
-          )
+          errors.find((e) => e.type === 'ORGANIZATION.SUBSCRIPTION.INACTIVE')
         ) {
           setGlobalErrors({ subscriptionInactive: true });
         }
         if (
-          data.errors.find((e: { type?: string }) => e.type === 'USER_INACTIVE')
+          errors.find(
+            (e) => e.type === 'ORGANIZATION.SUBSCRIPTION.TRIAL_EXPIRED',
+          )
         ) {
+          setGlobalErrors({ trialExpired: true });
+        }
+        if (errors.find((e) => e.type === 'USER_INACTIVE')) {
           setGlobalErrors({ userInactive: true });
           setLogout();
+        }
+        const batchError = errors.find((e) =>
+          [
+            'BATCH_FEATURE_NOT_ENABLED',
+            'BATCH_ALLOCATIONS_REQUIRED',
+            'BATCH_NOT_FOUND',
+            'BATCH_NUMBER_EXISTS',
+            'BATCH_ITEM_NOT_FOUND',
+            'BATCH_ITEM_NOT_INVENTORY',
+            'BATCH_ITEM_MISMATCH',
+            'BATCH_INSUFFICIENT_QUANTITY',
+            'BATCH_HAS_ASSOCIATED_TRANSACTIONS',
+            'BATCH_INVALID_EXPIRY_DATE',
+            'BATCH_ALLOCATION_QUANTITY_MISMATCH',
+            'BATCH_ALLOCATION_INVALID_QUANTITY',
+            'BATCH_ALLOCATION_DUPLICATE',
+          ].includes(e.type as string),
+        );
+        if (batchError) {
+          const payload = batchError.payload ?? {};
+          const indexes = payload.entryIndexes;
+          const message = intl
+            .get(`batch.error.${batchError.type}`, payload)
+            .defaultMessage(
+              batchError.message || intl.get('something_went_wrong'),
+            );
+          AppToaster.show({
+            message:
+              Array.isArray(indexes) && indexes.length > 0 ? (
+                <>
+                  {message}
+                  <div>
+                    {intl.get('batch.missing_lines', {
+                      lines: indexes.join(', '),
+                    })}
+                  </div>
+                </>
+              ) : (
+                message
+              ),
+            intent: Intent.DANGER,
+          });
         }
       }
     },

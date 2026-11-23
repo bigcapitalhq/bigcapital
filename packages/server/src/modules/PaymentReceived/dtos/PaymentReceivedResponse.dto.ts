@@ -49,7 +49,7 @@ export class PaymentReceivedResponseDto {
 
   @ApiProperty({
     description: 'The date of the payment',
-    example: '2023-01-01T00:00:00Z',
+    example: '2023-01-01',
   })
   paymentDate: Date | string;
 

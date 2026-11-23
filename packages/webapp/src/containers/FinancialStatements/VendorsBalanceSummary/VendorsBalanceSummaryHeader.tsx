@@ -16,6 +16,7 @@ import {
   WithVendorsBalanceSummaryActionsProps,
 } from './withVendorsBalanceSummaryActions';
 import { FormattedMessage as T } from '@/components';
+import { NS } from '@/constants/classes';
 import { transformToForm } from '@/utils';
 
 interface VendorsBalanceSummaryHeaderOwnProps {
@@ -123,7 +124,7 @@ export const VendorsBalanceSummaryHeader = FF.pipe(
 );
 
 const VendorBalanceDrawerHeader = styled(FinancialStatementHeader)`
-  .bp4-drawer {
+  .${NS}-drawer {
     max-height: 450px;
   }
 `;

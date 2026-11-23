@@ -1,6 +1,7 @@
+@import '@/style/_common';
 
 .menu{
-  :global .bp4-heading{
+  :global .#{$ns}-heading{
     font-weight: 400;
     opacity: 0.5;
     font-size: 12px;

@@ -65,10 +65,6 @@
         }
       }
 
-      .bp4-context-menu-popover-target {
-        z-index: 100;
-      }
-
       .tr-context {
         display: flex;
         flex: 1 0 auto;
@@ -97,7 +93,7 @@
         border-right: 0;
       }
 
-      .bp4-control {
+      .#{$ns}-control {
         margin-bottom: 0;
       }
       .resizer {
@@ -121,7 +117,7 @@
         }
       }
 
-      .bp4-control.bp4-checkbox:not(.bp4-large) .bp4-control-indicator {
+      .#{$ns}-control.#{$ns}-checkbox:not(.#{$ns}-large) .#{$ns}-control-indicator {
         cursor: auto;
 
         &,
@@ -130,7 +126,7 @@
           width: 15px;
         }
       }
-      .bp4-control.bp4-checkbox input:not(:checked):not(:indeterminate) ~ .bp4-control-indicator{
+      .#{$ns}-control.#{$ns}-checkbox input:not(:checked):not(:indeterminate) ~ .#{$ns}-control-indicator{
         box-shadow: inset 0 0 0 1px var(--color-datatable-checkbox-border);
       }
 
@@ -190,7 +186,7 @@
           text-overflow: ellipsis;
         }
 
-        .bp4-form-group {
+        .#{$ns}-form-group {
           width: 100%;
         }
 
@@ -382,7 +378,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    body.bp4-dark & {
+    body.#{$ns}-dark & {
       background: rgba(28, 33, 39, 0.6);
     }
   }
@@ -396,7 +392,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    body.bp4-dark & {
+    body.#{$ns}-dark & {
       background: rgba(28, 33, 39, 0.6);
     }
   }

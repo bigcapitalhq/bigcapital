@@ -4,6 +4,7 @@ import { Global, Module } from '@nestjs/common';
 import { knexSnakeCaseMappers } from 'objection';
 import { ClsModule, ClsService } from 'nestjs-cls';
 import { ConfigService } from '@nestjs/config';
+import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
 import { TENANCY_DB_CONNECTION } from './TenancyDB.constants';
 import { UnitOfWork } from './UnitOfWork.service';
 
@@ -31,6 +32,7 @@ export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
         password: configService.get('tenantDatabase.password'),
         database,
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
         directory: configService.get('tenantDatabase.migrationsDir'),

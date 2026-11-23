@@ -6,6 +6,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import type { Batch } from '@/ee/batches/hooks/query/queries';
+import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
 import type { SaleInvoice, CreateSaleInvoiceBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { ERROR } from '@/constants/errors';
@@ -17,12 +19,14 @@ import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplate
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  isItemOrDescriptionEntry,
 } from '@/containers/Entries/utils';
 import {
   aggregateItemEntriesTaxRates,
   assignEntriesTaxAmount,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
+import { getEntryBatchRequest } from '@/ee/batches/components/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
@@ -43,9 +47,13 @@ export type InvoiceEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sellAccountId: string | number;
   taxRateId: string | number;
   taxRate: string | number;
   taxAmount: string | number;
+  batchId?: number | null;
+  batch?: Batch | null;
+  batches?: ItemEntryBatchAllocation[];
 };
 
 export type PaymentMethodFormValue = { enable: boolean };
@@ -92,9 +100,13 @@ export const defaultInvoiceEntry: InvoiceEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sellAccountId: '',
   taxRateId: '',
   taxRate: '',
   taxAmount: '',
+  batchId: null,
+  batch: null,
+  batches: [],
 };
 
 // Default invoice object.
@@ -131,7 +143,10 @@ export const defaultReqInvoiceEntry = {
   discount: '',
   quantity: '',
   description: '',
+  sellAccountId: '',
   taxRateId: '',
+  batchId: null,
+  batches: [],
 };
 
 /**
@@ -268,16 +283,25 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
  * Transformes bill entries to submit request.
  */
 const transformEntriesToRequest = (entries: InvoiceEntry[]) => {
-  return filterNonZeroEntries(entries).map((entry) =>
-    transformToForm(entry, defaultReqInvoiceEntry),
-  );
+  return filterNonZeroEntries(entries).map((entry) => {
+    const { batchId, batch, batches, ...rest } = transformToForm(
+      entry,
+      defaultReqInvoiceEntry,
+    );
+    return {
+      ...rest,
+      ...getEntryBatchRequest(entry),
+    };
+  });
 };
 
 /**
  * Filters the givne non-zero entries.
  */
 const filterNonZeroEntries = (entries: InvoiceEntry[]) => {
-  return entries.filter((item) => item.itemId && item.quantity);
+  return entries.filter(
+    (item) => isItemOrDescriptionEntry(item) && item.quantity,
+  );
 };
 
 /**

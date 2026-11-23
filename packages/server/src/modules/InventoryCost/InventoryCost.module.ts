@@ -6,6 +6,7 @@ import { InventoryTransaction } from './models/InventoryTransaction';
 import { InventoryCostGLBeforeWriteSubscriber } from './subscribers/InventoryCostGLBeforeWriteSubscriber';
 import { InventoryItemsQuantitySyncService } from './commands/InventoryItemsQuantitySync.service';
 import { InventoryTransactionsService } from './commands/InventoryTransactions.service';
+import { InventoryStockGuard } from './commands/InventoryStockGuard.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { InventoryComputeCostService } from './commands/InventoryComputeCost.service';
 import { InventoryCostApplication } from './InventoryCostApplication';
@@ -57,6 +58,7 @@ const models = [
     InventoryCostGLStorage,
     InventoryItemsQuantitySyncService,
     InventoryTransactionsService,
+    InventoryStockGuard,
     InventoryComputeCostService,
     InventoryCostApplication,
     StoreInventoryLotsCostService,

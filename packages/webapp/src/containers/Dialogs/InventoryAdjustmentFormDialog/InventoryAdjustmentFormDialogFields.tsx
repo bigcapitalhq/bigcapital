@@ -29,6 +29,8 @@ import {
   FAccountsSuggestField,
 } from '@/components';
 import { Features } from '@/constants';
+import { NS } from '@/constants/classes';
+import { ItemBatchSelect } from '@/ee/batches/components/ItemBatchSelect';
 import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
 import { toSafeNumber } from '@/utils';
@@ -41,7 +43,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
   const dateFieldRef = useAutofocus<HTMLInputElement>();
   const dateInputFormatter = useDateInputFormatter();
 
-  const { accounts, branches, warehouses } = useInventoryAdjContext();
+  const { accounts, branches, warehouses, item } = useInventoryAdjContext();
   const { values, setFieldValue } =
     useFormikContext<InventoryAdjustmentFormValues>();
 
@@ -135,6 +137,17 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
 
       <InventoryAdjustmentQuantityFields />
 
+      {featureCan(Features.BatchTracking) &&
+        (item?.inventoryTracking === 'batches' || values.batchId) && (
+          <FormGroup label={intl.get('batch.tab.label')}>
+            <ItemBatchSelect
+              itemId={Number(values.itemId)}
+              batchId={values.batchId}
+              onChange={(batchId) => setFieldValue('batchId', batchId)}
+            />
+          </FormGroup>
+        )}
+
       <FFormGroup
         name={'adjustmentAccountId'}
         label={intl.get('adjustment_account')}
@@ -165,7 +178,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
         labelInfo={<FieldRequiredHint />}
         fastField
       >
-        <FTextArea name={'reason'} growVertically large fastField fill />
+        <FTextArea name={'reason'} autoResize large fastField fill />
       </FFormGroup>
     </div>
   );
@@ -173,7 +186,7 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
 
 export const FeatureRowDivider = styled.div`
   --x-color-background: #e9e9e9;
-  .bp4-dark & {
+  .${NS}-dark & {
     --x-color-background: rgba(255, 255, 255, 0.1);
   }
   height: 2px;

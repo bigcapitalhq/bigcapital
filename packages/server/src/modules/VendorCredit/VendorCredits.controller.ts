@@ -33,9 +33,12 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { VendorCreditAction } from './types/VendorCredit.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits')
+@RequireSubscriptionFeature(SubscriptionFeature.VendorCredits)
 @ApiCommonHeaders()
 @ApiExtraModels(ValidateBulkDeleteResponseDto, VendorCreditResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)

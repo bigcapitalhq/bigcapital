@@ -5,7 +5,7 @@ import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 let customerId;
 let itemId;
 
-const requestSaleInvoiceBody = () => ({
+const requestSaleInvoiceBody = (overrides: Record<string, any> = {}) => ({
   customerId: customerId,
   invoiceDate: '2023-01-01',
   dueDate: '2023-02-01',
@@ -25,7 +25,24 @@ const requestSaleInvoiceBody = () => ({
       description: 'Item description...',
     },
   ],
+  ...overrides,
 });
+
+/**
+ * Retrieves the sale invoices ids that match the given filter roles.
+ */
+async function getInvoiceIdsByFilterRoles(
+  filterRoles: Record<string, any>[],
+): Promise<number[]> {
+  const response = await request(app.getHttpServer())
+    .get('/sale-invoices')
+    .query({ stringified_filter_roles: JSON.stringify(filterRoles) })
+    .set('organization-id', orgainzationId)
+    .set('Authorization', AuthorizationHeader)
+    .expect(200);
+
+  return response.body.data.map((invoice: { id: number }) => invoice.id);
+}
 
 describe('Sale Invoices (e2e)', () => {
   beforeAll(async () => {
@@ -71,6 +88,111 @@ describe('Sale Invoices (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody())
       .expect(201);
+  });
+
+  it('/sale-invoices (POST) with a description-only line', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 100,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      )
+      .expect(201);
+
+    const invoice = await request(app.getHttpServer())
+      .get(`/sale-invoices/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(invoice.body.entries[0].item_id).toBeNull();
+    expect(invoice.body.entries[0].sell_account_id).toBe(1026);
+    expect(invoice.body.entries[0].description).toBe('Consulting services');
+  });
+
+  it('/sale-invoices (POST) rejects a line without an item, description or account', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [{ index: 1, quantity: 1, rate: 100 }],
+        }),
+      )
+      .expect(400);
+  });
+
+  it('/sale-invoices (POST) rejects a line without an account when no item is selected', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 100,
+            },
+          ],
+        }),
+      )
+      .expect(400);
+  });
+
+  it('/sale-invoices (POST) rejects a line without a description when no item is selected', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              quantity: 1,
+              rate: 100,
+              sellAccountId: 1026,
+            },
+          ],
+        }),
+      )
+      .expect(400);
+  });
+
+  it('/sale-invoices (POST) rejects an invalid sell account type', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(
+        requestSaleInvoiceBody({
+          entries: [
+            {
+              index: 1,
+              description: 'Consulting services',
+              quantity: 1,
+              rate: 100,
+              sellAccountId: 1019,
+            },
+          ],
+        }),
+      )
+      .expect(400);
   });
 
   it('/sale-invoices/:id (DELETE)', async () => {
@@ -123,11 +245,21 @@ describe('Sale Invoices (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
-    return request(app.getHttpServer())
+    const getResponse = await request(app.getHttpServer())
       .get(`/sale-invoices/${response.body.id}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+
+    // `DATE` columns are served as `YYYY-MM-DD` calendar dates, while
+    // timestamp columns keep their full ISO datetime.
+    expect(getResponse.body.invoice_date).toBe('2023-01-01');
+    expect(getResponse.body.due_date).toBe('2023-02-01');
+    expect(getResponse.body.created_at).toMatch(
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
+    );
+
+    return getResponse;
   });
 
   it('/sale-invoices/state (GET)', async () => {
@@ -244,5 +376,72 @@ describe('Sale Invoices (e2e)', () => {
         attachInvoice: false,
       })
       .expect(200);
+  });
+
+  it('/sale-invoices (GET) filters by status with the is_not comparator', async () => {
+    const invoiceNo = `E2E-${faker.string.alphanumeric(10)}`;
+    const invoice = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(requestSaleInvoiceBody({ invoiceNo }))
+      .expect(201);
+
+    const invoiceIds = await getInvoiceIdsByFilterRoles([
+      {
+        index: 1,
+        fieldKey: 'status',
+        comparator: 'is_not',
+        value: 'paid',
+        condition: 'and',
+      },
+      {
+        index: 2,
+        fieldKey: 'invoice_no',
+        comparator: 'equals',
+        value: invoiceNo,
+        condition: 'and',
+      },
+    ]);
+    expect(invoiceIds).toEqual([invoice.body.id]);
+  });
+
+  it('/sale-invoices (GET) treats fully written-off discounted invoices as paid', async () => {
+    const invoiceNo = `E2E-${faker.string.alphanumeric(10)}`;
+    const invoice = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(requestSaleInvoiceBody({ invoiceNo }))
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/sale-invoices/${invoice.body.id}/writeoff`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        expenseAccountId: 1024,
+        date: '2023-01-01',
+        reason: 'Write off reason',
+      })
+      .expect(200);
+
+    const invoiceIds = await getInvoiceIdsByFilterRoles([
+      {
+        index: 1,
+        fieldKey: 'status',
+        comparator: 'is',
+        value: 'paid',
+        condition: 'and',
+      },
+      {
+        index: 2,
+        fieldKey: 'invoice_no',
+        comparator: 'equals',
+        value: invoiceNo,
+        condition: 'and',
+      },
+    ]);
+    expect(invoiceIds).toEqual([invoice.body.id]);
   });
 });

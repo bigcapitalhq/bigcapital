@@ -1,89 +1,85 @@
 import { ButtonProps } from '@blueprintjs/core';
-import * as FF from 'fp-ts/function';
+import type { SubscriptionPlansResponse } from '@bigcapital/sdk-ts';
 import { PricingPlan } from '@/components/PricingPlan/PricingPlan';
-import {
-  WithPlansProps,
-  withPlans,
-} from '@/containers/Subscriptions/withPlans';
-import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 
-interface SubscriptionPricingFeature {
-  text: string;
-  hint?: string;
-  hintLabel?: string;
-  style?: Record<string, string>;
-}
+export type SubscriptionPlansPeriod = 'monthly' | 'annually';
+export type SubscriptionPlanGroup = SubscriptionPlansResponse['plans'][number];
+export type SubscriptionPlanPrice = SubscriptionPlanGroup['prices'][number];
+export type SubscriptionPlanFeature = SubscriptionPlanGroup['features'][number];
 
 export interface SubscriptionPricingProps {
-  slug: string;
-  label: string;
-  description: string;
-  features?: Array<SubscriptionPricingFeature>;
-  featured?: boolean;
-  monthlyPrice: string;
-  monthlyPriceLabel: string;
-  annuallyPrice: string;
-  annuallyPriceLabel: string;
-  onSubscribe?: (variantId: number) => void;
+  plan: SubscriptionPlanGroup;
+  period: SubscriptionPlansPeriod;
+  currentPlanSlug?: string;
+  onSubscribe?: (planSlug: string) => void;
+  subscribeButtonLabel?: string;
   subscribeButtonProps?: Partial<ButtonProps>;
 }
 
-interface SubscriptionPricingCombinedProps
-  extends SubscriptionPricingProps,
-    Pick<WithPlansProps, 'plansPeriod'> {}
+/**
+ * Maps the selected billing period to a plan price row.
+ */
+export function getPlanPrice(
+  plan: SubscriptionPlanGroup,
+  period: SubscriptionPlansPeriod,
+): SubscriptionPlanPrice | undefined {
+  const interval = period === 'annually' ? 'year' : 'month';
+  return (
+    plan.prices.find((price) => price.interval === interval) || plan.prices[0]
+  );
+}
 
-function SubscriptionPlanRoot({
-  label,
-  description,
-  featured,
-  features,
-  monthlyPrice,
-  monthlyPriceLabel,
-  annuallyPrice,
-  annuallyPriceLabel,
+/**
+ * Displays a single subscription plan card.
+ */
+export function SubscriptionPlan({
+  plan,
+  period,
+  currentPlanSlug,
   onSubscribe,
+  subscribeButtonLabel,
   subscribeButtonProps,
+}: SubscriptionPricingProps) {
+  const price = getPlanPrice(plan, period);
+  const isCurrentPlan = !!price && price.slug === currentPlanSlug;
 
-  // #withPlans
-  plansPeriod,
-}: SubscriptionPricingCombinedProps) {
   const handleClick = () => {
-    // The callback is invoked without a variant id (the same call shape as before).
-    onSubscribe && onSubscribe(undefined as unknown as number);
+    if (!price || isCurrentPlan) return;
+    onSubscribe?.(price.slug);
   };
 
   return (
-    <PricingPlan featured={featured}>
-      {featured && <PricingPlan.Featured>Most Popular</PricingPlan.Featured>}
-      <PricingPlan.Header label={label} description={description} />
-
-      {plansPeriod === SubscriptionPlansPeriod.Monthly ? (
-        <PricingPlan.Price price={monthlyPrice} subPrice={monthlyPriceLabel} />
-      ) : (
-        <PricingPlan.Price
-          price={annuallyPrice}
-          subPrice={annuallyPriceLabel}
-        />
+    <PricingPlan featured={plan.featured}>
+      {plan.featured && (
+        <PricingPlan.Featured>Most Popular</PricingPlan.Featured>
       )}
-      <PricingPlan.BuyButton onClick={handleClick} {...subscribeButtonProps}>
-        Subscribe
+      <PricingPlan.Header label={plan.name} description={plan.description} />
+
+      <PricingPlan.Price
+        price={price?.amountFormatted || '—'}
+        subPrice={price?.priceLabel || ''}
+      />
+      <PricingPlan.BuyButton
+        onClick={handleClick}
+        disabled={isCurrentPlan || !price}
+        {...subscribeButtonProps}
+      >
+        {isCurrentPlan ? 'Current plan' : subscribeButtonLabel || 'Subscribe'}
       </PricingPlan.BuyButton>
 
       <PricingPlan.Features>
-        {features?.map((feature) => (
-          <PricingPlan.FeatureLine
-            hintLabel={feature.hintLabel}
-            hintContent={feature.hint}
-          >
-            {feature.text}
-          </PricingPlan.FeatureLine>
-        ))}
+        {plan.features?.map(
+          (feature: SubscriptionPlanFeature, index: number) => (
+            <PricingPlan.FeatureLine
+              key={`${feature.text}-${index}`}
+              hintLabel={feature.hintLabel}
+              hintContent={feature.hint}
+            >
+              {feature.text}
+            </PricingPlan.FeatureLine>
+          ),
+        )}
       </PricingPlan.Features>
     </PricingPlan>
   );
 }
-
-export const SubscriptionPlan = FF.pipe(
-  SubscriptionPlanRoot,
-  withPlans(({ plansPeriod }) => ({ plansPeriod })),
-);

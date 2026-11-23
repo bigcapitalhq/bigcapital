@@ -129,7 +129,7 @@ export function OwnerContributionFormFields() {
       <FFormGroup name={'description'} label={intl.get('description')}>
         <FTextArea
           name={'description'}
-          growVertically={true}
+          autoResize={true}
           large={true}
           fill={true}
         />

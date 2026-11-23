@@ -10,7 +10,6 @@ import {
   Classes,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-import { isNumber } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { DataTableColumn } from '@/components/Datatable/types';
@@ -33,6 +32,7 @@ export type ItemTableRow = Item & {
 
 interface CellProps {
   cell: { value: unknown };
+  row?: { original: ItemTableRow };
 }
 
 interface ActionsMenuPayload {
@@ -84,11 +84,36 @@ export const ItemCodeAccessor = (row: ItemTableRow) =>
     ''
   );
 
-export const QuantityOnHandCell = ({ cell: { value } }: CellProps) => {
-  const num = value as number;
-  return isNumber(value) ? (
-    <span className={num < 0 ? 'quantity_on_hand' : undefined}>{value}</span>
-  ) : null;
+export const QuantityOnHandCell = ({ cell: { value }, row }: CellProps) => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+  const quantityOnHand = Number(value);
+
+  if (Number.isNaN(quantityOnHand)) {
+    return null;
+  }
+  const reorderPoint =
+    row?.original?.reorderPoint === null ||
+    row?.original?.reorderPoint === undefined
+      ? null
+      : Number(row.original.reorderPoint);
+  const isLowStock =
+    reorderPoint !== null &&
+    !Number.isNaN(reorderPoint) &&
+    quantityOnHand <= reorderPoint;
+
+  return (
+    <span
+      className={clsx({
+        quantity_on_hand: quantityOnHand < 0,
+        'low-stock': isLowStock,
+      })}
+      title={isLowStock ? intl.get('reorder_point_reached') : undefined}
+    >
+      {value as React.ReactNode}
+    </span>
+  );
 };
 
 export const CostPriceCell = ({ cell: { value } }: CellProps) => {

@@ -15,7 +15,9 @@ import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
+import { BatchAllocationsBridge } from '@/modules/TransactionItemEntry/integrations/BatchAllocationsBridge';
 
 @Injectable()
 export class CreateSaleInvoice {
@@ -37,6 +39,8 @@ export class CreateSaleInvoice {
     private readonly eventPublisher: EventEmitter2,
     private readonly commandEstimateValidators: SaleEstimateValidators,
     private readonly uow: UnitOfWork,
+    private readonly subscriptionAccess: SubscriptionAccessService,
+    private readonly batchAllocationsBridge: BatchAllocationsBridge,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -60,6 +64,9 @@ export class CreateSaleInvoice {
     saleInvoiceDTO: CreateSaleInvoiceDto,
     trx?: Knex.Transaction,
   ): Promise<SaleInvoice> => {
+    // Validate the organization can still write data (Cloud trial/access).
+    await this.subscriptionAccess.assertCanWrite();
+
     // Validate customer existance.
     const customer = await this.customerModel()
       .query()
@@ -83,6 +90,11 @@ export class CreateSaleInvoice {
     // Validate items should be sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       saleInvoiceDTO.entries,
+    );
+    // Validate entries have an item or a description with a sell account.
+    await this.itemsEntriesService.validateEntriesItemOrAccount(
+      saleInvoiceDTO.entries,
+      'sellAccountId',
     );
     // Transform DTO object to model object.
     const saleInvoiceObj = await this.transformCreateDTOToModel(
@@ -108,6 +120,14 @@ export class CreateSaleInvoice {
       const saleInvoice = await this.saleInvoiceModel()
         .query(trx)
         .upsertGraph(saleInvoiceObj);
+
+      // Replaces the batch allocations of the invoice entries.
+      await this.batchAllocationsBridge.syncEntriesAllocations(
+        'SaleInvoice',
+        saleInvoice.id,
+        saleInvoiceDTO.entries,
+        trx,
+      );
 
       const eventPayload: ISaleInvoiceCreatedPayload = {
         saleInvoice,

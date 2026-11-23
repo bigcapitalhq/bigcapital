@@ -16,6 +16,7 @@ import { ItemsAlerts } from '@/containers/Items/ItemsAlerts';
 import { ItemsCategoriesAlerts } from '@/containers/ItemsCategories/ItemsCategoriesAlerts';
 import { BranchesAlerts } from '@/containers/Preferences/Branches/BranchesAlerts';
 import { CurrenciesAlerts } from '@/containers/Preferences/Currencies/CurrenciesAlerts';
+import { TrackingCategoriesAlerts } from '@/containers/Preferences/TrackingCategories/TrackingCategoriesAlerts';
 import { RolesAlerts } from '@/containers/Preferences/Users/Roles/RolesAlerts';
 import { UsersAlerts } from '@/containers/Preferences/Users/UsersAlerts';
 import { WarehousesAlerts } from '@/containers/Preferences/Warehouses/WarehousesAlerts';
@@ -72,6 +73,7 @@ export const registered: RegisteredEntry[] = [
   ...WarehousesAlerts,
   ...WarehousesTransfersAlerts,
   ...BranchesAlerts,
+  ...TrackingCategoriesAlerts,
   ...TaxRatesAlerts,
   ...BudgetsAlerts,
   ...CashflowAlerts,

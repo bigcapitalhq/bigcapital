@@ -17,8 +17,8 @@ export class VendorCreditInventoryTransactionsSubscriber {
    * Writes inventory transactions once vendor created created.
    * @param {IVendorCreditCreatedPayload} payload -
    */
-  @OnEvent(events.vendorCredit.onCreated)
-  @OnEvent(events.vendorCredit.onOpened)
+  @OnEvent(events.vendorCredit.onCreated, { suppressErrors: false })
+  @OnEvent(events.vendorCredit.onOpened, { suppressErrors: false })
   public async writeInventoryTransactionsOnceCreated({
     vendorCredit,
     trx,
@@ -36,7 +36,7 @@ export class VendorCreditInventoryTransactionsSubscriber {
    * Rewrites inventory transactions once vendor credit edited.
    * @param {IVendorCreditEditedPayload} payload -
    */
-  @OnEvent(events.vendorCredit.onEdited)
+  @OnEvent(events.vendorCredit.onEdited, { suppressErrors: false })
   public async rewriteInventroyTransactionsOnceEdited({
     oldVendorCredit,
     vendorCredit,
@@ -56,7 +56,7 @@ export class VendorCreditInventoryTransactionsSubscriber {
    * Reverts inventory transactions once vendor credit deleted.
    * @param {IVendorCreditDeletedPayload} payload -
    */
-  @OnEvent(events.vendorCredit.onDeleted)
+  @OnEvent(events.vendorCredit.onDeleted, { suppressErrors: false })
   public async revertInventoryTransactionsOnceDeleted({
     vendorCreditId,
     trx,

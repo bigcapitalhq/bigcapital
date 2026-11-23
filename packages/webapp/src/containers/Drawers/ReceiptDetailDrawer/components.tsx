@@ -65,7 +65,7 @@ export function ReceiptMoreMenuItems({ payload }: ReceiptMoreMenuItemsProps) {
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}
       modifiers={{
-        offset: { offset: '0, 4' },
+        offset: { options: { offset: [0, 4] } },
       }}
     >
       <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />

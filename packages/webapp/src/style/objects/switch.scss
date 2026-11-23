@@ -1,5 +1,6 @@
-.bp4-control.bp4-switch {
-  .bp4-control-indicator {
+@import '@/style/_common';
+.#{$ns}-control.#{$ns}-switch {
+  .#{$ns}-control-indicator {
 
     &:before {
       box-shadow: none;

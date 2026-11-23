@@ -9,6 +9,7 @@ import type React from 'react';
 
 export interface WarehouseTransferEntry {
   index: number;
+  batchId?: number | null;
   itemId: number | string;
   sourceWarehouse: number | string;
   destinationWarehouse: number | string;

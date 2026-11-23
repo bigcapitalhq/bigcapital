@@ -10,7 +10,7 @@
 
   &-body{
     &.is-loading{
-      .bp4-spinner{
+      .#{$ns}-spinner{
         padding-top: 10px;
         margin-bottom: -10px;
       } 

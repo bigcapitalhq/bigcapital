@@ -128,7 +128,7 @@ export function TransferFromAccountFormFields() {
       <FormGroup label={intl.get('description')}>
         <FTextArea
           name={'description'}
-          growVertically={true}
+          autoResize={true}
           large={true}
           fill={true}
         />

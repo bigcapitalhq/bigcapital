@@ -11,6 +11,7 @@ import {
   handlePreviousPeriodPercentageCheckboxChange,
 } from './utils';
 import { Flex, FlexItem, FieldHint, FFormGroup, FCheckbox } from '@/components';
+import { NS } from '@/constants/classes';
 
 /**
  * Profit/loss comparisons panel fields.
@@ -152,7 +153,7 @@ export function ProfitLossSheetHeaderComparisonPanel() {
 }
 
 const ProfitLossSheetComparisonWrap = styled.div`
-  .bp4-form-group {
+  .${NS}-form-group {
     margin-bottom: 3px;
   }
 `;

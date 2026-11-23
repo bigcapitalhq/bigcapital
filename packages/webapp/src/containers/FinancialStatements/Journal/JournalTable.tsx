@@ -36,6 +36,7 @@ function JournalTableInner({
 
   const table = (journalSheet as any)?.table;
   const meta = (journalSheet as any)?.meta;
+  const query = journalSheet?.query;
 
   // Opens the detail drawer of the given transaction reference.
   const handleViewDetail = (referenceType: string, referenceId: number) => {
@@ -53,6 +54,7 @@ function JournalTableInner({
       companyName={companyName}
       sheetType={intl.get('journal_sheet')}
       dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
+      basis={query?.basis}
       fullWidth={true}
     >
       <JournalDataTable

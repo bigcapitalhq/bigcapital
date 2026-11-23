@@ -1,5 +1,6 @@
 import { Account } from '../../Accounts/models/Account.model';
 import { Transformer } from '../../Transformer/Transformer';
+import { getReconciliationSupport } from '../../BankingReconciliation/getReconciliationSupport';
 
 export class CashflowAccountTransformer extends Transformer {
   /**
@@ -9,12 +10,22 @@ export class CashflowAccountTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'formattedAmount',
+      'isReconciliationSupported',
       'lastFeedsUpdatedAt',
       'lastFeedsUpdatedAtFormatted',
       'lastFeedsUpdatedFromNow',
       'uncategorizedTransactionsCount',
+      'plaidInstitutionName',
+      'plaidInstitutionLogo',
     ];
   };
+
+  protected isReconciliationSupported(account: Account): boolean {
+    return getReconciliationSupport(
+      account,
+      this.context?.organization?.baseCurrency,
+    ).isSupported;
+  }
 
   /**
    * Exclude these attributes to sale invoice object.
@@ -29,6 +40,8 @@ export class CashflowAccountTransformer extends Transformer {
       'accountParentType',
       'isBalanceSheetAccount',
       'isPlSheet',
+      // Never expose the Plaid item (it holds the access token).
+      'plaidItem',
     ];
   };
 
@@ -64,6 +77,30 @@ export class CashflowAccountTransformer extends Transformer {
       ? this.formatDateFromNow(account.lastFeedsUpdatedAt)
       : '';
   }
+
+  /**
+   * Retrieves the Plaid institution name of the linked bank account.
+   * @param {Account} account
+   * @returns {string|null}
+   */
+  protected plaidInstitutionName = (account: Account): string | null => {
+    return account.plaidItem?.plaidInstitutionName || null;
+  };
+
+  /**
+   * Retrieves the Plaid institution logo of the linked bank account as a
+   * ready-to-use image data URL.
+   * @param {Account} account
+   * @returns {string|null}
+   */
+  protected plaidInstitutionLogo = (account: Account): string | null => {
+    const logo = account.plaidItem?.plaidInstitutionLogo;
+
+    if (!logo) {
+      return null;
+    }
+    return logo.startsWith('data:') ? logo : `data:image/png;base64,${logo}`;
+  };
 
   /**
    * Retrieves the uncategorized transactions count of the account.
