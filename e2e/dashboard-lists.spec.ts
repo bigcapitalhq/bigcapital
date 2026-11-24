@@ -22,7 +22,11 @@ const lists = [
     endpoint: '/api/vendor-credits',
     rowTestId: 'vendor-credit-row',
     identifier: 'vendor_credit_number',
-    fields: { formatted_credits_remaining: '$42.25', is_draft: true },
+    fields: {
+      formatted_credits_remaining: '$42.25',
+      formatted_credits_remaining_amount: '$42.25',
+      is_draft: true,
+    },
     cell: '$42.25',
   },
   {

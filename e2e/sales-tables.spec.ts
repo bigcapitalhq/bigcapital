@@ -43,7 +43,11 @@ const lists = [
     endpoint: '/api/credit-notes',
     rowTestId: 'credit-note-row',
     identifier: 'credit_note_number',
-    fields: { formatted_credits_remaining: '$42.25', is_draft: true },
+    fields: {
+      formatted_credits_remaining: '$42.25',
+      formatted_credits_remaining_amount: '$42.25',
+      is_draft: true,
+    },
     cell: '$42.25',
     menuItem: 'Mark as Open',
   },
