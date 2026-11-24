@@ -34,7 +34,10 @@ export class ActivateTaxRateService {
    * @returns {Promise<ITaxRate>}
    */
   public async activateTaxRate(taxRateId: number) {
-    const oldTaxRate = await this.taxRateModel().query().findById(taxRateId);
+    const oldTaxRate = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);

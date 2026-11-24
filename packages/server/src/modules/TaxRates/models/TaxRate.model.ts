@@ -13,6 +13,7 @@ export class TaxRateModel extends BaseModel {
   name!: string;
   rate!: number;
   description?: string;
+  deletedAt?: Date | null;
 
   /**
    * Table name
@@ -53,7 +54,15 @@ export class TaxRateModel extends BaseModel {
    * Model modifiers.
    */
   static get modifiers() {
-    return {};
+    return {
+      /**
+       * Excludes soft-deleted tax rates. Lookups by id used by past
+       * transactions intentionally skip this so history keeps resolving.
+       */
+      notDeleted(query) {
+        query.whereNull(`${TaxRateModel.tableName}.deleted_at`);
+      },
+    };
   }
 
   /**

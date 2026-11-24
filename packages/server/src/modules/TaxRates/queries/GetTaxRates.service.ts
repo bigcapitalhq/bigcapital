@@ -18,7 +18,10 @@ export class GetTaxRatesService {
    */
   public async getTaxRates() {
     // Retrieves the tax rates.
-    const taxRates = await this.taxRateModel().query().orderBy('name', 'ASC');
+    const taxRates = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .orderBy('name', 'ASC');
 
     // Transforms the tax rates.
     return this.transformer.transform(taxRates, new TaxRateTransformer());

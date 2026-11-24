@@ -66,7 +66,11 @@ export class EditTaxRateService {
     );
     if (isTaxDTOChanged) {
       // Soft deleting the old tax rate.
-      await this.taxRateModel().query(trx).findById(oldTaxRate.id).delete();
+      // Hard delete fails once transactions reference the rate (FK).
+      await this.taxRateModel()
+        .query(trx)
+        .findById(oldTaxRate.id)
+        .patch({ deletedAt: new Date() });
 
       // Create a new tax rate with new edited data.
       return this.taxRateModel()
@@ -91,7 +95,10 @@ export class EditTaxRateService {
    * @returns {Promise<ITaxRate>}
    */
   public async editTaxRate(taxRateId: number, editTaxRateDTO: EditTaxRateDto) {
-    const oldTaxRate = await this.taxRateModel().query().findById(taxRateId);
+    const oldTaxRate = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
