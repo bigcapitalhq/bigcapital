@@ -51,7 +51,7 @@ export class CashflowAccountTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (account: Account): string => {
-    return this.formatNumber(account.amount, {
+    return this.formatMoney(account.amount, {
       currencyCode: account.currencyCode,
     });
   };

@@ -106,7 +106,7 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (receipt: SaleReceipt): string => {
-    return this.formatNumber(receipt.amount, {
+    return this.formatMoney(receipt.amount, {
       currencyCode: receipt.currencyCode,
     });
   };

@@ -20,7 +20,7 @@ export class BankTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (transaction) => {
-    return this.formatNumber(transaction.amount, {
+    return this.formatMoney(transaction.amount, {
       currencyCode: transaction.currencyCode,
       excerptZero: true,
     });

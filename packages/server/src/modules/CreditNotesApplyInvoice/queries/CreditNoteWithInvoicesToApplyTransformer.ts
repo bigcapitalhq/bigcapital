@@ -39,7 +39,7 @@ export class CreditNoteWithInvoicesToApplyTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (invoice): string => {
-    return this.formatNumber(invoice.balance, {
+    return this.formatMoney(invoice.balance, {
       currencyCode: invoice.currencyCode,
     });
   };
