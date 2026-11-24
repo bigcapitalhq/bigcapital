@@ -107,7 +107,8 @@ jobs:
           THROTTLE_GLOBAL_TTL=60000
           THROTTLE_GLOBAL_LIMIT=300
           THROTTLE_AUTH_TTL=60000
-          THROTTLE_AUTH_LIMIT=30
+          # Each new browser context loads the authenticated account from the same runner IP.
+          THROTTLE_AUTH_LIMIT=300
 
           # Redis
           REDIS_HOST=127.0.0.1
