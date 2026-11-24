@@ -164,7 +164,9 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: SaleInvoiceAction.Edit, label: 'ability.edit', default: true },
       { key: SaleInvoiceAction.Delete, label: 'ability.delete', default: true },
     ],
-    extraAbilities: [{ key: 'bad-debt', label: 'Due amount to bad debit' }],
+    extraAbilities: [
+      { key: SaleInvoiceAction.Writeoff, label: 'Due amount to bad debit' },
+    ],
   },
   {
     subject: AbilitySubject.RecurringInvoice,
