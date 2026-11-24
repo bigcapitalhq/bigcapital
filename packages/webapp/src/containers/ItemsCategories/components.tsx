@@ -7,10 +7,11 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { ItemCategory } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
 
@@ -66,34 +67,28 @@ export function TableActionsCell(props: ActionMenuListProps) {
   );
 }
 
-/**
- * Retrieve the items categories table columns.
- */
-export function useItemsCategoriesTableColumns(): DataTableColumn<ItemCategoryTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, ItemCategoryTableRow>();
+
+export function useItemsCategoriesTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('name', {
           id: 'name',
-          Header: intl.get('category_name'),
-          accessor: 'name',
-          width: 220,
-        },
-        {
+          header: intl.get('category_name'),
+          size: 220,
+        }),
+        column.accessor('count', {
           id: 'count',
-          Header: intl.get('count'),
-          accessor: 'count',
-          className: 'count',
-          width: 180,
-        },
-        {
+          header: intl.get('count'),
+          size: 180,
+        }),
+        column.accessor('description', {
           id: 'description',
-          Header: intl.get('description'),
-          accessor: 'description',
-          className: 'description',
-          width: 220,
-        },
-      ] as DataTableColumn<ItemCategoryTableRow>[],
+          header: intl.get('description'),
+          size: 220,
+        }),
+      ]),
     [],
   );
 }

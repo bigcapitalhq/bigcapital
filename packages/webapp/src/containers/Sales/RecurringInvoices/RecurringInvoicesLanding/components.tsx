@@ -1,9 +1,11 @@
 import { Intent, Menu, MenuDivider, MenuItem, Tag } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { RecurringInvoicesListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Can, Icon } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import {
   AbilitySubject,
   RecurringInvoiceAction,
@@ -124,66 +126,71 @@ export function ActionsMenu({
   );
 }
 
-export const useRecurringInvoicesTableColumns = (): Array<
-  DataTableColumn<RecurringInvoiceTableRow>
-> => {
+const column = createColumnHelper<BP_TableFeatures, RecurringInvoiceTableRow>();
+
+export function useRecurringInvoicesTableColumns() {
   return React.useMemo(
-    () => [
-      {
-        id: 'profile_name',
-        Header: intl.get('recurring_invoice.field.profile_name'),
-        accessor: 'profileName',
-        width: 190,
-        className: 'profile_name',
-      },
-      {
-        id: 'customer',
-        Header: intl.get('recurring_invoice.field.customer'),
-        accessor: (row) => row.customer?.displayName,
-        width: 170,
-      },
-      {
-        id: 'frequency',
-        Header: intl.get('recurring_invoice.field.frequency'),
-        accessor: (row) =>
-          intl.get('recurring_invoice.frequency_summary', {
-            interval: row.repeatInterval,
-            frequency: intl.get(`recurring_invoice.frequency.${row.frequency}`),
-          }),
-        width: 150,
-      },
-      {
-        id: 'next_invoice_date',
-        Header: intl.get('recurring_invoice.field.next_invoice_date'),
-        accessor: (row) => row.nextInvoiceDateFormatted || row.nextInvoiceDate,
-        width: 150,
-      },
-      {
-        id: 'last_invoice_date',
-        Header: intl.get('recurring_invoice.field.last_invoice_date'),
-        accessor: (row) => row.lastInvoiceDateFormatted || row.lastInvoiceDate,
-        width: 150,
-      },
-      {
-        id: 'total',
-        Header: intl.get('recurring_invoice.field.amount'),
-        accessor: (row) => row.totalFormatted,
-        width: 130,
-        align: 'right',
-        money: true,
-      },
-      {
-        id: 'status',
-        Header: intl.get('recurring_invoice.field.status'),
-        accessor: (row) => (
-          <RecurringInvoiceStatus
-            status={row.status}
-            failureCount={row.failureCount}
-          />
+    () =>
+      column.columns([
+        column.accessor('profileName', {
+          id: 'profile_name',
+          header: intl.get('recurring_invoice.field.profile_name'),
+          size: 190,
+        }),
+        column.accessor((row) => row.customer?.displayName, {
+          id: 'customer',
+          header: intl.get('recurring_invoice.field.customer'),
+          size: 170,
+        }),
+        column.accessor(
+          (row) =>
+            intl.get('recurring_invoice.frequency_summary', {
+              interval: row.repeatInterval,
+              frequency: intl.get(
+                `recurring_invoice.frequency.${row.frequency}`,
+              ),
+            }),
+          {
+            id: 'frequency',
+            header: intl.get('recurring_invoice.field.frequency'),
+            size: 150,
+          },
         ),
-        width: 120,
-      },
-    ],
+        column.accessor(
+          (row) => row.nextInvoiceDateFormatted || row.nextInvoiceDate,
+          {
+            id: 'next_invoice_date',
+            header: intl.get('recurring_invoice.field.next_invoice_date'),
+            size: 150,
+          },
+        ),
+        column.accessor(
+          (row) => row.lastInvoiceDateFormatted || row.lastInvoiceDate,
+          {
+            id: 'last_invoice_date',
+            header: intl.get('recurring_invoice.field.last_invoice_date'),
+            size: 150,
+          },
+        ),
+        column.accessor('totalFormatted', {
+          id: 'total',
+          header: intl.get('recurring_invoice.field.amount'),
+          size: 130,
+          meta: { textAlign: 'right' },
+          cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
+        }),
+        column.accessor('status', {
+          id: 'status',
+          header: intl.get('recurring_invoice.field.status'),
+          size: 120,
+          cell: ({ getValue, row }) => (
+            <RecurringInvoiceStatus
+              status={getValue()}
+              failureCount={row.original.failureCount}
+            />
+          ),
+        }),
+      ]),
     [],
   );
-};
+}

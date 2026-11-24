@@ -25,7 +25,6 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import {
-  If,
   Can,
   Icon,
   DashboardActionViewsList,
@@ -98,7 +97,7 @@ function ItemsActionsBarInner({
 
   // Handle cancel/confirm items bulk.
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(itemsSelectedRows as number[]);
+    openBulkDeleteDialog(itemsSelectedRows);
   };
 
   // Handle inactive switch changing.

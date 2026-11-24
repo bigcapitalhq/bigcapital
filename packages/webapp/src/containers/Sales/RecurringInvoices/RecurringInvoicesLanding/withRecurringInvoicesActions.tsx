@@ -12,7 +12,7 @@ import {
 export interface WithRecurringInvoiceActionsProps {
   setRecurringInvoicesTableState: (queries: Partial<TableQuery>) => void;
   resetRecurringInvoicesTableState: () => void;
-  setRecurringInvoicesSelectedRows: (selectedRows: Array<unknown>) => void;
+  setRecurringInvoicesSelectedRows: (selectedRows: number[]) => void;
   resetRecurringInvoicesSelectedRows: () => void;
 }
 
@@ -23,7 +23,7 @@ export const mapDispatchToProps = (
     dispatch(setRecurringInvoicesTableState(queries)),
   resetRecurringInvoicesTableState: () =>
     dispatch(resetRecurringInvoicesTableState()),
-  setRecurringInvoicesSelectedRows: (selectedRows: Array<unknown>) =>
+  setRecurringInvoicesSelectedRows: (selectedRows: number[]) =>
     dispatch(setRecurringInvoicesSelectedRows(selectedRows)),
   resetRecurringInvoicesSelectedRows: () =>
     dispatch(resetRecurringInvoicesSelectedRows()),

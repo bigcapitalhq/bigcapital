@@ -10,7 +10,7 @@ import {
 
 export interface WithItemCategoriesActionsProps {
   setItemsCategoriesTableState: (state: Partial<TableQuery>) => void;
-  setItemsCategoriesSelectedRows: (selectedRows: Array<unknown>) => void;
+  setItemsCategoriesSelectedRows: (selectedRows: number[]) => void;
   resetItemsCategoriesSelectedRows: () => void;
 }
 
@@ -19,7 +19,7 @@ export const mapDispatchToProps = (
 ): WithItemCategoriesActionsProps => ({
   setItemsCategoriesTableState: (state: Partial<TableQuery>) =>
     dispatch(setItemsCategoriesTableState(state)),
-  setItemsCategoriesSelectedRows: (selectedRows: Array<unknown>) =>
+  setItemsCategoriesSelectedRows: (selectedRows: number[]) =>
     dispatch(setItemsCategoriesSelectedRows(selectedRows)),
   resetItemsCategoriesSelectedRows: () =>
     dispatch(resetItemsCategoriesSelectedRows()),

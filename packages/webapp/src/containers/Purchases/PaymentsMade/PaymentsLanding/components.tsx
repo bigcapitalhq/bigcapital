@@ -7,10 +7,11 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { BillPaymentsListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Icon, Money, Can } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
@@ -84,62 +85,45 @@ export function ActionsCell(props: ActionsCellProps) {
   );
 }
 
-export function usePaymentMadesTableColumns(): DataTableColumn<PaymentMadeTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, PaymentMadeTableRow>();
+
+export function usePaymentMadesTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedPaymentDate', {
           id: 'payment_date',
-          Header: intl.get('payment_date'),
-          accessor: 'formattedPaymentDate',
-          width: 140,
-          className: 'payment_date',
-          clickable: true,
-        },
-        {
+          header: intl.get('payment_date'),
+          size: 140,
+        }),
+        column.accessor((row) => row.vendor?.displayName, {
           id: 'vendor',
-          Header: intl.get('vendor_name'),
-          accessor: 'vendor.displayName',
-          width: 140,
-          className: 'vendor_id',
-          clickable: true,
-        },
-        {
+          header: intl.get('vendor_name'),
+          size: 140,
+        }),
+        column.accessor('paymentNumber', {
           id: 'payment_number',
-          Header: intl.get('payment_number'),
-          accessor: (row: PaymentMadeTableRow) =>
-            row.paymentNumber ? `${row.paymentNumber}` : null,
-          width: 140,
-          className: 'payment_number',
-          clickable: true,
-        },
-        {
+          header: intl.get('payment_number'),
+          size: 140,
+        }),
+        column.accessor((row) => row.paymentAccount?.name, {
           id: 'payment_account',
-          Header: intl.get('payment_account'),
-          accessor: 'paymentAccount.name',
-          width: 140,
-          className: 'payment_account_id',
-          clickable: true,
-        },
-        {
+          header: intl.get('payment_account'),
+          size: 140,
+        }),
+        column.accessor('amount', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: AmountAccessor,
-          width: 140,
-          className: 'amount',
-          align: 'right',
-          clickable: true,
-          money: true,
-        },
-        {
+          header: intl.get('amount'),
+          size: 140,
+          cell: ({ row }) => AmountAccessor(row.original),
+          meta: { bodyCellClassName: 'numeric-cell' },
+        }),
+        column.accessor('reference', {
           id: 'reference_no',
-          Header: intl.get('reference'),
-          accessor: 'reference',
-          width: 140,
-          className: 'reference',
-          clickable: true,
-        },
-      ] as DataTableColumn<PaymentMadeTableRow>[],
+          header: intl.get('reference'),
+          size: 140,
+        }),
+      ]),
     [],
   );
 }

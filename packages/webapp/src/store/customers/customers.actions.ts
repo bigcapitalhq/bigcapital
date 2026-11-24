@@ -22,7 +22,7 @@ export const resetCustomersTableState = () => {
   };
 };
 
-export const setCustomersSelectedRows = (selectedRows: Array<unknown>) => {
+export const setCustomersSelectedRows = (selectedRows: number[]) => {
   return {
     type: CUSTOMERS_SET_SELECTED_ROWS,
     payload: selectedRows,

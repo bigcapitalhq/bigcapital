@@ -10,7 +10,6 @@ import { withReceiptsActions } from './withReceiptsActions';
 import type { WithReceiptsProps } from './withReceipts';
 import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import { DashboardPageContent } from '@/components';
-import '@/style/pages/SaleReceipt/List.scss';
 import { transformTableStateToQuery } from '@/utils';
 
 interface ReceiptsListProps

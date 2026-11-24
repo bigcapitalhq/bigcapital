@@ -19,7 +19,7 @@ export const resetBillsTableState = () => {
   };
 };
 
-export const setBillsSelectedRows = (selectedRows: Array<unknown>) => {
+export const setBillsSelectedRows = (selectedRows: number[]) => {
   return {
     type: BILLS_SET_SELECTED_ROWS,
     payload: selectedRows,

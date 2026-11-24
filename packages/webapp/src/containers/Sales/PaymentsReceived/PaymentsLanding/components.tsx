@@ -7,17 +7,17 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { PaymentsReceivedListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Money, Icon, Can } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type PaymentReceiveTableRow = NonNullable<
@@ -73,10 +73,6 @@ export function ActionsMenu({
   );
 }
 
-export function AmountAccessor(row: PaymentReceiveTableRow) {
-  return <Money amount={row.amount} currency={row.currencyCode} />;
-}
-
 interface ActionsCellProps {
   row: { original: PaymentReceiveTableRow };
   payload: PaymentReceiveActionsPayload;
@@ -94,68 +90,48 @@ export function ActionsCell(props: ActionsCellProps) {
   );
 }
 
-export function usePaymentReceivesColumns(): DataTableColumn<PaymentReceiveTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, PaymentReceiveTableRow>();
+
+export function usePaymentReceivesColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedPaymentDate', {
           id: 'payment_date',
-          Header: intl.get('payment_date'),
-          accessor: 'formattedPaymentDate',
-          width: 140,
-          className: 'payment_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('payment_date'),
+          size: 140,
+        }),
+        column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
-          Header: intl.get('customer_name'),
-          accessor: 'customer.displayName',
-          width: 160,
-          className: 'customer_id',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('customer_name'),
+          size: 160,
+        }),
+        column.accessor('amount', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: AmountAccessor,
-          width: 120,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          money: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('amount'),
+          size: 120,
+          cell: ({ getValue, row }) => (
+            <MoneyDisplay>
+              <Money amount={getValue()} currency={row.original.currencyCode} />
+            </MoneyDisplay>
+          ),
+        }),
+        column.accessor('paymentReceiveNo', {
           id: 'payment_receive_no',
-          Header: intl.get('payment_received_no'),
-          accessor: (row: PaymentReceiveTableRow) =>
-            row.paymentReceiveNo ? `${row.paymentReceiveNo}` : null,
-          width: 140,
-          className: 'payment_receive_no',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('payment_received_no'),
+          size: 140,
+        }),
+        column.accessor((row) => row.depositAccount?.name, {
           id: 'deposit_account',
-          Header: intl.get('deposit_account'),
-          accessor: 'depositAccount.name',
-          width: 140,
-          className: 'deposit_account_id',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('deposit_account'),
+          size: 140,
+        }),
+        column.accessor('referenceNo', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'referenceNo',
-          width: 140,
-          className: 'reference_no',
-          clickable: true,
-          textOverview: true,
-        },
-      ] as DataTableColumn<PaymentReceiveTableRow>[],
+          header: intl.get('reference_no'),
+          size: 140,
+        }),
+      ]),
     [],
   );
 }

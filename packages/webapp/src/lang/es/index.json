@@ -60,6 +60,8 @@
   "sub_account": "¿Subcuenta?",
   "account_type": "Tipo de cuenta",
   "account_name": "Nombre de la cuenta",
+  "accounts.expand_all": "Expandir todas las cuentas",
+  "accounts.collapse_all": "Contraer todas las cuentas",
   "account_code": "Código de cuenta",
   "parent_account": "Cuenta principal",
   "edit": "Editar",

@@ -19,9 +19,7 @@ export const resetPaymentReceivesTableState = () => {
   };
 };
 
-export const setPaymentReceivesSelectedRows = (
-  selectedRows: Array<unknown>,
-) => {
+export const setPaymentReceivesSelectedRows = (selectedRows: number[]) => {
   return {
     type: PAYMENT_RECEIVES_SET_SELECTED_ROWS,
     payload: selectedRows,

@@ -1,5 +1,4 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useCustomersTableColumns } from './components';
 import { CustomersEmptyStatus } from './CustomersEmptyStatus';
@@ -12,18 +11,19 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import type { Customer } from '@bigcapital/sdk-ts';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.CUSTOMER,
+  rowName: 'customer',
+  identifierColumn: 'display_name',
+  ActionsMenu,
+});
 
 interface CustomersTableInnerProps
   extends Pick<
@@ -36,8 +36,6 @@ interface CustomersTableInnerProps
     WithDrawerActionsProps {}
 
 type CustomerRow = Pick<Customer, 'id'>;
-type SortBy = Array<{ id: string; desc: boolean }>;
-
 /**
  * Customers table.
  */
@@ -61,9 +59,6 @@ function CustomersTableInner({
 }: CustomersTableInnerProps) {
   const history = useHistory();
 
-  // Customers table columns.
-  const columns = useCustomersTableColumns();
-
   // Customers list context.
   const {
     isEmptyStatus,
@@ -73,39 +68,8 @@ function CustomersTableInner({
     isCustomersFetching,
     customersSettings,
   } = useCustomersListContext();
-  const customersTableSize = customersSettings?.tableSize as string | undefined;
-
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CUSTOMER);
-
-  // Handle fetch data once the page index, size or sort by of the table change.
-  const handleFetchData = React.useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: SortBy;
-    }) => {
-      setCustomersTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setCustomersTableState],
-  );
-
-  const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows: Array<{ original: CustomerRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setCustomersSelectedRows(selectedIds);
-    },
-    [setCustomersSelectedRows],
-  );
+  const compact = customersSettings?.tableSize === 'small';
+  const columns = useCustomersTableColumns(compact ? 'small' : 'medium');
 
   // Handles the customer delete action.
   const handleCustomerDelete = ({ id }: CustomerRow) => {
@@ -136,62 +100,31 @@ function CustomersTableInner({
     openDrawer(DRAWERS.CUSTOMER_DETAILS, { customerId: id });
   };
 
-  // Handle cell click.
-  const handleCellClick = (
-    cell: { row: { original: CustomerRow } },
-    _event: React.MouseEvent,
-  ) => {
-    openDrawer(DRAWERS.CUSTOMER_DETAILS, {
-      customerId: cell.row.original.id,
-    });
-  };
-
   if (isEmptyStatus) {
     return <CustomersEmptyStatus />;
   }
 
   return (
-    <DashboardContentTable>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={customers ?? []}
-        loading={isCustomersLoading}
-        headerLoading={isCustomersLoading}
-        progressBarLoading={isCustomersFetching}
-        onFetchData={handleFetchData}
-        selectionColumn={true}
-        expandable={false}
-        sticky={true}
-        spinnerProps={{ size: 30 }}
-        pagination={true}
-        rowTestId={'customer-row'}
-        initialPageSize={customersTableState?.pageSize ?? 10}
-        manualSortBy={true}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={customersSelectedRows}
-        autoResetSelectedRows={false}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={customersTableSize}
-        payload={{
-          onDelete: handleCustomerDelete,
-          onEdit: handleCustomerEdit,
-          onDuplicate: handleContactDuplicate,
-          onInactivate: handleInactiveCustomer,
-          onActivate: handleActivateCustomer,
-          onViewDetails: handleViewDetailCustomer,
-        }}
-        ContextMenu={ActionsMenu}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={customers}
+      total={pagination?.total}
+      loading={isCustomersLoading}
+      fetching={isCustomersFetching}
+      compact={compact}
+      query={customersTableState}
+      setQuery={setCustomersTableState}
+      selectedIds={customersSelectedRows}
+      setSelectedIds={setCustomersSelectedRows}
+      actions={{
+        onDelete: handleCustomerDelete,
+        onEdit: handleCustomerEdit,
+        onDuplicate: handleContactDuplicate,
+        onInactivate: handleInactiveCustomer,
+        onActivate: handleActivateCustomer,
+        onViewDetails: handleViewDetailCustomer,
+      }}
+    />
   );
 }
 

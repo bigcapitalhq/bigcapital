@@ -11,7 +11,7 @@ import {
 
 interface VendorCreditState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery: Partial<TableQuery> = {
@@ -39,7 +39,7 @@ const reducerInstance = createReducer(initialState, {
 
   [VENDOR_CREDITS_SET_SELECTED_ROWS]: (
     state: VendorCreditState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

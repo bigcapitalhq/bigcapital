@@ -46,10 +46,7 @@ function InventoryAdjustmentsProvider({
   };
 
   return (
-    <DashboardInsider
-      loading={isAdjustmentsLoading}
-      name={'inventory_adjustments'}
-    >
+    <DashboardInsider name={'inventory_adjustments'}>
       <InventoryAdjustmentsContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

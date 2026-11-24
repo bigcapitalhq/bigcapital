@@ -12,7 +12,7 @@ import {
 export interface WithItemsActionsProps {
   setItemsTableState: (queries: Partial<TableQuery>) => void;
   resetItemsTableState: () => void;
-  setItemsSelectedRows: (selectedRows: Array<unknown>) => void;
+  setItemsSelectedRows: (selectedRows: number[]) => void;
   resetItemsSelectedRows: () => void;
 }
 

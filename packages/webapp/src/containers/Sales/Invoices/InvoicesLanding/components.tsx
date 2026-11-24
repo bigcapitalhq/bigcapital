@@ -1,24 +1,16 @@
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { SaleInvoicesListResponse } from '@bigcapital/sdk-ts';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  AppToaster,
-  Choose,
-  If,
-  Icon,
-  Can,
-} from '@/components';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
+import { FormatDate, AppToaster, If, Icon, Can } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import {
   SaleInvoiceAction,
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-import { CLASSES } from '@/constants/classes';
 import { formattedAmount, safeCallback } from '@/utils';
 
 export type InvoiceTableRow = NonNullable<
@@ -45,51 +37,40 @@ interface DeleteError {
   type: string;
 }
 
-export function InvoiceStatus({ invoice }: { invoice: InvoiceTableRow }) {
-  return (
-    <Choose>
-      <Choose.When condition={!!(invoice.isFullyPaid && invoice.isDelivered)}>
-        <Tag intent={Intent.SUCCESS} round minimal>
-          <T id={'paid'} />
-        </Tag>
-      </Choose.When>
-
-      <Choose.When condition={!!(invoice.isDelivered && invoice.isOverdue)}>
-        <Tag intent={Intent.DANGER} round minimal>
-          {intl.get('overdue_by', { overdue: invoice.overdueDays })}
-        </Tag>
-      </Choose.When>
-
-      <Choose.When condition={!!(invoice.isDelivered && !invoice.isOverdue)}>
-        <Tag intent={Intent.WARNING} round minimal>
-          {intl.get('due_in', { due: invoice.remainingDays })}
-        </Tag>
-      </Choose.When>
-
-      <Choose.When condition={!!invoice.isPartiallyPaid}>
-        <Tag intent={Intent.PRIMARY} round minimal>
-          {intl.get('day_partially_paid', {
-            due: formattedAmount(invoice.dueAmount, invoice.currencyCode),
-          })}
-        </Tag>
-      </Choose.When>
-
-      <Choose.Otherwise>
-        <Tag round minimal>
-          <T id={'draft'} />
-        </Tag>
-      </Choose.Otherwise>
-    </Choose>
-  );
+function getInvoiceStatus(invoice: InvoiceTableRow) {
+  if (invoice.isDelivered) {
+    if (invoice.isFullyPaid)
+      return { text: intl.get('paid'), intent: Intent.SUCCESS };
+    if (invoice.isOverdue) {
+      return {
+        text: intl.get('overdue_by', { overdue: invoice.overdueDays }),
+        intent: Intent.DANGER,
+      };
+    }
+    return {
+      text: intl.get('due_in', { due: invoice.remainingDays }),
+      intent: Intent.WARNING,
+    };
+  }
+  if (invoice.isPartiallyPaid) {
+    return {
+      text: intl.get('day_partially_paid', {
+        due: formattedAmount(invoice.dueAmount, invoice.currencyCode),
+      }),
+      intent: Intent.PRIMARY,
+    };
+  }
+  return { text: intl.get('draft'), intent: Intent.NONE };
 }
 
-export const statusAccessor = (row: InvoiceTableRow) => {
+export function InvoiceStatus({ invoice }: { invoice: InvoiceTableRow }) {
+  const { text, intent } = getInvoiceStatus(invoice);
   return (
-    <div className={'status-accessor'}>
-      <InvoiceStatus invoice={row} />
-    </div>
+    <Tag intent={intent} round minimal>
+      {text}
+    </Tag>
   );
-};
+}
 
 export const handleDeleteErrors = (errors: DeleteError[]) => {
   if (
@@ -206,77 +187,52 @@ export function ActionsMenu({
   );
 }
 
-/**
- * Retrieve invoices table columns.
- */
-export function useInvoicesTableColumns(): DataTableColumn<InvoiceTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, InvoiceTableRow>();
+
+export function useInvoicesTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('invoiceDateFormatted', {
           id: 'invoice_date',
-          Header: intl.get('invoice_date'),
-          accessor: 'invoiceDateFormatted',
-          width: 110,
-          className: 'invoice_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('invoice_date'),
+          size: 110,
+        }),
+        column.accessor((invoice) => invoice.customer?.displayName, {
           id: 'customer',
-          Header: intl.get('customer_name'),
-          accessor: 'customer.displayName',
-          width: 180,
-          className: 'customer_id',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('customer_name'),
+          size: 180,
+        }),
+        column.accessor('invoiceNo', {
           id: 'invoice_no',
-          Header: intl.get('invoice_no__'),
-          accessor: 'invoiceNo',
-          width: 100,
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('invoice_no__'),
+          size: 100,
+        }),
+        column.accessor('totalFormatted', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: 'totalFormatted',
-          width: 120,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          money: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('amount'),
+          size: 120,
+          meta: { textAlign: 'right' },
+          cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
+        }),
+        column.accessor((invoice) => getInvoiceStatus(invoice).text, {
           id: 'status',
-          Header: intl.get('status'),
-          accessor: (row: InvoiceTableRow) => statusAccessor(row),
-          width: 160,
-          className: 'status',
-          clickable: true,
-        },
-        {
+          header: intl.get('status'),
+          size: 160,
+          cell: ({ row }) => <InvoiceStatus invoice={row.original} />,
+        }),
+        column.accessor('dueDate', {
           id: 'due_date',
-          Header: intl.get('due_date'),
-          accessor: 'dueDate',
-          Cell: FormatDateCell,
-          width: 110,
-          className: 'due_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('due_date'),
+          size: 110,
+          cell: ({ getValue }) => <FormatDate value={getValue()} />,
+        }),
+        column.accessor('referenceNo', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'referenceNo',
-          width: 90,
-          clickable: true,
-          textOverview: true,
-        },
-      ] as DataTableColumn<InvoiceTableRow>[],
+          header: intl.get('reference_no'),
+          size: 90,
+        }),
+      ]),
     [],
   );
 }

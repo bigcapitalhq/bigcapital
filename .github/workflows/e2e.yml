@@ -27,7 +27,7 @@ jobs:
   test_e2e:
     runs-on: ubuntu-latest
     name: Playwright tests
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     services:
       mysql:
@@ -75,8 +75,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build shared packages
+      - name: Build application and shared packages
         run: pnpm build
+        env:
+          VITE_REACT_QUERY_DEVTOOLS: 'false'
 
       - name: Create server .env file
         run: |
@@ -143,14 +145,14 @@ jobs:
 
       - name: Start webapp in background
         run: |
-          cd packages/webapp && VITE_REACT_QUERY_DEVTOOLS=false pnpm dev &
-          sleep 10
+          cd packages/webapp && pnpm exec vite preview --port 4000 --strictPort &
+          curl --fail --silent --show-error --retry 30 --retry-connrefused --retry-delay 1 http://localhost:4000/ -o /dev/null
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium
 
       - name: Run E2E tests
-        run: pnpm run e2e:webapp
+        run: pnpm run e2e:webapp --reporter=list
         env:
           PLAYWRIGHT_TEST_API_URL: http://localhost:3000
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:4000

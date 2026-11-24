@@ -19,7 +19,7 @@ export const resetVendorCreditTableState = () => {
   };
 };
 
-export const setVendorCreditsSelectedRows = (selectedRows: Array<unknown>) => {
+export const setVendorCreditsSelectedRows = (selectedRows: number[]) => {
   return {
     type: VENDOR_CREDITS_SET_SELECTED_ROWS,
     payload: selectedRows,

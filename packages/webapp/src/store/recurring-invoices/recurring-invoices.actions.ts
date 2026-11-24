@@ -17,9 +17,7 @@ export const resetRecurringInvoicesTableState = () => ({
   type: RECURRING_INVOICES_TABLE_STATE_RESET,
 });
 
-export const setRecurringInvoicesSelectedRows = (
-  selectedRows: Array<unknown>,
-) => ({
+export const setRecurringInvoicesSelectedRows = (selectedRows: number[]) => ({
   type: RECURRING_INVOICES_SET_SELECTED_ROWS,
   payload: selectedRows,
 });

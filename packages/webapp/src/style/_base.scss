@@ -1,3 +1,13 @@
 
 @import '_variables';
 @import '_functions';
+
+@mixin datatable-sticky-background {
+  background-color: rgba(255, 255, 255, 0.25);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  body.#{$ns}-dark & {
+    background-color: rgba(28, 33, 39, 0.6);
+  }
+}

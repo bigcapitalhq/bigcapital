@@ -1,7 +1,7 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { ActionsMenu, useEstiamtesTableColumns } from './components';
+import { ActionsMenu, useEstimatesTableColumns } from './components';
 import { EstimatesEmptyStatus } from './EstimatesEmptyStatus';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { withEstimates } from './withEstimates';
@@ -12,18 +12,19 @@ import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.ESTIMATES,
+  rowName: 'estimate',
+  identifierColumn: 'estimate_number',
+  ActionsMenu,
+});
 
 interface EstimatesDataTableProps
   extends Pick<
@@ -54,9 +55,8 @@ function EstimatesDataTableInner({
     isEstimatesFetching,
     estimatesSettings,
   } = useEstimatesListContext();
-  const estimatesTableSize = estimatesSettings?.tableSize as string | undefined;
 
-  const columns = useEstiamtesTableColumns();
+  const columns = useEstimatesTableColumns();
 
   const handleEditEstimate = (estimate: EstimateTableRow) => {
     history.push(`/estimates/${estimate.id}/edit`);
@@ -89,89 +89,40 @@ function EstimatesDataTableInner({
     openDialog('estimate-pdf-preview', { estimateId: id });
   };
 
-  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
-    openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: cell.row.original.id });
-  };
-
   const handleMailSendEstimate = ({ id }: EstimateTableRow) => {
     openDrawer(DRAWERS.ESTIMATE_SEND_MAIL, { estimateId: id });
   };
-
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.ESTIMATES);
-
-  const handleFetchData = useCallback(
-    ({
-      pageIndex,
-      pageSize,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setEstimatesTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setEstimatesTableState],
-  );
-
-  const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows: Array<{ original: EstimateTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setEstimatesSelectedRows(selectedIds);
-    },
-    [setEstimatesSelectedRows],
-  );
 
   if (isEmptyStatus) {
     return <EstimatesEmptyStatus />;
   }
 
+  const actions = {
+    onApprove: handleApproveEstimate,
+    onEdit: handleEditEstimate,
+    onReject: handleRejectEstimate,
+    onDeliver: handleDeliverEstimate,
+    onDelete: handleDeleteEstimate,
+    onConvert: handleConvertToInvoice,
+    onViewDetails: handleViewDetailEstimate,
+    onPrint: handlePrintEstimate,
+    onSendMail: handleMailSendEstimate,
+  };
+
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={estimates ?? []}
-        loading={isEstimatesLoading}
-        headerLoading={isEstimatesLoading}
-        progressBarLoading={isEstimatesFetching}
-        onFetchData={handleFetchData}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={estimatesSelectedRows}
-        autoResetSelectedRows={false}
-        noInitialFetch={true}
-        manualSortBy={true}
-        selectionColumn={true}
-        sticky={true}
-        pagination={true}
-        initialPageSize={estimatesTableState?.pageSize ?? 10}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        rowTestId={'estimate-row'}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={estimatesTableSize}
-        payload={{
-          onApprove: handleApproveEstimate,
-          onEdit: handleEditEstimate,
-          onReject: handleRejectEstimate,
-          onDeliver: handleDeliverEstimate,
-          onDelete: handleDeleteEstimate,
-          onConvert: handleConvertToInvoice,
-          onViewDetails: handleViewDetailEstimate,
-          onPrint: handlePrintEstimate,
-          onSendMail: handleMailSendEstimate,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={estimates}
+      total={pagination?.total}
+      loading={isEstimatesLoading}
+      fetching={isEstimatesFetching}
+      compact={estimatesSettings?.tableSize === 'small'}
+      query={estimatesTableState}
+      setQuery={setEstimatesTableState}
+      selectedIds={estimatesSelectedRows}
+      setSelectedIds={setEstimatesSelectedRows}
+      actions={actions}
+    />
   );
 }
 

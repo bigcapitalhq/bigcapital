@@ -8,7 +8,7 @@ export interface WithItemCategoriesProps {
   itemsCategoriesTableState: ReturnType<
     ReturnType<typeof getItemsCategoriesTableStateFactory>
   >;
-  itemsCategoriesSelectedRows: Array<unknown>;
+  itemsCategoriesSelectedRows: number[];
 }
 
 export const withItemCategories = <

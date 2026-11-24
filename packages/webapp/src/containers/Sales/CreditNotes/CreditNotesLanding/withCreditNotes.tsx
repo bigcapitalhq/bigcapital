@@ -14,7 +14,7 @@ export interface WithCreditNotesProps {
   creditNoteTableStateChanged: ReturnType<
     ReturnType<typeof isCreditNotesTableStateChangedFactory>
   >;
-  creditNotesSelectedRows: unknown[];
+  creditNotesSelectedRows: number[];
 }
 
 export const withCreditNotes = <

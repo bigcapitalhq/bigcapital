@@ -10,7 +10,7 @@ import {
 
 export interface WithManualJournalsActionsProps {
   setManualJournalsTableState: (queries: Partial<TableQuery>) => void;
-  setManualJournalsSelectedRows: (selectedRows: Array<unknown>) => void;
+  setManualJournalsSelectedRows: (selectedRows: number[]) => void;
   resetManualJournalsSelectedRows: () => void;
 }
 

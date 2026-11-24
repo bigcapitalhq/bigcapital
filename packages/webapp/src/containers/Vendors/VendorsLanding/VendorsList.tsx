@@ -1,6 +1,5 @@
 import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
-import '@/style/pages/Vendors/List.scss';
 import { VendorActionsBar } from './VendorActionsBar';
 import { VendorsListDialogs } from './VendorsListDialogs';
 import { VendorsListProvider } from './VendorsListProvider';

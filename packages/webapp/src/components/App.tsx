@@ -92,7 +92,9 @@ export default function App() {
       </AppIntlLoader>
 
       {import.meta.env.VITE_REACT_QUERY_DEVTOOLS !== 'false' &&
-        !navigator.webdriver && <ReactQueryDevtools initialIsOpen />}
+        !navigator.webdriver && (
+          <ReactQueryDevtools initialIsOpen buttonPosition="bottom-left" />
+        )}
     </QueryClientProvider>
   );
 }

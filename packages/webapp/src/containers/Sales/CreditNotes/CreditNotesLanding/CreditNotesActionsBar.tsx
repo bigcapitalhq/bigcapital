@@ -101,7 +101,7 @@ function CreditNotesActionsBarInner({
 
   if (!isEmpty(creditNotesSelectedRows)) {
     const handleBulkDelete = () => {
-      openBulkDeleteDialog(creditNotesSelectedRows as number[]);
+      openBulkDeleteDialog(creditNotesSelectedRows);
     };
     return (
       <DashboardActionsBar>

@@ -12,7 +12,7 @@ import {
 export interface WithCustomersActionsProps {
   setCustomersTableState: (state: Partial<TableQuery>) => void;
   resetCustomersTableState: () => void;
-  setCustomersSelectedRows: (selectedRows: Array<unknown>) => void;
+  setCustomersSelectedRows: (selectedRows: number[]) => void;
   resetCustomersSelectedRows: () => void;
 }
 

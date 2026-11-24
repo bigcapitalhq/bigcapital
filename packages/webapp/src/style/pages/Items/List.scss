@@ -1,29 +1,9 @@
-@import '@/style/_common';
-// Blueprint framework.
-// @import '@blueprintjs/core/src/blueprint.scss';
-
 .dashboard__insider--items-list {
-  .bigcapital-datatable {
-    .table {
-      .tbody {
-        .item_type.td {
-          .#{$ns}-tag {
-            font-size: 13px;
-          }
-        }
-        .tr.inactive .td {
-          &.normal .#{$ns}-icon {
-            color: #9eaab6;
-          }
-        }
-        .quantity_on_hand {
-          color: #ff0000;
-        }
+  .quantity_on_hand {
+    color: #ff0000;
+  }
 
-        .low-stock {
-          color: #d9822b;
-        }
-      }
-    }
+  .low-stock {
+    color: #d9822b;
   }
 }

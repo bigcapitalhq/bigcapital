@@ -9,32 +9,22 @@ import {
   Intent,
   Classes,
 } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import type { Vendor } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs } from '@/utils';
 
-type VendorRow = Pick<
-  Vendor,
-  | 'id'
-  | 'active'
-  | 'displayName'
-  | 'workPhone'
-  | 'closingBalance'
-  | 'currencyCode'
-  | 'note'
->;
-
 type ActionsMenuPayload = {
-  onEdit?: (row: VendorRow) => void;
-  onDelete?: (row: VendorRow) => void;
-  onDuplicate?: (row: VendorRow) => void;
-  onInactivate?: (row: VendorRow) => void;
-  onActivate?: (row: VendorRow) => void;
-  onViewDetails?: (row: VendorRow) => void;
+  onEdit?: (row: Vendor) => void;
+  onDelete?: (row: Vendor) => void;
+  onDuplicate?: (row: Vendor) => void;
+  onInactivate?: (row: Vendor) => void;
+  onActivate?: (row: Vendor) => void;
+  onViewDetails: (row: Vendor) => void;
 };
 
 /**
@@ -51,7 +41,7 @@ export function ActionsMenu({
     onViewDetails,
   },
 }: {
-  row: { original: VendorRow };
+  row: { original: Vendor };
   payload: ActionsMenuPayload;
 }) {
   return (
@@ -109,7 +99,7 @@ export function ActionsMenu({
  * Actions cell.
  */
 export function ActionsCell(props: {
-  row: { original: VendorRow };
+  row: { original: Vendor };
   payload: ActionsMenuPayload;
 }) {
   return (
@@ -125,28 +115,28 @@ export function ActionsCell(props: {
 /**
  * Avatar table accessor.
  */
-export function AvatarAccessor(row: VendorRow) {
+export function AvatarAccessor(row: Vendor) {
   return <span className="avatar">{firstLettersArgs(row.displayName)}</span>;
 }
 
 /**
  * Phone number accessor.
  */
-export function PhoneNumberAccessor(row: VendorRow) {
+export function PhoneNumberAccessor(row: Vendor) {
   return <div className={'work_phone'}>{row.workPhone}</div>;
 }
 
 /**
  * Balance accessor.
  */
-export function BalanceAccessor(row: VendorRow) {
+export function BalanceAccessor(row: Vendor) {
   return <Money amount={row.closingBalance} currency={row.currencyCode} />;
 }
 
 /**
  * Note column accessor.
  */
-export function NoteAccessor(row: VendorRow) {
+export function NoteAccessor(row: Vendor) {
   return (
     <If condition={Boolean(row.note)}>
       <Tooltip
@@ -161,65 +151,54 @@ export function NoteAccessor(row: VendorRow) {
   );
 }
 
-/**
- * Retrieve the vendors table columns.
- */
-export function useVendorsTableColumns() {
+const column = createColumnHelper<BP_TableFeatures, Vendor>();
+
+export function useVendorsTableColumns(size: string) {
   return useMemo(
-    () => [
-      {
-        id: 'avatar',
-        Header: '',
-        Cell: AvatarCell,
-        className: 'avatar',
-        width: 45,
-        disableResizing: true,
-        disableSortBy: true,
-        clickable: true,
-      },
-      {
-        id: 'display_name',
-        Header: intl.get('display_name'),
-        accessor: 'displayName',
-        className: 'display_name',
-        width: 150,
-        clickable: true,
-      },
-      {
-        id: 'company_name',
-        Header: intl.get('company_name'),
-        accessor: 'companyName',
-        className: clsx(Classes.TEXT_MUTED),
-        width: 150,
-        clickable: true,
-      },
-      {
-        id: 'work_phone',
-        Header: intl.get('phone_number'),
-        accessor: PhoneNumberAccessor,
-        className: clsx(Classes.TEXT_MUTED),
-        width: 100,
-        clickable: true,
-      },
-      {
-        id: 'note',
-        Header: intl.get('note'),
-        accessor: NoteAccessor,
-        disableSortBy: true,
-        className: clsx(Classes.TEXT_MUTED),
-        width: 85,
-        clickable: true,
-      },
-      {
-        id: 'balance',
-        Header: intl.get('receivable_balance'),
-        accessor: BalanceAccessor,
-        align: 'right',
-        width: 100,
-        clickable: true,
-        money: true,
-      },
-    ],
-    [],
+    () =>
+      column.columns([
+        column.accessor('displayName', {
+          id: 'avatar',
+          header: '',
+          size: 45,
+          cell: ({ row }) => <AvatarCell row={row} size={size} />,
+          enableSorting: false,
+          enableResizing: false,
+        }),
+        column.accessor('displayName', {
+          id: 'display_name',
+          header: intl.get('display_name'),
+          size: 150,
+        }),
+        column.accessor('companyName', {
+          id: 'company_name',
+          header: intl.get('company_name'),
+          size: 150,
+          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+        }),
+        column.accessor('workPhone', {
+          id: 'work_phone',
+          header: intl.get('phone_number'),
+          size: 100,
+          cell: ({ row }) => PhoneNumberAccessor(row.original),
+          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+        }),
+        column.accessor('note', {
+          id: 'note',
+          header: intl.get('note'),
+          size: 85,
+          cell: ({ row }) => NoteAccessor(row.original),
+          enableSorting: false,
+          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+        }),
+        column.accessor('closingBalance', {
+          id: 'balance',
+          header: intl.get('receivable_balance'),
+          size: 100,
+          cell: ({ row }) => BalanceAccessor(row.original),
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
+        }),
+      ]),
+    [size],
   );
 }

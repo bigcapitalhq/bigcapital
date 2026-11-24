@@ -1,12 +1,11 @@
-import { Intent, Tag, Classes } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { Button, Classes, Intent, Tag } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { NormalCell, BalanceCell, BankBalanceCell } from './components';
+import { BalanceCell, NormalCell } from './components';
 import type { AccountTableRow } from './components';
-import type { DataTableColumn } from '@/components/Datatable/types';
-import type { Row } from 'react-table';
-import { If, AppToaster } from '@/components';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
+import { AppToaster } from '@/components';
 import { transformTableStateToQuery, isBlank } from '@/utils';
 
 export const DeleteAccountTypeError = {
@@ -17,20 +16,6 @@ export const DeleteAccountTypeError = {
 interface DeleteError {
   type: string;
 }
-
-/**
- * Account name accessor.
- */
-export const accountNameAccessor = (account: AccountTableRow) => {
-  return (
-    <span>
-      <span className={'account-name'}>{account.name}</span>
-      <If condition={!!account.description}>
-        <span className={'account-desc'}>{account.description}</span>
-      </If>
-    </span>
-  );
-};
 
 /**
  * Handle delete errors in bulk and singular.
@@ -54,98 +39,98 @@ export const handleDeleteErrors = (errors: DeleteError[]) => {
   }
 };
 
-export function AccountCodeCell({
-  cell: { value },
-}: {
-  cell: { value?: string };
-}) {
-  return !isBlank(value) ? (
-    <Tag minimal round intent={Intent.NONE}>
-      {value}
-    </Tag>
-  ) : null;
+const column = createColumnHelper<BP_TableFeatures, AccountTableRow>();
+
+export const stopExpanderPropagation = (event: React.MouseEvent) =>
+  event.stopPropagation();
+
+export function useAccountsTableColumns() {
+  return React.useMemo(
+    () =>
+      column.columns([
+        column.accessor('name', {
+          header: ({ table }) => {
+            const expanded = table.getIsAllRowsExpanded();
+            const onToggleAllRowsExpanded =
+              table.getToggleAllRowsExpandedHandler();
+            return (
+              <>
+                <Button
+                  className="accounts-expand-all"
+                  minimal
+                  size="small"
+                  icon={expanded ? 'caret-down' : 'caret-right'}
+                  aria-label={intl.get(
+                    expanded ? 'accounts.collapse_all' : 'accounts.expand_all',
+                  )}
+                  aria-expanded={expanded}
+                  disabled={!table.getCanSomeRowsExpand()}
+                  onMouseDown={stopExpanderPropagation}
+                  onClick={onToggleAllRowsExpanded}
+                />
+                {intl.get('account_name')}
+              </>
+            );
+          },
+          size: 200,
+        }),
+        column.accessor('code', {
+          header: intl.get('code'),
+          size: 80,
+          cell: ({ getValue }) => {
+            const code = getValue();
+            return isBlank(code) ? null : (
+              <Tag minimal round>
+                {code}
+              </Tag>
+            );
+          },
+        }),
+        column.accessor('accountTypeLabel', {
+          id: 'type',
+          header: intl.get('type'),
+          size: 140,
+        }),
+        column.accessor('accountNormal', {
+          id: 'normal',
+          header: intl.get('account_normal'),
+          size: 80,
+          cell: ({ getValue }) => <NormalCell value={getValue()} />,
+        }),
+        column.accessor('currencyCode', {
+          id: 'currency',
+          header: intl.get('currency'),
+          size: 75,
+          cell: ({ getValue }) => (
+            <span className={Classes.TEXT_MUTED}>{getValue()}</span>
+          ),
+        }),
+        column.accessor('bankBalanceFormatted', {
+          id: 'bank_balance',
+          header: 'Bank Balance',
+          size: 150,
+          meta: { textAlign: 'right' },
+          cell: ({ row, getValue }) => (
+            <BalanceCell
+              value={row.original.amount === null ? null : getValue()}
+            />
+          ),
+        }),
+        column.accessor('amount', {
+          id: 'balance',
+          header: intl.get('balance'),
+          size: 150,
+          meta: { textAlign: 'right' },
+          cell: ({ row, getValue }) => (
+            <BalanceCell
+              value={getValue() === null ? null : row.original.formattedAmount}
+            />
+          ),
+        }),
+      ]),
+    [],
+  );
 }
-
-/**
- * Accounts table columns.
- */
-export const useAccountsTableColumns =
-  (): DataTableColumn<AccountTableRow>[] => {
-    return React.useMemo(
-      () =>
-        [
-          {
-            id: 'name',
-            Header: intl.get('account_name'),
-            accessor: 'name',
-            className: 'account_name',
-            width: 200,
-            clickable: true,
-            textOverview: true,
-          },
-          {
-            id: 'code',
-            Header: intl.get('code'),
-            accessor: 'code',
-            Cell: AccountCodeCell,
-            className: 'code',
-            width: 80,
-            clickable: true,
-          },
-          {
-            id: 'type',
-            Header: intl.get('type'),
-            accessor: 'accountTypeLabel',
-            className: clsx('type', Classes.TEXT_MUTED),
-            width: 140,
-            clickable: true,
-            textOverview: true,
-          },
-          {
-            id: 'normal',
-            Header: intl.get('account_normal'),
-            Cell: NormalCell,
-            accessor: 'accountNormal',
-            className: 'normal',
-            width: 80,
-            clickable: true,
-          },
-          {
-            id: 'currency',
-            Header: intl.get('currency'),
-            accessor: 'currencyCode',
-            className: clsx(Classes.TEXT_MUTED),
-            width: 75,
-            clickable: true,
-          },
-          {
-            id: 'bank_balance',
-            Header: 'Bank Balance',
-            accessor: 'bankBalanceFormatted',
-            Cell: BankBalanceCell,
-            width: 150,
-            clickable: true,
-            align: 'right',
-            money: true,
-          },
-          {
-            id: 'balance',
-            Header: intl.get('balance'),
-            accessor: 'amount',
-            Cell: BalanceCell,
-            width: 150,
-            clickable: true,
-            money: true,
-            align: 'right',
-          },
-        ] as DataTableColumn<AccountTableRow>[],
-      [],
-    );
-  };
-
-export const rowClassNames = (row: Row<AccountTableRow>) => ({
-  inactive: !row.original.active,
-});
 
 /**
  * Transformes the table state to list query.

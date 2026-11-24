@@ -1,5 +1,5 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   useReceiptsTableColumns,
@@ -15,19 +15,19 @@ import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
-import { DialogsName } from '@/constants/dialogs';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.RECEIPTS,
+  rowName: 'receipt',
+  identifierColumn: 'receipt_number',
+  ActionsMenu,
+});
 
 interface ReceiptsDataTableProps
   extends Pick<WithReceiptsProps, 'receiptTableState' | 'receiptSelectedRows'>,
@@ -68,7 +68,6 @@ function ReceiptsDataTable({
     isEmptyStatus,
     receiptSettings,
   } = useReceiptsListContext();
-  const receiptsTableSize = receiptSettings?.tableSize as string | undefined;
 
   // Receipts table columns.
   const columns = useReceiptsTableColumns();
@@ -103,85 +102,33 @@ function ReceiptsDataTable({
     openDrawer(DRAWERS.RECEIPT_SEND_MAIL, { receiptId: id });
   };
 
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.RECEIPTS);
-
-  // Handles the datable fetch data once the state changing.
-  const handleDataTableFetchData = useCallback(
-    ({
-      sortBy,
-      pageIndex,
-      pageSize,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setReceiptsTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setReceiptsTableState],
-  );
-  // Handle cell click.
-  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
-    openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: cell.row.original.id });
-  };
-  // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback(
-    (selectedRows: Array<{ original: ReceiptTableRow }>) => {
-      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
-      setReceiptsSelectedRows(selectedIds);
-    },
-    [setReceiptsSelectedRows],
-  );
-
   if (isEmptyStatus) {
     return <ReceiptsEmptyStatus />;
   }
 
+  const actions = {
+    onEdit: handleEditReceipt,
+    onDelete: handleDeleteReceipt,
+    onClose: handleCloseReceipt,
+    onViewDetails: handleViewDetailReceipt,
+    onPrint: handlePrintInvoice,
+    onSendMail: handleSendMailReceipt,
+  };
+
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={receipts ?? []}
-        loading={isReceiptsLoading}
-        headerLoading={isReceiptsLoading}
-        progressBarLoading={isReceiptsFetching}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        initialPageSize={receiptTableState?.pageSize ?? 10}
-        rowsCount={pagination?.total ?? 0}
-        manualPagination={true}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={receiptsTableSize}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={receiptSelectedRows}
-        autoResetSelectedRows={false}
-        payload={{
-          onEdit: handleEditReceipt,
-          onDelete: handleDeleteReceipt,
-          onClose: handleCloseReceipt,
-          onViewDetails: handleViewDetailReceipt,
-          onPrint: handlePrintInvoice,
-          onSendMail: handleSendMailReceipt,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={receipts}
+      total={pagination?.total}
+      loading={isReceiptsLoading}
+      fetching={isReceiptsFetching}
+      compact={receiptSettings?.tableSize === 'small'}
+      query={receiptTableState}
+      setQuery={setReceiptsTableState}
+      selectedIds={receiptSelectedRows}
+      setSelectedIds={setReceiptsSelectedRows}
+      actions={actions}
+    />
   );
 }
 

@@ -19,7 +19,7 @@ export const resetVendorsTableState = () => {
   };
 };
 
-export const setVendorsSelectedRows = (selectedRows: Array<unknown>) => {
+export const setVendorsSelectedRows = (selectedRows: number[]) => {
   return {
     type: VENDORS_SET_SELECTED_ROWS,
     payload: selectedRows,

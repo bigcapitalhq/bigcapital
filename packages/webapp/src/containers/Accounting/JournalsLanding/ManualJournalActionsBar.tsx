@@ -83,7 +83,7 @@ function ManualJournalActionsBarInner({
     useBulkDeleteManualJournalsDialog();
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(manualJournalsSelectedRows as number[]);
+    openBulkDeleteDialog(manualJournalsSelectedRows);
   };
 
   // Handle tab change.

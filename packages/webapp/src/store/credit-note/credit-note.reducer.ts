@@ -11,7 +11,7 @@ import {
 
 interface CreditNoteState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery = {
@@ -39,7 +39,7 @@ const reducerInstance = createReducer(initialState, {
 
   [CREDIT_NOTES_SET_SELECTED_ROWS]: (
     state: CreditNoteState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

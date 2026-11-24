@@ -19,7 +19,7 @@ export const resetReceiptsTableState = () => {
   };
 };
 
-export const setReceiptsSelectedRows = (selectedRows: Array<unknown>) => {
+export const setReceiptsSelectedRows = (selectedRows: number[]) => {
   return {
     type: RECEIPTS_SELECTED_ROWS_SET,
     payload: selectedRows,

@@ -12,7 +12,7 @@ import {
 export interface WithVendorsActionsProps {
   setVendorsTableState: (queries: Partial<TableQuery>) => void;
   resetVendorsTableState: () => void;
-  setVendorsSelectedRows: (selectedRows: Array<unknown>) => void;
+  setVendorsSelectedRows: (selectedRows: number[]) => void;
   resetVendorsSelectedRows: () => void;
 }
 

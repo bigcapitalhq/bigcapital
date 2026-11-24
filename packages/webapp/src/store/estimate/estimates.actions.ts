@@ -19,7 +19,7 @@ export const resetEstimatesTableState = () => {
   };
 };
 
-export const setEstimatesSelectedRows = (selectedRows: Array<unknown>) => {
+export const setEstimatesSelectedRows = (selectedRows: number[]) => {
   return {
     type: ESTIMATES_SET_SELECTED_ROWS,
     payload: selectedRows,

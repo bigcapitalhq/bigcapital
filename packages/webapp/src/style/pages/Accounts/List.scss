@@ -1,71 +1,34 @@
-@import '../../_base.scss';
+@import '@/style/_common';
 
 .dashboard__insider--accounts-chart {
-  .bigcapital-datatable {
-    .normal {
-      .#{$ns}-icon {
-        color: #7f91a2;
-        padding-left: 15px;
-      }
-    }
+  min-height: 0;
 
-    .table {
-      .tbody {
-        .tr:not(.no-results) .td {
-          padding-top: 0.3rem;
-          padding-bottom: 0.3rem;
-        }
+  .dashboard__page-content,
+  .dashboard__datatable {
+    min-height: 0;
+    min-width: 0;
+  }
 
-        .account_name {
-          .#{$ns}-popover-target--inactive-semafro {
-            margin-left: 8px;
-            margin-right: 6px;
-            float: right;
-            border: 0;
-          }
-          .#{$ns}-popover-target--account-desc {
-            border-bottom-color: #bbb;
-          }
-          .inactive-semafro {
-            height: 7px;
-            width: 7px;
-            background: #bbb;
-            display: inline-block;
-            border-radius: 8px;
-          }
-        }
-        .account-desc {
-          font-size: 11px;
-          color: hsl(0, 0%, 50%);
-          margin-top: 2px;
-          line-height: 1.25;
-          padding-bottom: 2px;
-          display: block;
-        }
-        .normal {
-          .#{$ns}-popover-target {
-            width: 100%;
-          }
-          .#{$ns}-tooltip-indicator {
-            cursor: initial;
-            border-bottom: 0;
-          }
-        }
-        .actions {
-          padding-right: 18px;
-          justify-content: right;
-        }
-      }
-    }
-    .table-size--small {
-      .tbody .tr {
-        .normal {
-          svg {
-            width: 14px;
-            height: 14px;
-          }
-        }
-      }
-    }
+  .account-normal-arrow {
+    display: inline-block;
+    width: 100%;
+    padding-left: 15px;
+    color: #7f91a2;
+    cursor: default;
+  }
+
+  .table-size--small .account-normal-arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  // Leave room for the empty-state message that follows the table.
+  .dashboard__datatable > .#{$ns}-table-container:not(:last-child) {
+    height: auto;
+  }
+
+  // Blueprint header labels ignore pointer events. The disclosure is interactive.
+  .accounts-expand-all {
+    pointer-events: auto;
   }
 }

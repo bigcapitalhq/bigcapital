@@ -74,7 +74,7 @@ function ItemsCategoryActionsBarInner({
 
   // Handle the items categories bulk delete.
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(itemsCategoriesSelectedRows as number[]);
+    openBulkDeleteDialog(itemsCategoriesSelectedRows);
   };
   // Handle the export button click.
   const handleExportBtnClick = () => {

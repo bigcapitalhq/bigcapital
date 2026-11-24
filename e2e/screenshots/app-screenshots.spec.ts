@@ -380,35 +380,35 @@ test.describe('app screenshots', () => {
   test('captures the bills list', async ({ page }) => {
     await capture(page, '/bills', 'bills.png', {
       title: 'Bills',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'bill-row',
     });
   });
 
   test('captures the customers list', async ({ page }) => {
     await capture(page, '/customers', 'customers.png', {
       title: 'Customers',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'customer-row',
     });
   });
 
   test('captures the vendors list', async ({ page }) => {
     await capture(page, '/vendors', 'vendors.png', {
       title: 'Vendors',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'vendor-row',
     });
   });
 
   test('captures the items list', async ({ page }) => {
     await capture(page, '/items', 'items.png', {
       title: 'Items',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'item-row',
     });
   });
 
   test('captures the expenses list', async ({ page }) => {
     await capture(page, '/expenses', 'expenses.png', {
       title: 'Expenses',
-      rowSelector: '.tbody .tr',
+      rowTestId: 'expense-row',
     });
   });
 

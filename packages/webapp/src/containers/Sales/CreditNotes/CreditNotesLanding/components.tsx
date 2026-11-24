@@ -1,12 +1,11 @@
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import clsx from 'classnames';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
-import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
+import { If, Icon, Can } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
-import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type CreditNoteTableRow = NonNullable<
@@ -99,102 +98,74 @@ export function ActionsMenu({
   );
 }
 
+function getCreditNoteStatus(creditNote: CreditNoteTableRow) {
+  if (creditNote.isOpen)
+    return { text: intl.get('open'), intent: Intent.WARNING };
+  if (creditNote.isClosed)
+    return { text: intl.get('closed'), intent: Intent.SUCCESS };
+  if (creditNote.isDraft)
+    return { text: intl.get('draft'), intent: Intent.NONE };
+}
+
 export function StatusAccessor(creditNote: CreditNoteTableRow) {
+  const status = getCreditNoteStatus(creditNote);
   return (
     <div>
-      <Choose>
-        <Choose.When condition={!!creditNote.isOpen}>
-          <Tag intent={Intent.WARNING} round minimal>
-            <T id={'open'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!creditNote.isClosed}>
-          <Tag intent={Intent.SUCCESS} round minimal>
-            <T id={'closed'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!creditNote.isDraft}>
-          <Tag intent={Intent.NONE} round minimal>
-            <T id={'draft'} />
-          </Tag>
-        </Choose.When>
-      </Choose>
+      {status && (
+        <Tag intent={status.intent} round minimal>
+          {status.text}
+        </Tag>
+      )}
     </div>
   );
 }
 
-export function useCreditNoteTableColumns(): DataTableColumn<CreditNoteTableRow>[] {
+const column = createColumnHelper<BP_TableFeatures, CreditNoteTableRow>();
+
+export function useCreditNoteTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('formattedCreditNoteDate', {
           id: 'credit_date',
-          Header: intl.get('credit_note.column.credit_date'),
-          accessor: 'formattedCreditNoteDate',
-          width: 110,
-          className: 'credit_date',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('credit_note.column.credit_date'),
+          size: 110,
+        }),
+        column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
-          Header: intl.get('customer_name'),
-          accessor: 'customer.displayName',
-          width: 180,
-          className: 'customer',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('customer_name'),
+          size: 180,
+        }),
+        column.accessor('creditNoteNumber', {
           id: 'credit_number',
-          Header: intl.get('credit_note.column.credit_note_no'),
-          accessor: 'creditNoteNumber',
-          width: 100,
-          className: 'credit_number',
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('credit_note.column.credit_note_no'),
+          size: 100,
+        }),
+        column.accessor('formattedAmount', {
           id: 'amount',
-          Header: intl.get('amount'),
-          accessor: 'formattedAmount',
-          width: 120,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('amount'),
+          size: 120,
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
+        }),
+        column.accessor('formattedCreditsRemaining', {
           id: 'balance',
-          Header: intl.get('balance'),
-          accessor: 'formattedCreditsRemaining',
-          width: 120,
-          align: 'right',
-          clickable: true,
-          textOverview: true,
-          disableSortBy: true,
-          className: clsx(CLASSES.FONT_BOLD),
-        },
-        {
+          header: intl.get('balance'),
+          size: 120,
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
+          enableSorting: false,
+        }),
+        column.accessor((row) => getCreditNoteStatus(row)?.text, {
           id: 'status',
-          Header: intl.get('status'),
-          accessor: StatusAccessor,
-          width: 160,
-          className: 'status',
-          clickable: true,
-        },
-        {
+          header: intl.get('status'),
+          size: 160,
+          cell: ({ row }) => StatusAccessor(row.original),
+        }),
+        column.accessor('referenceNo', {
           id: 'reference_no',
-          Header: intl.get('reference_no'),
-          accessor: 'referenceNo',
-          width: 90,
-          className: 'reference_no',
-          clickable: true,
-          textOverview: true,
-        },
-      ] as DataTableColumn<CreditNoteTableRow>[],
+          header: intl.get('reference_no'),
+          size: 90,
+        }),
+      ]),
     [],
   );
 }

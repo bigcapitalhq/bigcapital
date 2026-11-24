@@ -8,11 +8,13 @@ import {
   Button,
   Popover,
 } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import { isNumber } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { InventoryAdjustment } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Icon, Money, If, FormattedMessage as T, Can } from '@/components';
 import {
   InventoryAdjustmentAction,
@@ -172,63 +174,47 @@ export const ActionsCell = (props: ActionsMenuProps) => {
   );
 };
 
-/**
- * Retrieve inventory adjustments columns.
- */
-export const useInventoryAdjustmentsColumns = () => {
+const column = createColumnHelper<BP_TableFeatures, InventoryAdjustment>();
+
+export function useInventoryAdjustmentsColumns() {
   return React.useMemo(
-    () => [
-      {
-        id: 'date',
-        Header: intl.get('date'),
-        accessor: (r: InventoryAdjustment) =>
-          moment(r.date).format('YYYY MMM DD'),
-        width: 115,
-        className: 'date',
-        clickable: true,
-      },
-      {
-        id: 'type',
-        Header: intl.get('type'),
-        accessor: TypeAccessor,
-        className: 'type',
-        width: 100,
-        clickable: true,
-      },
-      {
-        id: 'reason',
-        Header: intl.get('reason'),
-        accessor: 'reason',
-        className: 'reason',
-        width: 115,
-        clickable: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'referenceNo',
-        className: 'reference_no',
-        width: 100,
-        clickable: true,
-      },
-      {
-        id: 'published_at',
-        Header: intl.get('status'),
-        accessor: PublishAccessor,
-        width: 95,
-        className: 'publish',
-        clickable: true,
-      },
-      {
-        id: 'created_at',
-        Header: intl.get('created_at'),
-        accessor: (r: InventoryAdjustment) =>
-          moment(r.createdAt).format('YYYY MMM DD'),
-        width: 125,
-        className: 'created_at',
-        clickable: true,
-      },
-    ],
+    () =>
+      column.columns([
+        column.accessor('date', {
+          id: 'date',
+          header: intl.get('date'),
+          size: 115,
+          cell: ({ getValue }) => moment(getValue()).format('YYYY MMM DD'),
+        }),
+        column.accessor('formattedType', {
+          id: 'type',
+          header: intl.get('type'),
+          size: 100,
+          cell: ({ row }) => TypeAccessor(row.original),
+        }),
+        column.accessor('reason', {
+          id: 'reason',
+          header: intl.get('reason'),
+          size: 115,
+        }),
+        column.accessor('referenceNo', {
+          id: 'reference_no',
+          header: intl.get('reference_no'),
+          size: 100,
+        }),
+        column.accessor('isPublished', {
+          id: 'published_at',
+          header: intl.get('status'),
+          size: 95,
+          cell: ({ row }) => PublishAccessor(row.original),
+        }),
+        column.accessor('createdAt', {
+          id: 'created_at',
+          header: intl.get('created_at'),
+          size: 125,
+          cell: ({ getValue }) => moment(getValue()).format('YYYY MMM DD'),
+        }),
+      ]),
     [],
   );
-};
+}

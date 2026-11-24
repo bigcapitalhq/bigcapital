@@ -90,7 +90,6 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('budgets'),
     pageTitle: intl.get('budgets_list'),
-    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: `/item/categories/import`,
@@ -543,7 +542,6 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('budget_vs_actual_report'),
     backLink: true,
     sidebarExpand: false,
-    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: '/financial-reports',

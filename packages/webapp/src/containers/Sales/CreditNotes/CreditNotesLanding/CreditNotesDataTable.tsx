@@ -12,19 +12,20 @@ import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.CREDIT_NOTES,
+  rowName: 'credit-note',
+  identifierColumn: 'credit_number',
+  ActionsMenu,
+});
 
 interface CreditNotesDataTableProps
   extends Pick<
@@ -55,45 +56,8 @@ function CreditNotesDataTableInner({
     isCreditNotesLoading,
     creditNoteSettings,
   } = useCreditNoteListContext();
-  const creditNoteTableSize = creditNoteSettings?.tableSize as
-    | string
-    | undefined;
 
   const columns = useCreditNoteTableColumns();
-
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CREDIT_NOTES);
-
-  const handleDataTableFetchData = React.useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setCreditNotesTableState({
-        pageSize,
-        pageIndex,
-        sortBy,
-      });
-    },
-    [setCreditNotesTableState],
-  );
-
-  const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows: Array<{ original: CreditNoteTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setCreditNotesSelectedRows(selectedIds);
-    },
-    [setCreditNotesSelectedRows],
-  );
-
-  if (isEmptyStatus) {
-    return <CreditNoteEmptyStatus />;
-  }
 
   const handleViewDetailCreditNote = ({ id }: CreditNoteTableRow) => {
     openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, { creditNoteId: id });
@@ -103,14 +67,8 @@ function CreditNotesDataTableInner({
     openAlert('credit-note-delete', { creditNoteId: id });
   };
 
-  const hanldeEditCreditNote = (creditNote: CreditNoteTableRow) => {
+  const handleEditCreditNote = (creditNote: CreditNoteTableRow) => {
     history.push(`/credit-notes/${creditNote.id}/edit`);
-  };
-
-  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
-    openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, {
-      creditNoteId: cell.row.original.id,
-    });
   };
 
   const handleRefundCreditNote = ({ id }: CreditNoteTableRow) => {
@@ -129,43 +87,34 @@ function CreditNotesDataTableInner({
     openDrawer(DRAWERS.CREDIT_NOTE_SEND_MAIL, { creditNoteId: id });
   };
 
+  if (isEmptyStatus) {
+    return <CreditNoteEmptyStatus />;
+  }
+
+  const actions = {
+    onViewDetails: handleViewDetailCreditNote,
+    onDelete: handleDeleteCreditNote,
+    onEdit: handleEditCreditNote,
+    onRefund: handleRefundCreditNote,
+    onOpen: handleOpenCreditNote,
+    onReconcile: handleReconcileCreditNote,
+    onSendMail: handleSendMailCreditNote,
+  };
+
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={creditNotes ?? []}
-        loading={isCreditNotesLoading}
-        headerLoading={isCreditNotesLoading}
-        progressBarLoading={isCreditNotesFetching}
-        onFetchData={handleDataTableFetchData}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={creditNotesSelectedRows}
-        autoResetSelectedRows={false}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        initialPageSize={creditNoteTableState?.pageSize ?? 10}
-        rowsCount={pagination?.total ?? 0}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={creditNoteTableSize}
-        payload={{
-          onViewDetails: handleViewDetailCreditNote,
-          onDelete: handleDeleteCreditNote,
-          onEdit: hanldeEditCreditNote,
-          onRefund: handleRefundCreditNote,
-          onOpen: handleOpenCreditNote,
-          onReconcile: handleReconcileCreditNote,
-          onSendMail: handleSendMailCreditNote,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={creditNotes}
+      total={pagination?.total}
+      loading={isCreditNotesLoading}
+      fetching={isCreditNotesFetching}
+      compact={creditNoteSettings?.tableSize === 'small'}
+      query={creditNoteTableState}
+      setQuery={setCreditNotesTableState}
+      selectedIds={creditNotesSelectedRows}
+      setSelectedIds={setCreditNotesSelectedRows}
+      actions={actions}
+    />
   );
 }
 

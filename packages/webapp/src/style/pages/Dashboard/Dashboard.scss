@@ -473,6 +473,16 @@ $dashboard-views-bar-height: 44px;
     }
   }
 
+  &__insider:has(.dashboard__datatable > :is(.#{$ns}-table-container, .#{$ns}-table-pagination-layout)) {
+    min-height: 0;
+
+    .dashboard__page-content,
+    .dashboard__datatable {
+      min-height: 0;
+      min-width: 0;
+    }
+  }
+
   &__datatable {
     display: flex;
     flex: 1 0 0;
@@ -480,6 +490,115 @@ $dashboard-views-bar-height: 44px;
     background: var(--color-dashboard-datatable-background);
     margin: 22px 32px;
     border: 1px solid var(--color-dashboard-datatable-border);
+
+    // Leave room for an empty-state message below the table.
+    > :is(.#{$ns}-table-container, .#{$ns}-table-pagination-layout):not(:last-child) {
+      height: auto;
+    }
+
+    .numeric-cell {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .#{$ns}-table-pagination-bar {
+      min-height: 34px;
+
+      .#{$ns}-table-pagination-bar-text {
+        color: var(--color-gray2);
+      }
+
+      .#{$ns}-button:enabled {
+        --bp-typography-color-muted: var(--color-gray4);
+        color: var(--color-gray4);
+
+        .#{$ns}-icon-caret-down {
+          --bp-typography-color-muted: var(--color-gray2);
+        }
+      }
+
+      .#{$ns}-dark & {
+        background-color: $dark-gray1;
+      }
+    }
+
+    .#{$ns}-table-container {
+      &,
+      .#{$ns}-dark & {
+        box-shadow: 0 0 0 1px var(--color-dashboard-datatable-border);
+      }
+
+      .#{$ns}-table-column-headers,
+      .#{$ns}-table-row-selection-header-cell {
+        background-color: var(--color-datatable-head-background);
+      }
+
+      .#{$ns}-table-row-selection-header-cell {
+        box-shadow: inset -1px 0 var(--color-datatable-head-border);
+
+        .#{$ns}-dark & {
+          box-shadow: inset -1px 0 rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      .#{$ns}-table-column-headers .#{$ns}-table-column-header-cell {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 36px;
+        color: var(--color-light-gray1);
+        box-shadow: inset -1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .#{$ns}-dark & {
+        .#{$ns}-table-cell-client,
+        .#{$ns}-table-row-headers {
+          background-color: $dark-gray1;
+        }
+
+        .#{$ns}-table-quadrant {
+          background-color: $dark-gray1;
+        }
+      }
+
+      .#{$ns}-table-quadrant-left,
+      .#{$ns}-table-quadrant-top-left {
+        @include datatable-sticky-background;
+
+        // Let the scrolling columns show through the frozen pane.
+        .#{$ns}-table-cell-client,
+        .#{$ns}-table-row-headers,
+        .#{$ns}-table-column-headers,
+        .#{$ns}-table-menu {
+          background-color: transparent;
+        }
+      }
+
+      .#{$ns}-table-cell-client .#{$ns}-table-cell {
+        font-size: 14px;
+        padding: 8px 6px;
+
+        &:not([data-vertical-align]) {
+          align-content: center;
+
+          > .#{$ns}-table-cell-with-expander {
+            align-items: center;
+          }
+        }
+      }
+
+      .#{$ns}-table-cell-client .#{$ns}-table-cell,
+      .#{$ns}-table-row-headers .#{$ns}-table-header {
+        box-shadow: inset 0 -1px var(--color-dark-gray4);
+      }
+
+      .#{$ns}-table-row-expander {
+        color: var(--color-gray3);
+      }
+
+      .#{$ns}-table-row-selection-checkbox input:not(:checked):not(:indeterminate) ~ .#{$ns}-control-indicator {
+        box-shadow: inset 0 0 0 1px var(--color-datatable-checkbox-border);
+      }
+    }
 
     .bigcapital-datatable {
       display: flex;

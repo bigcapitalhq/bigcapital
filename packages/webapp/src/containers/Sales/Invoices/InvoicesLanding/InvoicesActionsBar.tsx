@@ -24,6 +24,8 @@ import type { WithInvoicesProps } from './withInvoices';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
+  Can,
+  DashboardActionViewsList,
   Icon,
   FormattedMessage as T,
   AdvancedFilterPopover,
@@ -31,7 +33,6 @@ import {
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
-import { Can, If, DashboardActionViewsList } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
@@ -104,7 +105,7 @@ function InvoiceActionsBar({
   };
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(invoicesSelectedRows as number[]);
+    openBulkDeleteDialog(invoicesSelectedRows);
   };
 
   if (!isEmpty(invoicesSelectedRows)) {

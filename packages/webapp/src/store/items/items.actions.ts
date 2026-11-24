@@ -19,7 +19,7 @@ export const resetItemsTableState = () => {
   };
 };
 
-export const setItemsSelectedRows = (selectedRows: Array<unknown>) => {
+export const setItemsSelectedRows = (selectedRows: number[]) => {
   return {
     type: ITEMS_SET_SELECTED_ROWS,
     payload: selectedRows,

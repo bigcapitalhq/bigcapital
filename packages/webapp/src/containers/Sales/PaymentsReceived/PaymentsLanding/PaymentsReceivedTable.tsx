@@ -1,5 +1,5 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { PaymentsReceivedEmptyStatus as PaymentReceivesEmptyStatus } from './PaymentsReceivedEmptyStatus';
@@ -12,18 +12,19 @@ import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedAct
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.PAYMENT_RECEIVES,
+  rowName: 'payment-received',
+  identifierColumn: 'payment_receive_no',
+  ActionsMenu,
+});
 
 interface PaymentsReceivedDataTableProps
   extends Pick<
@@ -54,9 +55,6 @@ function PaymentsReceivedDataTable({
     isEmptyStatus,
     paymentReceiveSettings,
   } = usePaymentsReceivedListContext();
-  const paymentReceivesTableSize = paymentReceiveSettings?.tableSize as
-    | string
-    | undefined;
 
   const columns = usePaymentReceivesColumns();
 
@@ -76,82 +74,31 @@ function PaymentsReceivedDataTable({
     openDrawer(DRAWERS.PAYMENT_RECEIVED_SEND_MAIL, { paymentReceivedId: id });
   };
 
-  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
-    openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
-      paymentReceiveId: cell.row.original.id,
-    });
-  };
-
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PAYMENT_RECEIVES);
-
-  const handleDataTableFetchData = useCallback(
-    ({
-      pageIndex,
-      pageSize,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setPaymentReceivesTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setPaymentReceivesTableState],
-  );
-
-  const handleSelectedRowsChange = useCallback(
-    (selectedRows: Array<{ original: PaymentReceiveTableRow }>) => {
-      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
-      setPaymentReceivesSelectedRows(selectedIds);
-    },
-    [setPaymentReceivesSelectedRows],
-  );
-
   if (isEmptyStatus) {
     return <PaymentReceivesEmptyStatus />;
   }
 
+  const actions = {
+    onDelete: handleDeletePaymentReceive,
+    onEdit: handleEditPaymentReceive,
+    onViewDetails: handleViewDetailPaymentReceive,
+    onSendMail: handleSendMailPayment,
+  };
+
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={paymentReceives ?? []}
-        loading={isPaymentReceivesLoading}
-        headerLoading={isPaymentReceivesLoading}
-        progressBarLoading={isPaymentReceivesFetching}
-        onFetchData={handleDataTableFetchData}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={paymentReceivesSelectedRows}
-        autoResetSelectedRows={false}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        pagination={true}
-        initialPageSize={paymentReceivesTableState?.pageSize ?? 10}
-        rowsCount={pagination?.total ?? 0}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={paymentReceivesTableSize}
-        payload={{
-          onDelete: handleDeletePaymentReceive,
-          onEdit: handleEditPaymentReceive,
-          onViewDetails: handleViewDetailPaymentReceive,
-          onSendMail: handleSendMailPayment,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={paymentReceives}
+      total={pagination?.total}
+      loading={isPaymentReceivesLoading}
+      fetching={isPaymentReceivesFetching}
+      compact={paymentReceiveSettings?.tableSize === 'small'}
+      query={paymentReceivesTableState}
+      setQuery={setPaymentReceivesTableState}
+      selectedIds={paymentReceivesSelectedRows}
+      setSelectedIds={setPaymentReceivesSelectedRows}
+      actions={actions}
+    />
   );
 }
 

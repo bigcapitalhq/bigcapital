@@ -1,6 +1,6 @@
 import { Alert, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useRecurringInvoicesTableColumns } from './components';
@@ -11,23 +11,24 @@ import type { RecurringInvoiceTableRow } from './components';
 import type { WithRecurringInvoicesProps } from './withRecurringInvoices';
 import type { WithRecurringInvoiceActionsProps } from './withRecurringInvoicesActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  AppToaster,
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonHeader,
-  TableSkeletonRows,
-} from '@/components';
+import { AppToaster } from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
 import {
   useDeleteRecurringInvoice,
   useGenerateRecurringInvoiceNow,
   usePauseRecurringInvoice,
   useResumeRecurringInvoice,
 } from '@/hooks/query';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.RECURRING_INVOICES,
+  rowName: 'recurring-invoice',
+  identifierColumn: 'profile_name',
+  ActionsMenu,
+});
 
 interface RecurringInvoicesDataTableProps
   extends Pick<
@@ -148,94 +149,49 @@ function RecurringInvoicesDataTableInner({
     }
   };
 
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.RECURRING_INVOICES);
-
-  const handleFetchData = useCallback(
-    ({
-      pageIndex,
-      pageSize,
-      sortBy,
-    }: {
-      pageIndex: number;
-      pageSize: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setRecurringInvoicesTableState({ pageIndex, pageSize, sortBy });
-    },
-    [setRecurringInvoicesTableState],
-  );
-
-  const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows: Array<{ original: RecurringInvoiceTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setRecurringInvoicesSelectedRows(selectedIds);
-    },
-    [setRecurringInvoicesSelectedRows],
-  );
-
-  const handleCellClick = (cell: any) => {
-    openDrawer(DRAWERS.RECURRING_INVOICE_DETAILS, {
-      recurringInvoiceId: cell.row.original.id,
-      tab: 'details',
-    });
-  };
+  const handleCancelDelete = () => setDeleteTarget(null);
 
   if (isEmptyStatus) {
     return null;
   }
 
-  return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={recurringInvoices ?? []}
-        loading={isRecurringInvoicesLoading}
-        headerLoading={isRecurringInvoicesLoading}
-        progressBarLoading={isRecurringInvoicesFetching}
-        onFetchData={handleFetchData}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={recurringInvoicesSelectedRows}
-        autoResetSelectedRows={false}
-        noInitialFetch={true}
-        manualSortBy={true}
-        selectionColumn={true}
-        sticky={true}
-        pagination={true}
-        initialPageSize={recurringInvoicesTableState?.pageSize ?? 20}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        rowTestId={'recurring-invoice-row'}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={invoicesSettings?.tableSize as string | undefined}
-        payload={{
-          onEdit: handleEdit,
-          onViewDetails: handleViewDetails,
-          onViewInvoices: handleViewInvoices,
-          onPause: handlePause,
-          onResume: handleResume,
-          onGenerate: handleGenerate,
-          onDelete: (row: RecurringInvoiceTableRow) => setDeleteTarget(row),
-        }}
-      />
+  const actions = {
+    onEdit: handleEdit,
+    onViewDetails: handleViewDetails,
+    onViewInvoices: handleViewInvoices,
+    onPause: handlePause,
+    onResume: handleResume,
+    onGenerate: handleGenerate,
+    onDelete: setDeleteTarget,
+  };
 
+  return (
+    <>
+      <Table
+        columns={columns}
+        data={recurringInvoices}
+        total={pagination?.total}
+        loading={isRecurringInvoicesLoading}
+        fetching={isRecurringInvoicesFetching}
+        compact={invoicesSettings?.tableSize === 'small'}
+        query={recurringInvoicesTableState}
+        setQuery={setRecurringInvoicesTableState}
+        selectedIds={recurringInvoicesSelectedRows}
+        setSelectedIds={setRecurringInvoicesSelectedRows}
+        actions={actions}
+      />
       <Alert
         isOpen={!!deleteTarget}
         intent={Intent.DANGER}
         icon="trash"
         cancelButtonText={intl.get('cancel')}
         confirmButtonText={intl.get('delete')}
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
       >
         <p>{intl.get('recurring_invoice.delete_confirmation')}</p>
       </Alert>
-    </DashboardContentTable>
+    </>
   );
 }
 

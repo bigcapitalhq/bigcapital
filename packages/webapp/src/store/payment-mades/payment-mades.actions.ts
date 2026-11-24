@@ -20,7 +20,7 @@ export const resetPaymentMadesTableState = (queries?: Partial<TableQuery>) => {
   };
 };
 
-export const setPaymentMadesSelectedRows = (selectedRows: Array<unknown>) => {
+export const setPaymentMadesSelectedRows = (selectedRows: number[]) => {
   return {
     type: PAYMENT_MADES_SET_SELECTED_ROWS,
     payload: selectedRows,

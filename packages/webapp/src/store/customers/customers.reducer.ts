@@ -11,7 +11,7 @@ import {
 
 interface CustomersState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 // Default table query state.
@@ -33,7 +33,7 @@ const reducerInstance = createReducer(initialState, {
 
   [CUSTOMERS_SET_SELECTED_ROWS]: (
     state: CustomersState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

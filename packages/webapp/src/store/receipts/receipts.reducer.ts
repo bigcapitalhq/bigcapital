@@ -11,7 +11,7 @@ import {
 
 interface ReceiptsState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery = {
@@ -39,7 +39,7 @@ const reducerInstance = createReducer(initialState, {
 
   [RECEIPTS_SELECTED_ROWS_SET]: (
     state: ReceiptsState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

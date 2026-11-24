@@ -1,5 +1,4 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useExpensesTableColumns } from './components';
 import { ExpensesEmptyStatus } from './ExpensesEmptyStatus';
@@ -11,24 +10,25 @@ import type { WithExpensesProps } from './withExpenses';
 import type { WithExpensesActionsProps } from './withExpensesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  DashboardContentTable,
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.EXPENSES,
+  rowName: 'expense',
+  identifierColumn: 'payment_date',
+  ActionsMenu,
+});
 
 interface ExpensesDataTableProps
   extends WithExpensesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
-    Pick<WithExpensesProps, 'expensesTableState'> {}
+    Pick<WithExpensesProps, 'expensesTableState' | 'expensesSelectedRows'> {}
 
 /**
  * Expenses datatable.
@@ -46,6 +46,7 @@ function ExpensesDataTable({
 
   // #withExpenses
   expensesTableState,
+  expensesSelectedRows,
 }: ExpensesDataTableProps) {
   // Expenses list context.
   const {
@@ -57,36 +58,11 @@ function ExpensesDataTable({
     isEmptyStatus,
     expenseSettings,
   } = useExpensesListContext();
-  const expensesTableSize = expenseSettings?.tableSize as string | undefined;
 
   const history = useHistory();
 
   // Expenses table columns.
   const columns = useExpensesTableColumns();
-
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.EXPENSES);
-
-  // Handle fetch data of manual jouranls datatable.
-  const handleFetchData = useCallback(
-    ({
-      pageIndex,
-      pageSize,
-      sortBy,
-    }: {
-      pageIndex: number;
-      pageSize: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setExpensesTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setExpensesTableState],
-  );
 
   // Handle the expense publish action.
   const handlePublishExpense = (expense: ExpenseTableRow) => {
@@ -110,70 +86,39 @@ function ExpensesDataTable({
     });
   };
 
-  // Handle cell click.
-  const handleCellClick = (
-    cell: { row: { original: ExpenseTableRow } },
-    _event: React.MouseEvent,
-  ) => {
-    openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: cell.row.original.id });
-  };
-
-  // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows: Array<{ original: ExpenseTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setExpensesSelectedRows(selectedIds);
-    },
-    [setExpensesSelectedRows],
-  );
-
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <ExpensesEmptyStatus />;
   }
 
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={expenses || []}
-        loading={isExpensesLoading}
-        headerLoading={isExpensesLoading}
-        progressBarLoading={isExpensesFetching}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        rowTestId={'expense-row'}
-        onFetchData={handleFetchData}
-        pagination={true}
-        initialPageSize={expensesTableState?.pageSize ?? 10}
-        manualSortBy={true}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        size={expensesTableSize}
-        payload={{
-          onPublish: handlePublishExpense,
-          onDelete: handleDeleteExpense,
-          onEdit: handleEditExpense,
-          onViewDetails: handleViewDetailExpense,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={expenses}
+      total={pagination?.total}
+      loading={isExpensesLoading}
+      fetching={isExpensesFetching}
+      compact={expenseSettings?.tableSize === 'small'}
+      query={expensesTableState}
+      setQuery={setExpensesTableState}
+      selectedIds={expensesSelectedRows}
+      setSelectedIds={setExpensesSelectedRows}
+      actions={{
+        onPublish: handlePublishExpense,
+        onDelete: handleDeleteExpense,
+        onEdit: handleEditExpense,
+        onViewDetails: handleViewDetailExpense,
+      }}
+    />
   );
 }
 
 export const ExpenseDataTable = FF.pipe(
   ExpensesDataTable,
-  withExpenses(({ expensesTableState }) => ({ expensesTableState })),
+  withExpenses(({ expensesTableState, expensesSelectedRows }) => ({
+    expensesTableState,
+    expensesSelectedRows,
+  })),
   withExpensesActions,
   withDrawerActions,
   withAlertActions,

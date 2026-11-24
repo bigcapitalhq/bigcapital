@@ -70,5 +70,5 @@ export function useMemorizedColumnsWidths(tableName: string) {
   ) => {
     save(columnsResizing.columnWidths);
   };
-  return [get, save, handleColumnResizing];
+  return [get, save, handleColumnResizing] as const;
 }

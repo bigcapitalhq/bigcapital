@@ -1,5 +1,4 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useVendorsTableColumns } from './components';
 import { VendorsEmptyStatus } from './VendorsEmptyStatus';
@@ -12,18 +11,19 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import type { Vendor } from '@bigcapital/sdk-ts';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-  DashboardContentTable,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.VENDORS,
+  rowName: 'vendor',
+  identifierColumn: 'display_name',
+  ActionsMenu,
+});
 
 interface VendorsTableInnerProps
   extends Pick<WithVendorsProps, 'vendorsTableState' | 'vendorsSelectedRows'>,
@@ -33,8 +33,6 @@ interface VendorsTableInnerProps
     WithDrawerActionsProps {}
 
 type VendorRow = Pick<Vendor, 'id'>;
-type SortBy = Array<{ id: string; desc: boolean }>;
-
 /**
  * Vendors table.
  */
@@ -65,10 +63,8 @@ function VendorsTableInner({
     isEmptyStatus,
     vendorsSettings,
   } = useVendorsListContext();
-  const vendorsTableSize = vendorsSettings?.tableSize as string | undefined;
-
-  // Vendors table columns.
-  const columns = useVendorsTableColumns();
+  const compact = vendorsSettings?.tableSize === 'small';
+  const columns = useVendorsTableColumns(compact ? 'small' : 'medium');
 
   // History context.
   const history = useHistory();
@@ -107,91 +103,32 @@ function VendorsTableInner({
     openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: id });
   };
 
-  // Handle cell click.
-  const handleCellClick = (
-    cell: { row: { original: VendorRow } },
-    _event: React.MouseEvent,
-  ) => {
-    openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: cell.row.original.id });
-  };
-
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.VENDORS);
-
-  // Handle fetch data once the page index, size or sort by of the table change.
-  const handleFetchData = useCallback(
-    ({
-      pageSize,
-      pageIndex,
-      sortBy,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-      sortBy: SortBy;
-    }) => {
-      setVendorsTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setVendorsTableState],
-  );
-
-  const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows: Array<{ original: VendorRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setVendorsSelectedRows(selectedIds);
-    },
-    [setVendorsSelectedRows],
-  );
-
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <VendorsEmptyStatus />;
   }
 
   return (
-    <DashboardContentTable>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={vendors ?? []}
-        loading={isVendorsLoading}
-        headerLoading={isVendorsLoading}
-        progressBarLoading={isVendorsFetching}
-        onFetchData={handleFetchData}
-        selectionColumn={true}
-        expandable={false}
-        sticky={true}
-        pagination={true}
-        rowTestId={'vendor-row'}
-        initialPageSize={vendorsTableState?.pageSize ?? 10}
-        manualSortBy={true}
-        rowsCount={pagination?.total ?? 0}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={vendorsSelectedRows}
-        autoResetSelectedRows={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={vendorsTableSize}
-        payload={{
-          onEdit: handleEditVendor,
-          onDelete: handleDeleteVendor,
-          onDuplicate: handleContactDuplicate,
-          onInactivate: handleInactiveVendor,
-          onActivate: handleActivateVendor,
-          onViewDetails: handleViewDetailVendor,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={vendors}
+      total={pagination?.total}
+      loading={isVendorsLoading}
+      fetching={isVendorsFetching}
+      compact={compact}
+      query={vendorsTableState}
+      setQuery={setVendorsTableState}
+      selectedIds={vendorsSelectedRows}
+      setSelectedIds={setVendorsSelectedRows}
+      actions={{
+        onEdit: handleEditVendor,
+        onDelete: handleDeleteVendor,
+        onDuplicate: handleContactDuplicate,
+        onInactivate: handleInactiveVendor,
+        onActivate: handleActivateVendor,
+        onViewDetails: handleViewDetailVendor,
+      }}
+    />
   );
 }
 

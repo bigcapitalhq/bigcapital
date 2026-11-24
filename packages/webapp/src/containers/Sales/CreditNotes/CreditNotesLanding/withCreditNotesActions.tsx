@@ -12,7 +12,7 @@ import {
 export interface WithCreditNotesActionsProps {
   setCreditNotesTableState: (queries: Partial<TableQuery>) => void;
   resetCreditNotesTableState: () => void;
-  setCreditNotesSelectedRows: (selectedRows: Array<unknown>) => void;
+  setCreditNotesSelectedRows: (selectedRows: number[]) => void;
   resetCreditNotesSelectedRows: () => void;
 }
 
@@ -22,7 +22,7 @@ export const mapDipatchToProps = (
   setCreditNotesTableState: (queries: Partial<TableQuery>) =>
     dispatch(setCreditNoteTableState(queries)),
   resetCreditNotesTableState: () => dispatch(resetCreditNoteTableState()),
-  setCreditNotesSelectedRows: (selectedRows: Array<unknown>) =>
+  setCreditNotesSelectedRows: (selectedRows: number[]) =>
     dispatch(setCreditNotesSelectedRows(selectedRows)),
   resetCreditNotesSelectedRows: () => dispatch(resetCreditNotesSelectedRows()),
 });

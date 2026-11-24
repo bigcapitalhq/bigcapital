@@ -23,7 +23,7 @@ export const resetExpensesTableState = () => {
   };
 };
 
-export const setExpensesSelectedRows = (selectedRows: Array<unknown>) => {
+export const setExpensesSelectedRows = (selectedRows: number[]) => {
   return {
     type: EXPENSES_SET_SELECTED_ROWS,
     payload: selectedRows,

@@ -1,12 +1,11 @@
 import * as FF from 'fp-ts/function';
 import React from 'react';
-import '@/style/pages/InventoryAdjustments/List.scss';
 import { InventoryAdjustmentListDrawers } from './InventoryAdjustmentListDrawers';
 import { InventoryAdjustmentsProvider } from './InventoryAdjustmentsProvider';
 import { InventoryAdjustmentTable } from './InventoryAdjustmentTable';
 import { withInventoryAdjustments } from './withInventoryAdjustments';
 import type { WithInventoryAdjustmentsProps } from './withInventoryAdjustments';
-import { DashboardContentTable, DashboardPageContent } from '@/components';
+import { DashboardPageContent } from '@/components';
 import { transformTableStateToQuery } from '@/utils';
 
 interface InventoryAdjustmentListInnerProps
@@ -29,9 +28,7 @@ function InventoryAdjustmentListInner({
       <InventoryAdjustmentListDrawers />
 
       <DashboardPageContent>
-        <DashboardContentTable>
-          <InventoryAdjustmentTable />
-        </DashboardContentTable>
+        <InventoryAdjustmentTable />
       </DashboardPageContent>
     </InventoryAdjustmentsProvider>
   );
