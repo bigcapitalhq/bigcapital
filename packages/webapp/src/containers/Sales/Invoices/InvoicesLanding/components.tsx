@@ -4,15 +4,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { SaleInvoicesListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import {
-  FormatDate,
-  FormattedMessage as T,
-  AppToaster,
-  Choose,
-  If,
-  Icon,
-  Can,
-} from '@/components';
+import { FormatDate, AppToaster, If, Icon, Can } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import {
   SaleInvoiceAction,
@@ -45,41 +37,38 @@ interface DeleteError {
   type: string;
 }
 
+function getInvoiceStatus(invoice: InvoiceTableRow) {
+  if (invoice.isDelivered) {
+    if (invoice.isFullyPaid)
+      return { text: intl.get('paid'), intent: Intent.SUCCESS };
+    if (invoice.isOverdue) {
+      return {
+        text: intl.get('overdue_by', { overdue: invoice.overdueDays }),
+        intent: Intent.DANGER,
+      };
+    }
+    return {
+      text: intl.get('due_in', { due: invoice.remainingDays }),
+      intent: Intent.WARNING,
+    };
+  }
+  if (invoice.isPartiallyPaid) {
+    return {
+      text: intl.get('day_partially_paid', {
+        due: formattedAmount(invoice.dueAmount, invoice.currencyCode),
+      }),
+      intent: Intent.PRIMARY,
+    };
+  }
+  return { text: intl.get('draft'), intent: Intent.NONE };
+}
+
 export function InvoiceStatus({ invoice }: { invoice: InvoiceTableRow }) {
+  const { text, intent } = getInvoiceStatus(invoice);
   return (
-    <Choose>
-      <Choose.When condition={!!(invoice.isFullyPaid && invoice.isDelivered)}>
-        <Tag intent={Intent.SUCCESS} round minimal>
-          <T id={'paid'} />
-        </Tag>
-      </Choose.When>
-
-      <Choose.When condition={!!(invoice.isDelivered && invoice.isOverdue)}>
-        <Tag intent={Intent.DANGER} round minimal>
-          {intl.get('overdue_by', { overdue: invoice.overdueDays })}
-        </Tag>
-      </Choose.When>
-
-      <Choose.When condition={!!(invoice.isDelivered && !invoice.isOverdue)}>
-        <Tag intent={Intent.WARNING} round minimal>
-          {intl.get('due_in', { due: invoice.remainingDays })}
-        </Tag>
-      </Choose.When>
-
-      <Choose.When condition={!!invoice.isPartiallyPaid}>
-        <Tag intent={Intent.PRIMARY} round minimal>
-          {intl.get('day_partially_paid', {
-            due: formattedAmount(invoice.dueAmount, invoice.currencyCode),
-          })}
-        </Tag>
-      </Choose.When>
-
-      <Choose.Otherwise>
-        <Tag round minimal>
-          <T id={'draft'} />
-        </Tag>
-      </Choose.Otherwise>
-    </Choose>
+    <Tag intent={intent} round minimal>
+      {text}
+    </Tag>
   );
 }
 
@@ -226,11 +215,11 @@ export function useInvoicesTableColumns() {
           meta: { textAlign: 'right' },
           cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
         }),
-        column.accessor((invoice) => invoice, {
+        column.accessor((invoice) => getInvoiceStatus(invoice).text, {
           id: 'status',
           header: intl.get('status'),
           size: 160,
-          cell: ({ getValue }) => <InvoiceStatus invoice={getValue()} />,
+          cell: ({ row }) => <InvoiceStatus invoice={row.original} />,
         }),
         column.accessor('dueDate', {
           id: 'due_date',

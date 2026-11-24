@@ -500,8 +500,23 @@ $dashboard-views-bar-height: 44px;
       font-variant-numeric: tabular-nums;
     }
 
-    .#{$ns}-dark & .#{$ns}-table-pagination-bar {
-      background-color: $dark-gray1;
+    .#{$ns}-table-pagination-bar {
+      .#{$ns}-table-pagination-bar-text {
+        color: var(--color-gray2);
+      }
+
+      .#{$ns}-button:enabled {
+        --bp-typography-color-muted: var(--color-gray4);
+        color: var(--color-gray4);
+
+        .#{$ns}-icon-caret-down {
+          --bp-typography-color-muted: var(--color-gray2);
+        }
+      }
+
+      .#{$ns}-dark & {
+        background-color: $dark-gray1;
+      }
     }
 
     .#{$ns}-table-container {
@@ -528,6 +543,7 @@ $dashboard-views-bar-height: 44px;
         flex-direction: column;
         justify-content: center;
         height: 36px;
+        color: var(--color-light-gray1);
         box-shadow: inset -1px 0 rgba(255, 255, 255, 0.1);
       }
 

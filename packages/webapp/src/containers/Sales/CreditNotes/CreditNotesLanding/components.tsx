@@ -4,7 +4,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
+import { If, Icon, Can } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
@@ -98,28 +98,24 @@ export function ActionsMenu({
   );
 }
 
+function getCreditNoteStatus(creditNote: CreditNoteTableRow) {
+  if (creditNote.isOpen)
+    return { text: intl.get('open'), intent: Intent.WARNING };
+  if (creditNote.isClosed)
+    return { text: intl.get('closed'), intent: Intent.SUCCESS };
+  if (creditNote.isDraft)
+    return { text: intl.get('draft'), intent: Intent.NONE };
+}
+
 export function StatusAccessor(creditNote: CreditNoteTableRow) {
+  const status = getCreditNoteStatus(creditNote);
   return (
     <div>
-      <Choose>
-        <Choose.When condition={!!creditNote.isOpen}>
-          <Tag intent={Intent.WARNING} round minimal>
-            <T id={'open'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!creditNote.isClosed}>
-          <Tag intent={Intent.SUCCESS} round minimal>
-            <T id={'closed'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!creditNote.isDraft}>
-          <Tag intent={Intent.NONE} round minimal>
-            <T id={'draft'} />
-          </Tag>
-        </Choose.When>
-      </Choose>
+      {status && (
+        <Tag intent={status.intent} round minimal>
+          {status.text}
+        </Tag>
+      )}
     </div>
   );
 }
@@ -158,11 +154,11 @@ export function useCreditNoteTableColumns() {
           meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
           enableSorting: false,
         }),
-        column.accessor((row) => row, {
+        column.accessor((row) => getCreditNoteStatus(row)?.text, {
           id: 'status',
           header: intl.get('status'),
           size: 160,
-          cell: ({ getValue }) => StatusAccessor(getValue()),
+          cell: ({ row }) => StatusAccessor(row.original),
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',

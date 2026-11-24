@@ -5,14 +5,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { BillsListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import {
-  FormatDate,
-  FormattedMessage as T,
-  Icon,
-  If,
-  Choose,
-  Can,
-} from '@/components';
+import { FormatDate, Icon, If, Can } from '@/components';
 import { CLASSES, Features } from '@/constants';
 import {
   BillAction,
@@ -111,44 +104,46 @@ export function ActionsMenu({
   );
 }
 
+function getBillStatusTags(bill: BillTableRow) {
+  if (!bill.isOpen) {
+    return [{ text: intl.get('draft'), intent: Intent.NONE }];
+  }
+  if (bill.isFullyPaid) {
+    return [{ text: intl.get('paid'), intent: Intent.SUCCESS }];
+  }
+
+  const due = bill.isOverdue
+    ? {
+        text: intl.get('overdue_by', { overdue: bill.overdueDays }),
+        intent: Intent.DANGER,
+      }
+    : {
+        text: intl.get('due_in', { due: bill.remainingDays }),
+        intent: Intent.WARNING,
+      };
+
+  if (!bill.isPartiallyPaid) {
+    return [due];
+  }
+  return [
+    due,
+    {
+      text: intl.get('day_partially_paid', {
+        due: formattedAmount(bill.dueAmount, bill.currencyCode),
+      }),
+      intent: Intent.PRIMARY,
+    },
+  ];
+}
+
 export function StatusAccessor(bill: BillTableRow) {
   return (
-    <div className={'status-accessor'}>
-      <Choose>
-        <Choose.When condition={!!(bill.isFullyPaid && bill.isOpen)}>
-          <Tag round minimal intent={Intent.SUCCESS}>
-            <T id={'paid'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!bill.isOpen}>
-          <Choose>
-            <Choose.When condition={!!bill.isOverdue}>
-              <Tag round minimal intent={Intent.DANGER}>
-                {intl.get('overdue_by', { overdue: bill.overdueDays })}
-              </Tag>
-            </Choose.When>
-            <Choose.Otherwise>
-              <Tag round minimal intent={Intent.WARNING}>
-                {intl.get('due_in', { due: bill.remainingDays })}
-              </Tag>
-            </Choose.Otherwise>
-          </Choose>
-          <If condition={!!bill.isPartiallyPaid}>
-            <Tag round minimal intent={Intent.PRIMARY}>
-              {intl.get('day_partially_paid', {
-                due: formattedAmount(bill.dueAmount, bill.currencyCode),
-              })}
-            </Tag>
-          </If>
-        </Choose.When>
-
-        <Choose.Otherwise>
-          <Tag round minimal>
-            <T id={'draft'} />
-          </Tag>
-        </Choose.Otherwise>
-      </Choose>
+    <div className="status-accessor">
+      {getBillStatusTags(bill).map(({ text, intent }) => (
+        <Tag key={intent} round minimal intent={intent}>
+          {text}
+        </Tag>
+      ))}
     </div>
   );
 }
@@ -183,12 +178,18 @@ export function useBillsTableColumns() {
             bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
           },
         }),
-        column.accessor((row) => row, {
-          id: 'status',
-          header: intl.get('status'),
-          size: 160,
-          cell: ({ row }) => StatusAccessor(row.original),
-        }),
+        column.accessor(
+          (bill) =>
+            getBillStatusTags(bill)
+              .map(({ text }) => text)
+              .join(', '),
+          {
+            id: 'status',
+            header: intl.get('status'),
+            size: 160,
+            cell: ({ row }) => StatusAccessor(row.original),
+          },
+        ),
         column.accessor('dueDate', {
           id: 'due_date',
           header: intl.get('due_date'),

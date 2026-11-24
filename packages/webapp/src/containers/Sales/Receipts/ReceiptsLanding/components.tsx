@@ -13,14 +13,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { SaleReceiptsListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import {
-  FormattedMessage as T,
-  Choose,
-  Money,
-  Icon,
-  If,
-  Can,
-} from '@/components';
+import { Money, Icon, If, Can } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
@@ -116,21 +109,19 @@ export function ActionsCell(props: ActionsMenuProps) {
 /**
  * Status accessor.
  */
+function getReceiptStatus(receipt: ReceiptTableRow) {
+  return receipt.isClosed ? intl.get('closed') : intl.get('draft');
+}
+
 export function StatusAccessor(receipt: ReceiptTableRow) {
   return (
-    <Choose>
-      <Choose.When condition={receipt.isClosed}>
-        <Tag intent={Intent.SUCCESS} round minimal>
-          <T id={'closed'} />
-        </Tag>
-      </Choose.When>
-
-      <Choose.Otherwise>
-        <Tag intent={Intent.WARNING} round minimal>
-          <T id={'draft'} />
-        </Tag>
-      </Choose.Otherwise>
-    </Choose>
+    <Tag
+      intent={receipt.isClosed ? Intent.SUCCESS : Intent.WARNING}
+      round
+      minimal
+    >
+      {getReceiptStatus(receipt)}
+    </Tag>
   );
 }
 
@@ -171,11 +162,11 @@ export function useReceiptsTableColumns() {
             </MoneyDisplay>
           ),
         }),
-        column.accessor((row) => row, {
+        column.accessor(getReceiptStatus, {
           id: 'status',
           header: intl.get('status'),
           size: 140,
-          cell: ({ getValue }) => StatusAccessor(getValue()),
+          cell: ({ row }) => StatusAccessor(row.original),
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',

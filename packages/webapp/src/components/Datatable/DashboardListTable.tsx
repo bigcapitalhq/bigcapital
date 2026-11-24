@@ -17,8 +17,9 @@ import {
   MaterialProgressBar,
 } from '@/components';
 import {
-  getDashboardTableSizing,
+  getDashboardTableProps,
   getRowId,
+  onCellDetailClick,
   TABLE_LOADING_OPTIONS,
   useTableRowSelection,
 } from '@/components/Datatable/blueprintTable';
@@ -106,8 +107,7 @@ export function createDashboardListTable<
       const props: BP_BodyElementProps = {
         'data-testId':
           column.id === identifierColumn ? `${rowName}-row` : undefined,
-        tabIndex: 0,
-        onClick: () => actions.onViewDetails(row.original),
+        onClick: onCellDetailClick(() => actions.onViewDetails(row.original)),
       };
       props[rowIdAttribute] = row.original.id;
       return props;
@@ -127,7 +127,7 @@ export function createDashboardListTable<
           data={data}
           getRowId={getRowId}
           enableRowHeader={false}
-          {...getDashboardTableSizing(compact)}
+          {...getDashboardTableProps(compact)}
           enableSorting
           manualSorting
           onSortingChange={onSortingChange}
@@ -135,6 +135,7 @@ export function createDashboardListTable<
           autoResetPageIndex={false}
           rowCount={total}
           pageSizeOptions={PAGE_SIZE_OPTIONS}
+          paginationWithEdges={false}
           paginationButtonProps={PAGINATION_BUTTON_PROPS}
           pageSizeButtonProps={PAGINATION_BUTTON_PROPS}
           showPaginationBar={hasRows}

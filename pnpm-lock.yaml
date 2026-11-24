@@ -454,8 +454,8 @@ importers:
         specifier: workspace:*
         version: link:../../shared/bigcapital-utils
       '@bigcapitalhq/blueprintjs-react-table':
-        specifier: 0.3.2
-        version: 0.3.2(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.3.4
+        version: 0.3.4(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs-formik/core':
         specifier: ^0.3.9
         version: 0.3.9(patch_hash=c6zgqlrxou2xk4zpcei7thyhui)(@babel/core@7.26.0)(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(formik@2.4.6(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
@@ -2227,8 +2227,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@bigcapitalhq/blueprintjs-react-table@0.3.2':
-    resolution: {integrity: sha512-4/GboK90zYsBBHTlZZVZePMw+SDSHEF9dBTc6oDpw/rue/bC3QSBwh4y2OLjbG+szkXEkVfchDaqUrUMlmIZ4g==}
+  '@bigcapitalhq/blueprintjs-react-table@0.3.4':
+    resolution: {integrity: sha512-EKLCQZx4yYT4B/Bopq+tcLix1yNP7YY7yARrayEmPnIj76H3/RF1+h3gQr4RTD7Me5uBQrTD1CLG8UdyOAJpfw==}
     peerDependencies:
       '@blueprintjs/core': ^6.18.0
       '@blueprintjs/icons': ^6.13.0
@@ -16353,7 +16353,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@bigcapitalhq/blueprintjs-react-table@0.3.2(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@bigcapitalhq/blueprintjs-react-table@0.3.4(@blueprintjs/core@6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/icons@6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@blueprintjs/select@6.4.4(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-table@9.3.1(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-virtual@3.14.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@blueprintjs/core': 6.23.2(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blueprintjs/icons': 6.17.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

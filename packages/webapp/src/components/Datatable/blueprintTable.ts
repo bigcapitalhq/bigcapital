@@ -3,6 +3,7 @@ import { functionalUpdate } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import type { BP_RowSelectionState } from '@bigcapitalhq/blueprintjs-react-table';
 import type { Updater } from '@tanstack/react-table';
+import type { MouseEvent } from 'react';
 
 export const TABLE_LOADING_OPTIONS = [
   TableLoadingOption.CELLS,
@@ -12,10 +13,18 @@ export const TABLE_LOADING_OPTIONS = [
 
 export const getRowId = (record: { id: number }) => String(record.id);
 
-export const getDashboardTableSizing = (compact: boolean) => ({
+export const getDashboardTableProps = (compact: boolean) => ({
   rowHeight: compact ? 40 : 48,
   rowSelectionColumnWidth: 42,
+  enableCopyOnSelect: true,
 });
+
+export const onCellDetailClick =
+  (openDetails: () => void) => (event: MouseEvent) => {
+    if (!event.shiftKey && !event.ctrlKey && !event.metaKey) {
+      openDetails();
+    }
+  };
 
 export function useTableRowSelection(
   selectedIds: readonly number[],

@@ -17,8 +17,9 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { BP_TableProps } from '@bigcapitalhq/blueprintjs-react-table';
 import { EmptyStatus, MaterialProgressBar } from '@/components';
 import {
-  getDashboardTableSizing,
+  getDashboardTableProps,
   getRowId,
+  onCellDetailClick,
   TABLE_LOADING_OPTIONS,
   useTableRowSelection,
 } from '@/components/Datatable/blueprintTable';
@@ -132,8 +133,7 @@ function AccountsDataTableInner({
     'data-testId': column.id === 'name' ? 'account-row' : undefined,
     'data-account-id': row.original.id,
     className: row.original.active ? undefined : 'inactive',
-    tabIndex: 0,
-    onClick: () => handleViewDetailAccount(row.original),
+    onClick: onCellDetailClick(() => handleViewDetailAccount(row.original)),
   });
 
   const bodyContextMenuRenderer: AccountsTableProps['bodyContextMenuRenderer'] =
@@ -155,7 +155,7 @@ function AccountsDataTableInner({
         enableRowHeader={false}
         enableRowVirtualization
         htmlProps={{ className: isSmall ? 'table-size--small' : undefined }}
-        {...getDashboardTableSizing(isSmall)}
+        {...getDashboardTableProps(isSmall)}
         enableSorting
         state={tableState}
         onColumnSizingChange={setColumnSizing}

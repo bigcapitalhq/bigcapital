@@ -127,6 +127,30 @@ for (const list of lists) {
   });
 }
 
+test('items copy selected cells in spreadsheet order', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.route(
+    (url) => url.pathname === '/api/items',
+    (route) => route.fulfill({
+      json: {
+        data: [
+          { id: 1, name: 'Pen', code: 'P01' },
+          { id: 2, name: 'Notebook', code: 'N02' },
+        ],
+        pagination: { total: 2 },
+      },
+    }),
+  );
+  await page.goto('/items');
+  const first = page.getByTestId('item-row').first();
+  await expect(first).toHaveText('Pen', { timeout: 30_000 });
+  const last = page.locator('.dashboard__datatable').getByText('N02', { exact: true });
+  await first.dragTo(last);
+  await page.keyboard.press('ControlOrMeta+c');
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText()))
+    .toBe('Pen\tP01\nNotebook\tN02');
+});
+
 test('tax rates sort by numeric rate and keep the status action with the record', async ({
   page,
 }) => {

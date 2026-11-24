@@ -13,8 +13,9 @@ import {
   MaterialProgressBar,
 } from '@/components';
 import {
-  getDashboardTableSizing,
+  getDashboardTableProps,
   getRowId,
+  onCellDetailClick,
   TABLE_LOADING_OPTIONS,
 } from '@/components/Datatable/blueprintTable';
 import { DialogsName } from '@/constants/dialogs';
@@ -125,12 +126,11 @@ function TaxRatesDataTable({
         data={taxRates ?? EMPTY_ROWS}
         getRowId={getRowId}
         enableRowHeader={false}
-        {...getDashboardTableSizing(false)}
+        {...getDashboardTableProps(false)}
         enableSorting
         getCellProps={({ row, column }) => ({
           'data-testId': column.id === 'name' ? 'tax-rate-row' : undefined,
-          tabIndex: 0,
-          onClick: () => handleViewDetails(row.original),
+          onClick: onCellDetailClick(() => handleViewDetails(row.original)),
         })}
         enableGhostCells
         loadingOptions={isTaxRatesLoading ? TABLE_LOADING_OPTIONS : undefined}

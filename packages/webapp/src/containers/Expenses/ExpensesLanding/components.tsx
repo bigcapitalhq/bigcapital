@@ -156,11 +156,11 @@ export function PublishAccessor(row: ExpenseTableRow): ReactNode {
 /**
  * Expense account accessor.
  */
-export function ExpenseAccountAccessor(expense: ExpenseTableRow): ReactNode {
+export function ExpenseAccountAccessor(expense: ExpenseTableRow) {
   if (expense.categories.length === 1) {
     return expense.categories[0].expenseAccount?.name;
   } else if (expense.categories.length > 1) {
-    return <T id={'expense.column.multi_categories'} />;
+    return intl.get('expense.column.multi_categories');
   }
   return null;
 }
@@ -191,11 +191,10 @@ export function useExpensesTableColumns() {
           size: 150,
           meta: { bodyCellClassName: CLASSES.TEXT_MUTED },
         }),
-        column.accessor((row) => row, {
+        column.accessor(ExpenseAccountAccessor, {
           id: 'expense_account',
           header: intl.get('expense_account'),
           size: 160,
-          cell: ({ row }) => ExpenseAccountAccessor(row.original),
           enableSorting: false,
         }),
         column.accessor('isPublished', {

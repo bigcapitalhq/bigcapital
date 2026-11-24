@@ -5,7 +5,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { VendorCreditsListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
+import { If, Icon, Can } from '@/components';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
@@ -104,28 +104,27 @@ export function ActionsMenu({
   );
 }
 
+function getVendorCreditStatus(creditNote: VendorCreditTableRow) {
+  if (creditNote.isOpen) {
+    return { text: intl.get('open'), intent: Intent.WARNING };
+  }
+  if (creditNote.isClosed) {
+    return { text: intl.get('closed'), intent: Intent.SUCCESS };
+  }
+  if (creditNote.isDraft) {
+    return { text: intl.get('draft'), intent: Intent.NONE };
+  }
+}
+
 export function StatusAccessor(creditNote: VendorCreditTableRow) {
+  const status = getVendorCreditStatus(creditNote);
   return (
     <div>
-      <Choose>
-        <Choose.When condition={!!creditNote.isOpen}>
-          <Tag intent={Intent.WARNING} round minimal>
-            <T id={'open'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!creditNote.isClosed}>
-          <Tag intent={Intent.SUCCESS} round minimal>
-            <T id={'closed'} />
-          </Tag>
-        </Choose.When>
-
-        <Choose.When condition={!!creditNote.isDraft}>
-          <Tag round minimal>
-            <T id={'draft'} />
-          </Tag>
-        </Choose.When>
-      </Choose>
+      {status && (
+        <Tag intent={status.intent} round minimal>
+          {status.text}
+        </Tag>
+      )}
     </div>
   );
 }
@@ -170,7 +169,7 @@ export function useVendorsCreditNoteTableColumns() {
             bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
           },
         }),
-        column.accessor((row) => row, {
+        column.accessor((row) => getVendorCreditStatus(row)?.text, {
           id: 'status',
           header: intl.get('status'),
           size: 160,

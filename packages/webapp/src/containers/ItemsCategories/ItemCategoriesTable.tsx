@@ -17,7 +17,7 @@ import {
   EmptyStatus,
 } from '@/components';
 import {
-  getDashboardTableSizing,
+  getDashboardTableProps,
   getRowId,
   TABLE_LOADING_OPTIONS,
   useTableRowSelection,
@@ -93,7 +93,7 @@ function ItemsCategoryTable({
         data={itemsCategories ?? EMPTY_ROWS}
         getRowId={getRowId}
         enableRowHeader={false}
-        {...getDashboardTableSizing(
+        {...getDashboardTableProps(
           itemsCategoriesSettings?.tableSize === 'small',
         )}
         enableSorting

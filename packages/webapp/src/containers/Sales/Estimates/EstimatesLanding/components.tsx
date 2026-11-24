@@ -4,15 +4,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { SaleEstimatesListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import {
-  FormatDate,
-  FormattedMessage as T,
-  Money,
-  Choose,
-  Icon,
-  If,
-  Can,
-} from '@/components';
+import { FormatDate, Money, Choose, Icon, If, Can } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
@@ -38,39 +30,29 @@ interface ActionsMenuProps {
   payload: EstimateActionsPayload;
 }
 
-export const statusAccessor = (row: EstimateTableRow) => (
-  <Choose>
-    <Choose.When condition={!!row.isApproved}>
-      <Tag intent={Intent.SUCCESS} round minimal>
-        <T id={'approved'} />
-      </Tag>
-    </Choose.When>
+function getEstimateStatus(row: EstimateTableRow) {
+  if (row.isApproved)
+    return { text: intl.get('approved'), intent: Intent.SUCCESS };
+  if (row.isRejected)
+    return { text: intl.get('rejected'), intent: Intent.DANGER };
+  if (row.isExpired)
+    return {
+      text: intl.get('estimate.status.expired'),
+      intent: Intent.WARNING,
+    };
+  if (row.isDelivered)
+    return { text: intl.get('delivered'), intent: Intent.SUCCESS };
+  return { text: intl.get('draft'), intent: Intent.NONE };
+}
 
-    <Choose.When condition={!!row.isRejected}>
-      <Tag intent={Intent.DANGER} round minimal>
-        <T id={'rejected'} />
-      </Tag>
-    </Choose.When>
-
-    <Choose.When condition={!!row.isExpired}>
-      <Tag intent={Intent.WARNING} round minimal>
-        <T id={'estimate.status.expired'} />
-      </Tag>
-    </Choose.When>
-
-    <Choose.When condition={!!row.isDelivered}>
-      <Tag intent={Intent.SUCCESS} round minimal>
-        <T id={'delivered'} />
-      </Tag>
-    </Choose.When>
-
-    <Choose.Otherwise>
-      <Tag round minimal>
-        <T id={'draft'} />
-      </Tag>
-    </Choose.Otherwise>
-  </Choose>
-);
+export const statusAccessor = (row: EstimateTableRow) => {
+  const { text, intent } = getEstimateStatus(row);
+  return (
+    <Tag intent={intent} round minimal>
+      {text}
+    </Tag>
+  );
+};
 
 export function ActionsMenu({
   row: { original },
@@ -211,11 +193,11 @@ export function useEstimatesTableColumns() {
             </MoneyDisplay>
           ),
         }),
-        column.accessor((row) => row, {
+        column.accessor((row) => getEstimateStatus(row).text, {
           id: 'status',
           header: intl.get('status'),
           size: 140,
-          cell: ({ getValue }) => statusAccessor(getValue()),
+          cell: ({ row }) => statusAccessor(row.original),
         }),
         column.accessor('reference', {
           id: 'reference_no',
