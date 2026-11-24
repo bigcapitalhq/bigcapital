@@ -138,7 +138,7 @@ export function createDashboardListTable<
           paginationWithEdges={false}
           paginationButtonProps={PAGINATION_BUTTON_PROPS}
           pageSizeButtonProps={PAGINATION_BUTTON_PROPS}
-          showPaginationBar={hasRows}
+          showPaginationBar={hasRows || pagination.pageIndex > 0}
           onPaginationChange={onPaginationChange}
           state={state}
           onColumnSizingChange={setColumnSizing}

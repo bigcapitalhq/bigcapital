@@ -213,3 +213,49 @@ test.describe('invoices', () => {
     await expect(firstCheckbox).toBeChecked();
   });
 });
+
+test.describe('invoice pagination', () => {
+  for (const returnsTotal of [true, false]) {
+    test(`can return to earlier invoices after deleting the last invoice on a page ${returnsTotal ? 'with' : 'without'} a total`, async ({
+      page,
+    }) => {
+      const invoices = Array.from({ length: 21 }, (_, index) => ({
+        id: index + 1,
+        invoice_no: `INV-${index + 1}`,
+        due_date: '2025-08-01',
+      }));
+      await page.route(
+        (url) => url.pathname === '/api/sale-invoices',
+        (route) => {
+          const query = new URL(route.request().url()).searchParams;
+          const size = Number(query.get('page_size'));
+          const start = (Number(query.get('page')) - 1) * size;
+          return route.fulfill({
+            json: {
+              data: invoices.slice(start, start + size),
+              pagination: returnsTotal ? { total: invoices.length } : {},
+            },
+          });
+        },
+      );
+      await page.route('**/api/sale-invoices/21', (route) => {
+        expect(route.request().method()).toBe('DELETE');
+        invoices.pop();
+        return route.fulfill({ status: 204 });
+      });
+      await page.goto('/invoices');
+      await waitForInvoicesList(page);
+
+      const firstRow = page.getByTestId('invoice-row').first();
+      await expect(firstRow).toHaveText('INV-1');
+      await page.getByRole('button', { name: 'Next page' }).click();
+      await expect(firstRow).toHaveText('INV-21');
+      await deleteInvoiceViaRow(page, firstRow);
+      if (!returnsTotal) {
+        await expect(page.getByTestId('invoice-row')).toHaveCount(0);
+        await page.getByRole('button', { name: 'Previous page' }).click();
+      }
+      await expect(firstRow).toHaveText('INV-1');
+    });
+  }
+});
