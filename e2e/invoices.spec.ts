@@ -196,9 +196,8 @@ test.describe('invoices', () => {
     expect(validation.postDataJSON().ids).toEqual([101, 121]);
     await page.getByRole('button', { name: 'Cancel', exact: true }).click();
 
-    await page
-      .getByRole('combobox', { name: 'Rows per page' })
-      .selectOption('30');
+    await page.getByRole('combobox', { name: 'Rows per page' }).click();
+    await page.getByRole('option', { name: '30', exact: true }).click();
     await expect(firstInvoice).toHaveText('PAGE-01');
     await expect(firstCheckbox).toBeChecked();
     await expect(
