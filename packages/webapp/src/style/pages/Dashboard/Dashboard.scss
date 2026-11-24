@@ -501,6 +501,8 @@ $dashboard-views-bar-height: 44px;
     }
 
     .#{$ns}-table-pagination-bar {
+      min-height: 34px;
+
       .#{$ns}-table-pagination-bar-text {
         color: var(--color-gray2);
       }
