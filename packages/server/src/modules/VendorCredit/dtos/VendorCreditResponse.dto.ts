@@ -290,6 +290,13 @@ export class VendorCreditResponseDto {
   formattedCreditsRemaining?: string;
 
   @ApiProperty({
+    description: 'Formatted credits remaining amount',
+    example: '$1,000.00',
+    required: false,
+  })
+  formattedCreditsRemainingAmount?: string;
+
+  @ApiProperty({
     description: 'Formatted invoiced amount',
     example: '$0.00',
     required: false,

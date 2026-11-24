@@ -252,6 +252,12 @@ export class CreditNoteResponseDto {
   })
   formattedCreditsRemaining: string;
 
+  @ApiProperty({
+    description: 'Formatted credits remaining amount',
+    example: '$100.00',
+  })
+  formattedCreditsRemainingAmount: string;
+
   @ApiProperty({ description: 'Formatted credits used', example: '$50.00' })
   formattedCreditsUsed: string;
 

@@ -21,6 +21,7 @@ export type VendorCreditTableRow = VendorCreditsListResponse & {
   formattedVendorCreditDate?: string;
   formattedAmount?: string;
   formattedCreditsRemaining?: string;
+  formattedCreditsRemainingAmount?: string;
   referenceNo?: string;
   vendor?: { displayName?: string };
   isDraft?: boolean;
@@ -159,7 +160,7 @@ export function useVendorsCreditNoteTableColumns() {
             bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
           },
         }),
-        column.accessor('formattedCreditsRemaining', {
+        column.accessor('formattedCreditsRemainingAmount', {
           id: 'balance',
           header: intl.get('balance'),
           size: 120,

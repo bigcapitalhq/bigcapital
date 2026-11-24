@@ -147,7 +147,7 @@ export function useCreditNoteTableColumns() {
           size: 120,
           meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
-        column.accessor('formattedCreditsRemaining', {
+        column.accessor('formattedCreditsRemainingAmount', {
           id: 'balance',
           header: intl.get('balance'),
           size: 120,

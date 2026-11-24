@@ -166,6 +166,9 @@ export class RecurringInvoiceResponseDto {
   @ApiPropertyOptional({ description: 'Formatted created date' })
   createdAtFormatted?: string;
 
+  @ApiPropertyOptional({ description: 'Formatted amount' })
+  amountFormatted?: string;
+
   @ApiPropertyOptional({ description: 'Formatted total' })
   totalFormatted?: string;
 

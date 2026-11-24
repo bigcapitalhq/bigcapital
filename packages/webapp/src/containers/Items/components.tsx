@@ -15,7 +15,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { Item } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
+import { FormattedMessage as T, Icon, If, Can } from '@/components';
 import {
   AbilitySubject,
   ItemAction,
@@ -30,11 +30,6 @@ export type ItemTableRow = Item & {
   quantityOnHand?: number;
   category?: { id?: number; name?: string };
 };
-
-interface CellProps {
-  cell: { value: unknown };
-  row?: { original: ItemTableRow };
-}
 
 interface ActionsMenuPayload {
   onEditItem: (item: ItemTableRow) => void;
@@ -115,18 +110,6 @@ export const QuantityOnHandCell = ({ item }: { item: ItemTableRow }) => {
       {value}
     </span>
   );
-};
-
-export const CostPriceCell = ({ cell: { value } }: CellProps) => {
-  return !isBlank(value) ? (
-    <Money amount={value as number} currency={'USD'} />
-  ) : null;
-};
-
-export const SellPriceCell = ({ cell: { value } }: CellProps) => {
-  return !isBlank(value) ? (
-    <Money amount={value as number} currency={'USD'} />
-  ) : null;
 };
 
 export const ItemTypeAccessor = (row: ItemTableRow) => {
