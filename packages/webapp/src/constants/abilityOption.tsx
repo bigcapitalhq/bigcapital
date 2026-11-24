@@ -51,7 +51,7 @@ export const SaleInvoiceAction = {
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-  Writeoff: 'bad-debt',
+  Writeoff: 'Writeoff',
   NotifyBySms: 'NotifyBySms',
 } as const;
 
