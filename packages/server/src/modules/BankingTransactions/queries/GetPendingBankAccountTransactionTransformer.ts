@@ -37,7 +37,7 @@ export class GetPendingBankAccountTransactionTransformer extends Transformer {
    * @returns {string}
    */
   public formattedAmount(transaction) {
-    return this.formatNumber(transaction.amount, {
+    return this.formatMoney(transaction.amount, {
       currencyCode: transaction.currencyCode,
     });
   }

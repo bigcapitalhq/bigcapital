@@ -90,7 +90,7 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (estimate: SaleEstimate): string => {
-    return this.formatNumber(estimate.amount, {
+    return this.formatMoney(estimate.amount, {
       currencyCode: estimate.currencyCode,
     });
   };

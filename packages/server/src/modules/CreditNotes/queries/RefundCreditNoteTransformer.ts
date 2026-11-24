@@ -14,7 +14,7 @@ export class RefundCreditNoteTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (item) => {
-    return this.formatNumber(item.amount, {
+    return this.formatMoney(item.amount, {
       currencyCode: item.currencyCode,
     });
   };

@@ -69,7 +69,7 @@ export class PaymentReceiveTransfromer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (payment: PaymentReceived): string => {
-    return this.formatNumber(payment.amount, {
+    return this.formatMoney(payment.amount, {
       currencyCode: payment.currencyCode,
     });
   };

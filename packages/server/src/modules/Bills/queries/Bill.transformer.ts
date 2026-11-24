@@ -82,7 +82,7 @@ export class BillTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (bill: Bill): string => {
-    return this.formatNumber(bill.amount, { currencyCode: bill.currencyCode });
+    return this.formatMoney(bill.amount, { currencyCode: bill.currencyCode });
   };
 
   /**

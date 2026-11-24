@@ -19,7 +19,7 @@ export class ItemEstimateTransactionTransformer extends Transformer {
    * @returns {string}
    */
   public formattedAmount(item): string {
-    return this.formatNumber(item.amount, {
+    return this.formatMoney(item.amount, {
       currencyCode: item.estimate.currencyCode,
     });
   }
