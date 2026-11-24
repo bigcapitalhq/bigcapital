@@ -24,6 +24,7 @@ export const AbilitySubject = {
   TaxRate: 'TaxRate',
   BankRule: 'BankRule',
   AuditLog: 'AuditLog',
+  Budget: 'Budget',
 } as const;
 
 export const ItemAction = {
@@ -53,7 +54,7 @@ export const SaleInvoiceAction = {
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-  Writeoff: 'bad-debt',
+  Writeoff: 'Writeoff',
   NotifyBySms: 'NotifyBySms',
 } as const;
 
@@ -186,6 +187,7 @@ export const ReportsAction = {
   READ_BATCH_DETAILS: 'read-batch-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
   READ_SALES_TAX_LIABILITY_SUMMARY: 'read-sales-tax-liability-summary',
+  READ_BUDGET_VS_ACTUAL: 'read-budget-vs-actual',
 } as const;
 
 export const PreferencesAbility = {
@@ -219,4 +221,11 @@ export const BankRuleAction = {
 
 export const AuditLogAction = {
   View: 'View',
+} as const;
+
+export const BudgetAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
 } as const;

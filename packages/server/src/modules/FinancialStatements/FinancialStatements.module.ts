@@ -18,6 +18,7 @@ import { ProfitLossSheetModule } from './modules/ProfitLossSheet/ProfitLossSheet
 import { CashflowStatementModule } from './modules/CashFlowStatement/CashflowStatement.module';
 import { VendorBalanceSummaryModule } from './modules/VendorBalanceSummary/VendorBalanceSummary.module';
 import { BalanceSheetModule } from './modules/BalanceSheet/BalanceSheet.module';
+import { BudgetVsActualModule } from './modules/BudgetVsActual/BudgetVsActual.module';
 import { ReconciliationStatusModule } from './modules/ReconciliationStatus/ReconciliationStatus.module';
 
 @Module({
@@ -42,6 +43,7 @@ import { ReconciliationStatusModule } from './modules/ReconciliationStatus/Recon
     JournalSheetModule,
     ProfitLossSheetModule,
     CashflowStatementModule,
+    BudgetVsActualModule,
   ],
 })
 export class FinancialStatementsModule {}

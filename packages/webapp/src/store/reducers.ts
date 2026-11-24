@@ -3,6 +3,7 @@ import { accountsPersistReducer as accounts } from './accounts/accounts.reducer'
 import { authenticationPersistReducer as authentication } from './authentication/authentication.reducer';
 import { PlaidSlice } from './banking/banking.reducer';
 import { billsPersistReducer as bills } from './bills/bills.reducer';
+import { budgetsPersistReducer as budgets } from './budgets/budgets.reducer';
 import { cashflowAccountsPersistReducer as cashflowAccounts } from './cashflow-accounts/cashflow-accounts.reducer';
 import { creditNotesPersistReducer as creditNotes } from './credit-note/credit-note.reducer';
 import { customFieldsReducer as fields } from './custom-fields/custom-fields.reducer';
@@ -67,6 +68,7 @@ const appReducer = combineReducers({
   creditNotes,
   vendorCredit,
   warehouseTransfers,
+  budgets,
   plaid: PlaidSlice.reducer,
 });
 

@@ -41,6 +41,7 @@ export enum ReportsAction {
   READ_BATCH_DETAILS = 'read-batch-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION = 'read-cashflow-account-transactions',
   READ_SALES_TAX_LIABILITY_SUMMARY = 'read-sales-tax-liability-summary',
+  READ_BUDGET_VS_ACTUAL = 'read-budget-vs-actual',
 }
 
 export interface IFinancialSheetBranchesQuery {

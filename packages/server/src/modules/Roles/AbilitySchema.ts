@@ -29,6 +29,7 @@ import { PreferencesAction } from '../Settings/Settings.types';
 import { AuditLogAction } from '../EE/AuditLogs/types/AuditLogs.types';
 import { AttachmentAction } from '../Attachments/Attachments.types';
 import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
+import { BudgetAction } from '../Budgets/types/Budgets.types';
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {
@@ -55,6 +56,16 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: ManualJournalAction.Create, label: 'ability.create' },
       { key: ManualJournalAction.Edit, label: 'ability.edit' },
       { key: ManualJournalAction.Delete, label: 'ability.delete' },
+    ],
+  },
+  {
+    subject: AbilitySubject.Budget,
+    subjectLabel: 'ability.budgets',
+    abilities: [
+      { key: BudgetAction.View, label: 'ability.view', default: true },
+      { key: BudgetAction.Create, label: 'ability.create', default: true },
+      { key: BudgetAction.Edit, label: 'ability.edit', default: true },
+      { key: BudgetAction.Delete, label: 'ability.delete' },
     ],
   },
   {
@@ -153,7 +164,9 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: SaleInvoiceAction.Edit, label: 'ability.edit', default: true },
       { key: SaleInvoiceAction.Delete, label: 'ability.delete', default: true },
     ],
-    extraAbilities: [{ key: 'bad-debt', label: 'Due amount to bad debit' }],
+    extraAbilities: [
+      { key: SaleInvoiceAction.Writeoff, label: 'Due amount to bad debit' },
+    ],
   },
   {
     subject: AbilitySubject.RecurringInvoice,
@@ -388,6 +401,10 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       {
         key: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
         label: 'ability.sales_tax_liability_summary_report',
+      },
+      {
+        key: ReportsAction.READ_BUDGET_VS_ACTUAL,
+        label: 'ability.budget_vs_actual_report',
       },
     ],
   },

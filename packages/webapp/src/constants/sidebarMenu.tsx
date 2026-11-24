@@ -22,6 +22,7 @@ import {
   CashflowAction,
   PreferencesAbility,
   TaxRateAction,
+  BudgetAction,
 } from '@/constants/abilityOption';
 import { Features } from '@/constants/features';
 import {
@@ -441,6 +442,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 },
               },
               {
+                text: <T id={'sidebar.budgets'} />,
+                href: '/budgets',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Budget,
+                  ability: BudgetAction.View,
+                },
+              },
+              {
                 text: <T id={'sidebar.recurring_journals'} />,
                 href: '/recurring-journals',
                 type: ISidebarMenuItemType.Link,
@@ -720,6 +730,21 @@ export const SidebarMenu: SidebarMenuItem[] = [
               ability: ReportsAction.READ_AP_AGING_SUMMARY,
             },
           },
+          {
+            text: <T id={'sidebar.budget_vs_actual'} />,
+            href: '/financial-reports/budget-vs-actual',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_BUDGET_VS_ACTUAL,
+            },
+          },
+        ],
+      },
+      {
+        text: <T id={'sidebar.sales_purchases'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
           {
             text: <T id={'sidebar.sales_purchases'} />,
             type: ISidebarMenuItemType.Group,
