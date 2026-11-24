@@ -65,7 +65,7 @@ export function useTaxRatesTableColumns() {
           header: 'Rate',
           size: 100,
           cell: ({ row }) => row.original.rateFormatted,
-          meta: { bodyCellClassName: 'numeric-cell' },
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
         column.accessor('description', {
           id: 'description',

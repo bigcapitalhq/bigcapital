@@ -497,7 +497,6 @@ $dashboard-views-bar-height: 44px;
     }
 
     .numeric-cell {
-      text-align: right;
       font-variant-numeric: tabular-nums;
     }
 
@@ -511,8 +510,17 @@ $dashboard-views-bar-height: 44px;
         box-shadow: 0 0 0 1px var(--color-dashboard-datatable-border);
       }
 
-      .#{$ns}-table-column-headers {
+      .#{$ns}-table-column-headers,
+      .#{$ns}-table-row-selection-header-cell {
         background-color: var(--color-datatable-head-background);
+      }
+
+      .#{$ns}-table-row-selection-header-cell {
+        box-shadow: inset -1px 0 var(--color-datatable-head-border);
+
+        .#{$ns}-dark & {
+          box-shadow: inset -1px 0 rgba(255, 255, 255, 0.1);
+        }
       }
 
       .#{$ns}-table-column-headers .#{$ns}-table-column-header-cell {
@@ -534,15 +542,39 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
+      .#{$ns}-table-quadrant-left,
+      .#{$ns}-table-quadrant-top-left {
+        @include datatable-sticky-background;
+
+        // Let the scrolling columns show through the frozen pane.
+        .#{$ns}-table-cell-client,
+        .#{$ns}-table-row-headers,
+        .#{$ns}-table-column-headers,
+        .#{$ns}-table-menu {
+          background-color: transparent;
+        }
+      }
+
       .#{$ns}-table-cell-client .#{$ns}-table-cell {
-        align-items: center;
         font-size: 14px;
         padding: 8px 6px;
+
+        &:not([data-vertical-align]) {
+          align-content: center;
+
+          > .#{$ns}-table-cell-with-expander {
+            align-items: center;
+          }
+        }
       }
 
       .#{$ns}-table-cell-client .#{$ns}-table-cell,
       .#{$ns}-table-row-headers .#{$ns}-table-header {
         box-shadow: inset 0 -1px var(--color-dark-gray4);
+      }
+
+      .#{$ns}-table-row-expander {
+        color: var(--color-gray3);
       }
 
       .#{$ns}-table-row-selection-checkbox input:not(:checked):not(:indeterminate) ~ .#{$ns}-control-indicator {

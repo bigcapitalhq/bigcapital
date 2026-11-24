@@ -155,14 +155,20 @@ export function useVendorsCreditNoteTableColumns() {
           id: 'amount',
           header: intl.get('amount'),
           size: 120,
-          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+          meta: {
+            textAlign: 'right',
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+          },
         }),
         column.accessor('formattedCreditsRemaining', {
           id: 'balance',
           header: intl.get('balance'),
           size: 120,
           enableSorting: false,
-          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+          meta: {
+            textAlign: 'right',
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+          },
         }),
         column.accessor((row) => row, {
           id: 'status',

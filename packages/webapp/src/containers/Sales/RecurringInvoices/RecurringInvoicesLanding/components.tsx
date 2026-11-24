@@ -176,6 +176,7 @@ export function useRecurringInvoicesTableColumns() {
           id: 'total',
           header: intl.get('recurring_invoice.field.amount'),
           size: 130,
+          meta: { textAlign: 'right' },
           cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
         }),
         column.accessor('status', {

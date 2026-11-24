@@ -223,6 +223,7 @@ export function useInvoicesTableColumns() {
           id: 'amount',
           header: intl.get('amount'),
           size: 120,
+          meta: { textAlign: 'right' },
           cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
         }),
         column.accessor((invoice) => invoice, {

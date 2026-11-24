@@ -196,7 +196,7 @@ export function useVendorsTableColumns(size: string) {
           header: intl.get('receivable_balance'),
           size: 100,
           cell: ({ row }) => BalanceAccessor(row.original),
-          meta: { bodyCellClassName: 'numeric-cell' },
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
       ]),
     [size],

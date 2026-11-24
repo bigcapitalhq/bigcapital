@@ -22,7 +22,10 @@ export function useManualJournalsColumns() {
           id: 'amount',
           header: intl.get('amount'),
           size: 115,
-          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+          meta: {
+            textAlign: 'right',
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+          },
         }),
         column.accessor('journalNumber', {
           id: 'journal_number',

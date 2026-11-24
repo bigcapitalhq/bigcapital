@@ -204,6 +204,7 @@ export function useEstimatesTableColumns() {
           id: 'amount',
           header: intl.get('amount'),
           size: 140,
+          meta: { textAlign: 'right' },
           cell: ({ getValue, row }) => (
             <MoneyDisplay>
               <Money amount={getValue()} currency={row.original.currencyCode} />

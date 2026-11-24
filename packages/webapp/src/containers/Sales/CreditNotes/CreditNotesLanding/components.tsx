@@ -149,11 +149,13 @@ export function useCreditNoteTableColumns() {
           id: 'amount',
           header: intl.get('amount'),
           size: 120,
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
         column.accessor('formattedCreditsRemaining', {
           id: 'balance',
           header: intl.get('balance'),
           size: 120,
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
           enableSorting: false,
         }),
         column.accessor((row) => row, {

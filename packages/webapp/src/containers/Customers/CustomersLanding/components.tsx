@@ -143,7 +143,7 @@ export function useCustomersTableColumns(size: string) {
         column.accessor('displayName', {
           id: 'display_name',
           header: intl.get('display_name'),
-          size: 150,
+          size: 250,
         }),
         column.accessor('companyName', {
           id: 'company_name',
@@ -171,7 +171,7 @@ export function useCustomersTableColumns(size: string) {
           header: intl.get('receivable_balance'),
           size: 100,
           cell: ({ row }) => BalanceAccessor(row.original),
-          meta: { bodyCellClassName: 'numeric-cell' },
+          meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
       ]),
     [size],

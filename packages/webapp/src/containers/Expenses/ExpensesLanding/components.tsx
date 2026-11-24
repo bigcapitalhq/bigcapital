@@ -180,7 +180,10 @@ export function useExpensesTableColumns() {
           id: 'amount',
           header: intl.get('full_amount'),
           size: 150,
-          meta: { bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD) },
+          meta: {
+            textAlign: 'right',
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+          },
         }),
         column.accessor((row) => row.paymentAccount?.name, {
           id: 'payment_account',
