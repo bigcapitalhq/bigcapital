@@ -62,6 +62,7 @@ export class CommandTaxRatesValidators {
   public async validateTaxCodeUnique(taxCode: string, trx?: Knex.Transaction) {
     const foundTaxCode = await this.taxRateModel()
       .query(trx)
+      .modify('notDeleted')
       .findOne({ code: taxCode });
 
     if (foundTaxCode) {
@@ -88,6 +89,7 @@ export class CommandTaxRatesValidators {
 
     const foundTaxCodes = await this.taxRateModel()
       .query()
+      .modify('notDeleted')
       .whereIn('code', taxCodes);
     const foundCodes = foundTaxCodes.map((tax) => tax.code);
 

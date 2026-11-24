@@ -34,7 +34,10 @@ export class DeleteTaxRateService {
    * @returns {Promise<void>}
    */
   public async deleteTaxRate(taxRateId: number): Promise<void> {
-    const oldTaxRate = await this.taxRateModel().query().findById(taxRateId);
+    const oldTaxRate = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
@@ -46,7 +49,11 @@ export class DeleteTaxRateService {
         trx,
       } as ITaxRateDeletingPayload);
 
-      await this.taxRateModel().query(trx).findById(taxRateId).delete();
+      // Soft delete: past transactions keep referencing the rate.
+      await this.taxRateModel()
+        .query(trx)
+        .findById(taxRateId)
+        .patch({ deletedAt: new Date() });
 
       // Triggers `onTaxRateDeleted` event.
       await this.eventEmitter.emitAsync(events.taxRates.onDeleted, {

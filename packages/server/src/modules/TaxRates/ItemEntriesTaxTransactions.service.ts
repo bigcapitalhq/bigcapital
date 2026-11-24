@@ -49,6 +49,7 @@ export class ItemEntriesTaxTransactions {
     const taxCodes = entriesWithCode.map((entry) => entry.taxCode);
     const foundTaxCodes = await this.taxRateModel()
       .query()
+      .modify('notDeleted')
       .whereIn('code', taxCodes);
 
     const taxCodesMap = keyBy(foundTaxCodes, 'code');

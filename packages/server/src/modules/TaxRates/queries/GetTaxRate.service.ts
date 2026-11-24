@@ -25,7 +25,10 @@ export class GetTaxRateService {
    * @returns {Promise<ITaxRate>}
    */
   public async getTaxRate(taxRateId: number) {
-    const taxRate = await this.taxRateModel().query().findById(taxRateId);
+    const taxRate = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(taxRate);

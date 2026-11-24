@@ -300,7 +300,10 @@ export class ItemsValidators {
    * @param {number} taxRateId - Tax rate id.
    */
   public async validatePurchaseTaxRateExistance(taxRateId: number) {
-    const foundTaxRate = await this.taxRateModel().query().findById(taxRateId);
+    const foundTaxRate = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .findById(taxRateId);
 
     if (!foundTaxRate) {
       throw new ServiceError(ERRORS.PURCHASE_TAX_RATE_NOT_FOUND);
@@ -312,7 +315,10 @@ export class ItemsValidators {
    * @param {number} taxRateId - Tax rate id.
    */
   public async validateSellTaxRateExistance(taxRateId: number) {
-    const foundTaxRate = await this.taxRateModel().query().findById(taxRateId);
+    const foundTaxRate = await this.taxRateModel()
+      .query()
+      .modify('notDeleted')
+      .findById(taxRateId);
 
     if (!foundTaxRate) {
       throw new ServiceError(ERRORS.SELL_TAX_RATE_NOT_FOUND);
