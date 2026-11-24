@@ -52,7 +52,7 @@ export class AccountTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (account: Account): string => {
-    return this.formatNumber(account.amount, {
+    return this.formatMoney(account.amount, {
       currencyCode: account.currencyCode,
     });
   };
@@ -63,7 +63,7 @@ export class AccountTransformer extends Transformer {
    * @returns {string}
    */
   protected bankBalanceFormatted = (account: Account): string => {
-    return this.formatNumber(account.bankBalance, {
+    return this.formatMoney(account.bankBalance, {
       currencyCode: account.currencyCode,
     });
   };

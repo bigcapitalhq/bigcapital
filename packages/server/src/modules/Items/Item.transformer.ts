@@ -39,9 +39,7 @@ export class ItemTransformer extends Transformer {
    * @returns {string}
    */
   public sellPriceFormatted(item: Item): string {
-    return this.formatNumber(item.sellPrice, {
-      currencyCode: this.context.organization.baseCurrency,
-    });
+    return this.formatMoney(item.sellPrice);
   }
 
   /**
@@ -50,9 +48,7 @@ export class ItemTransformer extends Transformer {
    * @returns {string}
    */
   public costPriceFormatted(item: Item): string {
-    return this.formatNumber(item.costPrice, {
-      currencyCode: this.context.organization.baseCurrency,
-    });
+    return this.formatMoney(item.costPrice);
   }
 
   /**

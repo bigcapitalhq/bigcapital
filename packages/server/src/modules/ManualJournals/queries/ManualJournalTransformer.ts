@@ -23,7 +23,7 @@ export class ManualJournalTransfromer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (manualJorunal: ManualJournal): string => {
-    return this.formatNumber(manualJorunal.amount, {
+    return this.formatMoney(manualJorunal.amount, {
       currencyCode: manualJorunal.currencyCode,
     });
   };

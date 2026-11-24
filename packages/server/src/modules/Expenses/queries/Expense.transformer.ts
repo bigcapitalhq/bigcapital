@@ -29,7 +29,7 @@ export class ExpenseTransfromer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (expense: Expense): string => {
-    return this.formatNumber(expense.totalAmount, {
+    return this.formatMoney(expense.totalAmount, {
       currencyCode: expense.currencyCode,
     });
   };

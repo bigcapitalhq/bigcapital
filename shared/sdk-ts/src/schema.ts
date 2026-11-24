@@ -11798,6 +11798,8 @@ export interface components {
             lastInvoiceDateFormatted?: string;
             /** @description Formatted created date */
             createdAtFormatted?: string;
+            /** @description Formatted amount */
+            amountFormatted?: string;
             /** @description Formatted total */
             totalFormatted?: string;
             /** @description Formatted subtotal */
@@ -14197,6 +14199,11 @@ export interface components {
              */
             formattedCreditsRemaining: string;
             /**
+             * @description Formatted credits remaining amount
+             * @example $100.00
+             */
+            formattedCreditsRemainingAmount: string;
+            /**
              * @description Formatted credits used
              * @example $50.00
              */
@@ -14754,6 +14761,11 @@ export interface components {
              * @example $1,000.00
              */
             formattedCreditsRemaining?: string;
+            /**
+             * @description Formatted credits remaining amount
+             * @example $1,000.00
+             */
+            formattedCreditsRemainingAmount?: string;
             /**
              * @description Formatted invoiced amount
              * @example $0.00

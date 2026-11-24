@@ -18,6 +18,7 @@ export class RecurringInvoiceTransformer extends Transformer {
       'taxAmountFormatted',
       'discountAmountFormatted',
       'adjustmentFormatted',
+      'amountFormatted',
       'totalFormatted',
       'entries',
     ];
@@ -63,6 +64,12 @@ export class RecurringInvoiceTransformer extends Transformer {
 
   protected adjustmentFormatted = (recurringInvoice: RecurringInvoice) => {
     return this.formatNumber(recurringInvoice.adjustment, {
+      currencyCode: recurringInvoice.currencyCode,
+    });
+  };
+
+  protected amountFormatted = (recurringInvoice: RecurringInvoice) => {
+    return this.formatMoney(recurringInvoice.total, {
       currencyCode: recurringInvoice.currencyCode,
     });
   };

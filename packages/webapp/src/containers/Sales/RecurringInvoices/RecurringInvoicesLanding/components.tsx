@@ -172,7 +172,7 @@ export function useRecurringInvoicesTableColumns() {
             size: 150,
           },
         ),
-        column.accessor('totalFormatted', {
+        column.accessor('amountFormatted', {
           id: 'total',
           header: intl.get('recurring_invoice.field.amount'),
           size: 130,

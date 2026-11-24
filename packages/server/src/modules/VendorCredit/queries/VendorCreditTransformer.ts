@@ -15,6 +15,7 @@ export class VendorCreditTransformer extends Transformer {
       'formattedVendorCreditDate',
       'formattedCreatedAt',
       'formattedCreditsRemaining',
+      'formattedCreditsRemainingAmount',
       'formattedInvoicedAmount',
 
       'discountAmountFormatted',
@@ -56,7 +57,7 @@ export class VendorCreditTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (vendorCredit: VendorCredit): string => {
-    return this.formatNumber(vendorCredit.amount, {
+    return this.formatMoney(vendorCredit.amount, {
       currencyCode: vendorCredit.currencyCode,
     });
   };
@@ -77,6 +78,19 @@ export class VendorCreditTransformer extends Transformer {
    */
   protected formattedCreditsRemaining = (credit: VendorCredit): string => {
     return this.formatNumber(credit.creditsRemaining, {
+      currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieve formatted credits remaining amount.
+   * @param credit
+   * @returns {string}
+   */
+  protected formattedCreditsRemainingAmount = (
+    credit: VendorCredit,
+  ): string => {
+    return this.formatMoney(credit.creditsRemaining, {
       currencyCode: credit.currencyCode,
     });
   };

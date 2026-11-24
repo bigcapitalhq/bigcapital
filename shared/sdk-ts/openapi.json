@@ -38535,6 +38535,10 @@
             "type": "string",
             "description": "Formatted created date"
           },
+          "amountFormatted": {
+            "type": "string",
+            "description": "Formatted amount"
+          },
           "totalFormatted": {
             "type": "string",
             "description": "Formatted total"
@@ -42082,6 +42086,11 @@
             "description": "Formatted credits remaining",
             "example": "$100.00"
           },
+          "formattedCreditsRemainingAmount": {
+            "type": "string",
+            "description": "Formatted credits remaining amount",
+            "example": "$100.00"
+          },
           "formattedCreditsUsed": {
             "type": "string",
             "description": "Formatted credits used",
@@ -42151,6 +42160,7 @@
           "formattedCreatedAt",
           "formattedAmount",
           "formattedCreditsRemaining",
+          "formattedCreditsRemainingAmount",
           "formattedCreditsUsed",
           "formattedSubtotal",
           "discountAmountFormatted",
@@ -42915,6 +42925,11 @@
           "formattedCreditsRemaining": {
             "type": "string",
             "description": "Formatted credits remaining",
+            "example": "$1,000.00"
+          },
+          "formattedCreditsRemainingAmount": {
+            "type": "string",
+            "description": "Formatted credits remaining amount",
             "example": "$1,000.00"
           },
           "formattedInvoicedAmount": {
