@@ -168,25 +168,25 @@ export function useVendorsTableColumns(size: string) {
         column.accessor('displayName', {
           id: 'display_name',
           header: intl.get('display_name'),
-          size: 150,
+          size: 250,
         }),
         column.accessor('companyName', {
           id: 'company_name',
           header: intl.get('company_name'),
-          size: 150,
+          size: 200,
           meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('workPhone', {
           id: 'work_phone',
           header: intl.get('phone_number'),
-          size: 100,
+          size: 200,
           cell: ({ row }) => PhoneNumberAccessor(row.original),
           meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('note', {
           id: 'note',
           header: intl.get('note'),
-          size: 85,
+          size: 200,
           cell: ({ row }) => NoteAccessor(row.original),
           enableSorting: false,
           meta: { bodyCellClassName: Classes.TEXT_MUTED },
@@ -194,7 +194,7 @@ export function useVendorsTableColumns(size: string) {
         column.accessor('closingBalance', {
           id: 'balance',
           header: intl.get('receivable_balance'),
-          size: 100,
+          size: 200,
           cell: ({ row }) => BalanceAccessor(row.original),
           meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
