@@ -14,7 +14,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -92,7 +92,7 @@ function PaymentsReceivedDataTable({
       total={pagination?.total}
       loading={isPaymentReceivesLoading}
       fetching={isPaymentReceivesFetching}
-      compact={paymentReceiveSettings?.tableSize === 'small'}
+      compact={isSmallTableSize(paymentReceiveSettings?.tableSize)}
       query={paymentReceivesTableState}
       setQuery={setPaymentReceivesTableState}
       selectedIds={paymentReceivesSelectedRows}

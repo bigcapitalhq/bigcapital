@@ -13,7 +13,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
@@ -93,7 +93,7 @@ function VendorsCreditNoteDataTableInner({
       total={pagination?.total}
       loading={isVendorCreditsLoading}
       fetching={isVendorCreditsFetching}
-      compact={vendorCreditSettings?.tableSize === 'small'}
+      compact={isSmallTableSize(vendorCreditSettings?.tableSize)}
       query={vendorsCreditNoteTableState}
       setQuery={setVendorsCreditNoteTableState}
       selectedIds={vendorsCreditNoteSelectedRows}

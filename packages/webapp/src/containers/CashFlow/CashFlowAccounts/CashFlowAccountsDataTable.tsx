@@ -7,7 +7,7 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
+import { getTableSize, TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useSettingCashFlow } from '@/hooks/query';
 
@@ -51,7 +51,7 @@ function CashFlowAccountsDataTableInner() {
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      size={cashflowTableSize}
+      size={getTableSize(cashflowTableSize)}
     />
   );
 }

@@ -13,6 +13,7 @@ import clsx from 'classnames';
 import React from 'react';
 import Style from './style.module.scss';
 import { Icon, T } from '@/components';
+import { DEFAULT_TABLE_SIZE, getTableSize } from '@/constants/tables';
 
 interface DashboardRowsHeightButtonProps {
   initialValue?: any;
@@ -24,11 +25,18 @@ interface DashboardRowsHeightButtonProps {
  * Dashboard rows height button control.
  */
 export function DashboardRowsHeightButton({
-  initialValue = 'medium',
+  initialValue = DEFAULT_TABLE_SIZE,
   value,
   onChange,
 }: DashboardRowsHeightButtonProps) {
-  const [localSize, setLocalSize] = React.useState(initialValue);
+  const [localSize, setLocalSize] = React.useState(
+    getTableSize(value ?? initialValue),
+  );
+
+  // Keep the local size in sync when the stored preference finishes loading.
+  React.useEffect(() => {
+    setLocalSize(getTableSize(value ?? initialValue));
+  }, [value, initialValue]);
 
   // Handle menu item click.
   const handleItemClick = (size: string) => (event: React.SyntheticEvent) => {

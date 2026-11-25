@@ -14,7 +14,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -137,7 +137,7 @@ function ItemsDataTableInner({
       total={pagination?.total}
       loading={isItemsLoading}
       fetching={isItemsFetching}
-      compact={itemsSettings?.tableSize === 'small'}
+      compact={isSmallTableSize(itemsSettings?.tableSize)}
       query={itemsTableState}
       setQuery={setItemsTableState}
       selectedIds={itemsSelectedRows}

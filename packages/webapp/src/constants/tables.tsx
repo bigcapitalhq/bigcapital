@@ -30,3 +30,18 @@ export const TABLE_SIZE = {
   SMALL: 'small',
   MEDIUM: 'medium',
 } as const;
+
+export const DEFAULT_TABLE_SIZE = TABLE_SIZE.SMALL;
+
+/**
+ * Resolves a table size to the value that should be used at runtime.
+ * A missing preference falls back to the default table size (small).
+ */
+export const getTableSize = (size?: unknown): string =>
+  size === TABLE_SIZE.MEDIUM ? TABLE_SIZE.MEDIUM : DEFAULT_TABLE_SIZE;
+
+/**
+ * Detects whether the given table size renders rows in small mode.
+ */
+export const isSmallTableSize = (size?: unknown): boolean =>
+  getTableSize(size) === TABLE_SIZE.SMALL;

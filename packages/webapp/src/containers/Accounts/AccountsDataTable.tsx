@@ -25,7 +25,7 @@ import {
 } from '@/components/Datatable/blueprintTable';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
@@ -68,7 +68,7 @@ function AccountsDataTableInner({
     useAccountsChartContext();
   const data = accounts ?? EMPTY_ACCOUNTS;
   const isEmpty = !isAccountsLoading && data.length === 0;
-  const isSmall = accountsSettings?.tableSize === 'small';
+  const isSmall = isSmallTableSize(accountsSettings?.tableSize);
   const loadingOptions = isAccountsLoading ? TABLE_LOADING_OPTIONS : undefined;
 
   const columns = useAccountsTableColumns();

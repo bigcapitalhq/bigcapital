@@ -14,7 +14,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
@@ -108,7 +108,7 @@ function CreditNotesDataTableInner({
       total={pagination?.total}
       loading={isCreditNotesLoading}
       fetching={isCreditNotesFetching}
-      compact={creditNoteSettings?.tableSize === 'small'}
+      compact={isSmallTableSize(creditNoteSettings?.tableSize)}
       query={creditNoteTableState}
       setQuery={setCreditNotesTableState}
       selectedIds={creditNotesSelectedRows}

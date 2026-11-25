@@ -22,6 +22,7 @@ import {
   TABLE_LOADING_OPTIONS,
   useTableRowSelection,
 } from '@/components/Datatable/blueprintTable';
+import { isSmallTableSize } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
@@ -94,7 +95,7 @@ function ItemsCategoryTable({
         getRowId={getRowId}
         enableRowHeader={false}
         {...getDashboardTableProps(
-          itemsCategoriesSettings?.tableSize === 'small',
+          isSmallTableSize(itemsCategoriesSettings?.tableSize),
         )}
         enableSorting
         getCellProps={({ row, column }) => ({

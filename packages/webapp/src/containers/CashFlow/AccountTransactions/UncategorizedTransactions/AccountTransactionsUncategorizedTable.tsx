@@ -20,7 +20,7 @@ import {
   TableVirtualizedListRows,
   AppToaster,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
 
@@ -139,7 +139,7 @@ function AccountTransactionsDataTable({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize === 'small' ? 34 : 40}
+      vListrowHeight={isSmallTableSize(cashflowTansactionsTableSize) ? 34 : 40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}

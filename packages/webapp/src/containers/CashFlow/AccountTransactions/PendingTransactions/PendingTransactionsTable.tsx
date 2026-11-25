@@ -9,6 +9,7 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
+import { isSmallTableSize } from '@/constants/tables';
 
 /**
  * Account transactions data table.
@@ -42,7 +43,7 @@ function PendingTransactionsDataTableRoot() {
       TableRowsRenderer={TableVirtualizedListRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize === 'small' ? 32 : 40}
+      vListrowHeight={isSmallTableSize(cashflowTansactionsTableSize) ? 32 : 40}
       vListOverscanRowCount={0}
       noResults={'There is no pending transactions in the current account.'}
       windowScrollerProps={{ scrollElement: scrollableRef }}
