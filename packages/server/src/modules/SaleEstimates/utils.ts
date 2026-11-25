@@ -15,8 +15,13 @@ export const transformEstimateToPdfTemplate = (
       quantity: entry.quantityFormatted,
       total: entry.totalFormatted,
     })),
-    total: estimate.formattedSubtotal,
+    total: estimate.totalFormatted,
     subtotal: estimate.formattedSubtotal,
+    discount: estimate.discountAmountFormatted,
+    discountLabel: estimate.discountPercentageFormatted
+      ? `Discount [${estimate.discountPercentageFormatted}]`
+      : 'Discount',
+    adjustment: estimate.adjustmentFormatted,
     customerNote: estimate.note,
     termsConditions: estimate.termsConditions,
     customerAddress: contactAddressTextFormat(estimate.customer),
