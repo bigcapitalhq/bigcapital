@@ -12,7 +12,7 @@ import {
 export interface WithRecurringJournalsActionsProps {
   setRecurringJournalsTableState: (queries: Partial<TableQuery>) => void;
   resetRecurringJournalsTableState: () => void;
-  setRecurringJournalsSelectedRows: (selectedRows: Array<unknown>) => void;
+  setRecurringJournalsSelectedRows: (selectedRows: number[]) => void;
   resetRecurringJournalsSelectedRows: () => void;
 }
 
@@ -23,7 +23,7 @@ export const mapDispatchToProps = (
     dispatch(setRecurringJournalsTableState(queries)),
   resetRecurringJournalsTableState: () =>
     dispatch(resetRecurringJournalsTableState()),
-  setRecurringJournalsSelectedRows: (selectedRows: Array<unknown>) =>
+  setRecurringJournalsSelectedRows: (selectedRows: number[]) =>
     dispatch(setRecurringJournalsSelectedRows(selectedRows)),
   resetRecurringJournalsSelectedRows: () =>
     dispatch(resetRecurringJournalsSelectedRows()),

@@ -1,6 +1,6 @@
 import { Alert, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useRecurringJournalsTableColumns } from './components';
@@ -11,15 +11,10 @@ import type { RecurringJournalTableRow } from './components';
 import type { WithRecurringJournalsProps } from './withRecurringJournals';
 import type { WithRecurringJournalsActionsProps } from './withRecurringJournalsActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import {
-  AppToaster,
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonHeader,
-  TableSkeletonRows,
-} from '@/components';
+import { AppToaster } from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { getTableSize, TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   useDeleteRecurringJournal,
@@ -27,7 +22,13 @@ import {
   usePauseRecurringJournal,
   useResumeRecurringJournal,
 } from '@/ee/recurring-journals/hooks/query';
-import { useMemorizedColumnsWidths } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.RECURRING_JOURNALS,
+  rowName: 'recurring-journal',
+  identifierColumn: 'profile_name',
+  ActionsMenu,
+});
 
 interface RecurringJournalsDataTableProps
   extends Pick<
@@ -148,79 +149,31 @@ function RecurringJournalsDataTableInner({
     }
   };
 
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.RECURRING_JOURNALS);
-
-  const handleFetchData = useCallback(
-    ({
-      pageIndex,
-      pageSize,
-      sortBy,
-    }: {
-      pageIndex: number;
-      pageSize: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setRecurringJournalsTableState({ pageIndex, pageSize, sortBy });
-    },
-    [setRecurringJournalsTableState],
-  );
-
-  const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows: Array<{ original: RecurringJournalTableRow }>) => {
-      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-      setRecurringJournalsSelectedRows(selectedIds);
-    },
-    [setRecurringJournalsSelectedRows],
-  );
-
-  const handleCellClick = (cell: any) => {
-    openDrawer(DRAWERS.RECURRING_JOURNAL_DETAILS, {
-      recurringJournalId: cell.row.original.id,
-      tab: 'details',
-    });
-  };
-
   if (isEmptyStatus) {
     return null;
   }
 
   return (
-    <DashboardContentTable>
-      <DataTable
+    <>
+      <Table
         columns={columns}
-        data={recurringJournals ?? []}
+        data={recurringJournals}
+        total={pagination?.total}
         loading={isRecurringJournalsLoading}
-        headerLoading={isRecurringJournalsLoading}
-        progressBarLoading={isRecurringJournalsFetching}
-        onFetchData={handleFetchData}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        selectedRowsIds={recurringJournalsSelectedRows}
-        autoResetSelectedRows={false}
-        noInitialFetch={true}
-        manualSortBy={true}
-        selectionColumn={false}
-        sticky={true}
-        pagination={true}
-        initialPageSize={recurringJournalsTableState?.pageSize ?? 20}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        rowTestId={'recurring-journal-row'}
-        onCellClick={handleCellClick}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        size={getTableSize(manualJournalsSettings?.tableSize)}
-        payload={{
+        fetching={isRecurringJournalsFetching}
+        compact={isSmallTableSize(manualJournalsSettings?.tableSize)}
+        query={recurringJournalsTableState}
+        setQuery={setRecurringJournalsTableState}
+        selectedIds={recurringJournalsSelectedRows}
+        setSelectedIds={setRecurringJournalsSelectedRows}
+        actions={{
           onEdit: handleEdit,
           onViewDetails: handleViewDetails,
           onViewJournals: handleViewJournals,
           onPause: handlePause,
           onResume: handleResume,
           onGenerate: handleGenerate,
-          onDelete: (row: RecurringJournalTableRow) => setDeleteTarget(row),
+          onDelete: setDeleteTarget,
         }}
       />
 
@@ -235,7 +188,7 @@ function RecurringJournalsDataTableInner({
       >
         <p>{intl.get('recurring_journal.delete_confirmation')}</p>
       </Alert>
-    </DashboardContentTable>
+    </>
   );
 }
 

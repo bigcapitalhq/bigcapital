@@ -1,9 +1,11 @@
 import { Intent, Menu, MenuDivider, MenuItem, Tag } from '@blueprintjs/core';
+import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { RecurringJournalsListResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Can, Icon } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import {
   AbilitySubject,
   RecurringJournalAction,
@@ -124,60 +126,66 @@ export function ActionsMenu({
   );
 }
 
-export const useRecurringJournalsTableColumns = (): Array<
-  DataTableColumn<RecurringJournalTableRow>
-> => {
+const column = createColumnHelper<BP_TableFeatures, RecurringJournalTableRow>();
+
+export function useRecurringJournalsTableColumns() {
   return React.useMemo(
-    () => [
-      {
-        id: 'profile_name',
-        Header: intl.get('recurring_journal.field.profile_name'),
-        accessor: 'profileName',
-        width: 210,
-        className: 'profile_name',
-      },
-      {
-        id: 'frequency',
-        Header: intl.get('recurring_journal.field.frequency'),
-        accessor: (row) =>
-          intl.get('recurring_journal.frequency_summary', {
-            interval: row.repeatInterval,
-            frequency: intl.get(`recurring_journal.frequency.${row.frequency}`),
-          }),
-        width: 150,
-      },
-      {
-        id: 'next_journal_date',
-        Header: intl.get('recurring_journal.field.next_journal_date'),
-        accessor: (row) => row.nextJournalDateFormatted || row.nextJournalDate,
-        width: 150,
-      },
-      {
-        id: 'last_journal_date',
-        Header: intl.get('recurring_journal.field.last_journal_date'),
-        accessor: (row) => row.lastJournalDateFormatted || row.lastJournalDate,
-        width: 150,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('recurring_journal.field.amount'),
-        accessor: (row) => row.amountFormatted,
-        width: 130,
-        align: 'right',
-        money: true,
-      },
-      {
-        id: 'status',
-        Header: intl.get('recurring_journal.field.status'),
-        accessor: (row) => (
-          <RecurringJournalStatus
-            status={row.status}
-            failureCount={row.failureCount}
-          />
+    () =>
+      column.columns([
+        column.accessor('profileName', {
+          id: 'profile_name',
+          header: intl.get('recurring_journal.field.profile_name'),
+          size: 250,
+        }),
+        column.accessor('amountFormatted', {
+          id: 'amount',
+          header: intl.get('recurring_journal.field.amount'),
+          size: 200,
+          meta: { textAlign: 'right' },
+          cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
+        }),
+        column.accessor(
+          (row) =>
+            intl.get('recurring_journal.frequency_summary', {
+              interval: row.repeatInterval,
+              frequency: intl.get(
+                `recurring_journal.frequency.${row.frequency}`,
+              ),
+            }),
+          {
+            id: 'frequency',
+            header: intl.get('recurring_journal.field.frequency'),
+            size: 200,
+          },
         ),
-        width: 120,
-      },
-    ],
+        column.accessor(
+          (row) => row.nextJournalDateFormatted || row.nextJournalDate,
+          {
+            id: 'next_journal_date',
+            header: intl.get('recurring_journal.field.next_journal_date'),
+            size: 200,
+          },
+        ),
+        column.accessor(
+          (row) => row.lastJournalDateFormatted || row.lastJournalDate,
+          {
+            id: 'last_journal_date',
+            header: intl.get('recurring_journal.field.last_journal_date'),
+            size: 200,
+          },
+        ),
+        column.accessor('status', {
+          id: 'status',
+          header: intl.get('recurring_journal.field.status'),
+          size: 120,
+          cell: ({ getValue, row }) => (
+            <RecurringJournalStatus
+              status={getValue()}
+              failureCount={row.original.failureCount}
+            />
+          ),
+        }),
+      ]),
     [],
   );
-};
+}

@@ -11,7 +11,7 @@ import {
 
 interface RecurringJournalsState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery: Partial<TableQuery> = {
@@ -39,7 +39,7 @@ const reducerInstance = createReducer(initialState, {
 
   [RECURRING_JOURNALS_SET_SELECTED_ROWS]: (
     state: RecurringJournalsState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

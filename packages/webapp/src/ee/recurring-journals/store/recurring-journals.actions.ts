@@ -17,9 +17,7 @@ export const resetRecurringJournalsTableState = () => ({
   type: RECURRING_JOURNALS_TABLE_STATE_RESET,
 });
 
-export const setRecurringJournalsSelectedRows = (
-  selectedRows: Array<unknown>,
-) => ({
+export const setRecurringJournalsSelectedRows = (selectedRows: number[]) => ({
   type: RECURRING_JOURNALS_SET_SELECTED_ROWS,
   payload: selectedRows,
 });
