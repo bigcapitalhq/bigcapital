@@ -27,6 +27,7 @@ import { ReportsAction } from '../../types/Report.types';
 import { BudgetVsActualApplication } from './BudgetVsActualApplication';
 import { BudgetVsActualQueryDto } from './BudgetVsActualQuery.dto';
 import { BudgetVsActualResponseExample } from './BudgetVsActual.swagger';
+import { BudgetsFeatureGuard } from '@/modules/Budgets/BudgetsFeatureGuard';
 import {
   BudgetVsActualResponseDto,
   BudgetVsActualTableResponseDto,
@@ -35,7 +36,7 @@ import {
 @Controller('/reports/budget-vs-actual')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@UseGuards(AuthorizationGuard, PermissionGuard)
+@UseGuards(AuthorizationGuard, PermissionGuard, BudgetsFeatureGuard)
 @ApiExtraModels(
   BudgetVsActualResponseDto,
   BudgetVsActualTableResponseDto,

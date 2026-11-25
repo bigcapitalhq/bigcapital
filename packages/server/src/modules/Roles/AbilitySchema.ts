@@ -30,6 +30,7 @@ import { AuditLogAction } from '../EE/AuditLogs/types/AuditLogs.types';
 import { AttachmentAction } from '../Attachments/Attachments.types';
 import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
 import { BudgetAction } from '../Budgets/types/Budgets.types';
+import { Features } from '@/common/types/Features';
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {
@@ -61,6 +62,7 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {
     subject: AbilitySubject.Budget,
     subjectLabel: 'ability.budgets',
+    feature: Features.BUDGETING,
     abilities: [
       { key: BudgetAction.View, label: 'ability.view', default: true },
       { key: BudgetAction.Create, label: 'ability.create', default: true },
@@ -405,6 +407,7 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       {
         key: ReportsAction.READ_BUDGET_VS_ACTUAL,
         label: 'ability.budget_vs_actual_report',
+        feature: Features.BUDGETING,
       },
     ],
   },

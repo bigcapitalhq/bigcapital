@@ -28,12 +28,13 @@ import { CreateBudgetDto, EditBudgetDto } from './dtos/Budget.dto';
 import { GetBudgetsQueryDto } from './dtos/GetBudgetsQuery.dto';
 import { BudgetResponseDto } from './dtos/BudgetResponse.dto';
 import { BudgetAction } from './types/Budgets.types';
+import { BudgetsFeatureGuard } from './BudgetsFeatureGuard';
 
 @Controller('budgets')
 @ApiTags('Budgets')
 @ApiExtraModels(BudgetResponseDto, PaginatedResponseDto)
 @ApiCommonHeaders()
-@UseGuards(AuthorizationGuard, PermissionGuard)
+@UseGuards(AuthorizationGuard, PermissionGuard, BudgetsFeatureGuard)
 export class BudgetsController {
   constructor(private readonly budgetsApplication: BudgetsApplication) {}
 

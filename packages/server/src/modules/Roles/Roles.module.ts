@@ -13,6 +13,7 @@ import { RolePermissionsSchema } from './queries/RolePermissionsSchema';
 import { AuthorizationGuard } from './Authorization.guard';
 import { PermissionGuard } from './Permission.guard';
 import { PurgeTenantAbilitiesSubscriber } from './subscribers/PurgeTenantAbilities.subscriber';
+import { FeaturesModule } from '../Features/Features.module';
 
 const models = [
   RegisterTenancyModel(Role),
@@ -20,7 +21,7 @@ const models = [
 ];
 
 @Module({
-  imports: [...models],
+  imports: [FeaturesModule, ...models],
   providers: [
     CreateRoleService,
     EditRoleService,

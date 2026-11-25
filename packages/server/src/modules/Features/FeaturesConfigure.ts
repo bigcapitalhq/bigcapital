@@ -50,6 +50,10 @@ export class FeaturesConfigure {
         name: Features.BATCH_TRACKING,
         defaultValue: false,
       },
+      {
+        name: Features.BUDGETING,
+        defaultValue: false,
+      },
     ];
   }
 }

@@ -103,6 +103,7 @@ export const financialReportMenus: FinancialSection[] = [
         link: '/financial-reports/budget-vs-actual',
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_BUDGET_VS_ACTUAL,
+        feature: Features.Budgeting,
       },
     ],
   },

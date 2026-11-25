@@ -43,6 +43,10 @@ export interface ISubjectAbilitySchema {
   key: string;
   label: string;
   default?: boolean;
+  /**
+   * Feature flag that has to be enabled for the ability to be exposed.
+   */
+  feature?: string;
 }
 
 export interface ISubjectAbilitiesSchema {
@@ -51,6 +55,10 @@ export interface ISubjectAbilitiesSchema {
   description?: string;
   abilities?: ISubjectAbilitySchema[];
   extraAbilities?: ISubjectAbilitySchema[];
+  /**
+   * Feature flag that has to be enabled for the subject to be exposed.
+   */
+  feature?: string;
 }
 
 export enum AbilitySubject {
