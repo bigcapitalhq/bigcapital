@@ -174,14 +174,14 @@ export function useVendorsTableColumns(size: string) {
           id: 'company_name',
           header: intl.get('company_name'),
           size: 150,
-          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('workPhone', {
           id: 'work_phone',
           header: intl.get('phone_number'),
           size: 100,
           cell: ({ row }) => PhoneNumberAccessor(row.original),
-          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('note', {
           id: 'note',

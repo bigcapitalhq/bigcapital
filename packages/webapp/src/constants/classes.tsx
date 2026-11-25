@@ -125,6 +125,8 @@ const CLASSES = {
   CARD: 'card',
   ALIGN_RIGHT: 'align-right',
   FONT_BOLD: 'font-bold',
+  FONT_SEMIBOLD: 'font-semibold',
+  FEATURED_CELL: 'featured-cell',
   TEXT_LINK: 'text-link',
 
   NS,

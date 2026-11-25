@@ -15,6 +15,7 @@ import type { SaleReceiptsListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Money, Icon, If, Can } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
+import { CLASSES } from '@/constants';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
@@ -145,11 +146,13 @@ export function useReceiptsTableColumns() {
           id: 'receipt_number',
           header: intl.get('receipt_number'),
           size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor((row) => row.depositAccount?.name, {
           id: 'deposit_account',
           header: intl.get('deposit_account'),
           size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('total', {
           id: 'amount',
@@ -172,6 +175,7 @@ export function useReceiptsTableColumns() {
           id: 'reference_no',
           header: intl.get('reference_no'),
           size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
     [],

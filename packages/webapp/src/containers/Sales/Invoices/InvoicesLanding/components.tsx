@@ -1,4 +1,11 @@
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import {
+  Intent,
+  Tag,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Classes,
+} from '@blueprintjs/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -11,6 +18,7 @@ import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
 import { formattedAmount, safeCallback } from '@/utils';
 
 export type InvoiceTableRow = NonNullable<
@@ -196,41 +204,46 @@ export function useInvoicesTableColumns() {
         column.accessor('invoiceDateFormatted', {
           id: 'invoice_date',
           header: intl.get('invoice_date'),
-          size: 110,
+          size: 140,
         }),
         column.accessor((invoice) => invoice.customer?.displayName, {
           id: 'customer',
           header: intl.get('customer_name'),
-          size: 180,
+          size: 225,
         }),
         column.accessor('invoiceNo', {
           id: 'invoice_no',
           header: intl.get('invoice_no__'),
-          size: 100,
+          size: 170,
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('totalFormatted', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 120,
-          meta: { textAlign: 'right' },
+          size: 130,
+          meta: {
+            textAlign: 'right',
+            bodyCellInnerClassName: CLASSES.FEATURED_CELL,
+          },
           cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
         }),
         column.accessor((invoice) => getInvoiceStatus(invoice).text, {
           id: 'status',
           header: intl.get('status'),
-          size: 160,
+          size: 170,
           cell: ({ row }) => <InvoiceStatus invoice={row.original} />,
         }),
         column.accessor('dueDate', {
           id: 'due_date',
           header: intl.get('due_date'),
-          size: 110,
+          size: 145,
           cell: ({ getValue }) => <FormatDate value={getValue()} />,
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 90,
+          size: 170,
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
       ]),
     [],

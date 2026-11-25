@@ -18,6 +18,7 @@ import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type PaymentReceiveTableRow = NonNullable<
@@ -120,6 +121,7 @@ export function usePaymentReceivesColumns() {
           id: 'payment_receive_no',
           header: intl.get('payment_received_no'),
           size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor((row) => row.depositAccount?.name, {
           id: 'deposit_account',
@@ -130,6 +132,7 @@ export function usePaymentReceivesColumns() {
           id: 'reference_no',
           header: intl.get('reference_no'),
           size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
     [],

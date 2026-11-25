@@ -6,6 +6,7 @@ import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { If, Icon, Can } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type CreditNoteTableRow = NonNullable<
@@ -129,28 +130,29 @@ export function useCreditNoteTableColumns() {
         column.accessor('formattedCreditNoteDate', {
           id: 'credit_date',
           header: intl.get('credit_note.column.credit_date'),
-          size: 110,
+          size: 135,
         }),
         column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
           header: intl.get('customer_name'),
-          size: 180,
+          size: 250,
         }),
         column.accessor('creditNoteNumber', {
           id: 'credit_number',
           header: intl.get('credit_note.column.credit_note_no'),
-          size: 100,
+          size: 150,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('formattedAmount', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 120,
+          size: 160,
           meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
         }),
         column.accessor('formattedCreditsRemainingAmount', {
           id: 'balance',
           header: intl.get('balance'),
-          size: 120,
+          size: 160,
           meta: { textAlign: 'right', bodyCellClassName: 'numeric-cell' },
           enableSorting: false,
         }),
@@ -163,7 +165,8 @@ export function useCreditNoteTableColumns() {
         column.accessor('referenceNo', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 90,
+          size: 150,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
     [],

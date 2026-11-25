@@ -157,25 +157,26 @@ export function useBillsTableColumns() {
         column.accessor('formattedBillDate', {
           id: 'bill_date',
           header: intl.get('bill_date'),
-          size: 110,
+          size: 150,
         }),
         column.accessor((row) => row.vendor?.displayName, {
           id: 'vendor',
           header: intl.get('vendor_name'),
-          size: 180,
+          size: 200,
         }),
         column.accessor('billNumber', {
           id: 'bill_number',
           header: intl.get('bill_number'),
-          size: 100,
+          size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('totalFormatted', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 120,
+          size: 150,
           meta: {
             textAlign: 'right',
-            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_SEMIBOLD),
           },
         }),
         column.accessor(
@@ -186,20 +187,21 @@ export function useBillsTableColumns() {
           {
             id: 'status',
             header: intl.get('status'),
-            size: 160,
+            size: 200,
             cell: ({ row }) => StatusAccessor(row.original),
           },
         ),
         column.accessor('dueDate', {
           id: 'due_date',
           header: intl.get('due_date'),
-          size: 110,
+          size: 140,
           cell: ({ getValue }) => <FormatDate value={getValue()} />,
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 90,
+          size: 140,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
     [],

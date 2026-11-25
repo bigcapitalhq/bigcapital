@@ -7,6 +7,7 @@ import {
   Position,
   Button,
   Popover,
+  Classes,
 } from '@blueprintjs/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import { isNumber } from 'lodash';
@@ -183,35 +184,37 @@ export function useInventoryAdjustmentsColumns() {
         column.accessor('date', {
           id: 'date',
           header: intl.get('date'),
-          size: 115,
+          size: 170,
           cell: ({ getValue }) => moment(getValue()).format('YYYY MMM DD'),
         }),
         column.accessor('formattedType', {
           id: 'type',
           header: intl.get('type'),
-          size: 100,
+          size: 150,
           cell: ({ row }) => TypeAccessor(row.original),
         }),
         column.accessor('reason', {
           id: 'reason',
           header: intl.get('reason'),
-          size: 115,
+          size: 225,
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 100,
+          size: 180,
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('isPublished', {
           id: 'published_at',
           header: intl.get('status'),
-          size: 95,
+          size: 150,
           cell: ({ row }) => PublishAccessor(row.original),
         }),
         column.accessor('createdAt', {
           id: 'created_at',
           header: intl.get('created_at'),
-          size: 125,
+          size: 180,
           cell: ({ getValue }) => moment(getValue()).format('YYYY MMM DD'),
         }),
       ]),
