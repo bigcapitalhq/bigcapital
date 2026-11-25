@@ -1,5 +1,6 @@
 import {
   Position,
+  Tag,
   Tooltip,
   MenuItem,
   Menu,
@@ -107,12 +108,11 @@ export function NormalCell({ value }: { value: string }) {
   }
   return (
     <Tooltip
-      className="account-normal-arrow"
       content={intl.get(value)}
       position={Position.RIGHT}
       hoverOpenDelay={100}
     >
-      <Icon icon={value === 'credit' ? 'arrow-down' : 'arrow-up'} />
+      <Tag minimal>{value === 'credit' ? 'C' : 'D'}</Tag>
     </Tooltip>
   );
 }
