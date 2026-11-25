@@ -72,11 +72,11 @@ export function useAccountsTableColumns() {
               </>
             );
           },
-          size: 200,
+          size: 250,
         }),
         column.accessor('code', {
           header: intl.get('code'),
-          size: 80,
+          size: 150,
           cell: ({ getValue }) => {
             const code = getValue();
             return isBlank(code) ? null : (
@@ -89,7 +89,7 @@ export function useAccountsTableColumns() {
         column.accessor('accountTypeLabel', {
           id: 'type',
           header: intl.get('type'),
-          size: 140,
+          size: 150,
         }),
         column.accessor('accountNormal', {
           id: 'normal',
@@ -100,7 +100,7 @@ export function useAccountsTableColumns() {
         column.accessor('currencyCode', {
           id: 'currency',
           header: intl.get('currency'),
-          size: 75,
+          size: 100,
           cell: ({ getValue }) => (
             <span className={Classes.TEXT_MUTED}>{getValue()}</span>
           ),
@@ -108,7 +108,7 @@ export function useAccountsTableColumns() {
         column.accessor('bankBalanceFormatted', {
           id: 'bank_balance',
           header: 'Bank Balance',
-          size: 150,
+          size: 180,
           meta: { textAlign: 'right' },
           cell: ({ row, getValue }) => (
             <BalanceCell
@@ -119,7 +119,7 @@ export function useAccountsTableColumns() {
         column.accessor('amount', {
           id: 'balance',
           header: intl.get('balance'),
-          size: 150,
+          size: 180,
           meta: { textAlign: 'right' },
           cell: ({ row, getValue }) => (
             <BalanceCell

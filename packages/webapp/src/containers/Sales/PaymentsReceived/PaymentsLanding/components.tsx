@@ -12,7 +12,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { PaymentsReceivedListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
-import { Money, Icon, Can } from '@/components';
+import { Icon, Can } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import {
   PaymentReceiveAction,
@@ -100,38 +100,37 @@ export function usePaymentReceivesColumns() {
         column.accessor('formattedPaymentDate', {
           id: 'payment_date',
           header: intl.get('payment_date'),
-          size: 140,
+          size: 200,
         }),
         column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
           header: intl.get('customer_name'),
-          size: 160,
+          size: 200,
         }),
-        column.accessor('amount', {
+        column.accessor('formattedAmount', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 120,
-          cell: ({ getValue, row }) => (
-            <MoneyDisplay>
-              <Money amount={getValue()} currency={row.original.currencyCode} />
-            </MoneyDisplay>
-          ),
+          size: 200,
+          cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
+          meta: {
+            textAlign: 'right',
+          },
         }),
         column.accessor('paymentReceiveNo', {
           id: 'payment_receive_no',
           header: intl.get('payment_received_no'),
-          size: 140,
+          size: 200,
           meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor((row) => row.depositAccount?.name, {
           id: 'deposit_account',
           header: intl.get('deposit_account'),
-          size: 140,
+          size: 200,
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 140,
+          size: 150,
           meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
