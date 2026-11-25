@@ -276,6 +276,11 @@ export interface EstimatePdfBrandingAttributes {
   subtotalLabel: string;
   showSubtotal: boolean;
 
+  discount?: string;
+  discountLabel?: string;
+
+  adjustment?: string;
+
   showCustomerNote: boolean;
   customerNote: string;
   customerNoteLabel: string;
