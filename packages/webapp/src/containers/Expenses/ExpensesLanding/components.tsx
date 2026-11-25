@@ -174,33 +174,34 @@ export function useExpensesTableColumns() {
         column.accessor('formattedDate', {
           id: 'payment_date',
           header: intl.get('payment_date'),
-          size: 140,
+          size: 200,
         }),
         column.accessor('formattedAmount', {
           id: 'amount',
           header: intl.get('full_amount'),
-          size: 150,
+          size: 200,
           meta: {
             textAlign: 'right',
-            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_SEMIBOLD),
           },
         }),
         column.accessor((row) => row.paymentAccount?.name, {
           id: 'payment_account',
           header: intl.get('payment_account'),
-          size: 150,
-          meta: { bodyCellClassName: CLASSES.TEXT_MUTED },
+          size: 200,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor(ExpenseAccountAccessor, {
           id: 'expense_account',
           header: intl.get('expense_account'),
-          size: 160,
+          size: 200,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
           enableSorting: false,
         }),
         column.accessor('isPublished', {
           id: 'published',
           header: intl.get('publish'),
-          size: 100,
+          size: 150,
           cell: ({ row }) => PublishAccessor(row.original),
         }),
         column.accessor('description', {

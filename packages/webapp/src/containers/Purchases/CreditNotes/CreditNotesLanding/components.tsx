@@ -150,6 +150,7 @@ export function useVendorsCreditNoteTableColumns() {
           id: 'credit_number',
           header: intl.get('vendor_credits.column.vendor_credit_no'),
           size: 100,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('formattedAmount', {
           id: 'amount',
@@ -157,7 +158,7 @@ export function useVendorsCreditNoteTableColumns() {
           size: 120,
           meta: {
             textAlign: 'right',
-            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_SEMIBOLD),
           },
         }),
         column.accessor('formattedCreditsRemainingAmount', {
@@ -167,7 +168,7 @@ export function useVendorsCreditNoteTableColumns() {
           enableSorting: false,
           meta: {
             textAlign: 'right',
-            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_BOLD),
+            bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_SEMIBOLD),
           },
         }),
         column.accessor((row) => getVendorCreditStatus(row)?.text, {
@@ -180,6 +181,7 @@ export function useVendorsCreditNoteTableColumns() {
           id: 'reference_no',
           header: intl.get('reference_no'),
           size: 90,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
     [],

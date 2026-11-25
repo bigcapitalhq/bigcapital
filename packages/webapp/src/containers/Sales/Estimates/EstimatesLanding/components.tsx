@@ -1,4 +1,11 @@
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import {
+  Intent,
+  Tag,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Classes,
+} from '@blueprintjs/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -7,6 +14,7 @@ import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { FormatDate, Money, Choose, Icon, If, Can } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
 
 export type EstimateTableRow = NonNullable<
@@ -169,24 +177,29 @@ export function useEstimatesTableColumns() {
         column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
           header: intl.get('customer_name'),
-          size: 140,
+          size: 200,
         }),
         column.accessor('expirationDate', {
           id: 'expiration_date',
           header: intl.get('expiration_date'),
-          size: 140,
+          size: 150,
           cell: ({ getValue }) => <FormatDate value={getValue()} />,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('estimateNumber', {
           id: 'estimate_number',
           header: intl.get('estimate_number'),
-          size: 140,
+          size: 150,
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('amount', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 140,
-          meta: { textAlign: 'right' },
+          size: 160,
+          meta: {
+            textAlign: 'right',
+            bodyCellInnerClassName: CLASSES.FEATURED_CELL,
+          },
           cell: ({ getValue, row }) => (
             <MoneyDisplay>
               <Money amount={getValue()} currency={row.original.currencyCode} />
@@ -202,7 +215,7 @@ export function useEstimatesTableColumns() {
         column.accessor('reference', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 90,
+          size: 170,
         }),
       ]),
     [],

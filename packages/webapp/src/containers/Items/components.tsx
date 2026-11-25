@@ -216,25 +216,25 @@ export function useItemsTableColumns() {
         column.accessor('name', {
           id: 'name',
           header: intl.get('item_name'),
-          size: 180,
+          size: 295,
         }),
         column.accessor('code', {
           id: 'code',
           header: intl.get('item_code'),
           size: 120,
-          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('typeFormatted', {
           id: 'type',
           header: intl.get('item_type'),
-          size: 120,
+          size: 95,
           cell: ({ row }) => ItemTypeAccessor(row.original),
         }),
         column.accessor((row) => row.category?.name, {
           id: 'category',
           header: intl.get('category'),
           size: 150,
-          meta: { bodyCellClassName: Classes.TEXT_MUTED },
+          meta: { bodyCellInnerClassName: Classes.TEXT_MUTED },
         }),
         column.accessor('sellPriceFormatted', {
           id: 'sell_price',

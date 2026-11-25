@@ -6,6 +6,7 @@ import type { RecurringInvoicesListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Can, Icon } from '@/components';
 import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
+import { CLASSES } from '@/constants';
 import {
   AbilitySubject,
   RecurringInvoiceAction,
@@ -136,6 +137,7 @@ export function useRecurringInvoicesTableColumns() {
           id: 'profile_name',
           header: intl.get('recurring_invoice.field.profile_name'),
           size: 190,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
@@ -154,6 +156,7 @@ export function useRecurringInvoicesTableColumns() {
             id: 'frequency',
             header: intl.get('recurring_invoice.field.frequency'),
             size: 150,
+            meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
           },
         ),
         column.accessor(
@@ -170,6 +173,7 @@ export function useRecurringInvoicesTableColumns() {
             id: 'last_invoice_date',
             header: intl.get('recurring_invoice.field.last_invoice_date'),
             size: 150,
+            meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
           },
         ),
         column.accessor('amountFormatted', {
