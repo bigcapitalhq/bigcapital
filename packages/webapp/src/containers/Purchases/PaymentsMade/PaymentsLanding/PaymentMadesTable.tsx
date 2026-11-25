@@ -12,7 +12,7 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
@@ -76,7 +76,7 @@ function PaymentMadesTableInner({
       total={pagination?.total}
       loading={isPaymentsLoading}
       fetching={isPaymentsFetching}
-      compact={billPaymentSettings?.tableSize === 'small'}
+      compact={isSmallTableSize(billPaymentSettings?.tableSize)}
       query={paymentMadesTableState}
       setQuery={setPaymentMadesTableState}
       selectedIds={paymentMadesSelectedRows}

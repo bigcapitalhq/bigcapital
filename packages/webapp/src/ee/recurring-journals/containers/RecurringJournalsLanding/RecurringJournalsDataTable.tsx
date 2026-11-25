@@ -19,7 +19,7 @@ import {
   TableSkeletonRows,
 } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { getTableSize, TABLES } from '@/constants/tables';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   useDeleteRecurringJournal,
@@ -212,7 +212,7 @@ function RecurringJournalsDataTableInner({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
-        size={manualJournalsSettings?.tableSize as string | undefined}
+        size={getTableSize(manualJournalsSettings?.tableSize)}
         payload={{
           onEdit: handleEdit,
           onViewDetails: handleViewDetails,

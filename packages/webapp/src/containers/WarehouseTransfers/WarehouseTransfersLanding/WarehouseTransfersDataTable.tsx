@@ -18,7 +18,7 @@ import {
   DashboardContentTable,
 } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { getTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
@@ -168,7 +168,7 @@ function WarehouseTransfersDataTableInner({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
-        size={warehouseTransferTableSize}
+        size={getTableSize(warehouseTransferTableSize)}
         payload={{
           onViewDetails: handleViewDetailWarehouseTransfer,
           onDelete: handleDeleteWarehouseTransfer,

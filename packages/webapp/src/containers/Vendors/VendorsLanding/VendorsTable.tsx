@@ -13,7 +13,7 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { Vendor } from '@bigcapital/sdk-ts';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -63,7 +63,7 @@ function VendorsTableInner({
     isEmptyStatus,
     vendorsSettings,
   } = useVendorsListContext();
-  const compact = vendorsSettings?.tableSize === 'small';
+  const compact = isSmallTableSize(vendorsSettings?.tableSize);
   const columns = useVendorsTableColumns(compact ? 'small' : 'medium');
 
   // History context.

@@ -13,7 +13,7 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import type { Customer } from '@bigcapital/sdk-ts';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -68,7 +68,7 @@ function CustomersTableInner({
     isCustomersFetching,
     customersSettings,
   } = useCustomersListContext();
-  const compact = customersSettings?.tableSize === 'small';
+  const compact = isSmallTableSize(customersSettings?.tableSize);
   const columns = useCustomersTableColumns(compact ? 'small' : 'medium');
 
   // Handles the customer delete action.

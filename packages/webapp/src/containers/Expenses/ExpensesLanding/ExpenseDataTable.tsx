@@ -12,7 +12,7 @@ import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions'
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -98,7 +98,7 @@ function ExpensesDataTable({
       total={pagination?.total}
       loading={isExpensesLoading}
       fetching={isExpensesFetching}
-      compact={expenseSettings?.tableSize === 'small'}
+      compact={isSmallTableSize(expenseSettings?.tableSize)}
       query={expensesTableState}
       setQuery={setExpensesTableState}
       selectedIds={expensesSelectedRows}

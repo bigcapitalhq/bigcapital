@@ -139,23 +139,23 @@ export function useVendorsCreditNoteTableColumns() {
         column.accessor('formattedVendorCreditDate', {
           id: 'credit_date',
           header: intl.get('date'),
-          size: 110,
+          size: 150,
         }),
         column.accessor((row) => row.vendor?.displayName, {
           id: 'vendor',
           header: intl.get('vendor_name'),
-          size: 180,
+          size: 200,
         }),
         column.accessor('vendorCreditNumber', {
           id: 'credit_number',
           header: intl.get('vendor_credits.column.vendor_credit_no'),
-          size: 100,
+          size: 200,
           meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('formattedAmount', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 120,
+          size: 150,
           meta: {
             textAlign: 'right',
             bodyCellClassName: clsx('numeric-cell', CLASSES.FONT_SEMIBOLD),
@@ -164,7 +164,7 @@ export function useVendorsCreditNoteTableColumns() {
         column.accessor('formattedCreditsRemainingAmount', {
           id: 'balance',
           header: intl.get('balance'),
-          size: 120,
+          size: 150,
           enableSorting: false,
           meta: {
             textAlign: 'right',
@@ -174,13 +174,13 @@ export function useVendorsCreditNoteTableColumns() {
         column.accessor((row) => getVendorCreditStatus(row)?.text, {
           id: 'status',
           header: intl.get('status'),
-          size: 160,
+          size: 150,
           cell: ({ row }) => StatusAccessor(row.original),
         }),
         column.accessor('referenceNo', {
           id: 'reference_no',
           header: intl.get('reference_no'),
-          size: 90,
+          size: 150,
           meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),

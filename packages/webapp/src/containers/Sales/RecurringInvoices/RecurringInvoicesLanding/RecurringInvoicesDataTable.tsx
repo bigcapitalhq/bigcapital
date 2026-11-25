@@ -14,7 +14,7 @@ import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActio
 import { AppToaster } from '@/components';
 import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { TABLES } from '@/constants/tables';
+import { isSmallTableSize, TABLES } from '@/constants/tables';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   useDeleteRecurringInvoice,
@@ -173,7 +173,7 @@ function RecurringInvoicesDataTableInner({
         total={pagination?.total}
         loading={isRecurringInvoicesLoading}
         fetching={isRecurringInvoicesFetching}
-        compact={invoicesSettings?.tableSize === 'small'}
+        compact={isSmallTableSize(invoicesSettings?.tableSize)}
         query={recurringInvoicesTableState}
         setQuery={setRecurringInvoicesTableState}
         selectedIds={recurringInvoicesSelectedRows}

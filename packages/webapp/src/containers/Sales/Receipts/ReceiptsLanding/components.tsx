@@ -135,29 +135,29 @@ export function useReceiptsTableColumns() {
         column.accessor('formattedReceiptDate', {
           id: 'receipt_date',
           header: intl.get('receipt_date'),
-          size: 140,
+          size: 150,
         }),
         column.accessor((row) => row.customer?.displayName, {
           id: 'customer',
           header: intl.get('customer_name'),
-          size: 140,
+          size: 200,
         }),
         column.accessor('receiptNumber', {
           id: 'receipt_number',
           header: intl.get('receipt_number'),
-          size: 140,
+          size: 200,
           meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor((row) => row.depositAccount?.name, {
           id: 'deposit_account',
           header: intl.get('deposit_account'),
-          size: 140,
+          size: 200,
           meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('total', {
           id: 'amount',
           header: intl.get('amount'),
-          size: 140,
+          size: 150,
           meta: { textAlign: 'right' },
           cell: ({ getValue, row }) => (
             <MoneyDisplay>

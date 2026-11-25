@@ -13,6 +13,8 @@ import intl from 'react-intl-universal';
 import type { BillPaymentsListResponse } from '@bigcapital/sdk-ts';
 import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Icon, Money, Can } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
+import { CLASSES } from '@/constants';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
@@ -94,34 +96,40 @@ export function usePaymentMadesTableColumns() {
         column.accessor('formattedPaymentDate', {
           id: 'payment_date',
           header: intl.get('payment_date'),
-          size: 140,
+          size: 200,
         }),
         column.accessor((row) => row.vendor?.displayName, {
           id: 'vendor',
           header: intl.get('vendor_name'),
-          size: 140,
+          size: 200,
         }),
         column.accessor('paymentNumber', {
           id: 'payment_number',
           header: intl.get('payment_number'),
-          size: 140,
+          size: 200,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
+        }),
+        column.accessor('formattedAmount', {
+          id: 'amount',
+          header: intl.get('amount'),
+          size: 200,
+          cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
+          meta: {
+            textAlign: 'right',
+            bodyCellClassName: 'numeric-cell',
+          },
         }),
         column.accessor((row) => row.paymentAccount?.name, {
           id: 'payment_account',
           header: intl.get('payment_account'),
-          size: 140,
-        }),
-        column.accessor('amount', {
-          id: 'amount',
-          header: intl.get('amount'),
-          size: 140,
-          cell: ({ row }) => AmountAccessor(row.original),
-          meta: { bodyCellClassName: 'numeric-cell' },
+          size: 200,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
         column.accessor('reference', {
           id: 'reference_no',
           header: intl.get('reference'),
-          size: 140,
+          size: 200,
+          meta: { bodyCellInnerClassName: CLASSES.TEXT_MUTED },
         }),
       ]),
     [],
