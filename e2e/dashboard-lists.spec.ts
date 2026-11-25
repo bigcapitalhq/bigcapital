@@ -38,6 +38,20 @@ const lists = [
     cell: 'Accrual',
   },
   {
+    path: '/recurring-journals',
+    endpoint: '/api/recurring-journals',
+    feature: 'recurring_journals',
+    rowTestId: 'recurring-journal-row',
+    identifier: 'profile_name',
+    fields: {
+      frequency: 'month',
+      repeat_interval: 1,
+      status: 'paused',
+      failure_count: 2,
+    },
+    cell: 'Needs attention',
+  },
+  {
     path: '/expenses',
     endpoint: '/api/expenses',
     rowTestId: 'expense-row',
@@ -88,6 +102,23 @@ for (const list of lists) {
       currency_code: 'USD',
       ...list.fields,
     }));
+    if (list.feature) {
+      await page.route('**/api/dashboard/boot', async (route) => {
+        const response = await route.fetch();
+        const boot = await response.json();
+        await route.fulfill({
+          response,
+          json: {
+            ...boot,
+            features: boot.features.map((feature: { name: string }) =>
+              feature.name === list.feature
+                ? { ...feature, is_accessible: true }
+                : feature,
+            ),
+          },
+        });
+      });
+    }
     await page.route(
       (url) => url.pathname === list.endpoint,
       (route) => {
