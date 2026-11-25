@@ -445,6 +445,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 text: <T id={'sidebar.budgets'} />,
                 href: '/budgets',
                 type: ISidebarMenuItemType.Link,
+                feature: Features.Budgeting,
                 permission: {
                   subject: AbilitySubject.Budget,
                   ability: BudgetAction.View,
@@ -734,6 +735,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
             text: <T id={'sidebar.budget_vs_actual'} />,
             href: '/financial-reports/budget-vs-actual',
             type: ISidebarMenuItemType.Link,
+            feature: Features.Budgeting,
             permission: {
               subject: AbilitySubject.Report,
               ability: ReportsAction.READ_BUDGET_VS_ACTUAL,

@@ -11,6 +11,8 @@ import { GetBudget } from './queries/GetBudget.service';
 import { GetBudgets } from './queries/GetBudgets.service';
 import { BudgetsApplication } from './BudgetsApplication.service';
 import { BudgetsController } from './Budgets.controller';
+import { BudgetsFeatureGuard } from './BudgetsFeatureGuard';
+import { FeaturesModule } from '../Features/Features.module';
 
 const models = [
   RegisterTenancyModel(Budget),
@@ -19,7 +21,7 @@ const models = [
 
 @Module({
   controllers: [BudgetsController],
-  imports: [DynamicListModule, ...models],
+  imports: [DynamicListModule, FeaturesModule, ...models],
   providers: [
     BudgetValidator,
     CreateBudgetService,
@@ -28,6 +30,7 @@ const models = [
     GetBudget,
     GetBudgets,
     BudgetsApplication,
+    BudgetsFeatureGuard,
   ],
   exports: [...models],
 })

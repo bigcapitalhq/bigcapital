@@ -2,6 +2,15 @@ import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
+const enableFeature = (value: number) =>
+  request(app.getHttpServer())
+    .put('/settings')
+    .set('organization-id', orgainzationId)
+    .set('Authorization', AuthorizationHeader)
+    .send({
+      options: [{ group: 'features', key: 'budgeting', value }],
+    });
+
 const makeBudgetRequest = () => ({
   name: faker.string.uuid(),
   description: 'The annual budget of test.',
@@ -25,6 +34,14 @@ const createBudget = async () => {
 };
 
 describe('Budgets (e2e)', () => {
+  beforeAll(async () => {
+    await enableFeature(1).expect(200);
+  });
+
+  afterAll(async () => {
+    await enableFeature(0).expect(200);
+  });
+
   it('/budgets (POST)', async () => {
     const response = await request(app.getHttpServer())
       .post('/budgets')
@@ -229,5 +246,30 @@ describe('Budgets (e2e)', () => {
       );
 
     expect(Buffer.isBuffer(response.body)).toBe(true);
+  });
+
+  it('rejects the budgeting endpoints when the feature is disabled', async () => {
+    await enableFeature(0).expect(200);
+
+    const budgetsResponse = await request(app.getHttpServer())
+      .get('/budgets')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(400);
+
+    expect(budgetsResponse.body.errors[0].type).toBe(
+      'BUDGETING_FEATURE_NOT_ENABLED',
+    );
+
+    const reportResponse = await request(app.getHttpServer())
+      .get('/reports/budget-vs-actual')
+      .query({ budgetId: 1 })
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(400);
+
+    expect(reportResponse.body.errors[0].type).toBe(
+      'BUDGETING_FEATURE_NOT_ENABLED',
+    );
   });
 });

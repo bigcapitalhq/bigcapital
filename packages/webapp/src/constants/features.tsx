@@ -9,4 +9,5 @@ export const Features = {
   TrackingCategories: 'tracking_categories',
   RecurringJournals: 'recurring_journals',
   BatchTracking: 'batch_tracking',
+  Budgeting: 'budgeting',
 };

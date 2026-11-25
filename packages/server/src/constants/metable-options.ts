@@ -377,5 +377,8 @@ export const SettingsOptions = {
     batch_tracking: {
       type: 'boolean',
     },
+    budgeting: {
+      type: 'boolean',
+    },
   },
 };

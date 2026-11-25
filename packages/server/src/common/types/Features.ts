@@ -8,6 +8,7 @@ export enum Features {
   TRACKING_CATEGORIES = 'tracking_categories',
   RECURRING_JOURNALS = 'recurring_journals',
   BATCH_TRACKING = 'batch_tracking',
+  BUDGETING = 'budgeting',
 }
 
 export interface IFeatureAllItem {
