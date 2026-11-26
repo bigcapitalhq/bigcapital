@@ -14,7 +14,10 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { getDefaultCashflowQuery } from './constants';
-import { AccountingBasisService } from '../../common/AccountingBasisService';
+import {
+  AccountingBasisService,
+  WithAccountingBasis,
+} from '../../common/AccountingBasisService';
 
 @Injectable()
 export class CashFlowStatementService {
@@ -37,7 +40,7 @@ export class CashFlowStatementService {
    * @returns {Promise<ModelObject<AccountTransaction>[]>}
    */
   private async cashAtBeginningTransactions(
-    filter: ICashFlowStatementQuery,
+    filter: WithAccountingBasis<ICashFlowStatementQuery>,
   ): Promise<ModelObject<AccountTransaction>[]> {
     const appendPeriodsOperToChain = (trans) => [
       ...trans,
@@ -72,11 +75,10 @@ export class CashFlowStatementService {
     const accounts = await this.cashFlowRepo.cashFlowAccounts();
     const tenant = await this.tenancyContext.getTenant(true);
 
-    const filter = {
+    const filter = await this.accountingBasisService.resolveQuery({
       ...getDefaultCashflowQuery(),
       ...query,
-    };
-    filter.basis = await this.accountingBasisService.resolve(filter.basis);
+    });
 
     // Retrieve the accounts transactions.
     const transactions =

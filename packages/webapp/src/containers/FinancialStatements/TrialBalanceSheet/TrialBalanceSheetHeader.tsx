@@ -14,23 +14,14 @@ import {
   withTrialBalanceActions,
   WithTrialBalanceActionsProps,
 } from './withTrialBalanceActions';
+import type { getDefaultTrialBalanceQuery } from './utils';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
-import { transformToForm } from '@/utils';
-
-interface TrialBalanceFormValues {
-  fromDate: Date;
-  toDate: Date;
-  basis: 'cash' | 'accrual';
-  branchesIds: string[];
-  filterByOption: string;
-  [key: string]: unknown;
-}
 
 interface TrialBalanceSheetHeaderOwnProps {
-  pageFilter: Record<string, unknown>;
+  pageFilter: ReturnType<typeof getDefaultTrialBalanceQuery>;
   onSubmitFilter: (values: Record<string, unknown>) => void;
 }
 
@@ -65,29 +56,17 @@ function TrialBalanceSheetHeaderInner({
 
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
-  // Default values.
-  const defaultValues: TrialBalanceFormValues = {
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    // Must match the report default basis in `getDefaultTrialBalanceQuery`.
-    basis: 'accrual',
-    branchesIds: [],
-    filterByOption: 'with-transactions',
+  const initialValues = {
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+    basis: pageFilter.basis,
+    branchesIds: pageFilter.branchesIds,
+    filterByOption: pageFilter.filterByOption,
   };
-
-  // Initial values.
-  const initialValues = transformToForm(
-    {
-      ...pageFilter,
-      fromDate: moment(pageFilter.fromDate as string).toDate(),
-      toDate: moment(pageFilter.toDate as string).toDate(),
-    },
-    defaultValues,
-  ) as TrialBalanceFormValues;
   // Handle form submit.
   const handleSubmit = (
-    values: TrialBalanceFormValues,
-    { setSubmitting }: FormikHelpers<TrialBalanceFormValues>,
+    values: typeof initialValues,
+    { setSubmitting }: FormikHelpers<typeof initialValues>,
   ) => {
     onSubmitFilter(values);
     setSubmitting(false);
@@ -108,7 +87,7 @@ function TrialBalanceSheetHeaderInner({
       isOpen={trialBalanceDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
-      <Formik<TrialBalanceFormValues>
+      <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}

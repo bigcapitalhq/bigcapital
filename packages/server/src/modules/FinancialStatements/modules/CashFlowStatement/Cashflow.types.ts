@@ -16,7 +16,7 @@ export interface ICashFlowStatementQuery {
   noneZero: boolean;
   noneTransactions: boolean;
   numberFormat: INumberFormatQuery;
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
 
   branchesIds?: number[];
 }

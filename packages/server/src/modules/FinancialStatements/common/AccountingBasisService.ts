@@ -3,6 +3,10 @@ import { SETTINGS_PROVIDER } from '@/modules/Settings/Settings.types';
 import { SettingsStore } from '@/modules/Settings/SettingsStore';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
 
+export type WithAccountingBasis<T> = Omit<T, 'basis'> & {
+  readonly basis: AccountingBasis;
+};
+
 /**
  * Resolves the accounting basis used by the financial statements.
  * The explicit basis of the report query takes precedence, otherwise
@@ -28,6 +32,12 @@ export class AccountingBasisService {
     return basis === AccountingBasis.Cash
       ? AccountingBasis.Cash
       : AccountingBasis.Accrual;
+  }
+
+  public async resolveQuery<T extends object>(
+    query: T & { basis?: AccountingBasis | null },
+  ): Promise<WithAccountingBasis<T>> {
+    return { ...query, basis: await this.resolve(query.basis) };
   }
 
   /**

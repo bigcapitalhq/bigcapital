@@ -25,8 +25,10 @@ import { ProfitLossSheetSortOrder } from './ProfitLossSheet.types';
 export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsEnum(AccountingBasis)
   @IsOptional()
-  @ApiProperty({ description: 'The basis for the profit and loss sheet' })
-  basis: AccountingBasis;
+  @ApiPropertyOptional({
+    description: 'The basis for the profit and loss sheet',
+  })
+  basis?: AccountingBasis;
 
   @IsDateString()
   @IsOptional()

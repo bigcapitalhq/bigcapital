@@ -2,13 +2,13 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { Ledger } from '@/modules/Ledger/Ledger';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
 import { Inject } from '@nestjs/common';
 import { ModelObject } from 'objection';
-import { AccountingBasisService } from '../../common/AccountingBasisService';
+import type { IJournalReportQuery } from './JournalSheet.types';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 
 export class JournalSheetRepository {
   @Inject(TenancyContext)
@@ -25,19 +25,6 @@ export class JournalSheetRepository {
 
   @Inject(AccountTransaction.name)
   private accountTransactions: Array<ModelObject<AccountTransaction>>;
-
-  @Inject(AccountingBasisService)
-  private accountingBasisService: AccountingBasisService;
-
-  /**
-   * The report accounting basis.
-   */
-  public basis: AccountingBasis;
-
-  /**
-   *
-   */
-  public filter: any;
 
   /**
    *
@@ -61,27 +48,15 @@ export class JournalSheetRepository {
 
   public baseCurrency: string;
 
-  setFilter(filter: any) {
-    this.filter = filter;
-  }
-
   /**
    * Loads the journal sheet data.
    */
-  async load() {
+  async load(filter: WithAccountingBasis<IJournalReportQuery>) {
     await this.initBaseCurrency();
-    await this.initBasis();
     await this.initAccountsGraph();
-    await this.initAccountTransactions();
+    await this.initAccountTransactions(filter);
     await this.initContacts();
     await this.initLedger();
-  }
-
-  /**
-   * Initialize the report accounting basis.
-   */
-  async initBasis() {
-    this.basis = await this.accountingBasisService.resolve(this.filter?.basis);
   }
 
   /**
@@ -105,32 +80,26 @@ export class JournalSheetRepository {
   /**
    * Initialize account transactions.
    */
-  async initAccountTransactions() {
+  async initAccountTransactions(
+    filter: WithAccountingBasis<IJournalReportQuery>,
+  ) {
     // Retrieve all journal transactions based on the given query.
     const transactions = await this.accountTransaction()
       .query()
       .onBuild((query) => {
-        if (this.filter.fromRange || this.filter.toRange) {
-          query.modify(
-            'filterAmountRange',
-            this.filter.fromRange,
-            this.filter.toRange,
-          );
+        if (filter.fromRange || filter.toRange) {
+          query.modify('filterAmountRange', filter.fromRange, filter.toRange);
         }
-        query.modify(
-          'filterDateRange',
-          this.filter.fromDate,
-          this.filter.toDate,
-        );
+        query.modify('filterDateRange', filter.fromDate, filter.toDate);
         query.orderBy(['date', 'createdAt', 'indexGroup', 'index']);
 
-        if (this.filter.transactionType) {
-          query.where('reference_type', this.filter.transactionType);
+        if (filter.transactionType) {
+          query.where('reference_type', filter.transactionType);
         }
-        if (this.filter.transactionType && this.filter.transactionId) {
-          query.where('reference_id', this.filter.transactionId);
+        if (filter.transactionType && filter.transactionId) {
+          query.where('reference_id', filter.transactionId);
         }
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', filter.basis);
         query.withGraphFetched('account');
       });
     this.accountTransactions = transactions;

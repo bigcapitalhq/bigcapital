@@ -19,8 +19,7 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
-import { AccountingBasisService } from '../../common/AccountingBasisService';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class BalanceSheetRepository extends flow(
@@ -40,15 +39,6 @@ export class BalanceSheetRepository extends flow(
   public readonly accountTransactionModel: TenantModelProxy<
     typeof AccountTransaction
   >;
-
-  @Inject(AccountingBasisService)
-  public readonly accountingBasisService: AccountingBasisService;
-
-  /**
-   * The report accounting basis.
-   * @param {AccountingBasis}
-   */
-  public basis: AccountingBasis;
 
   /**
    * @description Balance sheet query.
@@ -187,7 +177,7 @@ export class BalanceSheetRepository extends flow(
    * Constructor method.
    * @param {IBalanceSheetQuery} query
    */
-  public setQuery(query: IBalanceSheetQuery) {
+  public setQuery(query: WithAccountingBasis<IBalanceSheetQuery>) {
     this.query = new BalanceSheetQuery(query);
 
     this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(
@@ -199,10 +189,11 @@ export class BalanceSheetRepository extends flow(
    * Async initialize.
    * @returns {Promise<void>}
    */
-  public asyncInitialize = async (query: IBalanceSheetQuery) => {
+  public asyncInitialize = async (
+    query: WithAccountingBasis<IBalanceSheetQuery>,
+  ) => {
     this.setQuery(query);
 
-    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
 
@@ -245,13 +236,6 @@ export class BalanceSheetRepository extends flow(
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
     this.accountsByParentType = transformToMapBy(accounts, 'accountParentType');
-  };
-
-  /**
-   * Initialize the report accounting basis.
-   */
-  public initBasis = async () => {
-    this.basis = await this.accountingBasisService.resolve(this.query.basis);
   };
 
   /**
@@ -410,7 +394,7 @@ export class BalanceSheetRepository extends flow(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.query.basis);
       });
   };
 
@@ -431,7 +415,7 @@ export class BalanceSheetRepository extends flow(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.query.basis);
       });
   };
 

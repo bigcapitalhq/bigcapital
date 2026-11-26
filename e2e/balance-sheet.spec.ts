@@ -70,7 +70,7 @@ test.describe('balance sheet', () => {
     await expect(page.getByTestId('financial-sheet-date')).toBeVisible();
     await expect(
       page.getByTestId('financial-sheet-accounting-basis'),
-    ).toContainText('Cash');
+    ).toContainText('Accrual');
   });
 
   test('should render the balance sheet sections and totals.', async ({
@@ -152,20 +152,20 @@ test.describe('balance sheet', () => {
     await waitForBalanceSheetData(page);
     await expect(
       page.getByTestId('financial-sheet-accounting-basis'),
-    ).toContainText('Cash');
+    ).toContainText('Accrual');
 
     await page.getByRole('button', { name: 'Customize Report' }).click();
 
     const drawer = page.getByTestId('financial-report-drawer');
     await expect(drawer).toBeVisible({ timeout: 15_000 });
-    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeVisible();
+    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeChecked();
 
     // Click the radio directly (some environments inject the TanStack Query
     // Devtools overlay which intercepts pointer events; element.click()
     // bypasses it and still fires the React change event that updates the
     // form).
     await drawer
-      .getByRole('radio', { name: 'Accrual' })
+      .getByRole('radio', { name: 'Cash' })
       .evaluate((el) => (el as HTMLInputElement).click());
 
     // Submit the form directly for the same reason as the radio above.
@@ -175,6 +175,6 @@ test.describe('balance sheet', () => {
 
     await expect(
       page.getByTestId('financial-sheet-accounting-basis'),
-    ).toContainText('Accrual', { timeout: 30_000 });
+    ).toContainText('Cash', { timeout: 30_000 });
   });
 });

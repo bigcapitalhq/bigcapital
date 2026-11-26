@@ -1,20 +1,21 @@
-import { SalesByItemsTableQuery } from '@bigcapital/sdk-ts';
 import moment from 'moment';
-import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { useAccountingReportQuery } from '../useAccountingReportQuery';
 import { salesTaxLiabilitySummaryDynamicColumns } from './dynamicColumns';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
-import { useAppQueryString } from '@/hooks';
+import type { AccountingBasis } from '@/hooks/query/settings';
 import { transformToForm } from '@/utils';
 
 /**
  * Retrieves the default sales tax liability summary query.
  */
-export const getDefaultSalesTaxLiablitySummaryQuery = () => ({
+export const getDefaultSalesTaxLiablitySummaryQuery = (
+  basis: AccountingBasis,
+) => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  basis: 'cash',
+  basis,
   numberFormat: {},
 });
 
@@ -22,19 +23,14 @@ export const getDefaultSalesTaxLiablitySummaryQuery = () => ({
  * Parses the sales tax liability summary query.
  */
 const parseSalesTaxLiabilitySummaryQuery = (
-  locationQuery: Record<string, any>,
-): SalesByItemsTableQuery => {
-  const defaultQuery = getDefaultSalesTaxLiablitySummaryQuery();
+  locationQuery: Record<string, unknown>,
+  basis: AccountingBasis,
+) => {
+  const defaultQuery = getDefaultSalesTaxLiablitySummaryQuery(basis);
 
-  const transformed = {
+  return {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
-  };
-  return {
-    ...transformed,
-
-    // Ensures the branches ids is always array.
-    // branchesIds: castArray(transformed.branchesIds).map(Number),
   };
 };
 
@@ -42,26 +38,10 @@ const parseSalesTaxLiabilitySummaryQuery = (
  * Retrieves the sales tax liability summary query.
  */
 export const useSalesTaxLiabilitySummaryQuery = () => {
-  // Retrieves location query.
-  const [locationQuery, setLocationQuery] = useAppQueryString();
-
-  // Merges the default filter query with location URL query.
-  const parsedQuery = useMemo(
-    () => parseSalesTaxLiabilitySummaryQuery(locationQuery),
-    [locationQuery],
+  const { query, setLocationQuery } = useAccountingReportQuery(
+    parseSalesTaxLiabilitySummaryQuery,
   );
-  return [parsedQuery, setLocationQuery] as const;
-};
-
-/**
- * Retrieves the sales tax liability summary default query.
- */
-export const getSalesTaxLiabilitySummaryDefaultQuery = () => {
-  return {
-    basic: 'cash',
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-  };
+  return [query, setLocationQuery] as const;
 };
 
 /**

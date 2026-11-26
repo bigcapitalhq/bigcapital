@@ -10,7 +10,10 @@ import { ProfitLossSheetMeta } from './ProfitLossSheetMeta';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
+import { pipe } from 'fp-ts/function';
 import { I18nService } from 'nestjs-i18n';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
+import { normalizeComparisonQuery } from '../../common/normalizeComparisonQuery';
 
 @Injectable()
 export class ProfitLossSheetService {
@@ -19,6 +22,7 @@ export class ProfitLossSheetService {
     private readonly eventPublisher: EventEmitter2,
     private readonly i18nService: I18nService,
     private readonly profitLossRepository: ProfitLossSheetRepository,
+    private readonly accountingBasisService: AccountingBasisService,
   ) {}
 
   /**
@@ -33,12 +37,16 @@ export class ProfitLossSheetService {
     query: IProfitLossSheetQuery;
     meta: IProfitLossSheetMeta;
   }> => {
-    // Merges the given query with default filter query.
-    const filter = mergeQueryWithDefaults(query);
+    const filter = await pipe(
+      query,
+      mergeQueryWithDefaults,
+      normalizeComparisonQuery,
+      (normalizedQuery) =>
+        this.accountingBasisService.resolveQuery(normalizedQuery),
+    );
 
     // Loads the profit/loss sheet data.
-    this.profitLossRepository.setFilter(filter);
-    await this.profitLossRepository.asyncInitialize();
+    await this.profitLossRepository.asyncInitialize(filter);
 
     // Retrieve the profit/loss sheet meta first to get date format.
     const meta = await this.profitLossSheetMeta.meta(filter);

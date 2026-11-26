@@ -4,8 +4,9 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { useAccountingReportQuery } from '../useAccountingReportQuery';
+import type { AccountingBasis } from '@/hooks/query/settings';
 import type { FormikContextType } from 'formik';
-import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
 interface FormSetFieldValue {
@@ -24,10 +25,12 @@ type BalanceSheetFormQuery = BalanceSheetTableQuery & {
  * Retrieves the default balance sheet query.
  * @returns {}
  */
-export const getDefaultBalanceSheetQuery = (): BalanceSheetFormQuery => ({
+export const getDefaultBalanceSheetQuery = (
+  basis: AccountingBasis,
+): BalanceSheetFormQuery => ({
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  basis: 'cash',
+  basis,
   displayColumnsType: 'total',
   displayColumnsBy: 'month',
   filterByOption: 'without-zero-balance',
@@ -56,8 +59,9 @@ export const getDefaultBalanceSheetQuery = (): BalanceSheetFormQuery => ({
 
 const parseBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
+  basis: AccountingBasis,
 ): BalanceSheetFormQuery => {
-  const defaultQuery = getDefaultBalanceSheetQuery();
+  const defaultQuery = getDefaultBalanceSheetQuery(basis);
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
@@ -72,35 +76,8 @@ const parseBalanceSheetQuery = (
 /**
  * Retrieves the balance sheet query.
  */
-export const useBalanceSheetQuery = () => {
-  // Retrieves location query.
-  const [locationQuery, setLocationQuery] = useAppQueryString();
-
-  // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseBalanceSheetQuery(locationQuery),
-    [locationQuery],
-  );
-
-  return {
-    query,
-    locationQuery,
-    setLocationQuery,
-  };
-};
-
-/**
- * Retrieves the balance sheet header default values.
- */
-export const getBalanceSheetHeaderDefaultValues = () => {
-  return {
-    basic: 'cash',
-    filterByOption: 'without-zero-balance',
-    displayColumnsType: 'total',
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-  };
-};
+export const useBalanceSheetQuery = () =>
+  useAccountingReportQuery(parseBalanceSheetQuery);
 
 /**
  * Retrieves the balance sheet header validation schema.

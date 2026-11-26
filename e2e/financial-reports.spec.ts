@@ -106,42 +106,54 @@ test.describe('financial reports', () => {
     await waitForReportRows(page, 'trial-balance');
   });
 
-  test('should customize the trial balance sheet accounting basis through the filter drawer.', async ({
+  test('should default trial balance to the cash preference and allow an accrual override.', async ({
     page,
   }) => {
+    // Set the preference for this browser without changing the shared test organization.
+    await page.route('**/api/settings', async (route) => {
+      const response = await route.fetch();
+      const settings = await response.json();
+      const cashBasis = {
+        group: 'organization',
+        key: 'accounting_basis',
+        value: 'cash',
+      };
+      await route.fulfill({ response, json: [...settings, cashBasis] });
+    });
+
     await page.goto('/financial-reports/trial-balance-sheet');
     await waitForReportPage(page, 'Trial Balance Sheet');
     await waitForReportRows(page, 'trial-balance');
 
     await expect(
       page.getByTestId('financial-sheet-accounting-basis'),
-    ).toContainText('Accrual');
+    ).toContainText('Cash');
 
     await page.getByRole('button', { name: 'Customize Report' }).click();
 
     const drawer = page.getByTestId('financial-report-drawer');
     await expect(drawer).toBeVisible({ timeout: 15_000 });
-    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeChecked();
-    await expect(drawer.getByRole('radio', { name: 'Cash' })).toBeVisible();
+    await expect(drawer.getByRole('radio', { name: 'Cash' })).toBeChecked();
+    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeVisible();
 
     // Click the radio directly (some environments inject the TanStack Query
     // Devtools overlay which intercepts pointer events; element.click()
     // bypasses it and still fires the React change event that updates the
     // form).
     await drawer
-      .getByRole('radio', { name: 'Cash' })
+      .getByRole('radio', { name: 'Accrual' })
       .evaluate((el) => (el as HTMLInputElement).click());
-    await expect(drawer.getByRole('radio', { name: 'Cash' })).toBeChecked();
+    await expect(drawer.getByRole('radio', { name: 'Accrual' })).toBeChecked();
 
     // Submit the form directly for the same reason as the radio above.
     await drawer
       .getByRole('button', { name: 'Calculate report' })
       .evaluate((el) => (el as HTMLButtonElement).click());
 
-    await expect(page).toHaveURL(/basis=cash/);
+    await expect(page).toHaveURL(/basis=accrual/);
     await expect(
       page.getByTestId('financial-sheet-accounting-basis'),
-    ).toContainText('Cash', { timeout: 30_000 });
+    ).toContainText('Accrual', { timeout: 30_000 });
   });
 
   test('should render the General Ledger report.', async ({ page }) => {
@@ -275,7 +287,7 @@ test.describe('financial reports', () => {
     page,
   }) => {
     // The seeded invoice is not paid, so tax is only recognised on the
-    // accrual basis (the report page defaults to cash).
+    // accrual basis.
     await page.goto(
       '/financial-reports/sales-tax-liability-summary?basis=accrual',
     );

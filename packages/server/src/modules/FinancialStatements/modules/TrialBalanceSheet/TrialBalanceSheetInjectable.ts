@@ -10,6 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable()
 export class TrialBalanceSheetService {
@@ -18,6 +19,7 @@ export class TrialBalanceSheetService {
     private readonly eventPublisher: EventEmitter2,
     private readonly trialBalanceSheetRepository: TrialBalanceSheetRepository,
     private readonly tenancyContext: TenancyContext,
+    private readonly accountingBasisService: AccountingBasisService,
   ) {}
 
   /**
@@ -28,16 +30,15 @@ export class TrialBalanceSheetService {
   public async trialBalanceSheet(
     query: ITrialBalanceSheetQuery,
   ): Promise<ITrialBalanceStatement> {
-    const filter = {
+    const filter = await this.accountingBasisService.resolveQuery({
       ...getTrialBalanceSheetDefaultQuery(),
       ...query,
-    };
-    this.trialBalanceSheetRepository.setQuery(filter);
+    });
 
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
 
     // Loads the resources.
-    await this.trialBalanceSheetRepository.asyncInitialize();
+    await this.trialBalanceSheetRepository.asyncInitialize(filter);
 
     // Trial balance sheet meta first to get date format.
     const meta = await this.trialBalanceSheetMetaService.meta(filter);

@@ -1,9 +1,9 @@
 import { castArray } from 'lodash';
 import moment from 'moment';
-import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
-import { useAppQueryString } from '@/hooks';
+import { useAccountingReportQuery } from '../useAccountingReportQuery';
+import type { AccountingBasis } from '@/hooks/query/settings';
 import { transformToForm } from '@/utils';
 
 // Filters accounts options.
@@ -25,10 +25,10 @@ export const filterAccountsOptions = [
 /**
  * Retrieves the default general ledger query.
  */
-export const getDefaultGeneralLedgerQuery = () => ({
+export const getDefaultGeneralLedgerQuery = (basis: AccountingBasis) => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  basis: 'accrual',
+  basis,
   filterByOption: 'with-transactions',
   branchesIds: [] as string[],
   accountsIds: [] as string[],
@@ -50,8 +50,11 @@ export const getGeneralLedgerQuerySchema = () => {
 /**
  * Parses general ledger query of browser location.
  */
-const parseGeneralLedgerQuery = (locationQuery: Record<string, unknown>) => {
-  const defaultQuery = getDefaultGeneralLedgerQuery();
+const parseGeneralLedgerQuery = (
+  locationQuery: Record<string, unknown>,
+  basis: AccountingBasis,
+) => {
+  const defaultQuery = getDefaultGeneralLedgerQuery(basis);
 
   const transformed = {
     ...defaultQuery,
@@ -69,14 +72,5 @@ const parseGeneralLedgerQuery = (locationQuery: Record<string, unknown>) => {
 /**
  * Retrieves the general ledger location query.
  */
-export const useGeneralLedgerQuery = () => {
-  // Retrieves location query.
-  const [locationQuery, setLocationQuery] = useAppQueryString();
-
-  // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseGeneralLedgerQuery(locationQuery),
-    [locationQuery],
-  );
-  return { query, locationQuery, setLocationQuery };
-};
+export const useGeneralLedgerQuery = () =>
+  useAccountingReportQuery(parseGeneralLedgerQuery);

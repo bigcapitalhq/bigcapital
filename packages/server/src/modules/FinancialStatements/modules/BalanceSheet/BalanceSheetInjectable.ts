@@ -8,6 +8,8 @@ import { BalanceSheet } from './BalanceSheet';
 import { getBalanceSheetDefaultQuery } from './constants';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { I18nService } from 'nestjs-i18n';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
+import { normalizeComparisonQuery } from '../../common/normalizeComparisonQuery';
 
 @Injectable()
 export class BalanceSheetInjectable {
@@ -17,6 +19,7 @@ export class BalanceSheetInjectable {
     private readonly tenancyContext: TenancyContext,
     private readonly i18n: I18nService,
     private readonly balanceSheetRepository: BalanceSheetRepository,
+    private readonly accountingBasisService: AccountingBasisService,
   ) {}
 
   /**
@@ -27,10 +30,9 @@ export class BalanceSheetInjectable {
   public async balanceSheet(
     query: IBalanceSheetQuery,
   ): Promise<IBalanceSheetDOO> {
-    const filter = {
-      ...getBalanceSheetDefaultQuery(),
-      ...query,
-    };
+    const filter = await this.accountingBasisService.resolveQuery(
+      normalizeComparisonQuery({ ...getBalanceSheetDefaultQuery(), ...query }),
+    );
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
 
     // Loads all resources.

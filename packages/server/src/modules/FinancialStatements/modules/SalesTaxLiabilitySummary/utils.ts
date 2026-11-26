@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import { merge } from 'lodash';
 import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 /**
  * Retrieves the default sales tax liability summary query.
@@ -11,7 +10,6 @@ export const getSalesTaxLiabilityDefaultQuery =
   (): SalesTaxLiabilitySummaryQuery => ({
     fromDate: moment().startOf('month').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
-    basis: AccountingBasis.Cash,
     numberFormat: {},
   });
 

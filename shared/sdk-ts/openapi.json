@@ -23687,7 +23687,7 @@
           },
           {
             "name": "basis",
-            "required": true,
+            "required": false,
             "in": "query",
             "description": "Accounting basis for the summary",
             "schema": {
@@ -24188,7 +24188,7 @@
           },
           {
             "name": "basis",
-            "required": true,
+            "required": false,
             "in": "query",
             "description": "The basis for the profit and loss sheet",
             "schema": {

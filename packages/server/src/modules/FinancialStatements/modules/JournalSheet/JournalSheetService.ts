@@ -7,6 +7,7 @@ import { getJournalSheetDefaultQuery } from './constant';
 import { IJournalReportQuery, IJournalSheet } from './JournalSheet.types';
 import { events } from '@/common/events/events';
 import { JournalSheetRepository } from './JournalSheetRepository';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable()
 export class JournalSheetService {
@@ -15,6 +16,7 @@ export class JournalSheetService {
     private readonly journalRepository: JournalSheetRepository,
     private readonly eventPublisher: EventEmitter2,
     private readonly i18n: I18nService,
+    private readonly accountingBasisService: AccountingBasisService,
   ) {}
 
   /**
@@ -23,16 +25,12 @@ export class JournalSheetService {
    * @returns {Promise<IJournalSheet>}
    */
   async journalSheet(query: IJournalReportQuery): Promise<IJournalSheet> {
+    const ledgerFilter = await this.accountingBasisService.resolveQuery(query);
     const filter = {
       ...getJournalSheetDefaultQuery(),
-      ...query,
+      ...ledgerFilter,
     };
-    this.journalRepository.setFilter(query);
-    await this.journalRepository.load();
-
-    // Reflect the resolved accounting basis in the report query, including
-    // the organization setting fallback when no basis was requested.
-    filter.basis = this.journalRepository.basis;
+    await this.journalRepository.load(ledgerFilter);
 
     // Retrieve the journal sheet meta first to get the date format.
     const meta = await this.journalSheetMeta.meta(filter);

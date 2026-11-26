@@ -8,7 +8,7 @@ import { AccountingBasis } from '@/common/types/AccountingBasis';
 export interface IGeneralLedgerSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
   numberFormat: IGeneralLedgerNumberFormat;
   dateFormat?: string;
   noneTransactions: boolean;

@@ -13,7 +13,7 @@ export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
   numberFormat: INumberFormatQuery;
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
   noneZero: boolean;
   noneTransactions: boolean;
   onlyActive: boolean;

@@ -1,14 +1,14 @@
 import { castArray } from 'lodash';
 import moment from 'moment';
-import React from 'react';
-import { useAppQueryString } from '@/hooks';
+import { useAccountingReportQuery } from '../useAccountingReportQuery';
+import type { AccountingBasis } from '@/hooks/query/settings';
 import { transformToForm } from '@/utils';
 
-export const getDefaultCashFlowSheetQuery = () => {
+export const getDefaultCashFlowSheetQuery = (basis: AccountingBasis) => {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
-    basis: 'cash',
+    basis,
     displayColumnsType: 'total',
     filterByOption: 'with-transactions',
     branchesIds: [],
@@ -16,8 +16,11 @@ export const getDefaultCashFlowSheetQuery = () => {
   };
 };
 
-const parseCashflowQuery = (query: Record<string, unknown>) => {
-  const defaultQuery = getDefaultCashFlowSheetQuery();
+const parseCashflowQuery = (
+  query: Record<string, unknown>,
+  basis: AccountingBasis,
+) => {
+  const defaultQuery = getDefaultCashFlowSheetQuery(basis);
 
   const transformed = {
     ...defaultQuery,
@@ -34,19 +37,5 @@ const parseCashflowQuery = (query: Record<string, unknown>) => {
 /**
  * Retrieves the cashflow statement query.
  */
-export const useCashflowStatementQuery = () => {
-  // Retrieves location query.
-  const [locationQuery, setLocationQuery] = useAppQueryString();
-
-  // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseCashflowQuery(locationQuery),
-    [locationQuery],
-  );
-
-  return {
-    query,
-    locationQuery,
-    setLocationQuery,
-  };
-};
+export const useCashflowStatementQuery = () =>
+  useAccountingReportQuery(parseCashflowQuery);

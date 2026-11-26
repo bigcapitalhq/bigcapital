@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
 import { ICashFlowStatementQuery } from './Cashflow.types';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -54,7 +55,7 @@ export class CashFlowRepository {
    * @return {Promise<IAccountTransaction[]>}
    */
   public async cashAtBeginningTotalTransactions(
-    filter: ICashFlowStatementQuery,
+    filter: WithAccountingBasis<ICashFlowStatementQuery>,
   ): Promise<ModelObject<AccountTransaction>[]> {
     const cashBeginningPeriod = moment(filter.fromDate)
       .subtract(1, 'day')
@@ -83,7 +84,7 @@ export class CashFlowRepository {
    * @return {Promise<IAccountTransaction>}
    */
   public async getAccountsTransactions(
-    filter: ICashFlowStatementQuery,
+    filter: WithAccountingBasis<ICashFlowStatementQuery>,
   ): Promise<ModelObject<AccountTransaction>[]> {
     const groupByDateType = this.getGroupTypeFromPeriodsType(
       filter.displayColumnsBy,
@@ -112,7 +113,7 @@ export class CashFlowRepository {
    * @return {Promise<IAccountTransaction[]>}
    */
   public async getNetIncomeTransactions(
-    filter: ICashFlowStatementQuery,
+    filter: WithAccountingBasis<ICashFlowStatementQuery>,
   ): Promise<AccountTransaction[]> {
     const groupByDateType = this.getGroupTypeFromPeriodsType(
       filter.displayColumnsBy,
@@ -139,7 +140,7 @@ export class CashFlowRepository {
    * @return {Promise<ModelObject<AccountTransaction>[]>}
    */
   public async cashAtBeginningPeriodTransactions(
-    filter: ICashFlowStatementQuery,
+    filter: WithAccountingBasis<ICashFlowStatementQuery>,
   ): Promise<ModelObject<AccountTransaction>[]> {
     const groupByDateType = this.getGroupTypeFromPeriodsType(
       filter.displayColumnsBy,
@@ -166,7 +167,7 @@ export class CashFlowRepository {
    * @param {Knex.QueryBuilder} query
    */
   private commonFilterBranchesQuery = (
-    query: ICashFlowStatementQuery,
+    query: WithAccountingBasis<ICashFlowStatementQuery>,
     knexQuery,
   ) => {
     if (!isEmpty(query.branchesIds)) {

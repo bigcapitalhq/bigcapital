@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import { merge } from 'lodash';
 import { IProfitLossSheetQuery } from './ProfitLossSheet.types';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 /**
  * Default sheet filter query.
@@ -18,7 +17,6 @@ export const getDefaultPLQuery = (): IProfitLossSheetQuery => ({
     formatMoney: 'total',
     precision: 2,
   },
-  basis: AccountingBasis.Accrual,
 
   noneZero: false,
   noneTransactions: false,

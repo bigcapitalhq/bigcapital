@@ -5,12 +5,13 @@ describe('ProfitLossSheetQuery', () => {
   const baseQuery = () => getDefaultPLQuery();
 
   it('enables the amount change and previous period when the percentage change is on', () => {
-    const query = new ProfitLossSheetQuery({
+    const filter = Object.freeze({
       ...baseQuery(),
       previousPeriod: false,
       previousPeriodAmountChange: false,
       previousPeriodPercentageChange: true,
     });
+    const query = new ProfitLossSheetQuery(filter);
     expect(query.query.previousPeriodAmountChange).toBe(true);
     expect(query.query.previousPeriod).toBe(true);
     expect(query.isPreviousPeriodChangeActive()).toBe(true);

@@ -66,7 +66,7 @@ export interface IFinancialCommonHorizDatePeriodNode {
 }
 
 export interface IProfitLossSheetQuery extends IFinancialSheetBranchesQuery {
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
 
   fromDate: moment.MomentInput;
   toDate: moment.MomentInput;

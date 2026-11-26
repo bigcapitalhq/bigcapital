@@ -18,8 +18,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
-import { AccountingBasisService } from '../../common/AccountingBasisService';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
@@ -33,15 +32,6 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
 
   @Inject(TenancyContext)
   public tenancyContext: TenancyContext;
-
-  @Inject(AccountingBasisService)
-  public accountingBasisService: AccountingBasisService;
-
-  /**
-   * The report accounting basis.
-   * @param {AccountingBasis}
-   */
-  public basis: AccountingBasis;
 
   /**
    * Tenancy base currency.
@@ -160,24 +150,16 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
    */
   public PPTotalAccountsLedger: Ledger;
 
-  /**
-   * Set the filter of the report.
-   * @param {IBalanceSheetQuery} query
-   */
-  setFilter(query: IProfitLossSheetQuery) {
+  public asyncInitialize = async (
+    query: WithAccountingBasis<IProfitLossSheetQuery>,
+  ) => {
     this.query = new ProfitLossSheetQuery(query);
 
     this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(
       this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
     );
-  }
 
-  /**
-   * Async report repository.
-   */
-  public asyncInitialize = async () => {
     await this.initBaseCurrency();
-    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
 
@@ -208,13 +190,6 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
       await this.initPeriodsPreviousYear();
     }
   };
-
-  /**
-   * Initialize the report accounting basis.
-   */
-  async initBasis() {
-    this.basis = await this.accountingBasisService.resolve(this.query.basis);
-  }
 
   /**
    * Initialize the base currency.
@@ -358,7 +333,7 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.query.basis);
       });
   };
 
@@ -386,7 +361,7 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.query.basis);
       });
   };
 

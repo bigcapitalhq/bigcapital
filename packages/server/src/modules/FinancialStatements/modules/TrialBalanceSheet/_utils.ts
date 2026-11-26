@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
 import {
   ITrialBalanceAccount,
   TrialBalanceSortOrder,
@@ -51,7 +50,6 @@ export const getTrialBalanceSheetDefaultQuery = () => ({
     formatMoney: 'total',
     precision: 2,
   },
-  basis: AccountingBasis.Accrual,
   noneZero: false,
   noneTransactions: true,
   onlyActive: false,

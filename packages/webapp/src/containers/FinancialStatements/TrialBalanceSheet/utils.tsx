@@ -3,19 +3,25 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { transformFilterFormToQuery } from '../common';
-import { useAppQueryString } from '@/hooks';
+import { useAccountingReportQuery } from '../useAccountingReportQuery';
+import type { AccountingBasis } from '@/hooks/query/settings';
 import { transformToForm } from '@/utils';
 
-type TrialBalanceQuery = TrialBalanceTableQuery & { filterByOption?: string };
+type TrialBalanceQuery = TrialBalanceTableQuery & {
+  filterByOption?: string;
+  basis: AccountingBasis;
+};
 
 /**
  * Retrieves the default trial balance query.
  */
-export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
+export function getDefaultTrialBalanceQuery(
+  basis: AccountingBasis,
+): TrialBalanceQuery {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
-    basis: 'accrual',
+    basis,
     filterByOption: 'with-transactions',
     branchesIds: [] as number[],
     numberFormat: {},
@@ -29,8 +35,9 @@ export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
  */
 const parseTrialBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
+  basis: AccountingBasis,
 ): TrialBalanceQuery => {
-  const defaultQuery = getDefaultTrialBalanceQuery();
+  const defaultQuery = getDefaultTrialBalanceQuery(basis);
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
@@ -45,22 +52,8 @@ const parseTrialBalanceSheetQuery = (
 /**
  * Retrieves the trial balance sheet query.
  */
-export const useTrialBalanceSheetQuery = () => {
-  // Retrieves location query.
-  const [locationQuery, setLocationQuery] = useAppQueryString();
-
-  // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseTrialBalanceSheetQuery(locationQuery),
-    [locationQuery],
-  );
-
-  return {
-    query,
-    locationQuery,
-    setLocationQuery,
-  };
-};
+export const useTrialBalanceSheetQuery = () =>
+  useAccountingReportQuery(parseTrialBalanceSheetQuery);
 
 /**
  * Retrieves the trial balance sheet http query.
