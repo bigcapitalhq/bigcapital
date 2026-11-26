@@ -4,6 +4,7 @@ import moment from 'moment';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -42,7 +43,7 @@ const parseCustomersTransactionsQuery = (
   const defaultQuery = getCustomersTransactionsDefaultQuery();
 
   const transformedQuery = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(query, defaultQuery),
   };
   return {

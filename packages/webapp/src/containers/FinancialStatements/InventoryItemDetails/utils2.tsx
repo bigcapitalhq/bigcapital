@@ -4,6 +4,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import { transformFilterFormToQuery } from '../common';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -42,7 +43,7 @@ const parseInventoryItemDetailsQuery = (
   const defaultQuery = getInventoryItemDetailsDefaultQuery();
 
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
 
