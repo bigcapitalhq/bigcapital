@@ -10,6 +10,7 @@ import {
   IGeneralLedgerMeta,
   IGeneralLedgerSheetQuery,
 } from './GeneralLedger.types';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable()
 export class GeneralLedgerService {
@@ -18,6 +19,7 @@ export class GeneralLedgerService {
     private readonly eventEmitter: EventEmitter2,
     private readonly generalLedgerRepository: GeneralLedgerRepository,
     private readonly i18n: I18nService,
+    private readonly accountingBasisService: AccountingBasisService,
   ) {}
 
   /**
@@ -30,12 +32,11 @@ export class GeneralLedgerService {
     query: IGeneralLedgerSheetQuery;
     meta: IGeneralLedgerMeta;
   }> {
-    const filter = {
+    const filter = await this.accountingBasisService.resolveQuery({
       ...getGeneralLedgerReportQuery(),
       ...query,
-    };
-    this.generalLedgerRepository.setFilter(filter);
-    await this.generalLedgerRepository.asyncInitialize();
+    });
+    await this.generalLedgerRepository.asyncInitialize(filter);
 
     // Retrieve general ledger report metadata first to get the date format.
     const meta = await this.generalLedgerMeta.meta(filter);

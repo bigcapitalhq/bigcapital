@@ -1,6 +1,7 @@
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
 import { SalesTaxLiabilitySummary } from './SalesTaxLiabilitySummary';
 import { SalesTaxLiabilitySummaryMeta } from './SalesTaxLiabilitySummaryMeta';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 import { Injectable } from '@nestjs/common';
 import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
@@ -9,6 +10,7 @@ import { mergeSalesTaxLiabilityQueryWithDefaults } from './utils';
 @Injectable()
 export class SalesTaxLiabilitySummaryService {
   constructor(
+    private readonly accountingBasisService: AccountingBasisService,
     private readonly repository: SalesTaxLiabilitySummaryRepository,
     private readonly salesTaxLiabilityMeta: SalesTaxLiabilitySummaryMeta,
     private readonly tenancyContext: TenancyContext,
@@ -20,7 +22,9 @@ export class SalesTaxLiabilitySummaryService {
    * @returns
    */
   public async salesTaxLiability(query: SalesTaxLiabilitySummaryQuery) {
-    const filter = mergeSalesTaxLiabilityQueryWithDefaults(query);
+    const filter = await this.accountingBasisService.resolveQuery(
+      mergeSalesTaxLiabilityQueryWithDefaults(query),
+    );
 
     await this.repository.load(filter);
 

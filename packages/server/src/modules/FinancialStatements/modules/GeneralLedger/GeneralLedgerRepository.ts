@@ -12,12 +12,11 @@ import { transformToMap } from '@/utils/transform-to-key';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
-import { AccountingBasisService } from '../../common/AccountingBasisService';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class GeneralLedgerRepository {
-  public filter: IGeneralLedgerSheetQuery;
+  private filter: WithAccountingBasis<IGeneralLedgerSheetQuery>;
   public accounts: Account[];
 
   public transactions: AccountTransaction[];
@@ -53,29 +52,14 @@ export class GeneralLedgerRepository {
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
 
-  @Inject(AccountingBasisService)
-  private readonly accountingBasisService: AccountingBasisService;
-
-  /**
-   * The report accounting basis.
-   * @param {AccountingBasis}
-   */
-  public basis: AccountingBasis;
-
-  /**
-   * Set the filter.
-   * @param {IGeneralLedgerSheetQuery} filter - The filter.
-   */
-  setFilter(filter: IGeneralLedgerSheetQuery) {
-    this.filter = filter;
-  }
-
   /**
    * Initialize the G/L report.
    */
-  public async asyncInitialize() {
+  public async asyncInitialize(
+    filter: WithAccountingBasis<IGeneralLedgerSheetQuery>,
+  ) {
+    this.filter = filter;
     await this.initTenant();
-    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
     await this.initContacts();
@@ -90,13 +74,6 @@ export class GeneralLedgerRepository {
    */
   public async initTenant() {
     this.tenant = await this.tenancyContext.getTenant(true);
-  }
-
-  /**
-   * Initialize the report accounting basis.
-   */
-  public async initBasis() {
-    this.basis = await this.accountingBasisService.resolve(this.filter.basis);
   }
 
   /**
@@ -138,7 +115,7 @@ export class GeneralLedgerRepository {
         if (!isEmpty(this.filter.branchesIds)) {
           query.modify('filterByBranches', this.filter.branchesIds);
         }
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.filter.basis);
         query.orderBy('date', 'ASC');
 
         if (this.filter.accountsIds?.length > 0) {
@@ -166,7 +143,7 @@ export class GeneralLedgerRepository {
         if (!isEmpty(this.filter.branchesIds)) {
           query.modify('filterByBranches', this.filter.branchesIds);
         }
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.filter.basis);
         query.withGraphFetched('account');
       });
     // Accounts opening transactions.

@@ -35570,7 +35570,7 @@ export interface operations {
                 /** @description End date for the sales tax liability summary */
                 toDate: string;
                 /** @description Accounting basis for the summary */
-                basis: "cash" | "accrual";
+                basis?: "cash" | "accrual";
                 /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
                 numberFormat?: components["schemas"]["NumberFormatQueryDto"];
             };
@@ -35929,7 +35929,7 @@ export interface operations {
                 /** @description Filter out branches (if multiple branches feature is enabled) */
                 branchesIds?: number[];
                 /** @description The basis for the profit and loss sheet */
-                basis: string;
+                basis?: string;
                 /** @description Whether to exclude zero values */
                 noneZero?: boolean;
                 /** @description Whether to exclude transactions */

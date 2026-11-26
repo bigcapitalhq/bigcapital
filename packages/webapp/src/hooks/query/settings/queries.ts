@@ -30,6 +30,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  useSuspenseQuery,
   UseMutationOptions,
   UseQueryOptions,
   QueryClient,
@@ -310,23 +311,37 @@ export function useSettingsBillPayments(props?: GroupQueryOptions) {
   });
 }
 
-export function useSettingsOrganization(props?: GroupQueryOptions) {
+function useOrganizationSettingsQueryOptions() {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-  return useQuery({
-    ...props,
+  return {
     queryKey: settingsKeys.organization(),
     queryFn: () => fetchSettingsOrganization(fetcher),
-  });
+  };
+}
+
+export function useSettingsOrganization(props?: GroupQueryOptions) {
+  return useQuery({ ...props, ...useOrganizationSettingsQueryOptions() });
 }
 
 export type AccountingBasis = 'accrual' | 'cash';
+
+function getOrganizationAccountingBasis(
+  settings?: SettingsGroup,
+): AccountingBasis {
+  return settings?.accountingBasis === 'cash' ? 'cash' : 'accrual';
+}
+
+export function useSuspenseOrganizationAccountingBasis(): AccountingBasis {
+  const { data } = useSuspenseQuery(useOrganizationSettingsQueryOptions());
+  return getOrganizationAccountingBasis(data);
+}
 
 /**
  * The current organization's accounting basis (defaults to accrual).
  */
 export function useCurrentOrganizationAccountingBasis(): AccountingBasis {
   const { data } = useSettingsOrganization();
-  return data?.accountingBasis === 'cash' ? 'cash' : 'accrual';
+  return getOrganizationAccountingBasis(data);
 }
 
 export function useSettingsExpenses(props?: GroupQueryOptions) {

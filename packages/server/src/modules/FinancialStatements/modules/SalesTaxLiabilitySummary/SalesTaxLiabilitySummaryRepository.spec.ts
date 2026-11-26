@@ -1,5 +1,4 @@
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
-import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 const createQueryBuilder = (result: unknown) => {
@@ -18,7 +17,7 @@ const createQueryBuilder = (result: unknown) => {
 };
 
 describe('SalesTaxLiabilitySummaryRepository', () => {
-  const filter: SalesTaxLiabilitySummaryQuery = {
+  const filter = {
     fromDate: '2026-01-01',
     toDate: '2026-01-31',
     basis: AccountingBasis.Accrual,
@@ -52,9 +51,6 @@ describe('SalesTaxLiabilitySummaryRepository', () => {
     (repository as any).accountTransactionModel = jest.fn(() => ({
       query: transactionQueries,
     }));
-    (repository as any).accountingBasisService = {
-      resolve: jest.fn(async () => filter.basis),
-    };
 
     return { repository, payableQuery, salesQuery };
   };

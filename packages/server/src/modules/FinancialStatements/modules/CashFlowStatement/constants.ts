@@ -1,6 +1,5 @@
 import * as moment from 'moment';
 import { ICashFlowStatementQuery } from './Cashflow.types';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export const DISPLAY_COLUMNS_BY = {
   DATE_PERIODS: 'date_periods',
@@ -50,5 +49,4 @@ export const getDefaultCashflowQuery = (): ICashFlowStatementQuery => ({
   },
   noneZero: false,
   noneTransactions: false,
-  basis: AccountingBasis.Cash,
 });

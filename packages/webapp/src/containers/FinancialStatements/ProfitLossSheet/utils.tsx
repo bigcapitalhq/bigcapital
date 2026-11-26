@@ -3,16 +3,17 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { useAccountingReportQuery } from '../useAccountingReportQuery';
+import type { AccountingBasis } from '@/hooks/query/settings';
 import type { FormikContextType } from 'formik';
-import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
 interface FormSetFieldValue {
   setFieldValue: FormikContextType<Record<string, unknown>>['setFieldValue'];
 }
 
-export const getDefaultProfitLossQuery = () => ({
-  basis: 'cash',
+export const getDefaultProfitLossQuery = (basis: AccountingBasis) => ({
+  basis,
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
   displayColumnsType: 'total',
@@ -39,8 +40,11 @@ export const getDefaultProfitLossQuery = () => ({
   sortOrder: undefined,
 });
 
-const parseProfitLossQuery = (locationQuery: Record<string, unknown>) => {
-  const defaultQuery = getDefaultProfitLossQuery();
+const parseProfitLossQuery = (
+  locationQuery: Record<string, unknown>,
+  basis: AccountingBasis,
+) => {
+  const defaultQuery = getDefaultProfitLossQuery(basis);
 
   const transformed = {
     ...defaultQuery,
@@ -53,19 +57,8 @@ const parseProfitLossQuery = (locationQuery: Record<string, unknown>) => {
   };
 };
 
-export const useProfitLossSheetQuery = () => {
-  const [locationQuery, setLocationQuery] = useAppQueryString();
-
-  const query = React.useMemo(
-    () => parseProfitLossQuery(locationQuery),
-    [locationQuery],
-  );
-  return {
-    query,
-    locationQuery,
-    setLocationQuery,
-  };
-};
+export const useProfitLossSheetQuery = () =>
+  useAccountingReportQuery(parseProfitLossQuery);
 
 export const useProfitLossHeaderValidationSchema = () => {
   return Yup.object().shape({

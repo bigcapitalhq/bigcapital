@@ -9,7 +9,7 @@ import { AccountingBasis } from '@/common/types/AccountingBasis';
 export interface SalesTaxLiabilitySummaryQuery {
   fromDate: DateInput;
   toDate: DateInput;
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
   numberFormat?: Partial<INumberFormatQuery>;
 }
 

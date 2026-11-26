@@ -11,6 +11,7 @@ import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { normalizeComparisonQuery } from '../../common/normalizeComparisonQuery';
 
 export class BalanceSheetQuery extends flow(FinancialDateRanges)(
   class {} as GConstructor<FinancialSheet>,
@@ -71,21 +72,7 @@ export class BalanceSheetQuery extends flow(FinancialDateRanges)(
   constructor(query: IBalanceSheetQuery) {
     super();
 
-    // Enabling the percentage change requires the amount change and the
-    // previous period/year to be enabled as well.
-    if (query.previousPeriodPercentageChange) {
-      query.previousPeriodAmountChange = true;
-    }
-    if (query.previousPeriodAmountChange) {
-      query.previousPeriod = true;
-    }
-    if (query.previousYearPercentageChange) {
-      query.previousYearAmountChange = true;
-    }
-    if (query.previousYearAmountChange) {
-      query.previousYear = true;
-    }
-    this.query = query;
+    this.query = normalizeComparisonQuery(query);
 
     // Pervious Year (PY) Dates.
     this.PYToDate = this.getPreviousYearDate(this.query.toDate);
@@ -109,7 +96,7 @@ export class BalanceSheetQuery extends flow(FinancialDateRanges)(
       this.PPToDate = toDate;
       this.PPFromDate = fromDate;
     }
-    return merge(this, query);
+    return merge(this, this.query);
   }
 
   // ---------------------------

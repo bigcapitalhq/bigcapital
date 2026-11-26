@@ -21,7 +21,6 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
-import { transformToForm } from '@/utils';
 
 type BalanceSheetFormValues = Omit<
   ReturnType<typeof getDefaultBalanceSheetQuery>,
@@ -46,18 +45,12 @@ function BalanceSheetHeaderInner({
   balanceSheetDrawerFilter,
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }: BalanceSheetHeaderProps) {
-  const defaultValues = getDefaultBalanceSheetQuery();
-
   // Filter form initial values.
-  const initialValues = transformToForm(
-    {
-      ...defaultValues,
-      ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
-    },
-    defaultValues,
-  ) as BalanceSheetFormValues;
+  const initialValues = {
+    ...pageFilter,
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+  };
   // Validation schema.
   const validationSchema = getBalanceSheetHeaderValidationSchema();
 

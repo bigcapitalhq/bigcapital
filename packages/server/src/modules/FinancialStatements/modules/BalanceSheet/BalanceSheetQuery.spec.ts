@@ -5,12 +5,13 @@ describe('BalanceSheetQuery', () => {
   const baseQuery = () => getBalanceSheetDefaultQuery();
 
   it('enables the amount change and previous period when the percentage change is on', () => {
-    const query = new BalanceSheetQuery({
+    const filter = Object.freeze({
       ...baseQuery(),
       previousPeriod: false,
       previousPeriodAmountChange: false,
       previousPeriodPercentageChange: true,
     });
+    const query = new BalanceSheetQuery(filter);
     expect(query.query.previousPeriodAmountChange).toBe(true);
     expect(query.query.previousPeriod).toBe(true);
     expect(query.isPreviousPeriodChangeActive()).toBe(true);

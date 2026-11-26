@@ -56,7 +56,7 @@ export interface IBalanceSheetQuery extends IFinancialSheetBranchesQuery {
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
   noneZero: boolean;
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
   accountIds: number[];
 
   percentageOfColumn: boolean;

@@ -7,12 +7,11 @@ import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { AccountingBasis } from '@/common/types/AccountingBasis';
-import { AccountingBasisService } from '../../common/AccountingBasisService';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class TrialBalanceSheetRepository {
-  private query: ITrialBalanceSheetQuery;
+  private query: WithAccountingBasis<ITrialBalanceSheetQuery>;
 
   @Inject(Account.name)
   private accountModel: TenantModelProxy<typeof Account>;
@@ -22,14 +21,6 @@ export class TrialBalanceSheetRepository {
 
   @Inject(AccountRepository)
   private accountRepository: AccountRepository;
-
-  @Inject(AccountingBasisService)
-  private accountingBasisService: AccountingBasisService;
-
-  /**
-   * The report accounting basis.
-   */
-  public basis: AccountingBasis;
 
   public accountsDepGraph: any;
   public accounts: Array<ModelObject<Account>>;
@@ -41,28 +32,15 @@ export class TrialBalanceSheetRepository {
   public totalAccountsLedger: Ledger;
 
   /**
-   * Set query.
-   * @param {ITrialBalanceSheetQuery} query
-   */
-  public setQuery(query: ITrialBalanceSheetQuery) {
-    this.query = query;
-  }
-
-  /**
    * Async initialize.
    * @returns {Promise<void>}
    */
-  public asyncInitialize = async () => {
-    await this.initBasis();
+  public asyncInitialize = async (
+    query: WithAccountingBasis<ITrialBalanceSheetQuery>,
+  ) => {
+    this.query = query;
     await this.initAccounts();
     await this.initAccountsClosingTotalLedger();
-  };
-
-  /**
-   * Initialize the report accounting basis.
-   */
-  public initBasis = async () => {
-    this.basis = await this.accountingBasisService.resolve(this.query.basis);
   };
 
   // ----------------------------
@@ -115,7 +93,7 @@ export class TrialBalanceSheetRepository {
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
-        query.modify('filterByBasis', this.basis);
+        query.modify('filterByBasis', this.query.basis);
       });
   };
 

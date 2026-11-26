@@ -21,13 +21,20 @@ import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import { transformToForm } from '@/utils';
 
-type CashFlowSheetFormValues = ReturnType<typeof getDefaultCashFlowSheetQuery>;
+type CashFlowSheetQuery = ReturnType<typeof getDefaultCashFlowSheetQuery>;
+
+type CashFlowSheetFormValues = Omit<
+  CashFlowSheetQuery,
+  'fromDate' | 'toDate'
+> & {
+  fromDate: Date;
+  toDate: Date;
+};
 
 interface CashFlowStatementHeaderOwnProps {
   onSubmitFilter: (values: CashFlowSheetFormValues) => void;
-  pageFilter: CashFlowSheetFormValues;
+  pageFilter: CashFlowSheetQuery;
 }
 
 type CashFlowStatementHeaderProps = CashFlowStatementHeaderOwnProps &
@@ -43,16 +50,11 @@ function CashFlowStatementHeaderInner({
   cashFlowStatementDrawerFilter: isFilterDrawerOpen,
   toggleCashFlowStatementFilterDrawer,
 }: CashFlowStatementHeaderProps) {
-  const defaultValues = getDefaultCashFlowSheetQuery();
-
-  const initialValues = transformToForm(
-    {
-      ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
-    },
-    defaultValues,
-  ) as CashFlowSheetFormValues;
+  const initialValues = {
+    ...pageFilter,
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+  };
 
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),

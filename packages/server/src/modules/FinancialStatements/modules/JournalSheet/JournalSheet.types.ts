@@ -4,9 +4,10 @@ import {
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
+import type { WithAccountingBasis } from '../../common/AccountingBasisService';
 
 export interface IJournalReportQuery {
-  basis: AccountingBasis;
+  basis?: AccountingBasis;
 
   fromDate: Date | string;
   toDate: Date | string;
@@ -73,7 +74,7 @@ export interface IJournalSheetMeta extends IFinancialSheetCommonMeta {
 }
 
 export interface IJournalTable extends IFinancialTable {
-  query: IJournalReportQuery;
+  query: WithAccountingBasis<IJournalReportQuery>;
   meta: IJournalSheetMeta;
 }
 
@@ -81,6 +82,6 @@ export type IJournalTableData = IJournalReportEntriesGroup[];
 
 export interface IJournalSheet {
   data: IJournalTableData;
-  query: IJournalReportQuery;
+  query: WithAccountingBasis<IJournalReportQuery>;
   meta: IJournalSheetMeta;
 }

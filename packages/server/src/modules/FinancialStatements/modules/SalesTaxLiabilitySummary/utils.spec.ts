@@ -13,7 +13,7 @@ describe('mergeSalesTaxLiabilityQueryWithDefaults', () => {
       moment(query.fromDate).isSame(moment().startOf('month'), 'day'),
     ).toBe(true);
     expect(moment(query.toDate).isSame(moment(), 'day')).toBe(true);
-    expect(query.basis).toBe(AccountingBasis.Cash);
+    expect(query.basis).toBeUndefined();
   });
 
   it('keeps the explicit query values', () => {

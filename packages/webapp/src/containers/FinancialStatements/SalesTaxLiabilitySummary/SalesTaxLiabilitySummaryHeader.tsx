@@ -6,10 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FinancialStatementHeader } from '../../FinancialStatements/FinancialStatementHeader';
 import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
-import {
-  getDefaultSalesTaxLiablitySummaryQuery,
-  getSalesTaxLiabilitySummaryQueryValidation,
-} from './utils';
+import { getSalesTaxLiabilitySummaryQueryValidation } from './utils';
 import {
   withSalesTaxLiabilitySummary,
   WithSalesTaxLiabilitySummaryProps,
@@ -18,21 +15,13 @@ import {
   withSalesTaxLiabilitySummaryActions,
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
+import type { useSalesTaxLiabilitySummaryQuery } from './utils';
 import { FormattedMessage as T } from '@/components';
 import { NS } from '@/constants/classes';
-import { useFeatureCan } from '@/hooks/state';
-import { transformToForm } from '@/utils';
-
-interface SalesTaxLiabilitySummaryFormValues {
-  fromDate: Date;
-  toDate: Date;
-  basis: string;
-  [key: string]: unknown;
-}
 
 interface SalesTaxLiabilitySummaryHeaderOwnProps {
   onSubmitFilter: (values: Record<string, any>) => void;
-  pageFilter: Record<string, any>;
+  pageFilter: ReturnType<typeof useSalesTaxLiabilitySummaryQuery>[0];
 }
 
 type SalesTaxLiabilitySummaryHeaderProps = Pick<
@@ -59,26 +48,20 @@ function SalesTaxLiabilitySummaryHeaderInner({
   // #withSalesTaxLiabilitySummaryActions
   toggleSalesTaxLiabilitySummaryFilterDrawer: toggleFilterDrawer,
 }: SalesTaxLiabilitySummaryHeaderProps) {
-  const defaultValues = getDefaultSalesTaxLiablitySummaryQuery();
-
   // Validation schema.
   const validationSchema = getSalesTaxLiabilitySummaryQueryValidation();
 
   // Filter form initial values.
-  const initialValues = transformToForm(
-    {
-      ...defaultValues,
-      ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
-    },
-    defaultValues,
-  ) as SalesTaxLiabilitySummaryFormValues;
+  const initialValues = {
+    ...pageFilter,
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+  };
 
   // Handle form submit.
   const handleSubmit = (
-    values: SalesTaxLiabilitySummaryFormValues,
-    actions: FormikHelpers<SalesTaxLiabilitySummaryFormValues>,
+    values: typeof initialValues,
+    actions: FormikHelpers<typeof initialValues>,
   ) => {
     onSubmitFilter(values);
     toggleFilterDrawer(false);
@@ -92,8 +75,6 @@ function SalesTaxLiabilitySummaryHeaderInner({
   const handleDrawerClose = () => {
     toggleFilterDrawer(false);
   };
-  // Detarmines the given feature whether is enabled.
-  const { featureCan } = useFeatureCan();
 
   return (
     <SalesTaxSummaryFinancialHeader

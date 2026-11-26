@@ -20,7 +20,6 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { NS } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
-import { transformToForm } from '@/utils';
 
 type GeneralLedgerFormValues = Omit<
   ReturnType<typeof getDefaultGeneralLedgerQuery>,
@@ -53,19 +52,12 @@ function GeneralLedgerHeaderInner({
   // #withGeneralLedger
   generalLedgerFilterDrawer,
 }: GeneralLedgerHeaderProps) {
-  // Default values.
-  const defaultValues = getDefaultGeneralLedgerQuery();
-
   // Initial values.
-  const initialValues = transformToForm(
-    {
-      ...defaultValues,
-      ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
-    },
-    defaultValues,
-  ) as GeneralLedgerFormValues;
+  const initialValues = {
+    ...pageFilter,
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+  };
   // Validation schema.
   const validationSchema = getGeneralLedgerQuerySchema();
 

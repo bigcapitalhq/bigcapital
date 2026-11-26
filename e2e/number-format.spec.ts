@@ -109,7 +109,7 @@ const REPORTS: ReportConfig[] = [
   {
     title: 'Sales Tax Liability Summary',
     // The seeded invoice is not paid, so tax is only recognised on the
-    // accrual basis (the report page defaults to cash).
+    // accrual basis.
     path: '/financial-reports/sales-tax-liability-summary?basis=accrual',
     rowPrefix: 'sales-tax-liability',
   },
@@ -615,8 +615,7 @@ test.describe('number format', () => {
   test('should show negative amounts in red on the balance sheet when the switch is on.', async ({
     page,
   }) => {
-    // On the accrual basis the seeded unpaid invoice and bill give accounts
-    // with positive balances (the page defaults to cash).
+    // Accrual includes the unpaid invoice and bill in the account balances.
     await page.goto('/financial-reports/balance-sheet?basis=accrual');
     await waitForReportPage(page, 'Balance Sheet');
     await waitForReportRows(page, 'balance-sheet');
