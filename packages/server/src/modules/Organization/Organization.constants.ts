@@ -28,6 +28,7 @@ export const MONTHS = [
 export const ACCEPTED_LOCALES = ['en', 'ar'];
 
 export const ERRORS = {
+  JOB_NOT_FOUND: 'JOB_NOT_FOUND',
   TENANT_DATABASE_UPGRADED: 'TENANT_DATABASE_UPGRADED',
   TENANT_NOT_FOUND: 'tenant_not_found',
   TENANT_ALREADY_BUILT: 'TENANT_ALREADY_BUILT',

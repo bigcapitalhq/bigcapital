@@ -218,7 +218,8 @@ export class WorkspacesController {
   async buildJobStatus(
     @Param('buildJobId') buildJobId: string,
   ): Promise<WorkspaceBuildJobResponseDto> {
-    return this.getWorkspaceBuildJobService.getJobDetails(buildJobId);
+    const userId = this.cls.get<number>('userId');
+    return this.getWorkspaceBuildJobService.getJobDetails(buildJobId, userId);
   }
 
   /**

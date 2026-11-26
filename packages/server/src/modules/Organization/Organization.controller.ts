@@ -17,6 +17,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
+import { ClsService } from 'nestjs-cls';
 import { BuildOrganizationService } from './commands/BuildOrganization.service';
 import {
   BuildOrganizationDto,
@@ -57,6 +58,7 @@ export class OrganizationController {
     private readonly updateOrganizationService: UpdateOrganizationService,
     private readonly getBuildOrganizationJobService: GetBuildOrganizationBuildJob,
     private readonly orgBaseCurrencyLockingService: OrganizationBaseCurrencyLocking,
+    private readonly cls: ClsService,
   ) {}
 
   @Post('build')
@@ -101,7 +103,11 @@ export class OrganizationController {
     },
   })
   async buildJob(@Param('buildJobId') buildJobId: string) {
-    return this.getBuildOrganizationJobService.getJobDetails(buildJobId);
+    const userId = this.cls.get<number>('userId');
+    return this.getBuildOrganizationJobService.getJobDetails(
+      buildJobId,
+      userId,
+    );
   }
 
   @Get('current')

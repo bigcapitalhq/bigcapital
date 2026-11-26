@@ -9,8 +9,10 @@ export class GetWorkspaceBuildJobService {
 
   /**
    * Returns the current status of a workspace build job.
+   * @param {string} buildJobId - The build job id.
+   * @param {number} userId - The authenticated user id.
    */
-  getJobDetails(buildJobId: string) {
-    return this.getBuildJobService.getJobDetails(buildJobId);
+  getJobDetails(buildJobId: string, userId: number) {
+    return this.getBuildJobService.getJobDetails(buildJobId, userId);
   }
 }
