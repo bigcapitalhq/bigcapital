@@ -23,8 +23,8 @@ export default function ItemsListCell({
 
   // Handle the item selected.
   const handleItemSelected = useCallback(
-    (item) => {
-      updateData(index, id, item.id);
+    (itemId) => {
+      updateData(index, id, itemId);
     },
     [updateData, index, id],
   );
@@ -39,7 +39,7 @@ export default function ItemsListCell({
     >
       <ItemsSuggest
         items={items}
-        onItemSelect={handleItemSelected}
+        onItemChange={handleItemSelected}
         selectedValue={initialValue}
         sellable={filterSellable}
         purchasable={filterPurchasable}
