@@ -257,7 +257,7 @@ PaperTemplate.Statement = ({
   return (
     <x.div mb={'20px'}>
       {label && <x.div color={'#666'}>{label}</x.div>}
-      <x.div>{children}</x.div>
+      <x.div whiteSpace={'pre-line'}>{children}</x.div>
     </x.div>
   );
 };
