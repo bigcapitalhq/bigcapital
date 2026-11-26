@@ -85,7 +85,7 @@ export class InventoryAdjustmentsGL {
     return {
       ...commonEntry,
       accountId: this.inventoryAdjustment.adjustmentAccountId,
-      accountNormal: AccountNormal.DEBIT,
+      accountNormal: this.inventoryAdjustment.adjustmentAccount.accountNormal,
       credit: amount,
       index: index + 2,
     };

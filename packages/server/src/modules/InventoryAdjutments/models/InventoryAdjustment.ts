@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import type { Account } from '@/modules/Accounts/models/Account.model';
 import { InventoryAdjustmentEntry } from './InventoryAdjustmentEntry';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
@@ -10,6 +11,7 @@ export class InventoryAdjustment extends TenantBaseModel {
   public readonly date!: string;
   public readonly type!: string;
   public readonly adjustmentAccountId!: number;
+  public readonly adjustmentAccount: Account;
   public readonly reason?: string;
   public readonly referenceNo!: string;
   public readonly description?: string;
