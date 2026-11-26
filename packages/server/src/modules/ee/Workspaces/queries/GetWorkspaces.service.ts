@@ -52,11 +52,14 @@ export class GetWorkspacesService {
     userId: number,
     includeInactive: boolean = false,
     currentOrganizationId?: string,
+    scopedTenantId?: number,
   ): Promise<WorkspaceDto[]> {
-    const memberships = await this.userTenantModel
+    const query = this.userTenantModel
       .query()
       .where('userId', userId)
       .withGraphFetched('tenant.metadata');
+    if (scopedTenantId !== undefined) query.where('tenantId', scopedTenantId);
+    const memberships = await query;
 
     // Get user's default tenant ID
     const user = await this.systemUserModel

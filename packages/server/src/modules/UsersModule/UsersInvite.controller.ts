@@ -1,3 +1,4 @@
+import { AllowOrganizationSession } from '@/modules/Auth/OrganizationSession.decorator';
 import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersApplication } from './Users.application';
@@ -8,6 +9,7 @@ import {
 import { SkipSubscriptionCheck } from '@/modules/Subscription/decorators/SkipSubscriptionCheck.decorator';
 
 @Controller('invite')
+@AllowOrganizationSession(false)
 @ApiTags('Users')
 @SkipSubscriptionCheck()
 export class UsersInviteController {

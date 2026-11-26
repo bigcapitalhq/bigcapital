@@ -6,6 +6,8 @@ import { AuthSignupDto } from './dtos/AuthSignup.dto';
 export interface JwtPayload {
   /** The authenticated user's id. */
   sub: string;
+  /** The organization whose identity provider authenticated this session. */
+  samlOrganizationId?: string;
   iss?: string;
   aud?: string;
   iat: number;

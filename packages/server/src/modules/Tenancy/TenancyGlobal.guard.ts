@@ -2,12 +2,14 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   UnauthorizedException,
   SetMetadata,
   Inject,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ClsService } from 'nestjs-cls';
+import { ORGANIZATION_SESSION_ALLOWED } from '../Auth/OrganizationSession.decorator';
 import { IS_PUBLIC_ROUTE } from '../Auth/Auth.constants';
 import { getAuthApiKey } from '../Auth/Auth.utils';
 import { UserTenant } from '../System/models/UserTenant.model';
@@ -36,7 +38,7 @@ export class TenancyGlobalGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const organizationId = request.headers['organization-id'];
+    let organizationId = request.headers['organization-id'];
     const authorization = request.headers['authorization']?.trim();
     const isAuthApiKey = !!getAuthApiKey(authorization || '');
 
@@ -49,7 +51,27 @@ export class TenancyGlobalGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
 
-    if (isPublic || isTenantAgnostic || isAuthApiKey) {
+    if (isPublic || isAuthApiKey) {
+      return true;
+    }
+    const scopedOrganizationId = request.user?.scopedOrganizationId;
+    if (scopedOrganizationId) {
+      const allowed =
+        this.reflector.getAllAndOverride<boolean>(
+          ORGANIZATION_SESSION_ALLOWED,
+          [context.getHandler(), context.getClass()],
+        ) ?? !isTenantAgnostic;
+      if (
+        !allowed ||
+        (organizationId && organizationId !== scopedOrganizationId)
+      ) {
+        throw new ForbiddenException(
+          'This session is restricted to its sign-in organization.',
+        );
+      }
+      organizationId = scopedOrganizationId;
+      this.clsService.set('organizationId', organizationId);
+    } else if (isTenantAgnostic) {
       return true;
     }
     if (!organizationId) {
@@ -59,7 +81,7 @@ export class TenancyGlobalGuard implements CanActivate {
     const userId = this.clsService.get<number>('userId');
 
     const tenant = await this.tenantModel.query().findOne({ organizationId });
-    if (!tenant) {
+    if (!tenant || (scopedOrganizationId && !tenant.isActive)) {
       throw new UnauthorizedException('Organization not found.');
     }
 
@@ -71,6 +93,9 @@ export class TenancyGlobalGuard implements CanActivate {
       throw new UnauthorizedException(
         'You do not have access to this organization.',
       );
+    }
+    if (scopedOrganizationId) {
+      this.clsService.set('scopedTenantId', tenant.id);
     }
     return true;
   }

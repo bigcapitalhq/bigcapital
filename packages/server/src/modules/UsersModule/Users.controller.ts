@@ -1,3 +1,4 @@
+import { AllowOrganizationSession } from '@/modules/Auth/OrganizationSession.decorator';
 import {
   Body,
   Controller,
@@ -34,6 +35,7 @@ export class UsersController {
    * Edit details of the given user.
    */
   @Put(':id')
+  @AllowOrganizationSession(false)
   @ApiOperation({ summary: 'Edit details of the given user.' })
   @ApiResponse({
     status: 200,
@@ -58,6 +60,7 @@ export class UsersController {
    * Soft deleting the given user.
    */
   @Delete(':id')
+  @AllowOrganizationSession(false)
   @ApiOperation({ summary: 'Soft deleting the given user.' })
   @ApiResponse({
     status: 200,
@@ -113,6 +116,7 @@ export class UsersController {
    * Activate the given user.
    */
   @Put(':id/activate')
+  @AllowOrganizationSession(false)
   @ApiOperation({ summary: 'Activate the given user.' })
   @ApiResponse({
     status: 200,
@@ -134,6 +138,7 @@ export class UsersController {
    * Inactivate the given user.
    */
   @Put(':id/inactivate')
+  @AllowOrganizationSession(false)
   @ApiOperation({ summary: 'Inactivate the given user.' })
   @ApiResponse({
     status: 200,

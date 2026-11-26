@@ -4,6 +4,7 @@ import {
   TwoFactorCodeInvalidException,
   TwoFactorMethodUnavailableException,
   TwoFactorTooManyAttemptsException,
+  TwoFactorSetupRequiredException,
 } from './TwoFactor.exceptions';
 
 describe('TwoFactorSigninService', () => {
@@ -107,10 +108,42 @@ describe('TwoFactorSigninService', () => {
           defaultMethod: 'totp',
         },
       });
-      expect(challengeService.issue).toHaveBeenCalledWith(7, 'verify', true, [
-        'totp',
-        'recovery_code',
-      ]);
+      expect(challengeService.issue).toHaveBeenCalledWith(
+        7,
+        'verify',
+        true,
+        ['totp', 'recovery_code'],
+        undefined,
+      );
+    });
+
+    it('keeps the issuing organization on SAML verification challenges', async () => {
+      const { service, registry, challengeService } = setup();
+      registry.getEnrolledMethods.mockResolvedValue([totpMethod]);
+      await service.begin(user, tenant, false, tenant.organizationId);
+      expect(challengeService.issue).toHaveBeenCalledWith(
+        user.id,
+        'verify',
+        false,
+        ['totp'],
+        tenant.organizationId,
+      );
+      challengeService.find.mockResolvedValue({
+        ...challenge,
+        samlOrganizationId: tenant.organizationId,
+      });
+      await expect(service.complete('tok', '123456')).resolves.toMatchObject({
+        scopedOrganizationId: tenant.organizationId,
+      });
+    });
+
+    it('requires an account sign-in to enroll a shared second factor', async () => {
+      const { service, policyService, challengeService } = setup();
+      policyService.isRequiredForTenant.mockResolvedValue(true);
+      await expect(
+        service.begin(user, tenant, false, tenant.organizationId),
+      ).rejects.toThrow(TwoFactorSetupRequiredException);
+      expect(challengeService.issue).not.toHaveBeenCalled();
     });
 
     it('asks for a setup when the organization requires two-factor', async () => {

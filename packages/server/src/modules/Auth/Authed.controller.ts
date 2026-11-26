@@ -1,3 +1,4 @@
+import { AllowOrganizationSession } from '@/modules/Auth/OrganizationSession.decorator';
 import {
   ApiBody,
   ApiExtraModels,
@@ -47,6 +48,7 @@ export class AuthedController {
   }
 
   @Get('/account')
+  @AllowOrganizationSession()
   @ApiOperation({ summary: 'Retrieve the authenticated account' })
   @ApiResponse({
     status: 200,

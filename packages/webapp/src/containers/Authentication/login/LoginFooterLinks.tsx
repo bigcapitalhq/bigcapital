@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom';
 import { AuthFooterLink, AuthFooterLinks } from '../_components';
 import { useAuthMetaBoot } from '../AuthMetaBoot';
 import { FormattedMessage as T } from '@/components';
+import { saml } from '@/routes/optionalSaml';
 
 export function LoginFooterLinks() {
   const { signupDisabled } = useAuthMetaBoot();
 
   return (
     <AuthFooterLinks>
+      {saml && <saml.LoginLink />}
       {!signupDisabled && (
         <AuthFooterLink>
           <T id={'dont_have_an_account'} />{' '}

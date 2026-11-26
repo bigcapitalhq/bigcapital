@@ -1,3 +1,4 @@
+import { AllowOrganizationSession } from '@/modules/Auth/OrganizationSession.decorator';
 import {
   Body,
   Controller,
@@ -41,6 +42,7 @@ import { WorkspacesError } from './Workspaces.constants';
 
 @ApiTags('Workspaces')
 @Controller('workspaces')
+@AllowOrganizationSession(false)
 @ApiExtraModels(
   WorkspaceDto,
   CreateWorkspaceResponseDto,
@@ -63,6 +65,7 @@ export class WorkspacesController {
    * No `organization-id` header required.
    */
   @Get()
+  @AllowOrganizationSession()
   @TenantAgnosticRoute()
   @IgnoreUserVerifiedRoute()
   @ApiOperation({
@@ -85,6 +88,7 @@ export class WorkspacesController {
       userId,
       includeInactive === 'true',
       currentOrganizationId,
+      this.cls.get<number>('scopedTenantId'),
     );
   }
 
