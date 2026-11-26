@@ -135,7 +135,7 @@ function withItemsSuggestLogic<C extends ComponentType<any>>(
     const handleCreateItemSelect = useCallback(
       (item: ItemSuggestModel | Partial<ItemSuggestModel>) => {
         if (!('id' in item) || !item.id) {
-          openDrawer(DRAWERS.QUICK_CREATE_ITEM);
+          openDrawer(DRAWERS.QUICK_CREATE_ITEM, { name: item.name });
         }
       },
       [openDrawer],
