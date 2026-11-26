@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { withReportBasis } from '../withReportBasis';
 import { SalesTaxLiabilitySummaryLoadingBar } from './components';
 import { SalesTaxLiabiltiyPdfDialog } from './SalesTaxLiabilityPdfDialog';
 import { SalesTaxLiabilitySummaryActionsBar } from './SalesTaxLiabilitySummaryActionsBar';
@@ -78,4 +79,5 @@ function SalesTaxLiabilitySummaryInner({
 export const SalesTaxLiabilitySummary = FF.pipe(
   SalesTaxLiabilitySummaryInner,
   withSalesTaxLiabilitySummaryActions,
+  withReportBasis,
 );

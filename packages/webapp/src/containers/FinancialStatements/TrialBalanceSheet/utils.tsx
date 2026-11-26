@@ -3,6 +3,8 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { transformFilterFormToQuery } from '../common';
+import { FALLBACK_REPORT_BASIS, ReportBasis } from '../reportBasis';
+import { useDefaultReportBasis } from '../withReportBasis';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -11,11 +13,13 @@ type TrialBalanceQuery = TrialBalanceTableQuery & { filterByOption?: string };
 /**
  * Retrieves the default trial balance query.
  */
-export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
+export function getDefaultTrialBalanceQuery(
+  basis: ReportBasis = FALLBACK_REPORT_BASIS,
+): TrialBalanceQuery {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
-    basis: 'accrual',
+    basis,
     filterByOption: 'with-transactions',
     branchesIds: [] as number[],
     numberFormat: {},
@@ -29,8 +33,9 @@ export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
  */
 const parseTrialBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
+  basis: ReportBasis,
 ): TrialBalanceQuery => {
-  const defaultQuery = getDefaultTrialBalanceQuery();
+  const defaultQuery = getDefaultTrialBalanceQuery(basis);
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
@@ -48,11 +53,12 @@ const parseTrialBalanceSheetQuery = (
 export const useTrialBalanceSheetQuery = () => {
   // Retrieves location query.
   const [locationQuery, setLocationQuery] = useAppQueryString();
+  const { basis } = useDefaultReportBasis();
 
   // Merges the default filter query with location URL query.
   const query = React.useMemo(
-    () => parseTrialBalanceSheetQuery(locationQuery),
-    [locationQuery],
+    () => parseTrialBalanceSheetQuery(locationQuery, basis),
+    [locationQuery, basis],
   );
 
   return {

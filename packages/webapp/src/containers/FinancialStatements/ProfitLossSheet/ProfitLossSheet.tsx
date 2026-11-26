@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
+import { withReportBasis } from '../withReportBasis';
 import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
 import { ProfitLossActionsBar } from './ProfitLossActionsBar';
 import { ProfitLossBody } from './ProfitLossBody';
@@ -76,4 +77,5 @@ export const ProfitLossSheet = FF.pipe(
   ProfitLossSheetInner,
   withProfitLossActions,
   withDashboardActions,
+  withReportBasis,
 );

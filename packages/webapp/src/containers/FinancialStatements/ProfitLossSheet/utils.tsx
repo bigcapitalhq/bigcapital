@@ -3,6 +3,8 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { FALLBACK_REPORT_BASIS, ReportBasis } from '../reportBasis';
+import { useDefaultReportBasis } from '../withReportBasis';
 import type { FormikContextType } from 'formik';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
@@ -11,8 +13,10 @@ interface FormSetFieldValue {
   setFieldValue: FormikContextType<Record<string, unknown>>['setFieldValue'];
 }
 
-export const getDefaultProfitLossQuery = () => ({
-  basis: 'cash',
+export const getDefaultProfitLossQuery = (
+  basis: ReportBasis = FALLBACK_REPORT_BASIS,
+) => ({
+  basis,
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
   displayColumnsType: 'total',
@@ -39,8 +43,11 @@ export const getDefaultProfitLossQuery = () => ({
   sortOrder: undefined,
 });
 
-const parseProfitLossQuery = (locationQuery: Record<string, unknown>) => {
-  const defaultQuery = getDefaultProfitLossQuery();
+const parseProfitLossQuery = (
+  locationQuery: Record<string, unknown>,
+  basis: ReportBasis,
+) => {
+  const defaultQuery = getDefaultProfitLossQuery(basis);
 
   const transformed = {
     ...defaultQuery,
@@ -55,10 +62,11 @@ const parseProfitLossQuery = (locationQuery: Record<string, unknown>) => {
 
 export const useProfitLossSheetQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
+  const { basis } = useDefaultReportBasis();
 
   const query = React.useMemo(
-    () => parseProfitLossQuery(locationQuery),
-    [locationQuery],
+    () => parseProfitLossQuery(locationQuery, basis),
+    [locationQuery, basis],
   );
   return {
     query,
