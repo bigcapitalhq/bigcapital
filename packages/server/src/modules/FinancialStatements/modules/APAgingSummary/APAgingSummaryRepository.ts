@@ -1,11 +1,18 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { isEmpty, groupBy } from 'lodash';
-import { ModelObject } from 'objection';
 import { Bill } from '@/modules/Bills/models/Bill';
+import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
+import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
+import {
+  AgingSettlementRow,
+  getAgingDocumentsAsOf,
+  IAgingDocument,
+  toDateKey,
+} from '../AgingSummary/AgingAsOf';
 
 @Injectable({ scope: Scope.REQUEST })
 export class APAgingSummaryRepository {
@@ -14,6 +21,16 @@ export class APAgingSummaryRepository {
 
   @Inject(Bill.name)
   private readonly billModel: TenantModelProxy<typeof Bill>;
+
+  @Inject(BillPaymentEntry.name)
+  private readonly billPaymentEntryModel: TenantModelProxy<
+    typeof BillPaymentEntry
+  >;
+
+  @Inject(VendorCreditAppliedBill.name)
+  private readonly vendorCreditAppliedBillModel: TenantModelProxy<
+    typeof VendorCreditAppliedBill
+  >;
 
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
@@ -25,28 +42,16 @@ export class APAgingSummaryRepository {
   filter: APAgingSummaryQueryDto;
 
   /**
-   * Due bills.
-   * @param {Bill[]} dueBills
+   * Bills that are open and not yet due on the as-of date, by vendor id.
+   * @param {Record<string, IAgingDocument[]>} dueBillsByVendorId
    */
-  dueBills: Bill[];
+  dueBillsByVendorId: Record<string, IAgingDocument[]>;
 
   /**
-   * Due bills by vendor id.
-   * @param {Record<string, Bill[]>} dueBillsByVendorId
+   * Bills that are open and overdue on the as-of date, by vendor id.
+   * @param {Record<string, IAgingDocument[]>} overdueBillsByVendorId
    */
-  dueBillsByVendorId: Record<string, Bill[]>;
-
-  /**
-   * Overdue bills.
-   * @param {Bill[]} overdueBills - overdue bills.
-   */
-  overdueBills: ModelObject<Bill>[];
-
-  /**
-   * Overdue bills by vendor id.
-   * @param {Record<string, Bill[]>} overdueBillsByVendorId - Overdue bills by vendor id.
-   */
-  overdueBillsByVendorId: Record<string, Array<ModelObject<Bill>>>;
+  overdueBillsByVendorId: Record<string, IAgingDocument[]>;
 
   /**
    * Vendors.
@@ -74,8 +79,7 @@ export class APAgingSummaryRepository {
   async load() {
     await this.asyncBaseCurrency();
     await this.asyncVendors();
-    await this.asyncDueBills();
-    await this.asyncOverdueBills();
+    await this.asyncAgingBills();
   }
 
   /**
@@ -102,39 +106,92 @@ export class APAgingSummaryRepository {
   }
 
   /**
-   * Retrieve all overdue bills from the storage.
+   * Retrieve the bills open on the as-of date, split into due and overdue
+   * ones. Only payments and vendor credits dated on or before the as-of date
+   * reduce a bill's open amount.
    */
-  async asyncOverdueBills() {
-    const commonQuery = (query) => {
-      if (!isEmpty(this.filter.branchesIds)) {
-        query.modify('filterByBranches', this.filter.branchesIds);
-      }
-    };
-    const overdueBills = await this.billModel()
-      .query()
-      .modify('overdueBillsFromDate', this.filter.asDate)
-      .onBuild(commonQuery);
+  async asyncAgingBills() {
+    const asDate = toDateKey(this.filter.asDate);
 
-    this.overdueBills = overdueBills;
-    this.overdueBillsByVendorId = groupBy(overdueBills, 'vendorId');
+    const bills = await this.billModel()
+      .query()
+      .modify('agingCandidatesAsOf', asDate)
+      .onBuild((query) => {
+        if (!isEmpty(this.filter.branchesIds)) {
+          query.modify('filterByBranches', this.filter.branchesIds);
+        }
+        if (!isEmpty(this.filter.vendorsIds)) {
+          query.whereIn('vendorId', this.filter.vendorsIds);
+        }
+      });
+    const settlements = await this.getBillsSettlements(
+      bills.map((bill) => bill.id),
+    );
+    const { current, overdue } = getAgingDocumentsAsOf(
+      bills.map((bill) => ({
+        id: bill.id,
+        contactId: bill.vendorId,
+        total: bill.total,
+        exchangeRate: bill.exchangeRate,
+        documentDate: bill.billDate,
+        dueDate: bill.dueDate,
+      })),
+      settlements,
+      asDate,
+    );
+    this.dueBillsByVendorId = groupBy(current, 'contactId');
+    this.overdueBillsByVendorId = groupBy(overdue, 'contactId');
   }
 
   /**
-   * Retrieve all due bills from the storage.
+   * Retrieves the payments and applied vendor credits of the given bills,
+   * each dated on the payment date or the vendor credit date.
+   * @param {number[]} billsIds
+   * @returns {Promise<AgingSettlementRow[]>}
    */
-  async asyncDueBills() {
-    const commonQuery = (query) => {
-      if (!isEmpty(this.filter.branchesIds)) {
-        query.modify('filterByBranches', this.filter.branchesIds);
-      }
-    };
-    // Retrieve all due vendors bills.
-    const dueBills = await this.billModel()
-      .query()
-      .modify('dueBillsFromDate', this.filter.asDate)
-      .onBuild(commonQuery);
+  private async getBillsSettlements(
+    billsIds: number[],
+  ): Promise<AgingSettlementRow[]> {
+    if (isEmpty(billsIds)) return [];
 
-    this.dueBills = dueBills;
-    this.dueBillsByVendorId = groupBy(dueBills, 'vendorId');
+    const payments = await this.billPaymentEntryModel()
+      .query()
+      .join(
+        'bills_payments',
+        'bills_payments.id',
+        'bills_payments_entries.bill_payment_id',
+      )
+      .whereIn('bills_payments_entries.bill_id', billsIds)
+      .select(
+        'bills_payments_entries.bill_id',
+        'bills_payments_entries.payment_amount',
+        'bills_payments.payment_date',
+      );
+    const credits = await this.vendorCreditAppliedBillModel()
+      .query()
+      .join(
+        'vendor_credits',
+        'vendor_credits.id',
+        'vendor_credit_applied_bill.vendor_credit_id',
+      )
+      .whereIn('vendor_credit_applied_bill.bill_id', billsIds)
+      .select(
+        'vendor_credit_applied_bill.bill_id',
+        'vendor_credit_applied_bill.amount',
+        'vendor_credits.vendor_credit_date',
+      );
+
+    return [
+      ...payments.map((payment: any) => ({
+        documentId: payment.billId,
+        amount: Number(payment.paymentAmount),
+        date: payment.paymentDate,
+      })),
+      ...credits.map((credit: any) => ({
+        documentId: credit.billId,
+        amount: Number(credit.amount),
+        date: credit.vendorCreditDate,
+      })),
+    ];
   }
 }

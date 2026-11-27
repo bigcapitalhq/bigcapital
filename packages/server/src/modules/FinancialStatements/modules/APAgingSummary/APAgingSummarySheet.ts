@@ -13,8 +13,8 @@ import { ModelObject } from 'objection';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { APAgingSummaryRepository } from './APAgingSummaryRepository';
-import { Bill } from '@/modules/Bills/models/Bill';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
+import { IAgingDocument } from '../AgingSummary/AgingAsOf';
 import {
   IFinancialReportMeta,
   DEFAULT_REPORT_META,
@@ -25,8 +25,8 @@ export class APAgingSummarySheet extends AgingSummaryReport {
   readonly query: APAgingSummaryQueryDto;
   readonly agingPeriods: IAgingPeriod[];
 
-  readonly overdueInvoicesByContactId: Record<string, Array<ModelObject<Bill>>>;
-  readonly currentInvoicesByContactId: Record<number, Array<ModelObject<Bill>>>;
+  readonly overdueInvoicesByContactId: Record<number, IAgingDocument[]>;
+  readonly currentInvoicesByContactId: Record<number, IAgingDocument[]>;
 
   /**
    * Constructor method.
