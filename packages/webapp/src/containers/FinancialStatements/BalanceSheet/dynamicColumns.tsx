@@ -1,308 +1,110 @@
-import * as FA from 'fp-ts/Array';
-import * as FF from 'fp-ts/function';
-import * as FO from 'fp-ts/Option';
-import { isEmpty } from 'lodash';
-import type { BalanceSheetColumnKey } from '@bigcapital/sdk-ts';
-import { Align } from '@/constants';
+import { isNegativeAmount } from '@bigcapital/utils';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { getReportCellTestId } from '../reportTestIds';
+import type { BalanceSheetTableResponse } from '@bigcapital/sdk-ts';
+import type { BP_TableProps } from '@bigcapitalhq/blueprintjs-react-table';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { getColumnWidth } from '@/utils';
-import { firstMatch, when } from '@/utils/fp';
 
-type AlignValue = (typeof Align)[keyof typeof Align];
+type ReportTable = BalanceSheetTableResponse['table'];
+export type BalanceSheetRow = ReportTable['rows'][number];
+type ReportColumn = NonNullable<
+  ReportTable['columns'][number]['children']
+>[number];
+type TableColumn = BP_TableProps<BalanceSheetRow>['columns'][number];
 
-interface ReportTableColumn {
-  key: string;
-  label: string;
-  cellIndex?: number;
-  children?: ReportTableColumn[];
-}
+const cellTestId = getReportCellTestId('balance-sheet');
 
-interface TableColumn {
-  key: string;
-  id?: string;
-  Header: string;
-  accessor?: string;
-  className?: string;
-  textOverview?: boolean;
-  width?: number;
-  sticky?: AlignValue;
-  align?: AlignValue;
-  disableSortBy?: boolean;
-  money?: boolean;
-  columns?: TableColumn[];
-}
+export function dynamicColumns(
+  columns: ReportColumn[],
+  rows: BalanceSheetRow[],
+) {
+  function mapColumn(column: ReportColumn, parentKey = ''): TableColumn {
+    const { key, label, children, cellIndex } = column;
+    if (children?.length) {
+      return {
+        id: `group-${key}`,
+        header: label,
+        meta: { headCellClassName: 'align-center' },
+        columns: children.map((child) => mapColumn(child, key)),
+      };
+    }
 
-type ColumnMapper = (
-  data: unknown[],
-) => (column: ReportTableColumn) => TableColumn;
-
-type ColumnMatcher = (column: ReportTableColumn) => FO.Option<TableColumn>;
-
-const getTableCellValueAccessor = (index?: number) => `cells[${index}].value`;
-
-const getReportColWidth = (
-  data: unknown[],
-  accessor: string,
-  headerText?: string,
-): number => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 12, minWidth: 100 },
-    headerText,
-  );
-};
-
-/**
- * Account name column mapper.
- */
-const accountNameMapper: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    key: column.key,
-    // The column id is sent to the backend as the sorting column key.
-    id: column.key,
-    Header: column.label,
-    accessor,
-    className: column.key,
-    textOverview: true,
-    width: Math.max(width, 300),
-    sticky: Align.Left,
-  };
-};
-
-/**
- * Shared money column mapper.
- */
-const moneyColumnMapper: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    // The column id is sent to the backend as the sorting column key.
-    id: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Date periods money column mapper.
- *
- * The backend does not support sorting date periods columns, and the same
- * column keys are repeated on each date range, so they are not sortable and
- * keep the accessor as their unique id.
- */
-const datePeriodColumnMapper: ColumnMapper = (data) => (column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  return {
-    Header: column.label,
-    key: column.key,
-    accessor,
-    width,
-    align: Align.Right,
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-  };
-};
-
-/**
- * Determines whether the given column matches the given key.
- */
-const isColumnKey =
-  (key: BalanceSheetColumnKey): FF.Predicate<ReportTableColumn> =>
-  (column) =>
-    column.key === key;
-
-/**
- * Determines whether the given string starts with `date-range`.
- */
-const isMatchesDateRange = (key: string): boolean => /^date-range/.test(key);
-
-const isDateRangeColumn: FF.Predicate<ReportTableColumn> = (column) =>
-  isMatchesDateRange(column.key);
-
-/**
- * Total sub-columns composer.
- */
-const totalColumnsComposer = (
-  data: unknown[],
-  column: ReportTableColumn,
-): TableColumn[] => {
-  return FF.pipe(column.children ?? [], FA.map(totalColumnsMapper(data)));
-};
-
-/**
- * Assoc columns to total column.
- */
-const assocColumnsToTotal =
-  (data: unknown[], column: ReportTableColumn) =>
-  (columnAccessor: TableColumn): TableColumn => ({
-    ...columnAccessor,
-    columns: totalColumnsComposer(data, column),
-  });
-
-/**
- * Assoc the solo date-range column attributes.
- */
-const assocDateRangeSoloAttrs =
-  (data: unknown[], column: ReportTableColumn) =>
-  (columnAccessor: TableColumn): TableColumn => {
-    const accessor = getTableCellValueAccessor(column.cellIndex);
-
+    const isName = key === 'name';
+    const isPeriod = (parentKey || key).startsWith('date-range');
+    const size = getColumnWidth(
+      rows,
+      `cells[${cellIndex}].value`,
+      {
+        magicSpacing: 12,
+        minWidth: isName ? 300 : 100,
+      },
+      isPeriod && !parentKey ? undefined : label,
+    );
     return {
-      ...columnAccessor,
-      accessor,
-      width: getReportColWidth(data, accessor),
+      // Period groups repeat the same comparison keys. Only summary leaves
+      // use their API key as a sortable column ID.
+      id: isPeriod ? `${parentKey || key}-${cellIndex}` : key,
+      accessorFn: (row) =>
+        cellIndex === undefined ? '' : row.cells[cellIndex]?.value,
+      size,
+      enableSorting: !isPeriod,
+      meta: {
+        headCellClassName: isName ? 'name' : 'align-right',
+        bodyCellClassName: isName ? 'name' : 'align-right',
+      },
+      header: ({ header, column, table }) => {
+        if (header.isPlaceholder) return null;
+        const sorted = column.getIsSorted();
+        const allExpanded = isName && table.getIsAllRowsExpanded();
+        return (
+          <>
+            {isName && (
+              <button
+                type="button"
+                className="expand-all"
+                aria-label={intl.get(
+                  allExpanded ? 'accounts.collapse_all' : 'accounts.expand_all',
+                )}
+                aria-expanded={allExpanded}
+                onClick={table.getToggleAllRowsExpandedHandler()}
+              />
+            )}
+            {column.getCanSort() ? (
+              <button
+                type="button"
+                className="sort-label"
+                onClick={column.getToggleSortingHandler()}
+              >
+                {label}
+                {sorted && (
+                  <span className={`sort-icon sort-icon--${sorted}`} />
+                )}
+              </button>
+            ) : (
+              label
+            )}
+          </>
+        );
+      },
+      cell: ({ row, getValue }) => {
+        const value = getValue<string>();
+        return (
+          <span
+            data-testId={cellTestId(row, { column: { key } })}
+            className={
+              !isName && isNegativeAmount(value)
+                ? 'is-negative-amount'
+                : undefined
+            }
+          >
+            {isName ? value : <MoneyDisplay>{value}</MoneyDisplay>}
+          </span>
+        );
+      },
     };
-  };
+  }
 
-/**
- * Total column mapper.
- */
-const totalMapper: ColumnMapper = (data) => (column) => {
-  const hasChildren = !isEmpty(column.children);
-  const accessor = getTableCellValueAccessor(column.cellIndex);
-  const width = getReportColWidth(data, accessor, column.label);
-
-  const base: TableColumn = {
-    key: column.key,
-    Header: column.label,
-    accessor,
-    textOverview: true,
-    width,
-    // Group headers are not sortable, only the leaf total column is.
-    disableSortBy: hasChildren,
-    money: true,
-    align: hasChildren ? Align.Center : Align.Right,
-    ...(!hasChildren ? { id: column.key } : {}),
-  };
-
-  return FF.pipe(
-    base,
-    FO.fromPredicate(FF.constant(hasChildren)),
-    FO.map(assocColumnsToTotal(data, column)),
-    FO.match(() => base, FF.identity),
-  );
-};
-
-/**
- * Date range children columns composer.
- */
-const dateRangeColumnsComposer = (
-  data: unknown[],
-  column: ReportTableColumn,
-): TableColumn[] => {
-  return FF.pipe(column.children ?? [], FA.map(datePeriodColumnMapper(data)));
-};
-
-/**
- * Assoc the date range children columns.
- */
-const assocColumnsToDateRange =
-  (data: unknown[], column: ReportTableColumn) =>
-  (columnAccessor: TableColumn): TableColumn => ({
-    ...columnAccessor,
-    columns: dateRangeColumnsComposer(data, column),
-  });
-
-/**
- * Date range columns mapper.
- */
-const dateRangeMapper: ColumnMapper = (data) => (column) => {
-  const hasChildren = !isEmpty(column.children);
-
-  const base: TableColumn = {
-    Header: column.label,
-    key: column.key,
-    // Date periods columns are not supported by the backend sorting.
-    disableSortBy: true,
-    textOverview: true,
-    money: true,
-    align: hasChildren ? Align.Center : Align.Right,
-  };
-
-  return FF.pipe(
-    base,
-    FO.fromPredicate(FF.constant(hasChildren)),
-    FO.map(assocColumnsToDateRange(data, column)),
-    FO.alt(() =>
-      FF.pipe(
-        base,
-        FO.fromPredicate(FF.constant(!hasChildren)),
-        FO.map(assocDateRangeSoloAttrs(data, column)),
-      ),
-    ),
-    FO.match(() => base, FF.identity),
-  );
-};
-
-/**
- * Fallback column mapper for keys matching no conditional mapper.
- */
-const fallbackColumnMapper = (column: ReportTableColumn): TableColumn => ({
-  key: column.key,
-  Header: column.label,
-  accessor: getTableCellValueAccessor(column.cellIndex),
-});
-
-/**
- * Total sub-columns conditional mappers.
- */
-const totalColumnMatchers = (data: unknown[]): ColumnMatcher[] => [
-  when(isColumnKey('total'), totalMapper(data)),
-  // Percentage of column/row.
-  when(isColumnKey('percentage_of_column'), moneyColumnMapper(data)),
-  when(isColumnKey('percentage_of_row'), moneyColumnMapper(data)),
-  // Previous year.
-  when(isColumnKey('previous_year'), moneyColumnMapper(data)),
-  when(isColumnKey('previous_year_change'), moneyColumnMapper(data)),
-  when(isColumnKey('previous_year_percentage'), moneyColumnMapper(data)),
-  // Previous period.
-  when(isColumnKey('previous_period'), moneyColumnMapper(data)),
-  when(isColumnKey('previous_period_change'), moneyColumnMapper(data)),
-  when(isColumnKey('previous_period_percentage'), moneyColumnMapper(data)),
-];
-
-const totalColumnsMapper =
-  (data: unknown[]) =>
-  (column: ReportTableColumn): TableColumn =>
-    FF.pipe(
-      column,
-      firstMatch(totalColumnMatchers(data)),
-      FO.match(() => fallbackColumnMapper(column), FF.identity),
-    );
-
-/**
- * Dynamic column conditional mappers.
- */
-const dynamicColumnMatchers = (data: unknown[]): ColumnMatcher[] => [
-  when(isDateRangeColumn, dateRangeMapper(data)),
-  when(isColumnKey('name'), accountNameMapper(data)),
-  when(isColumnKey('total'), totalMapper(data)),
-];
-
-const dynamicColumnMapper =
-  (data: unknown[]) =>
-  (column: ReportTableColumn): TableColumn =>
-    FF.pipe(
-      column,
-      firstMatch(dynamicColumnMatchers(data)),
-      FO.match(() => fallbackColumnMapper(column), FF.identity),
-    );
-
-export const dynamicColumns = (
-  columns: ReportTableColumn[],
-  data: unknown[],
-): TableColumn[] => {
-  return FF.pipe(columns, FA.map(dynamicColumnMapper(data)));
-};
+  return columns.map((column) => mapColumn(column));
+}

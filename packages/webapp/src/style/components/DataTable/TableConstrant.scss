@@ -1,0 +1,203 @@
+// The financial sheet grows with its rows. Keep Blueprint's horizontal
+// scrolling and frozen account column, and let the page scroll vertically.
+.TABLE_CONSTRANT.bp6-table-container {
+  width: fit-content;
+  overflow: visible;
+  will-change: auto;
+  max-width: 100%;
+  --report-text: #252a31;
+  --report-total: #000;
+  --report-sticky-background: rgba(255, 255, 255, 0.25);
+
+  .bp6-dark & {
+    --report-text: var(--color-light-gray1);
+    --report-total: var(--color-light-gray4);
+    --report-sticky-background: rgba(28, 33, 39, 0.6);
+  }
+
+  &,
+  .bp6-table-quadrant,
+  .bp6-table-cell-client,
+  .bp6-table-column-headers {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  &,
+  .bp6-table-quadrant-stack,
+  .bp6-table-quadrant-main,
+  .bp6-table-quadrant-main .bp6-table-quadrant-scroll-container {
+    height: auto;
+    min-height: 0;
+    position: relative;
+  }
+
+  .bp6-table-quadrant-stack {
+    display: grid;
+  }
+
+  .bp6-table-quadrant-main,
+  .bp6-table-quadrant-top,
+  .bp6-table-quadrant-top-left {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .bp6-table-quadrant-top,
+  .bp6-table-quadrant-top-left {
+    position: sticky;
+    align-self: start;
+  }
+
+  .bp6-table-quadrant-scroll-container {
+    will-change: auto;
+  }
+
+  .bp6-table-quadrant-left .bp6-table-cell-client .bp6-table-cell.name,
+  .bp6-table-column-headers .bp6-table-column-header-cell {
+    background: var(--report-sticky-background);
+    backdrop-filter: blur(10px);
+  }
+
+  .bp6-table-column-headers .bp6-table-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: none !important;
+    border-bottom: 1px solid var(--color-datatable-constrant-head-border);
+    padding: 0;
+    line-height: inherit;
+    color: var(--color-datatable-constrant-head-text);
+  }
+
+  .bp6-table-column-header-tr:first-child .bp6-table-header {
+    border-top: 1px solid var(--color-datatable-constrant-head-border);
+  }
+
+  .bp6-table-column-name {
+    transition: none;
+  }
+
+  .bp6-table-column-name-text {
+    padding: 0;
+    text-align: inherit;
+    pointer-events: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .align-right .bp6-table-column-name {
+    text-align: right;
+  }
+  .align-center .bp6-table-column-name {
+    text-align: center;
+  }
+
+  .bp6-table-th-menu-container {
+    display: none;
+  }
+  .sort-label,
+  .expand-all {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  .expand-all {
+    width: 12px;
+    height: 1em;
+    vertical-align: middle;
+  }
+  .sort-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-inline-start: 5px;
+    border-inline: 4px solid transparent;
+    &--asc {
+      border-top: 6px solid #666;
+    }
+    &--desc {
+      border-bottom: 6px solid #666;
+    }
+  }
+
+  .bp6-table-quadrant .bp6-table-cell-client .bp6-table-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: none !important;
+    background: transparent;
+    color: var(--report-text);
+    transition: none;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
+    border-color: var(--color-datatable-constrant-cell-border);
+    cursor: auto;
+
+    &:focus-visible {
+      outline: 1px solid var(--color-datatable-cell-focus-border);
+      outline-offset: -1px;
+    }
+    &.is-hovered,
+    &.name.is-hovered {
+      background: var(--color-datatable-cell-hover-background);
+    }
+    &.align-right {
+      text-align: right;
+    }
+    &.is-expanded:not(.name) .bp6-table-truncated-text {
+      opacity: 0;
+    }
+    &.row_type--TOTAL {
+      border-top: 1px solid var(--color-datatable-constrant-cell-border);
+      color: var(--report-total);
+      font-weight: 500;
+    }
+    &.bp6-table-last-in-column {
+      border-bottom: 1px solid var(--color-datatable-constrant-cell-border);
+    }
+    &.row_type--TOTAL:is(.row-id--ASSETS, .row-id--LIABILITY_EQUITY) {
+      border-bottom: 3px double var(--color-datatable-constrant-cell-border);
+    }
+  }
+
+  .bp6-table-cell-with-expander {
+    align-items: center;
+  }
+
+  .name > .bp6-table-cell-with-expander,
+  .name > .bp6-table-truncated-text {
+    padding-inline-start: calc(var(--row-depth) * 0.8rem) !important;
+  }
+
+  .bp6-table-row-expander {
+    margin: 0 8px 0 4px;
+    padding: 4px 0;
+    color: var(--color-datatable-caret);
+    &:hover {
+      color: var(--color-datatable-caret-hover);
+    }
+    .bp6-icon {
+      display: none;
+    }
+    &::before {
+      content: '';
+      border-block: 5px solid transparent;
+      border-left: 8px solid currentColor;
+    }
+    &[aria-expanded='true']::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  & + .no-results {
+    padding: 18px 20px;
+    text-align: center;
+    color: var(--color-datatable-no-results-text);
+    border-bottom: 1px solid var(--color-datatable-cell-border);
+  }
+}

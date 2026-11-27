@@ -146,6 +146,65 @@ test.describe('balance sheet', () => {
     await expect(pettyCashRow).toBeVisible({ timeout: 15_000 });
   });
 
+  test('should sort a comparison column on the server and restore it on reload.', async ({
+    page,
+  }) => {
+    await page.goto('/financial-reports/balance-sheet?previousYear=true');
+    await waitForBalanceSheetData(page);
+
+    const previousYear = page.getByRole('button', { name: /\(PY\)$/ });
+    for (const direction of ['asc', 'desc']) {
+      const response = page.waitForResponse((response) => {
+        const url = new URL(response.url());
+        return (
+          url.pathname === '/api/reports/balance-sheet' &&
+          url.searchParams.get('column_sort_by') === 'previous_year' &&
+          url.searchParams.get('sort_order') === direction
+        );
+      });
+      await previousYear.click();
+      expect((await response).ok()).toBe(true);
+      await expect(
+        previousYear.locator(`.sort-icon--${direction}`),
+      ).toBeVisible();
+      await page.reload();
+      await expect(
+        previousYear.locator(`.sort-icon--${direction}`),
+      ).toBeVisible();
+    }
+  });
+
+  test('should keep account names fixed while scrolling monthly comparison columns.', async ({
+    page,
+  }) => {
+    const year = new Date().getFullYear();
+    const query = new URLSearchParams({
+      displayColumnsType: 'month',
+      previousYear: 'true',
+      fromDate: `${year}-01-01`,
+      toDate: `${year}-12-31`,
+    });
+    await page.goto(`/financial-reports/balance-sheet?${query}`);
+    await waitForBalanceSheetData(page);
+    const assets = page.getByTestId('balance-sheet-row--TOTAL--ASSETS');
+    const left = (await assets.boundingBox())!.x;
+    const scrollArea = page.locator(
+      '.TABLE_CONSTRANT .bp6-table-quadrant-main .bp6-table-quadrant-scroll-container',
+    );
+    await scrollArea.evaluate((element) => {
+      element.scrollLeft = element.scrollWidth;
+    });
+    await expect
+      .poll(() => scrollArea.evaluate((element) => element.scrollLeft))
+      .toBeGreaterThan(0);
+    expect((await assets.boundingBox())!.x).toBe(left);
+    const lastMonth = page.getByText(`${year}-12`, { exact: true });
+    await expect(lastMonth).toBeInViewport();
+    await expect(
+      page.getByRole('button', { name: 'Total', exact: true }),
+    ).toHaveCount(0);
+  });
+
   test('should customize the report accounting basis through the filter drawer.', async ({
     page,
   }) => {

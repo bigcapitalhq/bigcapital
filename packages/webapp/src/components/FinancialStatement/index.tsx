@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { CLASSES } from '@/constants/classes';
 
 interface FinancialStatementRootProps {
   $showNegativeInRed?: boolean;
@@ -9,7 +10,8 @@ const FinancialStatementRoot = styled.div<FinancialStatementRootProps>`
   ${({ $showNegativeInRed }) =>
     $showNegativeInRed &&
     css`
-      .td.is-negative-amount .cell-inner {
+      .td.is-negative-amount .cell-inner,
+      .${CLASSES.TABLE_CONSTRANT} .is-negative-amount {
         color: var(--color-financial-sheet-negative-amount-text);
       }
     `}
