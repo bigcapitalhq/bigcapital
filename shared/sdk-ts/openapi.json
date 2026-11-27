@@ -29111,6 +29111,246 @@
         ]
       }
     },
+    "/api/organization/saml": {
+      "get": {
+        "operationId": "OrganizationSamlController_get",
+        "summary": "Get SAML settings for the current organization",
+        "parameters": [
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "The organization whose SAML settings to manage.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer JWT from an administrator session.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SamlSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Organization"
+        ]
+      },
+      "put": {
+        "operationId": "OrganizationSamlController_update",
+        "summary": "Update SAML settings for the current organization",
+        "parameters": [
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "The organization whose SAML settings to manage.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer JWT from an administrator session.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSamlSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SamlSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Organization"
+        ]
+      }
+    },
+    "/api/auth/saml/{organizationId}/metadata": {
+      "get": {
+        "operationId": "SamlController_metadata",
+        "summary": "Get SAML service provider metadata for an organization",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/samlmetadata+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/saml/{organizationId}/login": {
+      "get": {
+        "operationId": "SamlController_start",
+        "summary": "Start organization SAML sign-in",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the identity provider or sign-in error page."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/saml/{organizationId}/acs": {
+      "post": {
+        "operationId": "SamlController_accept",
+        "summary": "Receive the signed SAML assertion from the identity provider",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "RelayState",
+                  "SAMLResponse"
+                ],
+                "properties": {
+                  "RelayState": {
+                    "type": "string"
+                  },
+                  "SAMLResponse": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "303": {
+            "description": "Return the browser to the sign-in callback."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/saml/exchange": {
+      "post": {
+        "operationId": "SamlController_exchange",
+        "summary": "Redeem a single-use SAML sign-in code in the initiating browser",
+        "parameters": [
+          {
+            "name": "cookie",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSigninResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/exchange-rates/latest": {
       "get": {
         "operationId": "ExchangeRatesController_getLatestExchangeRate",
@@ -55644,6 +55884,74 @@
           "startDate",
           "frequency",
           "entries"
+        ]
+      },
+      "SamlSettingsResponseDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Allow members to sign in through this identity provider."
+          },
+          "idpEntityId": {
+            "type": "string",
+            "description": "Entity ID (issuer) from the identity provider."
+          },
+          "idpSsoUrl": {
+            "type": "string",
+            "description": "HTTPS single sign-on URL for the HTTP-Redirect binding."
+          },
+          "idpCertificate": {
+            "type": "string",
+            "description": "The identity provider signing certificate in PEM format."
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "entityId": {
+            "type": "string",
+            "description": "Service provider entity ID."
+          },
+          "acsUrl": {
+            "type": "string",
+            "description": "Assertion Consumer Service URL for the HTTP-POST binding."
+          }
+        },
+        "required": [
+          "enabled",
+          "idpEntityId",
+          "idpSsoUrl",
+          "idpCertificate",
+          "organizationId",
+          "entityId",
+          "acsUrl"
+        ]
+      },
+      "UpdateSamlSettingsDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Allow members to sign in through this identity provider."
+          },
+          "idpEntityId": {
+            "type": "string",
+            "description": "Entity ID (issuer) from the identity provider."
+          },
+          "idpSsoUrl": {
+            "type": "string",
+            "description": "HTTPS single sign-on URL for the HTTP-Redirect binding."
+          },
+          "idpCertificate": {
+            "type": "string",
+            "description": "The identity provider signing certificate in PEM format."
+          }
+        },
+        "required": [
+          "enabled",
+          "idpEntityId",
+          "idpSsoUrl",
+          "idpCertificate"
         ]
       },
       "ExchangeRateLatestResponseDto": {

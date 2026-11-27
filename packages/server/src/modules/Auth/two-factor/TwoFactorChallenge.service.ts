@@ -39,6 +39,7 @@ export class TwoFactorChallengeService {
     purpose: TwoFactorChallengePurpose,
     rememberMe = false,
     methods: MfaMethodId[] = ['totp', 'recovery_code'],
+    scopedOrganizationId?: string,
   ): Promise<IssuedTwoFactorChallenge> {
     const token = randomBytes(32).toString('base64url');
     const expiresIn = TWO_FACTOR_CHALLENGE_TTL_SECONDS[purpose];
@@ -46,6 +47,7 @@ export class TwoFactorChallengeService {
     await this.removeStale();
     await this.challengeModel.query().insert({
       tokenHash: hashToken(token),
+      ...(scopedOrganizationId && { samlOrganizationId: scopedOrganizationId }),
       userId,
       purpose,
       methods: JSON.stringify(methods),

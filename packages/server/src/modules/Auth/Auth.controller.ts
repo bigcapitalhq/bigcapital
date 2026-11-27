@@ -121,12 +121,17 @@ export class AuthController {
   async signinTwoFactor(
     @Body() body: TwoFactorSigninDto,
   ): Promise<AuthSigninResponseDto> {
-    const { user, rememberMe } = await this.twoFactorSignin.complete(
-      body.challengeToken,
-      body.code,
-      body.recoveryCode,
+    const { user, rememberMe, scopedOrganizationId } =
+      await this.twoFactorSignin.complete(
+        body.challengeToken,
+        body.code,
+        body.recoveryCode,
+      );
+    return this.authSignin.issueSigninResponse(
+      user,
+      rememberMe,
+      scopedOrganizationId,
     );
-    return this.authSignin.issueSigninResponse(user, rememberMe);
   }
 
   @Post('/signin/mfa/verify')
@@ -143,12 +148,17 @@ export class AuthController {
   async signinMfaVerify(
     @Body() body: MfaVerifyDto,
   ): Promise<AuthSigninResponseDto> {
-    const { user, rememberMe } = await this.twoFactorSignin.completeWithMethod(
-      body.challengeToken,
-      body.method,
-      { code: body.code, recoveryCode: body.recoveryCode },
+    const { user, rememberMe, scopedOrganizationId } =
+      await this.twoFactorSignin.completeWithMethod(
+        body.challengeToken,
+        body.method,
+        { code: body.code, recoveryCode: body.recoveryCode },
+      );
+    return this.authSignin.issueSigninResponse(
+      user,
+      rememberMe,
+      scopedOrganizationId,
     );
-    return this.authSignin.issueSigninResponse(user, rememberMe);
   }
 
   @Post('/signin/mfa/prepare')

@@ -9,6 +9,7 @@ import {
   TwoFactorCodeInvalidException,
   TwoFactorMethodUnavailableException,
   TwoFactorTooManyAttemptsException,
+  TwoFactorSetupRequiredException,
 } from './TwoFactor.exceptions';
 import { MfaMethodRegistry } from './methods/MfaMethodRegistry.service';
 import type {
@@ -39,6 +40,7 @@ export interface TwoFactorSigninResult {
   user: SystemUser;
   rememberMe: boolean;
   recoveryCodes?: string[];
+  scopedOrganizationId?: string;
 }
 
 export interface TwoFactorPrepareResult {
@@ -76,6 +78,7 @@ export class TwoFactorSigninService {
     user: SystemUser,
     tenant: TenantModel,
     rememberMe = false,
+    scopedOrganizationId?: string,
   ): Promise<TwoFactorSigninChallengeResponse | null> {
     const enrolledMethods = await this.methodRegistry.getEnrolledMethods(
       user.id,
@@ -88,12 +91,17 @@ export class TwoFactorSigninService {
         'verify',
         rememberMe,
         methods.map((method) => method.id),
+        scopedOrganizationId,
       );
       return this.buildChallenge('verify', token, expiresIn, methods, {
         twoFactorRequired: true,
       });
     }
     if (await this.policyService.isRequiredForTenant(tenant.id)) {
+      if (scopedOrganizationId) {
+        // Enrollment changes the account credential across all organizations.
+        throw new TwoFactorSetupRequiredException();
+      }
       const methods = this.methodRegistry.getEnrollableMethods();
       const { token, expiresIn } = await this.challengeService.issue(
         user.id,
@@ -307,6 +315,10 @@ export class TwoFactorSigninService {
     if (!user) {
       throw new TwoFactorChallengeInvalidException();
     }
-    return { user, rememberMe: !!challenge.rememberMe };
+    return {
+      user,
+      rememberMe: !!challenge.rememberMe,
+      scopedOrganizationId: challenge.samlOrganizationId,
+    };
   }
 }

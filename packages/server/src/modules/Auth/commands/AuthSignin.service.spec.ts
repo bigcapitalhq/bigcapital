@@ -21,7 +21,7 @@ describe('AuthSigninService token claims', () => {
     } as any;
     const service = new AuthSigninService(
       systemUserModel,
-      {} as any,
+      undefined,
       {} as any,
       jwtService,
       clsService,
@@ -78,6 +78,83 @@ describe('AuthSigninService token claims', () => {
         ).rejects.toThrow(UnauthorizedException);
       }
       expect(findOne).not.toHaveBeenCalled();
+    });
+  });
+
+  it('rejects organization-scoped sessions when the organization sign-in provider is absent', async () => {
+    const { service } = createService({
+      ...user,
+      active: true,
+      verified: true,
+    });
+    const payload = {
+      iss: JWT_ISSUER,
+      aud: JWT_AUDIENCE,
+      sub: String(userId),
+      samlOrganizationId: 'org-a',
+      iat: 1,
+      exp: 2,
+    };
+    await expect(service.verifyPayload(payload)).rejects.toThrow(
+      UnauthorizedException,
+    );
+    await expect(
+      service.issueSigninResponse(user, false, 'org-a'),
+    ).rejects.toThrow(UnauthorizedException);
+  });
+
+  describe('SAML session issuance', () => {
+    const member = {
+      ...user,
+      active: true,
+      verified: true,
+      defaultTenantId: 17,
+    };
+    const samlOrg = { id: 3, organizationId: 'org-a', isActive: true };
+    const membershipQuery = {
+      where: jest.fn().mockReturnThis(),
+      withGraphFetched: jest.fn().mockReturnThis(),
+      first: jest.fn(),
+    };
+    const sign = jest.fn(() => 'scoped-token');
+    const service = new AuthSigninService(
+      {} as any,
+      { resolveTenantId: async () => samlOrg.id } as any,
+      { query: () => membershipQuery } as any,
+      { sign } as any,
+      {} as any,
+    );
+
+    it('issues a token for the IdP organization even when the member has a different default', async () => {
+      membershipQuery.first.mockResolvedValue({ tenant: samlOrg });
+      const response = await service.issueSigninResponse(
+        member,
+        false,
+        'org-a',
+      );
+      expect(membershipQuery.where).toHaveBeenCalledWith({
+        userId,
+        tenantId: samlOrg.id,
+      });
+      expect(response.organizationId).toBe('org-a');
+      expect(sign).toHaveBeenCalledWith(
+        { sub: String(userId), samlOrganizationId: 'org-a' },
+        expect.anything(),
+      );
+    });
+
+    it('denies an account without an active membership in the asserted organization', async () => {
+      membershipQuery.first.mockResolvedValue(undefined);
+      await expect(
+        service.issueSigninResponse(member, false, 'org-a'),
+      ).rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.issueSigninResponse(
+          { ...member, active: false },
+          false,
+          'org-a',
+        ),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 

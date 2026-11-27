@@ -1,3 +1,4 @@
+import { AllowOrganizationSession } from '@/modules/Auth/OrganizationSession.decorator';
 import {
   Body,
   Controller,
@@ -53,6 +54,7 @@ export class TwoFactorController {
   }
 
   @Get()
+  @AllowOrganizationSession()
   @ApiOperation({ summary: 'Two-factor status of the signed-in user' })
   @ApiResponse({
     status: 200,

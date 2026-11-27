@@ -1,3 +1,4 @@
+import { AllowOrganizationSession } from '@/modules/Auth/OrganizationSession.decorator';
 import { Controller, Post, Param, Get, Put, Body } from '@nestjs/common';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
@@ -48,6 +49,7 @@ export class AuthApiKeysController {
   ) {}
 
   @Post('generate')
+  @AllowOrganizationSession(false)
   @ApiOperation({ summary: 'Generate a new API key' })
   @ApiBody({ type: GenerateApiKeyDto })
   @ApiResponse({

@@ -6015,6 +6015,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/organization/saml": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get SAML settings for the current organization */
+        get: operations["OrganizationSamlController_get"];
+        /** Update SAML settings for the current organization */
+        put: operations["OrganizationSamlController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/saml/{organizationId}/metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get SAML service provider metadata for an organization */
+        get: operations["SamlController_metadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/saml/{organizationId}/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Start organization SAML sign-in */
+        get: operations["SamlController_start"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/saml/{organizationId}/acs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Receive the signed SAML assertion from the identity provider */
+        post: operations["SamlController_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/saml/exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Redeem a single-use SAML sign-in code in the initiating browser */
+        post: operations["SamlController_exchange"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/exchange-rates/latest": {
         parameters: {
             query?: never;
@@ -20847,6 +20933,31 @@ export interface components {
             autoPublish: boolean;
             /** @description Recurring journal entries */
             entries: components["schemas"]["ManualJournalEntryDto"][];
+        };
+        SamlSettingsResponseDto: {
+            /** @description Allow members to sign in through this identity provider. */
+            enabled: boolean;
+            /** @description Entity ID (issuer) from the identity provider. */
+            idpEntityId: string;
+            /** @description HTTPS single sign-on URL for the HTTP-Redirect binding. */
+            idpSsoUrl: string;
+            /** @description The identity provider signing certificate in PEM format. */
+            idpCertificate: string;
+            organizationId: string;
+            /** @description Service provider entity ID. */
+            entityId: string;
+            /** @description Assertion Consumer Service URL for the HTTP-POST binding. */
+            acsUrl: string;
+        };
+        UpdateSamlSettingsDto: {
+            /** @description Allow members to sign in through this identity provider. */
+            enabled: boolean;
+            /** @description Entity ID (issuer) from the identity provider. */
+            idpEntityId: string;
+            /** @description HTTPS single sign-on URL for the HTTP-Redirect binding. */
+            idpSsoUrl: string;
+            /** @description The identity provider signing certificate in PEM format. */
+            idpCertificate: string;
         };
         ExchangeRateLatestResponseDto: {
             /**
@@ -38854,6 +38965,153 @@ export interface operations {
                     "application/json": components["schemas"]["PaginatedResponseDto"] & {
                         data?: components["schemas"]["ManualJournalResponseDto"][];
                     };
+                };
+            };
+        };
+    };
+    OrganizationSamlController_get: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The organization whose SAML settings to manage. */
+                "organization-id": string;
+                /** @description Bearer JWT from an administrator session. */
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SamlSettingsResponseDto"];
+                };
+            };
+        };
+    };
+    OrganizationSamlController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The organization whose SAML settings to manage. */
+                "organization-id": string;
+                /** @description Bearer JWT from an administrator session. */
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSamlSettingsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SamlSettingsResponseDto"];
+                };
+            };
+        };
+    };
+    SamlController_metadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/samlmetadata+xml": string;
+                };
+            };
+        };
+    };
+    SamlController_start: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirect to the identity provider or sign-in error page. */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SamlController_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organizationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/x-www-form-urlencoded": {
+                    RelayState: string;
+                    SAMLResponse: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Return the browser to the sign-in callback. */
+            303: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SamlController_exchange: {
+        parameters: {
+            query?: never;
+            header: {
+                cookie: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    code: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSigninResponseDto"];
                 };
             };
         };

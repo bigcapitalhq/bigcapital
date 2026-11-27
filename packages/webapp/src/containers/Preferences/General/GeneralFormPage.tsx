@@ -12,6 +12,7 @@ import type { GeneralFormValues } from './types';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { saml } from '@/routes/optionalSaml';
 import { transformToForm } from '@/utils';
 
 const defaultValues: GeneralFormValues = {
@@ -91,6 +92,7 @@ function GeneralFormPageInner({
         component={GeneralForm}
       />
       <OrganizationTwoFactorSetting />
+      {saml && <saml.OrganizationPreferences />}
     </>
   );
 }

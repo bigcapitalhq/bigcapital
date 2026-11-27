@@ -1,5 +1,11 @@
 import { ClsService } from 'nestjs-cls';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Optional,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { OrganizationSigninPolicy } from '../OrganizationSigninPolicy';
 import { JwtService } from '@nestjs/jwt';
 import { SystemUser } from '@/modules/System/models/SystemUser';
 import { TenantModel } from '@/modules/System/models/TenantModel';
@@ -18,8 +24,7 @@ export class AuthSigninService {
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
 
-    @Inject(TenantModel.name)
-    private readonly tenantModel: typeof TenantModel,
+    @Optional() private readonly organizationPolicy: OrganizationSigninPolicy,
 
     @Inject(UserTenant.name)
     private readonly userTenantModel: typeof UserTenant,
@@ -76,6 +81,14 @@ export class AuthSigninService {
     } catch (_error) {
       throw new UserNotFoundException(String(payload.sub));
     }
+    if (payload.samlOrganizationId) {
+      if (!this.organizationPolicy || !user.active || !user.verified) {
+        throw new UnauthorizedException('Organization sign-in is unavailable.');
+      }
+      // Account and MFA guards also read this context on headerless requests.
+      this.clsService.set('organizationId', payload.samlOrganizationId);
+      return { ...payload, scopedOrganizationId: payload.samlOrganizationId };
+    }
     return payload;
   }
 
@@ -111,6 +124,21 @@ export class AuthSigninService {
     return active?.tenant ?? null;
   }
 
+  async resolveScopedTenant(
+    user: SystemUser,
+    organizationId: string,
+  ): Promise<TenantModel> {
+    if (!this.organizationPolicy || !user.active || !user.verified) {
+      throw new UnauthorizedException('Organization sign-in is unavailable.');
+    }
+    const tenantId =
+      await this.organizationPolicy.resolveTenantId(organizationId);
+    const tenant = await this.tryGetActiveTenantForUser(user.id, tenantId);
+    if (!tenant)
+      throw new UnauthorizedException('Organization sign-in is unavailable.');
+    return tenant;
+  }
+
   /**
    * Returns the tenant only when the user is a member and the tenant is active.
    */
@@ -135,14 +163,17 @@ export class AuthSigninService {
   async issueSigninResponse(
     user: SystemUser,
     rememberMe = false,
+    scopedOrganizationId?: string,
   ): Promise<AuthSigninResponseDto> {
-    const tenant = await this.resolveSigninTenant(user);
+    const tenant = scopedOrganizationId
+      ? await this.resolveScopedTenant(user, scopedOrganizationId)
+      : await this.resolveSigninTenant(user);
 
     if (!tenant) {
       throw new NoActiveWorkspaceException();
     }
     return {
-      accessToken: this.signToken(user, rememberMe),
+      accessToken: this.signToken(user, rememberMe, scopedOrganizationId),
       organizationId: tenant.organizationId,
       tenantId: tenant.id,
       userId: user.id,
@@ -155,9 +186,14 @@ export class AuthSigninService {
    * @param {boolean} rememberMe - Extends the token lifetime when the user opted to stay signed in.
    * @returns {string}
    */
-  signToken(user: SystemUser, rememberMe = false): string {
+  signToken(
+    user: SystemUser,
+    rememberMe = false,
+    scopedOrganizationId?: string,
+  ): string {
     const payload = {
       sub: String(user.id),
+      ...(scopedOrganizationId && { samlOrganizationId: scopedOrganizationId }),
     };
     const expiresIn = rememberMe ? '30d' : '1d';
     return this.jwtService.sign(payload, {

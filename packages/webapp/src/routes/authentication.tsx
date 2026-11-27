@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { lazy } from 'react';
+import { saml } from './optionalSaml';
 
 const BASE_URL = '/auth';
 
@@ -12,6 +13,7 @@ export default [
       })),
     ),
   },
+  ...(saml?.authenticationRoutes ?? []),
   {
     path: `${BASE_URL}/google/callback`,
     component: lazy(() =>

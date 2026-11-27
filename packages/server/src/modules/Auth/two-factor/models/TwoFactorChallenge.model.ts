@@ -9,6 +9,7 @@ export type TwoFactorChallengePurpose = 'verify' | 'setup';
 export class TwoFactorChallenge extends SystemModel {
   readonly tokenHash!: string;
   readonly userId!: number;
+  readonly samlOrganizationId?: string;
   readonly purpose!: TwoFactorChallengePurpose;
   /** Methods offered when the challenge was issued (JSON column). */
   readonly methods?: unknown;

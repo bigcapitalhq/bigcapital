@@ -122,7 +122,12 @@ const models = [
       adapter: BullMQAdapter,
     }),
   ],
-  exports: [...models, TwoFactorService],
+  exports: [
+    ...models,
+    TwoFactorService,
+    AuthSigninService,
+    TwoFactorSigninService,
+  ],
   providers: [
     ...models,
     LocalStrategy,

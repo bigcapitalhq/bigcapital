@@ -66,6 +66,7 @@ To get started locally, we have a [guide to help you](https://github.com/bigcapi
 
 Optional integrations are documented under [`docs/`](docs/):
 
+- [Enterprise SAML single sign-on](docs/ee/saml-sso.md) — connect an organization’s identity provider.
 - [Google Sign-In](docs/google-auth.md) — configure the "Continue with Google" button.
 
 ### Gitpod
