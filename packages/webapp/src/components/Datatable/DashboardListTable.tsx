@@ -3,6 +3,7 @@ import {
   withPagination,
 } from '@bigcapitalhq/blueprintjs-react-table';
 import { functionalUpdate } from '@tanstack/react-table';
+import { noop } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import '@bigcapitalhq/blueprintjs-react-table/styles.css';
@@ -27,6 +28,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 
 const PAGE_SIZE_OPTIONS = [20, 30, 50, 75, 100, 150];
 const PAGINATION_BUTTON_PROPS = { small: true };
+const EMPTY_SELECTED_IDS: number[] = [];
 
 interface DashboardListTableConfig<TRecord, TActions> {
   tableName: string;
@@ -38,7 +40,11 @@ interface DashboardListTableConfig<TRecord, TActions> {
   }>;
 }
 
-interface DashboardListTableProps<TRecord extends { id: number }, TActions> {
+type DashboardListTableSelectionProps =
+  | { selectedIds: number[]; setSelectedIds: (ids: number[]) => void }
+  | { selectedIds?: never; setSelectedIds?: never };
+
+type DashboardListTableProps<TRecord extends { id: number }, TActions> = {
   columns: BP_PaginatedTableProps<TRecord>['columns'];
   data: TRecord[] | undefined;
   /** An unknown total keeps the current page while its request is in flight. */
@@ -49,10 +55,8 @@ interface DashboardListTableProps<TRecord extends { id: number }, TActions> {
   compact: boolean;
   query: Partial<TableQuery>;
   setQuery: (query: Partial<TableQuery>) => void;
-  selectedIds: number[];
-  setSelectedIds: (ids: number[]) => void;
   actions: TActions;
-}
+} & DashboardListTableSelectionProps;
 
 export function createDashboardListTable<
   TRecord extends { id: number },
@@ -85,8 +89,8 @@ export function createDashboardListTable<
     const [columnSizing, setColumnSizing] =
       useMemorizedColumnsWidths(tableName);
     const { rowSelection, onRowSelectionChange } = useTableRowSelection(
-      selectedIds,
-      setSelectedIds,
+      selectedIds ?? EMPTY_SELECTED_IDS,
+      setSelectedIds ?? noop,
     );
     const pagination = {
       pageIndex: query.pageIndex ?? 0,
@@ -142,7 +146,7 @@ export function createDashboardListTable<
           onPaginationChange={onPaginationChange}
           state={state}
           onColumnSizingChange={setColumnSizing}
-          showRowSelectionCheckboxes
+          showRowSelectionCheckboxes={selectedIds !== undefined}
           rowSelection={rowSelection}
           onRowSelectionChange={onRowSelectionChange}
           getCellProps={getCellProps}
