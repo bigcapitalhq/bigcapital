@@ -1,5 +1,5 @@
 import * as FF from 'fp-ts/function';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { BudgetsEmptyStatus } from './BudgetsEmptyStatus';
 import { useBudgetsListContext } from './BudgetsListProvider';
@@ -10,16 +10,18 @@ import type { BudgetTableRow } from './components';
 import type { WithBudgetsProps } from './withBudgets';
 import type { WithBudgetsActionsProps } from './withBudgetsActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
-import {
-  DashboardContentTable,
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { createDashboardListTable } from '@/components/Datatable/DashboardListTable';
 import { AbilitySubject, BudgetAction } from '@/constants/abilityOption';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { useAbilityContext, useMemorizedColumnsWidths } from '@/hooks';
+import { useAbilityContext } from '@/hooks';
+
+const Table = createDashboardListTable({
+  tableName: TABLES.BUDGETS,
+  rowName: 'budget',
+  identifierColumn: 'name',
+  ActionsMenu: BudgetActionsMenu,
+});
 
 interface BudgetsDataTableProps
   extends Pick<WithBudgetsProps, 'budgetsTableState'>,
@@ -54,39 +56,14 @@ function BudgetsDataTableInner({
   // Budgets table columns.
   const columns = useBudgetsTableColumns();
 
-  // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.BUDGETS);
-
-  // Handle fetch data of the budgets datatable.
-  const handleFetchData = useCallback(
-    ({
-      pageIndex,
-      pageSize,
-      sortBy,
-    }: {
-      pageIndex: number;
-      pageSize: number;
-      sortBy: Array<{ id: string; desc: boolean }>;
-    }) => {
-      setBudgetsTableState({
-        pageIndex,
-        pageSize,
-        sortBy,
-      });
-    },
-    [setBudgetsTableState],
-  );
-
   // Handle budget delete action.
   const handleDeleteBudget = (budget: BudgetTableRow) => {
     openAlert('budget-delete', { budgetId: budget.id });
   };
 
-  // Handle budget row click.
-  const handleCellClick = (cell: { row: { original: BudgetTableRow } }) => {
+  const handleEditBudget = (budget: BudgetTableRow) => {
     if (ability.can(BudgetAction.Edit, AbilitySubject.Budget)) {
-      history.push(`/budgets/${cell.row.original.id}/edit`);
+      history.push(`/budgets/${budget.id}/edit`);
     }
   };
 
@@ -96,36 +73,20 @@ function BudgetsDataTableInner({
   }
 
   return (
-    <DashboardContentTable>
-      <DataTable
-        columns={columns}
-        data={budgets || []}
-        loading={isBudgetsLoading}
-        headerLoading={isBudgetsLoading}
-        progressBarLoading={isBudgetsFetching}
-        noInitialFetch={true}
-        sticky={true}
-        rowTestId={'budget-row'}
-        onFetchData={handleFetchData}
-        onCellClick={handleCellClick}
-        pagination={true}
-        initialPageIndex={budgetsTableState?.pageIndex ?? 0}
-        initialPageSize={budgetsTableState?.pageSize ?? 20}
-        manualSortBy={true}
-        manualPagination={true}
-        rowsCount={pagination?.total ?? 0}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={BudgetActionsMenu}
-        initialColumnsWidths={initialColumnsWidths}
-        onColumnResizing={handleColumnResizing}
-        payload={{
-          onDelete: handleDeleteBudget,
-        }}
-      />
-    </DashboardContentTable>
+    <Table
+      columns={columns}
+      data={budgets}
+      total={pagination?.total}
+      loading={isBudgetsLoading}
+      fetching={isBudgetsFetching}
+      compact={false}
+      query={budgetsTableState}
+      setQuery={setBudgetsTableState}
+      actions={{
+        onDelete: handleDeleteBudget,
+        onViewDetails: handleEditBudget,
+      }}
+    />
   );
 }
 

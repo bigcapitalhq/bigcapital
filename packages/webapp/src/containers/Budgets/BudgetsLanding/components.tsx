@@ -1,24 +1,24 @@
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
-import React, { ReactNode } from 'react';
+import { createColumnHelper } from '@tanstack/react-table';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { useHistory } from 'react-router-dom';
-import type { DataTableColumn } from '@/components/Datatable/types';
 import type { Budget } from '@bigcapital/sdk-ts';
+import type { BP_TableFeatures } from '@bigcapitalhq/blueprintjs-react-table';
 import { Can, Icon } from '@/components';
+import { MoneyDisplay } from '@/components/Money/MoneyDisplay';
 import { AbilitySubject, BudgetAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
 /**
- * Runtime-only fields injected by the server-side budget transformer
- * (not part of the generated SDK schema).
+ * The budget transformer supplies the formatted total outside the SDK schema.
  */
 export type BudgetTableRow = Budget & {
-  totalBudgetAmount: number;
-  formattedTotalBudgetAmount: string;
+  formattedTotalBudgetAmount?: string;
 };
 
 interface BudgetActionsMenuPayload {
   onDelete: (budget: BudgetTableRow) => void;
+  onViewDetails: (budget: BudgetTableRow) => void;
 }
 
 interface BudgetActionsMenuProps {
@@ -31,17 +31,15 @@ interface BudgetActionsMenuProps {
  */
 export function BudgetActionsMenu({
   row: { original },
-  payload: { onDelete },
+  payload: { onDelete, onViewDetails },
 }: BudgetActionsMenuProps) {
-  const history = useHistory();
-
   return (
     <Menu>
       <Can I={BudgetAction.Edit} a={AbilitySubject.Budget}>
         <MenuItem
           icon={<Icon icon="edit" iconSize={16} />}
           text={intl.get('budget.edit')}
-          onClick={() => history.push(`/budgets/${original.id}/edit`)}
+          onClick={safeCallback(onViewDetails, original)}
         />
       </Can>
       <Can I={BudgetAction.Delete} a={AbilitySubject.Budget}>
@@ -56,78 +54,56 @@ export function BudgetActionsMenu({
   );
 }
 
-/**
- * Budget period accessor.
- */
-function PeriodAccessor(budget: BudgetTableRow): ReactNode {
-  return `${budget.formattedFromDate} – ${budget.formattedToDate}`;
-}
-
-/**
- * Budget entries count accessor.
- */
-function EntriesAccessor(budget: BudgetTableRow): ReactNode {
-  return budget.entries?.length ?? 0;
-}
+const column = createColumnHelper<BP_TableFeatures, BudgetTableRow>();
 
 /**
  * Retrieves the budgets table columns.
  */
-export function useBudgetsTableColumns(): DataTableColumn<BudgetTableRow>[] {
+export function useBudgetsTableColumns() {
   return React.useMemo(
     () =>
-      [
-        {
+      column.columns([
+        column.accessor('name', {
           id: 'name',
-          Header: intl.get('budget.col_name'),
-          accessor: 'name',
-          width: 220,
-          clickable: true,
-        },
-        {
-          id: 'from_date',
-          Header: intl.get('budget.col_period'),
-          accessor: (row: BudgetTableRow) => PeriodAccessor(row),
-          width: 200,
-          disableSortBy: true,
-          clickable: true,
-        },
-        {
+          header: intl.get('budget.col_name'),
+          size: 220,
+        }),
+        column.accessor(
+          (budget) => `${budget.formattedFromDate} – ${budget.formattedToDate}`,
+          {
+            id: 'from_date',
+            header: intl.get('budget.col_period'),
+            size: 200,
+            enableSorting: false,
+          },
+        ),
+        column.accessor('description', {
           id: 'description',
-          Header: intl.get('budget.col_description'),
-          accessor: 'description',
-          width: 240,
-          disableSortBy: true,
-          clickable: true,
-          textOverview: true,
-        },
-        {
+          header: intl.get('budget.col_description'),
+          size: 240,
+          enableSorting: false,
+        }),
+        column.accessor((budget) => budget.entries?.length ?? 0, {
           id: 'entries',
-          Header: intl.get('budget.col_entries'),
-          accessor: (row: BudgetTableRow) => EntriesAccessor(row),
-          width: 90,
-          align: 'right',
-          disableSortBy: true,
-          clickable: true,
-        },
-        {
+          header: intl.get('budget.col_entries'),
+          size: 90,
+          meta: { textAlign: 'right' },
+          enableSorting: false,
+        }),
+        column.accessor('formattedTotalBudgetAmount', {
           id: 'total_budget',
-          Header: intl.get('budget.col_total'),
-          accessor: 'formattedTotalBudgetAmount',
-          width: 150,
-          align: 'right',
-          money: true,
-          disableSortBy: true,
-          clickable: true,
-        },
-        {
+          header: intl.get('budget.col_total'),
+          size: 150,
+          meta: { textAlign: 'right' },
+          cell: ({ getValue }) => <MoneyDisplay>{getValue()}</MoneyDisplay>,
+          enableSorting: false,
+        }),
+        column.accessor('formattedCreatedAt', {
           id: 'created_at',
-          Header: intl.get('budget.col_created_at'),
-          accessor: 'formattedCreatedAt',
-          width: 150,
-          clickable: true,
-        },
-      ] as DataTableColumn<BudgetTableRow>[],
+          header: intl.get('budget.col_created_at'),
+          size: 150,
+        }),
+      ]),
     [],
   );
 }
