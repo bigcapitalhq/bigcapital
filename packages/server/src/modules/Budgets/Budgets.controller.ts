@@ -25,14 +25,22 @@ import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { BudgetsApplication } from './BudgetsApplication.service';
 import { CreateBudgetDto, EditBudgetDto } from './dtos/Budget.dto';
+import { GetBudgetPrefillQueryDto } from './dtos/GetBudgetPrefillQuery.dto';
 import { GetBudgetsQueryDto } from './dtos/GetBudgetsQuery.dto';
-import { BudgetResponseDto } from './dtos/BudgetResponse.dto';
+import {
+  BudgetPrefillResponseDto,
+  BudgetResponseDto,
+} from './dtos/BudgetResponse.dto';
 import { BudgetAction } from './types/Budgets.types';
 import { BudgetsFeatureGuard } from './BudgetsFeatureGuard';
 
 @Controller('budgets')
 @ApiTags('Budgets')
-@ApiExtraModels(BudgetResponseDto, PaginatedResponseDto)
+@ApiExtraModels(
+  BudgetResponseDto,
+  BudgetPrefillResponseDto,
+  PaginatedResponseDto,
+)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard, BudgetsFeatureGuard)
 export class BudgetsController {
@@ -88,6 +96,21 @@ export class BudgetsController {
   })
   public deleteBudget(@Param('id') budgetId: number) {
     return this.budgetsApplication.deleteBudget(budgetId);
+  }
+
+  @Get('prefill')
+  @RequirePermission(BudgetAction.View, AbilitySubject.Budget)
+  @ApiOperation({
+    summary: 'Retrieves the budget entries prefilled from previous actuals.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The prefilled budget entries have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(BudgetPrefillResponseDto) },
+  })
+  public getBudgetPrefill(@Query() filterDTO: GetBudgetPrefillQueryDto) {
+    return this.budgetsApplication.getBudgetPrefill(filterDTO);
   }
 
   @Get(':id')

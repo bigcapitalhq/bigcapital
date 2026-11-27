@@ -40,6 +40,46 @@ export class BudgetEntryResponseDto {
   formattedAmount: string;
 }
 
+export class BudgetPrefillEntryResponseDto {
+  @ApiProperty({ description: 'Account ID', example: 1 })
+  accountId: number;
+
+  @ApiProperty({
+    description: 'Target budget month date (the first day of the month)',
+    example: '2024-01-01',
+  })
+  date: string;
+
+  @ApiProperty({ description: 'Actual amount', example: 1000.0 })
+  amount: number;
+}
+
+export class BudgetPrefillResponseDto {
+  @ApiProperty({
+    description: 'The year the actual amounts were sourced from',
+    example: 2023,
+  })
+  sourceYear: number;
+
+  @ApiProperty({
+    description: 'Budget start date',
+    example: '2024-01-01',
+  })
+  fromDate: string;
+
+  @ApiProperty({
+    description: 'Budget end date',
+    example: '2024-12-31',
+  })
+  toDate: string;
+
+  @ApiProperty({
+    description: 'The budget entries prefilled from the actual amounts',
+    type: [BudgetPrefillEntryResponseDto],
+  })
+  entries: BudgetPrefillEntryResponseDto[];
+}
+
 export class BudgetResponseDto {
   @ApiProperty({ description: 'Budget ID', example: 1 })
   id: number;

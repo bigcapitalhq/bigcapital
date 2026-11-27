@@ -1,6 +1,7 @@
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
 import React, { ReactNode } from 'react';
 import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
 import type { DataTableColumn } from '@/components/Datatable/types';
 import type { Budget } from '@bigcapital/sdk-ts';
 import { Can, Icon } from '@/components';
@@ -32,8 +33,17 @@ export function BudgetActionsMenu({
   row: { original },
   payload: { onDelete },
 }: BudgetActionsMenuProps) {
+  const history = useHistory();
+
   return (
     <Menu>
+      <Can I={BudgetAction.Edit} a={AbilitySubject.Budget}>
+        <MenuItem
+          icon={<Icon icon="edit" iconSize={16} />}
+          text={intl.get('budget.edit')}
+          onClick={() => history.push(`/budgets/${original.id}/edit`)}
+        />
+      </Can>
       <Can I={BudgetAction.Delete} a={AbilitySubject.Budget}>
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}

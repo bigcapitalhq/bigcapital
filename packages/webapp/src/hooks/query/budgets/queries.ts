@@ -1,4 +1,11 @@
-import { fetchBudgets, fetchBudget, deleteBudget } from '@bigcapital/sdk-ts';
+import {
+  fetchBudgets,
+  fetchBudget,
+  deleteBudget,
+  createBudget,
+  editBudget,
+  fetchBudgetPrefill,
+} from '@bigcapital/sdk-ts';
 import {
   useMutation,
   useQuery,
@@ -12,6 +19,10 @@ import type {
   BudgetsListResponse,
   Budget,
   GetBudgetsQuery,
+  CreateBudgetBody,
+  EditBudgetBody,
+  GetBudgetPrefillQuery,
+  BudgetPrefillResponse,
 } from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
@@ -57,5 +68,51 @@ export function useDeleteBudget(
       commonInvalidateQueries(queryClient);
       queryClient.invalidateQueries({ queryKey: budgetsKeys.detail(id) });
     },
+  });
+}
+
+export function useCreateBudget(
+  props?: UseMutationOptions<void, Error, CreateBudgetBody>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...props,
+    mutationFn: (values: CreateBudgetBody) => createBudget(fetcher, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useEditBudget(
+  props?: UseMutationOptions<void, Error, [number, EditBudgetBody]>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, EditBudgetBody]) =>
+      editBudget(fetcher, id, values),
+    onSuccess: (_data, [id]) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries({ queryKey: budgetsKeys.detail(id) });
+    },
+  });
+}
+
+/**
+ * Fetches the budget entries prefilled from a previous year's actuals.
+ */
+export function useBudgetPrefill(
+  props?: UseMutationOptions<
+    BudgetPrefillResponse,
+    Error,
+    GetBudgetPrefillQuery
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useMutation({
+    ...props,
+    mutationFn: (query: GetBudgetPrefillQuery) =>
+      fetchBudgetPrefill(fetcher, query),
   });
 }

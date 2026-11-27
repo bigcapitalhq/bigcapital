@@ -9,6 +9,7 @@ import { EditBudgetService } from './commands/EditBudget.service';
 import { DeleteBudgetService } from './commands/DeleteBudget.service';
 import { GetBudget } from './queries/GetBudget.service';
 import { GetBudgets } from './queries/GetBudgets.service';
+import { GetBudgetPrefill } from './queries/GetBudgetPrefill.service';
 import { BudgetsApplication } from './BudgetsApplication.service';
 import { BudgetsController } from './Budgets.controller';
 import { BudgetsFeatureGuard } from './BudgetsFeatureGuard';
@@ -29,6 +30,7 @@ const models = [
     DeleteBudgetService,
     GetBudget,
     GetBudgets,
+    GetBudgetPrefill,
     BudgetsApplication,
     BudgetsFeatureGuard,
   ],

@@ -1,5 +1,6 @@
 import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { BudgetsEmptyStatus } from './BudgetsEmptyStatus';
 import { useBudgetsListContext } from './BudgetsListProvider';
 import { BudgetActionsMenu, useBudgetsTableColumns } from './components';
@@ -15,9 +16,10 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
+import { AbilitySubject, BudgetAction } from '@/constants/abilityOption';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { useMemorizedColumnsWidths } from '@/hooks';
+import { useAbilityContext, useMemorizedColumnsWidths } from '@/hooks';
 
 interface BudgetsDataTableProps
   extends Pick<WithBudgetsProps, 'budgetsTableState'>,
@@ -37,6 +39,9 @@ function BudgetsDataTableInner({
   // #withAlertActions
   openAlert,
 }: BudgetsDataTableProps) {
+  const history = useHistory();
+  const ability = useAbilityContext();
+
   // Budgets list context.
   const {
     budgets,
@@ -78,6 +83,13 @@ function BudgetsDataTableInner({
     openAlert('budget-delete', { budgetId: budget.id });
   };
 
+  // Handle budget row click.
+  const handleCellClick = (cell: { row: { original: BudgetTableRow } }) => {
+    if (ability.can(BudgetAction.Edit, AbilitySubject.Budget)) {
+      history.push(`/budgets/${cell.row.original.id}/edit`);
+    }
+  };
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <BudgetsEmptyStatus />;
@@ -95,6 +107,7 @@ function BudgetsDataTableInner({
         sticky={true}
         rowTestId={'budget-row'}
         onFetchData={handleFetchData}
+        onCellClick={handleCellClick}
         pagination={true}
         initialPageIndex={budgetsTableState?.pageIndex ?? 0}
         initialPageSize={budgetsTableState?.pageSize ?? 20}

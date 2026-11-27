@@ -82,6 +82,32 @@ export const getDashboardRoutes = () => [
   },
   // Budgets.
   {
+    path: `/budgets/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Budgets/BudgetForm/BudgetFormPage').then((m) => ({
+        default: m.BudgetFormPage,
+      })),
+    ),
+    breadcrumb: intl.get('budget.form.edit_title'),
+    pageTitle: intl.get('budget.form.edit_title'),
+    backLink: true,
+    exact: true,
+    feature: Features.Budgeting,
+  },
+  {
+    path: `/budgets/new`,
+    component: lazy(() =>
+      import('@/containers/Budgets/BudgetForm/BudgetFormPage').then((m) => ({
+        default: m.BudgetFormPage,
+      })),
+    ),
+    breadcrumb: intl.get('budget.form.new_title'),
+    pageTitle: intl.get('budget.form.new_title'),
+    backLink: true,
+    exact: true,
+    feature: Features.Budgeting,
+  },
+  {
     path: `/budgets`,
     component: lazy(() =>
       import('@/containers/Budgets/BudgetsLanding/BudgetsList').then((m) => ({
