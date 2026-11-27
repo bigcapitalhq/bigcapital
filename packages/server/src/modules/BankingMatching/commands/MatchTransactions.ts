@@ -1,4 +1,4 @@
-import { castArray } from 'lodash';
+import { castArray, uniq } from 'lodash';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { PromisePool } from '@supercharge/promise-pool';
@@ -71,6 +71,11 @@ export class MatchBankTransactions {
     // Validate the uncategorized transaction is not excluded.
     validateUncategorizedTransactionsExcluded(uncategorizedTransactions);
 
+    // The matched transactions must post to the bank transactions' accounts.
+    const accountIds = uniq(
+      uncategorizedTransactions.map((transaction) => transaction.accountId),
+    );
+
     // Validates the given matched transaction.
     const validateMatchedTransaction = async (matchedTransaction) => {
       const getMatchedTransactionsService =
@@ -85,6 +90,7 @@ export class MatchBankTransactions {
       const foundMatchedTransaction =
         await getMatchedTransactionsService.getMatchedTransaction(
           matchedTransaction.referenceId,
+          accountIds,
         );
       if (!foundMatchedTransaction) {
         throw new ServiceError(ERRORS.RESOURCE_ID_MATCHING_TRANSACTION_INVALID);
@@ -98,7 +104,8 @@ export class MatchBankTransactions {
 
     if (validatationResult.errors?.length > 0) {
       const error = validatationResult.errors.map((er) => er.raw)[0];
-      throw new ServiceError(error);
+      // Keep a service error's code readable for the client.
+      throw error instanceof ServiceError ? error : new ServiceError(error);
     }
     // Calculate the total given matching transactions.
     const totalMatchedTranasctions = sumMatchTranasctions(
