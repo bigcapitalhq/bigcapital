@@ -14,7 +14,6 @@ ENV PYTHON=/usr/bin/python3
 
 # Copy package files for dependency installation
 COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml lerna.json ./
-COPY --chown=node:node patches ./patches
 COPY --chown=node:node packages/webapp/package.json ./packages/webapp/
 COPY --chown=node:node shared ./shared
 
