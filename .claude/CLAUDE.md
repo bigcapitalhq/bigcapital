@@ -2,10 +2,10 @@
 
 ## Node.js Version
 
-Always use Node.js 18.16.1 for this project. Before running any npm/pnpm/node commands:
+Run `nvm use` from the repository root to select Node.js 22 before running npm, pnpm, or Node.js commands.
 
 ```bash
-nvm use 18.16.1
+nvm use
 ```
 
 ## Package Manager

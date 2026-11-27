@@ -1,11 +1,14 @@
+image: gitpod/workspace-node-22
+
 tasks:
   - name: Init
+    before: npm install --global pnpm@9
     init: |
-      pnpm install &&
+      pnpm install --frozen-lockfile &&
       cp .env.example .env &&
       docker-compose up -d &&
       pnpm run build:server &&
-      node packages/server/build/commands.js system:migrate:latest
+      pnpm run system:migrate:latest
     command: | 
       docker-compose up -d &&
       pnpm run dev

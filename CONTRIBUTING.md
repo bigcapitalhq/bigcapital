@@ -33,8 +33,9 @@ Contributions via pull requests are much appreciated. Once the approach is agree
 ---
 
 ## Local Setup Prerequisites
-  - The application currently supports **Node.js v18.x**.
-  - `pnpm` packages manager, (from pnpm [guide](https://pnpm.io/installation) pick any installation method).
+
+- **Node.js 22**. If you use nvm, run `nvm install` from the repository root.
+- **pnpm 9**. Install it with `npm install --global pnpm@9`.
 
 ## Contribute to Backend
 

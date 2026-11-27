@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18.16.0-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -14,6 +14,7 @@ ENV PYTHON=/usr/bin/python3
 
 # Copy package files for dependency installation
 COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml lerna.json ./
+COPY --chown=node:node patches ./patches
 COPY --chown=node:node packages/server/package.json ./packages/server/
 COPY --chown=node:node shared ./shared
 
@@ -27,7 +28,7 @@ COPY --chown=node:node ./packages/server ./packages/server
 RUN pnpm run build:server --skip-nx-cache
 
 # Stage 2: Production
-FROM node:18.16.0-alpine AS production
+FROM node:22-alpine AS production
 
 WORKDIR /app
 
@@ -46,17 +47,13 @@ ENV PYTHON=/usr/bin/python3
 
 # Copy package files for production dependency installation
 COPY --chown=nodejs:nodejs package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY --chown=nodejs:nodejs patches ./patches
 COPY --chown=nodejs:nodejs packages/server/package.json ./packages/server/
 COPY --chown=nodejs:nodejs shared ./shared
 
-# Copy .husky directory (needed for husky install command)
-COPY --chown=nodejs:nodejs .husky ./.husky
-
-# Install only production dependencies
-# Install husky temporarily so prepare script can run, then remove it
-RUN pnpm add -D -w husky && \
+# Install production dependencies without setting up Git hooks
+RUN npm pkg delete scripts.prepare && \
     pnpm install --prod --frozen-lockfile && \
-    pnpm remove -w husky && \
     # Remove build dependencies to reduce image size
     apk del python3 build-base
 

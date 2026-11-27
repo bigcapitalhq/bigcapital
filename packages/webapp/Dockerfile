@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18.16.0-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -14,11 +14,12 @@ ENV PYTHON=/usr/bin/python3
 
 # Copy package files for dependency installation
 COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml lerna.json ./
+COPY --chown=node:node patches ./patches
 COPY --chown=node:node packages/webapp/package.json ./packages/webapp/
 COPY --chown=node:node shared ./shared
 
 # Install all dependencies (including devDependencies for build)
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Copy source code for webapp and dependencies
 COPY --chown=node:node ./packages/webapp ./packages/webapp
