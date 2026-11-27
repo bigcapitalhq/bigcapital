@@ -10,6 +10,7 @@ on:
       - '**.ts'
       - '**.tsx'
       - '**/tsconfig.json'
+      - '.nvmrc'
       - 'pnpm-lock.yaml'
       - '.github/workflows/server-tests.yml'
   pull_request:
@@ -17,6 +18,7 @@ on:
       - '**.ts'
       - '**.tsx'
       - '**/tsconfig.json'
+      - '.nvmrc'
       - 'pnpm-lock.yaml'
       - '.github/workflows/server-tests.yml'
 
@@ -53,7 +55,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.16.1
+          node-version-file: '.nvmrc'
 
       - uses: pnpm/action-setup@v2
         with:

@@ -42,7 +42,7 @@
     "pnpm": "^9.0.5"
   },
   "engines": {
-    "node": "16.x || 17.x || 18.x"
+    "node": "22.x"
   },
   "husky": {
     "hooks": {

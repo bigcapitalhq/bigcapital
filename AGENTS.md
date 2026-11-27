@@ -61,7 +61,7 @@ Run from repo root unless noted.
 - **Server path alias**: `@/*` maps to `packages/server/src/*` (both in `tsconfig.json` and Jest `moduleNameMapper`).
 - **Webapp path alias**: `@` maps to `packages/webapp/src` (Vite resolve alias).
 - **Commit linting**: Husky enforces conventional commits via `commitlint` on `commit-msg` hook.
-- **Node version**: `engines` specifies 16.x/17.x/18.x, but CONTRIBUTING.md says 18.x. Use 18.x.
+- Use Node.js 22. Run `nvm use` from the repository root to select the version in `.nvmrc`.
 
 ## Data flow: server → sdk-ts → webapp
 

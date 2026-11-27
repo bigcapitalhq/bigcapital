@@ -192,8 +192,7 @@ replaces the last assistant message instead of duplicating it.
   "I cannot answer that from available data" response.
 - Conversations are not filtered by branch or tracking category yet.
 - There is no admin view or retention policy for conversations yet.
-- Node 18 is end-of-life. Upgrading to Node 22 also enables AI SDK 7 as a
-  separate infrastructure task.
+- Upgrading to AI SDK 7 is a separate task.
 
 ## Troubleshooting
 
