@@ -4,7 +4,9 @@ import { EditBudgetService } from './commands/EditBudget.service';
 import { DeleteBudgetService } from './commands/DeleteBudget.service';
 import { GetBudget } from './queries/GetBudget.service';
 import { GetBudgets } from './queries/GetBudgets.service';
+import { GetBudgetPrefill } from './queries/GetBudgetPrefill.service';
 import { CreateBudgetDto, EditBudgetDto } from './dtos/Budget.dto';
+import { GetBudgetPrefillQueryDto } from './dtos/GetBudgetPrefillQuery.dto';
 import { GetBudgetsQueryDto } from './dtos/GetBudgetsQuery.dto';
 
 @Injectable()
@@ -15,6 +17,7 @@ export class BudgetsApplication {
     private readonly deleteBudgetService: DeleteBudgetService,
     private readonly getBudgetService: GetBudget,
     private readonly getBudgetsService: GetBudgets,
+    private readonly getBudgetPrefillService: GetBudgetPrefill,
   ) {}
 
   /**
@@ -48,6 +51,14 @@ export class BudgetsApplication {
    */
   public getBudget = (budgetId: number) => {
     return this.getBudgetService.getBudget(budgetId);
+  };
+
+  /**
+   * Retrieves the budget entries prefilled from a previous year's actuals.
+   * @param {GetBudgetPrefillQueryDto} filterDTO - Filter DTO.
+   */
+  public getBudgetPrefill = (filterDTO: GetBudgetPrefillQueryDto) => {
+    return this.getBudgetPrefillService.getBudgetPrefill(filterDTO);
   };
 
   /**

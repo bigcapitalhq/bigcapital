@@ -52,7 +52,7 @@ export class FeaturesConfigure {
       },
       {
         name: Features.BUDGETING,
-        defaultValue: false,
+        defaultValue: true,
       },
     ];
   }

@@ -1,5 +1,6 @@
 import * as FF from 'fp-ts/function';
 import React from 'react';
+import { BudgetsActionsBar } from './BudgetsActionsBar';
 import { BudgetsDataTable } from './BudgetsDataTable';
 import { BudgetsListProvider } from './BudgetsListProvider';
 import { withBudgets } from './withBudgets';
@@ -40,6 +41,7 @@ function BudgetsListInner({
       query={transformTableStateToQuery(budgetsTableState)}
       tableStateChanged={!!budgetsTableStateChanged}
     >
+      <BudgetsActionsBar />
       <DashboardPageContent>
         <BudgetsDataTable />
       </DashboardPageContent>

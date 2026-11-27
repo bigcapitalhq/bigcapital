@@ -168,6 +168,35 @@ describe('Budgets (e2e)', () => {
       .expect(400);
   });
 
+  it('/budgets/prefill (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/budgets/prefill')
+      .query({
+        fromDate: '2024-01-01',
+        toDate: '2024-12-31',
+        sourceYear: 2023,
+      })
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(response.body.source_year).toEqual(2023);
+    expect(Array.isArray(response.body.entries)).toBe(true);
+  });
+
+  it('/budgets/prefill (GET) rejects a source year after the budget year', () => {
+    return request(app.getHttpServer())
+      .get('/budgets/prefill')
+      .query({
+        fromDate: '2024-01-01',
+        toDate: '2024-12-31',
+        sourceYear: 2025,
+      })
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(400);
+  });
+
   it('/reports/budget-vs-actual (GET)', async () => {
     const budget = await createBudget();
 
