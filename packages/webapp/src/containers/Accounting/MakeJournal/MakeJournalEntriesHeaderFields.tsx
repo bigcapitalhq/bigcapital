@@ -78,6 +78,7 @@ export function MakeJournalEntriesHeader() {
       <FFormGroup
         name={'journalType'}
         label={intl.get('journal_type')}
+        labelInfo={<FieldRequiredHint />}
         inline
         fastField
       >
