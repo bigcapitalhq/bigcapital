@@ -1,5 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsInt,
+  Min,
+  Max,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class GetMatchedTransactionsQueryDto {
@@ -37,4 +44,17 @@ export class GetMatchedTransactionsQueryDto {
   @IsOptional()
   @IsString()
   transactionType?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Days either side of the uncategorized transaction date to search for ' +
+      'candidates. Ignored when an explicit fromDate/toDate is given. ' +
+      'Zero searches the whole ledger. Defaults to 90.',
+    example: 90,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  dateWindowDays?: number;
 }
