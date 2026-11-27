@@ -75,7 +75,12 @@ const models = [
             cb(null, { fieldName: file.fieldname });
           },
           key: function (req, file, cb) {
-            const organizationId = cls.get<string>('organizationId');
+            // busboy invokes this from a stream event once the body spans more than one chunk, where
+            // the CLS context is no longer active. The CLS value is itself the organization-id header
+            // (ClsModule setup in App.module), so reading the header directly is equivalent.
+            const organizationId =
+              cls.get<string>('organizationId') ||
+              (req.headers['organization-id'] as string | undefined);
             if (!organizationId) {
               return cb(
                 new Error('Tenant context required for upload.'),
