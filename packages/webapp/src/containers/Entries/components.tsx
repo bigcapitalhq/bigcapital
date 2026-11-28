@@ -9,8 +9,10 @@ import {
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import { ItemStockTooltip } from './ItemStockTooltip';
 import type { Batch } from '@/ee/batches/hooks/query/queries';
 import type { ItemEntryBatchAllocation } from '@/interfaces/ItemEntries';
+import type { Item } from '@bigcapital/sdk-ts';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
 import {
   InputGroupCell,
@@ -234,6 +236,31 @@ function BatchQuantityCell(props: any) {
 BatchQuantityCell.cellType = NumericInputCell.cellType;
 
 /**
+ * Quantity cell that shows the stock of the line's inventory item in a
+ * tooltip while the quantity input is focused.
+ */
+function QuantityCell(props: any) {
+  const { row, payload } = props;
+  const [isFocused, setIsFocused] = React.useState(false);
+
+  const item = payload.items?.find(
+    (item: Item) => Number(item.id) === Number(row.original.itemId),
+  );
+  const InputCell = payload.batchMode ? BatchQuantityCell : NumericInputCell;
+
+  return (
+    <ItemStockTooltip item={item} isOpen={isFocused}>
+      <InputCell
+        {...props}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+      />
+    </ItemStockTooltip>
+  );
+}
+QuantityCell.cellType = NumericInputCell.cellType;
+
+/**
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
@@ -276,7 +303,7 @@ export function useEditableItemsEntriesColumns() {
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
-        Cell: batchMode ? BatchQuantityCell : NumericInputCell,
+        Cell: QuantityCell,
         disableSortBy: true,
         width: batchMode ? 120 : 70,
         align: Align.Right,

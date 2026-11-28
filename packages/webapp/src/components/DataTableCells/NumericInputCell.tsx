@@ -13,6 +13,8 @@ export default function NumericInputCell({
   cell: { value: controlledInputValue },
   payload,
   leftElement,
+  onFocus,
+  onBlur,
 }: any) {
   const [valueAsNumber, setValueAsNumber] = useState<number | null>(
     controlledInputValue || null,
@@ -23,8 +25,9 @@ export default function NumericInputCell({
   ) => {
     setValueAsNumber(valueAsNumber);
   };
-  const handleInputBlur = () => {
+  const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     payload.updateData(index, id, valueAsNumber);
+    onBlur?.(event);
   };
 
   useEffect(() => {
@@ -43,6 +46,7 @@ export default function NumericInputCell({
         asyncControl
         value={controlledInputValue}
         onValueChange={handleInputValueChange}
+        onFocus={onFocus}
         onBlur={handleInputBlur}
         buttonPosition={'none'}
         leftElement={leftElement}

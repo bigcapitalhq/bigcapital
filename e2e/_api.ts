@@ -34,6 +34,7 @@ export interface ItemSeedInput {
   type: 'service' | 'non-inventory' | 'inventory';
   sellPrice?: number;
   costPrice?: number;
+  reorderPoint?: number;
 }
 
 export interface InvoiceSeedInput {
@@ -332,7 +333,10 @@ export async function createItemViaApi(
       sellAccountId: sellAccount.id,
       costAccountId: costAccount.id,
       ...(input.type === 'inventory'
-        ? { inventoryAccountId: inventoryAccount.id }
+        ? {
+            inventoryAccountId: inventoryAccount.id,
+            reorderPoint: input.reorderPoint,
+          }
         : {}),
     }),
   });
