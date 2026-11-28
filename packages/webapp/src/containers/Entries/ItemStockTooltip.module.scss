@@ -1,0 +1,17 @@
+.stock {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 24px;
+  row-gap: 2px;
+  margin: 0;
+
+  dt {
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
