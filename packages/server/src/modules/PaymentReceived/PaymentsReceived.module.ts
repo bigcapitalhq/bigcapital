@@ -93,6 +93,7 @@ const models = [RegisterTenancyModel(InventoryCostLotTracker)];
   exports: [
     PaymentReceivesApplication,
     CreatePaymentReceivedService,
+    DeletePaymentReceivedService,
     PaymentReceivedGLEntries,
     PaymentsReceivedExportable,
     PaymentsReceivedImportable,

@@ -52,6 +52,7 @@ import { ValidateBulkDeleteBillPaymentsService } from './ValidateBulkDeleteBillP
   exports: [
     BillPaymentValidators,
     CreateBillPaymentService,
+    DeleteBillPayment,
     BillPaymentsExportable,
     BillPaymentsImportable,
   ],
