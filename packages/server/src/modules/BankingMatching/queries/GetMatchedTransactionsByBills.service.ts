@@ -114,7 +114,13 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
       vendorId: bill.vendorId,
       paymentAccountId: uncategorizedTransaction.accountId,
       paymentDate: uncategorizedTransaction.date,
-      exchangeRate: 1,
+      // A bank account in the bill's currency pays at the bill's rate, so no
+      // rate difference is posted as an exchange gain or loss. A bank account
+      // in the base currency keeps rate 1.
+      exchangeRate:
+        uncategorizedTransaction.currencyCode === bill.currencyCode
+          ? bill.exchangeRate
+          : 1,
       entries: [
         {
           paymentAmount: bill.dueAmount,
